@@ -37,6 +37,56 @@
 
 ---
 
+## Estrategia de Branching
+
+### Estructura de ramas
+
+```
+main
+└── develop
+      ├── feature/utils
+      ├── feature/io
+      ├── feature/swap
+      ├── feature/memory-stick
+      ├── feature/cpu/ciclo-basico
+      ├── feature/cpu/mmu
+      ├── feature/kernel-memory/conexiones-instrucciones
+      ├── feature/kernel-memory/segmentacion
+      ├── feature/kernel-memory/suspension-compactacion
+      ├── feature/kernel-scheduler/planificacion-basica
+      ├── feature/kernel-scheduler/mediano-plazo
+      ├── feature/kernel-scheduler/mutex-cmn
+      └── feature/kernel-scheduler/herencia-compactacion
+```
+
+### Reglas de branching
+
+- **`main`**: solo recibe merges desde `develop` en cada checkpoint. Siempre debe compilar y funcionar.
+- **`develop`**: rama de integración. Cada feature branch se mergea aquí al completarse.
+- **`feature/*`**: una rama por módulo o agrupación lógica de tareas. Se crea al inicio de la fase correspondiente y se mergea a `develop` al terminar.
+- No hacer commits directamente en `main` ni en `develop`.
+- Resolver conflictos en la feature branch antes de mergear a `develop`.
+
+### Asignación de ramas por integrante
+
+| Rama | Responsable |
+|---|---|
+| `feature/utils` | Nicolas |
+| `feature/io` | Nicolas |
+| `feature/kernel-scheduler/planificacion-basica` | Santiago |
+| `feature/kernel-scheduler/mediano-plazo` | Santiago |
+| `feature/kernel-scheduler/mutex-cmn` | Nicolas |
+| `feature/kernel-scheduler/herencia-compactacion` | Nicolas |
+| `feature/kernel-memory/conexiones-instrucciones` | Luciano + Kevin |
+| `feature/kernel-memory/segmentacion` | Luciano |
+| `feature/kernel-memory/suspension-compactacion` | Luciano |
+| `feature/cpu/ciclo-basico` | Kevin |
+| `feature/cpu/mmu` | Juan Manuel |
+| `feature/memory-stick` | Juan Manuel |
+| `feature/swap` | Luciano |
+
+---
+
 ## Fases de Desarrollo
 
 ### Fase 0 — Configuración del Entorno
@@ -54,15 +104,17 @@
 **Período:** 13/04 – 18/04/2026  
 **Objetivo:** Todos los módulos se conectan correctamente entre sí por sockets.
 
-| Módulo | Tarea |
-|---|---|
-| Utils | Wrapper de sockets (conectar, escuchar, enviar, recibir) + serialización |
-| Kernel Scheduler | Servidor de sockets: acepta Kernel Memory, CPUs e IOs |
-| Kernel Memory | Servidor de sockets: acepta Scheduler, CPUs, Memory Sticks y Swap |
-| CPU | Cliente: conecta a Kernel Scheduler y Kernel Memory |
-| Memory Stick | Cliente a Kernel Memory + servidor para CPUs |
-| Swap | Cliente a Kernel Memory, informa capacidad |
-| IO | Cliente a Kernel Scheduler |
+| Módulo | Tarea | Rama |
+|---|---|---|
+| Utils | Wrapper de sockets (conectar, escuchar, enviar, recibir) + serialización | `feature/utils` |
+| Kernel Scheduler | Servidor de sockets: acepta Kernel Memory, CPUs e IOs | `feature/kernel-scheduler/planificacion-basica` |
+| Kernel Memory | Servidor de sockets: acepta Scheduler, CPUs, Memory Sticks y Swap | `feature/kernel-memory/conexiones-instrucciones` |
+| CPU | Cliente: conecta a Kernel Scheduler y Kernel Memory | `feature/cpu/ciclo-basico` |
+| Memory Stick | Cliente a Kernel Memory + servidor para CPUs | `feature/memory-stick` |
+| Swap | Cliente a Kernel Memory, informa capacidad | `feature/swap` |
+| IO | Cliente a Kernel Scheduler | `feature/io` |
+
+> Al llegar al Check 1 se mergean todas las feature branches activas a `develop` y luego `develop` → `main`.
 
 **Criterio de éxito:** Todos los módulos levantan, se conectan y loguean la conexión establecida.
 
@@ -72,12 +124,15 @@
 **Período:** 19/04 – 23/05/2026  
 **Objetivo:** Planificación básica funcionando de punta a punta con CPU ejecutando instrucciones simples.
 
-| Módulo | Tareas |
-|---|---|
-| Kernel Scheduler | Estados NEW/READY/EXEC/BLOCK/EXIT, FIFO, RR, manejo de IO (SLEEP/STDIN/STDOUT), Mutex sin herencia |
-| CPU | Registros, fetch, decode, instrucciones básicas (NOOP, SET, SUM, SUB, JNZ), syscalls, interrupciones |
-| Kernel Memory | Retorno de instrucciones desde pseudocódigo, gestión de contextos mock |
-| IO | SLEEP, STDOUT y STDIN completos |
+| Módulo | Tareas | Rama |
+|---|---|---|
+| Kernel Scheduler | Estados NEW/READY/EXEC/BLOCK/EXIT, FIFO, RR, manejo de IO (SLEEP/STDIN/STDOUT) | `feature/kernel-scheduler/planificacion-basica` |
+| Kernel Scheduler | Mutex sin herencia | `feature/kernel-scheduler/mutex-cmn` |
+| CPU | Registros, fetch, decode, instrucciones básicas (NOOP, SET, SUM, SUB, JNZ), syscalls, interrupciones | `feature/cpu/ciclo-basico` |
+| Kernel Memory | Retorno de instrucciones desde pseudocódigo, gestión de contextos mock | `feature/kernel-memory/conexiones-instrucciones` |
+| IO | SLEEP, STDOUT y STDIN completos | `feature/io` |
+
+> Al llegar al Check 2: mergear a `develop` y luego `develop` → `main`.
 
 **Criterio de éxito:** Un proceso corre de inicio a fin con instrucciones simples, planificación FIFO/RR correcta, IO funcional, Mutex sin herencia.
 
@@ -87,13 +142,19 @@
 **Período:** 24/05 – 20/06/2026  
 **Objetivo:** CPU con MMU completa, memoria segmentada real, planificación avanzada.
 
-| Módulo | Tareas |
-|---|---|
-| CPU | MMU (dir. lógica → física), MOV_IN, MOV_OUT, COPY_MEM, MEM_ALLOC, MEM_FREE, INIT_PROC, EXIT, comunicación con Memory Sticks |
-| Kernel Memory | Tabla de segmentos por PID, BEST/WORST FIT, creación/eliminación de segmentos, hot-plug de Memory Sticks, compactación, suspensión/des-suspensión a Swap |
-| Kernel Scheduler | Suspensión/des-suspensión (mediano plazo), CMN (colas multinivel), QUEUE_PREEMPTION, herencia de prioridades, manejo de compactación, BSOD |
-| Memory Stick | Implementación completa con MEMORY_DELAY |
-| Swap | Implementación completa con bloques |
+| Módulo | Tareas | Rama |
+|---|---|---|
+| CPU | MMU (dir. lógica → física), MOV_IN, MOV_OUT, COPY_MEM, MEM_ALLOC, MEM_FREE, comunicación con Memory Sticks | `feature/cpu/mmu` |
+| CPU | INIT_PROC, EXIT | `feature/cpu/ciclo-basico` |
+| Kernel Memory | Tabla de segmentos, BEST/WORST FIT, creación/eliminación de segmentos, hot-plug | `feature/kernel-memory/segmentacion` |
+| Kernel Memory | Compactación, suspensión/des-suspensión a Swap | `feature/kernel-memory/suspension-compactacion` |
+| Kernel Scheduler | Suspensión/des-suspensión (mediano plazo), BSOD | `feature/kernel-scheduler/mediano-plazo` |
+| Kernel Scheduler | CMN, QUEUE_PREEMPTION, Mutex | `feature/kernel-scheduler/mutex-cmn` |
+| Kernel Scheduler | Herencia de prioridades, compactación | `feature/kernel-scheduler/herencia-compactacion` |
+| Memory Stick | Implementación completa con MEMORY_DELAY | `feature/memory-stick` |
+| Swap | Implementación completa con bloques | `feature/swap` |
+
+> Al llegar al Check 3: mergear a `develop` y luego `develop` → `main`.
 
 **Criterio de éxito:** Procesos con allocación de memoria real, MMU funcional, planificación CMN con desalojo, herencia de prioridades en mutex, suspensión por timeout.
 

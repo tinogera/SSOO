@@ -3,6 +3,15 @@
 ## Módulos Asignados
 - **Principal:** Kernel Scheduler — Planificación de largo plazo (estados y colas) y mediano plazo (suspensión/des-suspensión)
 
+## Ramas de trabajo
+
+| Rama | Tareas |
+|---|---|
+| `feature/kernel-scheduler/planificacion-basica` | Servidor de sockets, colas y estados, FIFO, RR, manejo de IO (SLEEP/STDIN/STDOUT) |
+| `feature/kernel-scheduler/mediano-plazo` | Suspensión por timeout, des-suspensión, BSOD |
+
+> Crear `feature/kernel-scheduler/planificacion-basica` desde `develop` al iniciar Fase 1. Crear `feature/kernel-scheduler/mediano-plazo` desde `develop` al iniciar Fase 3.
+
 ---
 
 ## Fase 0 — Configuración del Entorno
@@ -16,6 +25,7 @@
 
 ## Fase 1 — Check 1: Conexiones
 **Fecha límite:** 18/04/2026
+**Rama:** `feature/kernel-scheduler/planificacion-basica`
 
 - [ ] Implementar el **servidor de sockets** en Kernel Scheduler:
   - Conexión entrante desde **Kernel Memory** (establecida al inicio).
@@ -31,6 +41,7 @@
 
 ## Fase 2 — Check 2: Planificación Básica
 **Fecha límite:** 23/05/2026
+**Rama:** `feature/kernel-scheduler/planificacion-basica`
 
 ### Semana 1–2 (19/04 – 02/05)
 - [ ] Implementar la **estructura de proceso**: PID, estado, prioridad, cola de origen, tiempos.
@@ -63,6 +74,7 @@
 
 ## Fase 3 — Check 3: Planificación de Mediano Plazo
 **Fecha límite:** 20/06/2026
+**Rama:** `feature/kernel-scheduler/mediano-plazo`
 
 ### Semana 1–2 (24/05 – 06/06)
 - [ ] Implementar **suspensión de proceso**: si un proceso en BLOCK supera el `SUSPENSION_TIMEOUT` ms → pasar a SUSP. BLOCK y notificar a Kernel Memory para mover sus segmentos a Swap.
@@ -79,6 +91,7 @@
 
 ## Fase 4 — Integración y Entrega Final
 **Fecha límite:** 11/07/2026
+**Rama:** `develop` (integración directa)
 
 - [ ] Integrar y testear el flujo completo con CPUs reales, IO real y Kernel Memory real.
 - [ ] Verificar todos los logs obligatorios del Kernel Scheduler.

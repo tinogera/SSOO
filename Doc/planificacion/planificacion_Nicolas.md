@@ -4,6 +4,17 @@
 - **Principal:** Utils (librería compartida), IO (módulo completo)
 - **Secundario:** Kernel Scheduler — Mutex con herencia de prioridades, CMN (colas multinivel), compactación
 
+## Ramas de trabajo
+
+| Rama | Tareas |
+|---|---|
+| `feature/utils` | Wrapper de sockets, serialización/deserialización de mensajes |
+| `feature/io` | Conexión a KScheduler, SLEEP, STDOUT, STDIN |
+| `feature/kernel-scheduler/mutex-cmn` | Mutex sin herencia, CMN, QUEUE_PREEMPTION |
+| `feature/kernel-scheduler/herencia-compactacion` | Herencia de prioridades, manejo de compactación |
+
+> Crear `feature/utils` y `feature/io` desde `develop` al iniciar Fase 1 (Nicolas es el primero en crear ramas porque Utils es dependencia de todos). Crear las ramas de Scheduler desde `develop` en Fase 2 y 3 respectivamente.
+
 ---
 
 ## Fase 0 — Configuración del Entorno
@@ -18,6 +29,7 @@
 
 ## Fase 1 — Check 1: Utils Base + IO Conexión
 **Fecha límite:** 18/04/2026
+**Ramas:** `feature/utils` · `feature/io`
 
 ### Utils (13/04 – 18/04)
 - [ ] Implementar función **crear servidor**: crear socket, bind, listen, aceptar conexiones (bloqueante con pthread).
@@ -34,6 +46,7 @@
 
 ## Fase 2 — Check 2: IO Completo + Mutex en Scheduler
 **Fecha límite:** 23/05/2026
+**Ramas:** `feature/io` (IO completo) · `feature/kernel-scheduler/mutex-cmn` (Mutex)
 
 ### IO — Semanas 1–3 (19/04 – 09/05)
 - [ ] Implementar **IO tipo SLEEP**:
@@ -69,6 +82,7 @@
 
 ## Fase 3 — Check 3: CMN, Herencia de Prioridades y Compactación
 **Fecha límite:** 20/06/2026
+**Ramas:** `feature/kernel-scheduler/mutex-cmn` (CMN, QUEUE_PREEMPTION) · `feature/kernel-scheduler/herencia-compactacion` (herencia, compactación)
 
 ### Semana 1–2 (24/05 – 06/06)
 - [ ] Implementar algoritmo **CMN (Colas Multinivel)**:
@@ -96,6 +110,7 @@
 
 ## Fase 4 — Integración y Entrega Final
 **Fecha límite:** 11/07/2026
+**Rama:** `develop` (integración directa)
 
 - [ ] Verificar todos los logs obligatorios de IO y Kernel Scheduler.
 - [ ] Testear planificación CMN con múltiples niveles de prioridad.

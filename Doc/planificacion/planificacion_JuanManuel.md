@@ -4,6 +4,15 @@
 - **Principal:** CPU — MMU, instrucciones de acceso a memoria, syscalls de memoria
 - **Secundario:** Memory Stick — Implementación completa
 
+## Ramas de trabajo
+
+| Rama | Tareas |
+|---|---|
+| `feature/memory-stick` | Servidor de sockets, conexión a KMemory, lectura/escritura con MEMORY_DELAY |
+| `feature/cpu/mmu` | MMU (traducción lógica→física), MOV_IN, MOV_OUT, COPY_MEM, MEM_ALLOC, MEM_FREE, comunicación con Memory Sticks |
+
+> Crear `feature/memory-stick` desde `develop` al iniciar Fase 1. Crear `feature/cpu/mmu` desde `develop` al iniciar Fase 3.
+
 ---
 
 ## Fase 0 — Configuración del Entorno
@@ -18,6 +27,7 @@
 
 ## Fase 1 — Check 1: Conexiones
 **Fecha límite:** 18/04/2026
+**Rama:** `feature/memory-stick`
 
 - [ ] Implementar en **Memory Stick**:
   - Conexión cliente a **Kernel Memory** (registrarse con su tamaño).
@@ -30,6 +40,7 @@
 
 ## Fase 2 — Check 2: Memory Stick Básico
 **Fecha límite:** 23/05/2026
+**Rama:** `feature/memory-stick`
 
 ### Semana 1–3 (19/04 – 09/05)
 - [ ] Implementar en **Memory Stick** la inicialización del espacio de almacenamiento: asignar buffer en memoria RAM del tamaño recibido como argumento.
@@ -46,6 +57,7 @@
 
 ## Fase 3 — Check 3: CPU — MMU e Instrucciones de Memoria
 **Fecha límite:** 20/06/2026
+**Ramas:** `feature/cpu/mmu` (MMU e instrucciones) · `feature/memory-stick` (acceso concurrente)
 
 ### Semana 1 (24/05 – 30/05)
 - [ ] Implementar la **MMU** en CPU:
@@ -73,6 +85,7 @@
 
 ## Fase 4 — Integración y Entrega Final
 **Fecha límite:** 11/07/2026
+**Rama:** `develop` (integración directa)
 
 - [ ] Integrar y testear la MMU con Kernel Memory y Memory Sticks reales.
 - [ ] Testear hot-plug de Memory Sticks durante ejecución.

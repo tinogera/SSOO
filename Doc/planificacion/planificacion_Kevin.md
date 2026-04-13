@@ -4,6 +4,15 @@
 - **Principal:** CPU — Ciclo de instrucción (fetch, decode, execute), instrucciones básicas
 - **Secundario:** Kernel Memory — Gestión de instrucciones y contextos de proceso
 
+## Ramas de trabajo
+
+| Rama | Tareas |
+|---|---|
+| `feature/cpu/ciclo-basico` | Conexiones CPU, registros, fetch, decode, instrucciones básicas (NOOP/SET/SUM/SUB/JNZ), syscalls, interrupciones, INIT_PROC, EXIT |
+| `feature/kernel-memory/conexiones-instrucciones` | Lectura de pseudocódigo, gestión de contextos por PID (en conjunto con Luciano) |
+
+> Crear `feature/cpu/ciclo-basico` desde `develop` al iniciar Fase 1. Crear `feature/kernel-memory/conexiones-instrucciones` al inicio de Fase 2 (coordinar con Luciano quién hace el `git checkout -b`).
+
 ---
 
 ## Fase 0 — Configuración del Entorno
@@ -17,6 +26,7 @@
 
 ## Fase 1 — Check 1: Conexiones
 **Fecha límite:** 18/04/2026
+**Rama:** `feature/cpu/ciclo-basico`
 
 - [ ] Implementar conexión de CPU a **Kernel Scheduler** (recibir PID a ejecutar).
 - [ ] Implementar conexión de CPU a **Kernel Memory** (pedir instrucciones, enviar/recibir contexto).
@@ -28,6 +38,7 @@
 
 ## Fase 2 — Check 2: Ciclo de Instrucción Básico
 **Fecha límite:** 23/05/2026
+**Rama:** `feature/cpu/ciclo-basico`
 
 ### Semana 1–2 (19/04 – 02/05)
 - [ ] Definir e implementar la estructura de **registros de CPU**: PC (uint32_t), AX/BX/CX/DX (uint8_t), EAX/EBX/ECX/EDX (uint32_t), SI y DI (uint32_t).
@@ -52,6 +63,7 @@
 
 ## Fase 3 — Check 3: Kernel Memory (Contextos e Instrucciones)
 **Fecha límite:** 20/06/2026
+**Ramas:** `feature/kernel-memory/conexiones-instrucciones` (lectura y contextos) · `feature/cpu/ciclo-basico` (INIT_PROC, EXIT)
 
 > En esta fase Kevin contribuye al módulo Kernel Memory para la gestión de contextos y la lectura de instrucciones.
 
@@ -70,6 +82,7 @@
 
 ## Fase 4 — Integración y Entrega Final
 **Fecha límite:** 11/07/2026
+**Rama:** `develop` (integración directa)
 
 - [ ] Integrar y testear el ciclo completo de CPU con instrucciones básicas contra Kernel Memory real.
 - [ ] Verificar que el log de interrupción esté implementado: `## Interrupción recibida`.

@@ -4,6 +4,17 @@
 - **Principal:** Kernel Memory — Segmentación pura, algoritmos de asignación, hot-plug, compactación, suspensión/des-suspensión
 - **Secundario:** Swap — Implementación completa
 
+## Ramas de trabajo
+
+| Rama | Tareas |
+|---|---|
+| `feature/kernel-memory/conexiones-instrucciones` | Servidor de sockets KMemory, instrucciones, contextos (en conjunto con Kevin) |
+| `feature/kernel-memory/segmentacion` | Tabla de segmentos, Best/Worst Fit, creación/eliminación, lectura/escritura de datos, hot-plug |
+| `feature/kernel-memory/suspension-compactacion` | Compactación, suspensión a Swap, des-suspensión desde Swap |
+| `feature/swap` | Conexión a KMemory, lectura/escritura de bloques |
+
+> Crear `feature/kernel-memory/conexiones-instrucciones` desde `develop` al iniciar Fase 1 (coordinar con Kevin). Las demás ramas se crean desde `develop` al inicio de Fase 3.
+
 ---
 
 ## Fase 0 — Configuración del Entorno
@@ -17,6 +28,7 @@
 
 ## Fase 1 — Check 1: Conexiones
 **Fecha límite:** 18/04/2026
+**Ramas:** `feature/kernel-memory/conexiones-instrucciones` · `feature/swap`
 
 - [ ] Implementar el **servidor de sockets** en Kernel Memory:
   - Conexión desde **Kernel Scheduler**.
@@ -36,6 +48,7 @@
 
 ## Fase 2 — Check 2: Instrucciones y Contextos Mock
 **Fecha límite:** 23/05/2026
+**Rama:** `feature/kernel-memory/conexiones-instrucciones`
 
 ### Semana 1–2 (19/04 – 02/05)
 - [ ] Implementar la **lectura de archivos de pseudocódigo**: dado el `SCRIPTS_BASEPATH` y el path del proceso, leer el archivo y retornar la línea correspondiente al PC recibido.
@@ -53,6 +66,7 @@
 
 ## Fase 3 — Check 3: Segmentación Completa
 **Fecha límite:** 20/06/2026
+**Ramas:** `feature/kernel-memory/segmentacion` (semanas 1–3) · `feature/kernel-memory/suspension-compactacion` (semana 4) · `feature/swap` (semanas 3–4)
 
 ### Semana 1 (24/05 – 30/05)
 - [ ] Diseñar e implementar la **tabla de segmentos** por PID: cada entrada contiene ID de segmento, Memory Stick de destino, dirección base física, límite.
@@ -87,6 +101,7 @@
 
 ## Fase 4 — Integración y Entrega Final
 **Fecha límite:** 11/07/2026
+**Rama:** `develop` (integración directa)
 
 - [ ] Integrar Kernel Memory con Memory Sticks y Swap reales.
 - [ ] Testear compactación con múltiples procesos y Memory Sticks.
