@@ -1,0 +1,115 @@
+# Planificación Individual — Nicolas Alessandro Barreiro
+
+## Módulos Asignados
+- **Principal:** Utils (librería compartida), IO (módulo completo)
+- **Secundario:** Kernel Scheduler — Mutex con herencia de prioridades, CMN (colas multinivel), compactación
+
+---
+
+## Fase 0 — Configuración del Entorno
+**Fecha límite:** 13/04/2026
+
+- [ ] Instalar `so-commons-library` y verificar compilación de todos los módulos.
+- [ ] **Liderar el diseño del protocolo de comunicación** entre módulos: definir y documentar en Utils los tipos de mensaje, los structs compartidos y las convenciones de serialización que usarán todos los integrantes.
+- [ ] Crear el header compartido con los códigos de operación (enums de tipos de mensaje).
+- [ ] Coordinar con cada integrante los mensajes que necesita su módulo.
+
+---
+
+## Fase 1 — Check 1: Utils Base + IO Conexión
+**Fecha límite:** 18/04/2026
+
+### Utils (13/04 – 18/04)
+- [ ] Implementar función **crear servidor**: crear socket, bind, listen, aceptar conexiones (bloqueante con pthread).
+- [ ] Implementar función **conectar a servidor**: crear socket, connect, retornar fd.
+- [ ] Implementar función **enviar mensaje**: serializar tipo + payload + tamaño, enviar por socket.
+- [ ] Implementar función **recibir mensaje**: recibir cabecera, leer payload de tamaño indicado, deserializar.
+- [ ] Publicar header `utils.h` con las firmas de todas las funciones para que los demás módulos puedan usar la librería.
+
+### IO (13/04 – 18/04)
+- [ ] Implementar la conexión de **IO a Kernel Scheduler**: conectarse con el tipo de IO (STDIN/STDOUT/SLEEP) como argumento.
+- [ ] Implementar log: `## Conectado a Kernel Scheduler`.
+
+---
+
+## Fase 2 — Check 2: IO Completo + Mutex en Scheduler
+**Fecha límite:** 23/05/2026
+
+### IO — Semanas 1–3 (19/04 – 09/05)
+- [ ] Implementar **IO tipo SLEEP**:
+  - Recibir tiempo en ms desde Kernel Scheduler.
+  - Ejecutar `usleep(tiempo * 1000)`.
+  - Notificar a Kernel Scheduler que finalizó.
+  - Implementar log: `## PID: <PID> - Haciendo sleep por <TIEMPO> milisegundos`.
+  - Implementar log: `## PID: <PID> - Inicio de IO` y `## PID: <PID> - Fin de IO`.
+
+- [ ] Implementar **IO tipo STDOUT**:
+  - Recibir cadena de bytes desde Kernel Scheduler.
+  - Imprimir por pantalla (stdout).
+  - Notificar a Kernel Scheduler que finalizó.
+  - Implementar log: `## PID: <PID> - <CONTENIDO A IMPRIMIR>`.
+
+- [ ] Implementar **IO tipo STDIN**:
+  - Recibir cantidad de bytes a leer.
+  - Leer del teclado (con `readline` o `fgets`).
+  - Si entrada > bytes solicitados → cortar. Si entrada < bytes → rellenar con `\0`.
+  - Enviar datos al Kernel Scheduler para que los escriba en memoria.
+  - Implementar log: `## PID: <PID> - Ingrese <N> caracteres:`.
+
+### Kernel Scheduler — Mutex sin herencia (10/05 – 23/05)
+> Trabaja en conjunto con Santiago, quien maneja la estructura de colas.
+
+- [ ] Implementar **MUTEX_CREATE**: crear estructura de mutex con nombre dado, estado libre/tomado, cola de espera.
+- [ ] Implementar **MUTEX_LOCK**: si el mutex está libre → tomarlo, loguear. Si está tomado → poner proceso en BLOCK esperando ese mutex.
+- [ ] Implementar **MUTEX_UNLOCK**: liberar el mutex, si hay procesos esperando → desbloquear el primero (política FIFO dentro de la cola de espera del mutex), loguear.
+- [ ] Implementar log: `## (<PID>) Toma el Mutex <NOMBRE>`.
+- [ ] Implementar log: `## (<PID>) Libera el Mutex <NOMBRE>`.
+
+---
+
+## Fase 3 — Check 3: CMN, Herencia de Prioridades y Compactación
+**Fecha límite:** 20/06/2026
+
+### Semana 1–2 (24/05 – 06/06)
+- [ ] Implementar algoritmo **CMN (Colas Multinivel)**:
+  - N colas (configuradas en `QUEUES_ALGORITHMS`), cada una con su propio algoritmo (FIFO o RR).
+  - Cada proceso tiene una prioridad que determina en qué cola se ubica (0 = mayor prioridad).
+  - Siempre se despacha de la cola no vacía de mayor prioridad.
+- [ ] Implementar log: `## (<PID>) Prioridad: <PRIORIDAD_DESALOJADO> - Desalojado por cola más prioritaria por el proceso <PID> con prioridad <PRIORIDAD_NUEVA>`.
+
+### Semana 3 (07/06 – 13/06)
+- [ ] Implementar **QUEUE_PREEMPTION**: si un proceso de mayor prioridad llega a READY y hay un proceso de menor prioridad ejecutándose → enviar interrupción a CPU para desalojarlo → el desalojado vuelve al inicio de su cola READY.
+- [ ] Implementar **herencia de prioridades en Mutex**:
+  - Si proceso de baja prioridad tiene un mutex tomado y un proceso de alta prioridad necesita ese mutex → proceso de baja prioridad hereda la prioridad del proceso bloqueado.
+  - Al liberar el mutex → restaurar la prioridad original.
+  - Implementar log: `## <PID> Cambio de prioridad: <ANTERIOR> - <NUEVA>`.
+
+### Semana 4 (14/06 – 20/06)
+- [ ] Implementar el manejo de **compactación** en Kernel Scheduler:
+  - Cuando Kernel Memory indica que no hay espacio contiguo y es necesario compactar → desalojar todos los procesos de las CPUs.
+  - Esperar a que todas las CPUs estuelvan el contexto.
+  - Notificar a Kernel Memory para que compacte.
+  - Una vez finalizada la compactación → reinsertar los procesos desalojados al **inicio** de su cola READY (caso excepcional).
+  - Implementar log: `## Inicio de compactación` y `## Fin de compactación`.
+
+---
+
+## Fase 4 — Integración y Entrega Final
+**Fecha límite:** 11/07/2026
+
+- [ ] Verificar todos los logs obligatorios de IO y Kernel Scheduler.
+- [ ] Testear planificación CMN con múltiples niveles de prioridad.
+- [ ] Testear herencia de prioridades en escenarios con varios mutex anidados.
+- [ ] Testear compactación completa de punta a punta.
+- [ ] Colaborar en la resolución de bugs de integración.
+
+---
+
+## Interfaces a acordar con otros integrantes
+
+| Con quién | Qué acordar |
+|---|---|
+| **Todos** | Definir y publicar el protocolo de comunicación completo en Utils antes de la Fase 1 |
+| **Santiago** | División dentro de Kernel Scheduler: Santiago → largo/mediano plazo, FIFO/RR; Nicolas → Mutex, CMN, herencia, compactación |
+| **Kevin** | Mensajes Scheduler↔CPU para despacho, interrupciones y respuestas a syscalls |
+| **Juan Manuel** | Mensajes de syscalls MEM_ALLOC/MEM_FREE desde CPU → Scheduler → KMemory |

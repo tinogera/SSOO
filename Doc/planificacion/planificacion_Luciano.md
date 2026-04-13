@@ -1,0 +1,105 @@
+# Planificación Individual — Luciano Lisachi
+
+## Módulos Asignados
+- **Principal:** Kernel Memory — Segmentación pura, algoritmos de asignación, hot-plug, compactación, suspensión/des-suspensión
+- **Secundario:** Swap — Implementación completa
+
+---
+
+## Fase 0 — Configuración del Entorno
+**Fecha límite:** 13/04/2026
+
+- [ ] Instalar `so-commons-library` y verificar compilación de `kernel_memory` y `swap`.
+- [ ] Leer y entender completamente la sección de Kernel Memory y Swap en la consigna: segmentación pura, gestión de huecos, hot-plug, compactación.
+- [ ] Coordinar con Nicolas el diseño del protocolo de mensajes KMemory↔Scheduler, KMemory↔CPU, KMemory↔Memory Sticks y KMemory↔Swap.
+
+---
+
+## Fase 1 — Check 1: Conexiones
+**Fecha límite:** 18/04/2026
+
+- [ ] Implementar el **servidor de sockets** en Kernel Memory:
+  - Conexión desde **Kernel Scheduler**.
+  - Conexiones dinámicas de **CPUs** (multihilo).
+  - Conexiones dinámicas de **Memory Sticks** (hot-plug).
+  - Conexión de **Swap**.
+- [ ] Implementar la **conexión de Swap** a Kernel Memory: enviar capacidad total al conectarse.
+- [ ] Logear las conexiones establecidas:
+  - `## Kernel Scheduler Conectado - FD del socket: <FD>`.
+  - `## CPU <ID CPU> Conectada`.
+  - `## Memory Stick de <TAMAÑO> bytes Conectada`.
+  - `## Conectado a Kernel Memory` (desde Swap).
+
+**Dependencias:** Coordinarse con Nicolas para usar el wrapper de sockets de Utils.
+
+---
+
+## Fase 2 — Check 2: Instrucciones y Contextos Mock
+**Fecha límite:** 23/05/2026
+
+### Semana 1–2 (19/04 – 02/05)
+- [ ] Implementar la **lectura de archivos de pseudocódigo**: dado el `SCRIPTS_BASEPATH` y el path del proceso, leer el archivo y retornar la línea correspondiente al PC recibido.
+- [ ] Aplicar el **INSTRUCTION_DELAY** antes de responder.
+- [ ] Implementar log: `## PID: <PID> - Obtener instrucción: <PC> - Instrucción: <INSTRUCCIÓN> <...ARGS>`.
+
+> Nota: Kevin también trabaja en esta parte desde el lado de Kernel Memory. Coordinarse para no duplicar trabajo.
+
+### Semana 3–5 (03/05 – 23/05)
+- [ ] Implementar la **creación de proceso** en Kernel Memory: recibir PID + path de instrucciones desde Scheduler, inicializar estructura de contexto con todos los registros en 0.
+- [ ] Implementar **guardar y restaurar contexto** (registros + tabla de segmentos) por PID (versión mock sin segmentación real por ahora).
+- [ ] Implementar log: `## PID: <PID> - Proceso Creado`.
+
+---
+
+## Fase 3 — Check 3: Segmentación Completa
+**Fecha límite:** 20/06/2026
+
+### Semana 1 (24/05 – 30/05)
+- [ ] Diseñar e implementar la **tabla de segmentos** por PID: cada entrada contiene ID de segmento, Memory Stick de destino, dirección base física, límite.
+- [ ] Implementar la estructura de **mapa de memoria libre**: lista de huecos (dirección de inicio, tamaño) por cada Memory Stick.
+
+### Semana 2 (31/05 – 06/06)
+- [ ] Implementar algoritmo **Best Fit**: al crear un segmento, seleccionar el hueco libre más pequeño que lo contenga.
+- [ ] Implementar algoritmo **Worst Fit**: al crear un segmento, seleccionar el hueco libre más grande disponible.
+- [ ] Implementar **creación de segmento** (MEM_ALLOC): recibir PID + ID segmento + tamaño, aplicar algoritmo de selección, actualizar tabla de segmentos y mapa de huecos.
+- [ ] Implementar **eliminación de segmento** (MEM_FREE): recibir PID + ID segmento, liberar espacio y actualizar tabla.
+- [ ] Implementar log: `## PID: <PID> - Segmento Creado <ID_SEGMENTO> - Tamaño: <TAMAÑO>`.
+
+### Semana 3 (07/06 – 13/06)
+- [ ] Implementar **lectura de datos**: recibir PID + dirección lógica + tamaño, traducir a dirección física usando tabla de segmentos, solicitar datos al Memory Stick correspondiente, retornar al solicitante.
+- [ ] Implementar **escritura de datos**: recibir PID + dirección lógica + tamaño + datos, traducir a física, enviar al Memory Stick.
+- [ ] Manejar casos donde la operación abarca múltiples Memory Sticks (dividir y consolidar).
+- [ ] Implementar log: `## PID: <PID> - <Escritura/Lectura> - Dir. Física: <DIRECCIÓN_FÍSICA> - Tamaño: <TAMAÑO>`.
+
+### Semana 4 (14/06 – 20/06)
+- [ ] Implementar **hot-plug de Memory Sticks**: al conectarse un nuevo stick, agregar su espacio al mapa de memoria libre, notificar al Kernel Scheduler que hay más memoria disponible.
+- [ ] Implementar **compactación**: desplazar segmentos para eliminar fragmentación, actualizar tabla de segmentos de todos los PIDs afectados, aplicar `COMPACTION_DELAY`.
+- [ ] Implementar **suspensión de proceso**: para cada segmento del PID, solicitar bloques libres a Swap, copiar datos al Swap, liberar espacio en Memory Sticks.
+- [ ] Implementar **des-suspensión de proceso**: recuperar segmentos desde Swap, reasignar espacio en Memory Sticks, restaurar tabla de segmentos del PID.
+
+### Swap — Semana 3–4 (07/06 – 20/06)
+- [ ] Implementar el **servidor de Swap**: crear/abrir archivo binario del tamaño configurado (`SWAP_FILE_SIZE`).
+- [ ] Implementar **escritura de bloque**: recibir número de bloque + contenido (tamaño = `BLOCK_SIZE`) → escribir en posición `numero_bloque * BLOCK_SIZE` → confirmar.
+- [ ] Implementar **lectura de bloque**: recibir número de bloque → leer `BLOCK_SIZE` bytes → retornar.
+- [ ] Implementar logs: `## Conectado a Kernel Memory`, `## Escritura del bloque: <N>`, `## Lectura del bloque: <N>`.
+
+---
+
+## Fase 4 — Integración y Entrega Final
+**Fecha límite:** 11/07/2026
+
+- [ ] Integrar Kernel Memory con Memory Sticks y Swap reales.
+- [ ] Testear compactación con múltiples procesos y Memory Sticks.
+- [ ] Testear suspensión/des-suspensión con procesos reales.
+- [ ] Verificar todos los logs obligatorios de Kernel Memory y Swap.
+- [ ] Colaborar en la resolución de bugs de integración.
+
+---
+
+## Interfaces a acordar con otros integrantes
+
+| Con quién | Qué acordar |
+|---|---|
+| **Kevin** | Formato de mensajes KMemory↔CPU: fetch de instrucción, guardar/restaurar contexto |
+| **Juan Manuel** | Protocolo KMemory↔CPU para lectura/escritura de datos (traducción lógica→física), protocolo KMemory↔Memory Stick |
+| **Santiago** | Protocolo KMemory↔Scheduler: creación proceso, notificación hot-plug, notificación compactación, BSOD |
