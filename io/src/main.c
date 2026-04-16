@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <commons/log.h>
 #include <commons/config.h>
+
+#include <utils/sockets.h>
+#include <utils/protocolo.h>
 
 #include "io_utils.h"
 
@@ -52,8 +56,44 @@ int main(int argc, char* argv[]) {
 
     log_info(logger, "Configuración cargada desde %s", config_path);
 
-    // TODO: conectar al Kernel Scheduler
+    // -------------------------------------------------------------------
+    // 4. Conectarse al Kernel Scheduler
+    // -------------------------------------------------------------------
+    char* ks_ip = config_get_string_value(config, "KERNEL_SCHEDULER_IP");
+    if (ks_ip == NULL) {
+        log_error(logger, "Falta KERNEL_SCHEDULER_IP en el archivo de configuración");
+        config_destroy(config);
+        log_destroy(logger);
+        return EXIT_FAILURE;
+    }
 
+    int ks_port = config_get_int_value(config, "KERNEL_SCHEDULER_PORT");
+
+    int fd_scheduler = conectar_a_servidor(ks_ip, ks_port);
+    if (fd_scheduler < 0) {
+        log_error(logger, "No se pudo conectar al Kernel Scheduler en %s:%d", ks_ip, ks_port);
+        config_destroy(config);
+        log_destroy(logger);
+        return EXIT_FAILURE;
+    }
+
+    // -------------------------------------------------------------------
+    // 5. Identificarse con el tipo de IO
+    // -------------------------------------------------------------------
+    uint32_t payload_size;
+    void* payload = serializar_string(tipo, &payload_size);
+    enviar_mensaje(fd_scheduler, MSG_IO_IDENTIFICACION, payload, payload_size);
+    free(payload);
+
+    // Log obligatorio de la consigna
+    log_info(logger, "## Conectado a Kernel Scheduler");
+
+    // -------------------------------------------------------------------
+    // 6. Loop principal — Check 2
+    // -------------------------------------------------------------------
+    // TODO Check 2: implementar bucle de recepción de pedidos IO
+
+    close(fd_scheduler);
     config_destroy(config);
     log_destroy(logger);
     return EXIT_SUCCESS;
