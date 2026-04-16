@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  test-utils:
+    name: Build y tests de utils
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar dependencias del sistema
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y build-essential libreadline-dev
+
+      - name: Instalar so-commons-library
+        run: |
+          git clone https://github.com/sisoputnfrba/so-commons-library.git
+          cd so-commons-library
+          sudo make install
+
+      - name: Instalar cspecs
+        run: |
+          git clone https://github.com/sisoputnfrba/cspecs.git
+          cd cspecs
+          sudo make install
+
+      - name: Compilar utils
+        run: cd utils && make
+
+      - name: Compilar y ejecutar tests
+        run: |
+          cd utils
+          make test
+          ./bin/utils_tests
