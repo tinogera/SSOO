@@ -42,5 +42,6 @@ jobs:
       - name: Compilar y ejecutar tests
         run: |
           cd utils
+          mkdir -p bin
           make test
           ./bin/utils_tests
