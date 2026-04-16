@@ -22,13 +22,13 @@ jobs:
 
       - name: Instalar so-commons-library
         run: |
-          git clone https://github.com/sisoputnfrba/so-commons-library.git
+          git clone https://x-access-token:${{ github.token }}@github.com/sisoputnfrba/so-commons-library.git
           cd so-commons-library
           sudo make install
 
       - name: Instalar cspecs
         run: |
-          git clone https://github.com/sisoputnfrba/cspecs.git
+          git clone https://x-access-token:${{ github.token }}@github.com/sisoputnfrba/cspecs.git
           cd cspecs
           sudo make install
 
