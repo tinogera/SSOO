@@ -3,6 +3,12 @@ borrador_*.md
 resumen_nicolas.md
 instalacion.md
 
+# Archivos de configuración local (no commitear, cada uno tiene el suyo)
+*.config
+
+# Binarios compilados
+bin/
+
 # Eclipse files
 .metadata/
 
