@@ -68,7 +68,7 @@ Todos los mensajes entre módulos siguen este formato en el socket:
 ### Crear un servidor (escuchar conexiones entrantes)
 
 ```c
-int fd_servidor = crear_servidor(8001);
+int fd_servidor = crear_servidor(37214);
 if (fd_servidor < 0) {
     // error — ver perror en stderr
 }
@@ -87,7 +87,7 @@ Bloquea hasta que alguien se conecte. Retorna el fd del cliente. Llamar una vez 
 ### Conectarse a otro módulo
 
 ```c
-int fd = conectar_a_servidor("127.0.0.1", 8001);
+int fd = conectar_a_servidor("127.0.0.1", 37214);
 if (fd < 0) {
     // error — el servidor no está arriba todavía
 }
@@ -151,7 +151,7 @@ free(str);
 #include <utils/sockets.h>
 #include <utils/protocolo.h>
 
-int fd_servidor = crear_servidor(8001);
+int fd_servidor = crear_servidor(37214);
 
 // Aceptar una conexión
 int fd_cliente = aceptar_conexion(fd_servidor);
@@ -172,7 +172,7 @@ free_mensaje(msg);
 #include <utils/sockets.h>
 #include <utils/protocolo.h>
 
-int fd = conectar_a_servidor("127.0.0.1", 8001);
+int fd = conectar_a_servidor("127.0.0.1", 37214);
 
 // Enviar identificación
 uint32_t size;
