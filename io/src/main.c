@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include <commons/log.h>
 #include <commons/config.h>
+
+#include "io_utils.h"
 
 t_log* logger;
 
@@ -20,9 +21,7 @@ int main(int argc, char* argv[]) {
     char* config_path = argv[1];
     char* tipo        = argv[2];
 
-    if (strcmp(tipo, "STDIN")  != 0 &&
-        strcmp(tipo, "STDOUT") != 0 &&
-        strcmp(tipo, "SLEEP")  != 0) {
+    if (!es_tipo_valido(tipo)) {
         fprintf(stderr, "Tipo inválido: %s. Debe ser STDIN, STDOUT o SLEEP\n", tipo);
         return EXIT_FAILURE;
     }
