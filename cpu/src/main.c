@@ -9,23 +9,31 @@
 #include <string.h>
 
 int crear_conexion(char* ip, char* puerto) {
-    struct addrinfo hints, *servinfo;
+    struct addrinfo hints, *servinfo, *p;
+    int socket_cliente;
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
-    getaddrinfo(ip, puerto, &hints, &servinfo);
+    if (getaddrinfo(ip, puerto, &hints, &servinfo) != 0) {
+        return -1;
+    }
 
-    int socket_cliente = socket(servinfo->ai_family,
-                                servinfo->ai_socktype,
-                                servinfo->ai_protocol);
+    for (p = servinfo; p != NULL; p = p->ai_next) {
+        socket_cliente = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+        if (socket_cliente == -1) continue;
 
-    connect(socket_cliente, servinfo->ai_addr, servinfo->ai_addrlen);
+        if (connect(socket_cliente, p->ai_addr, p->ai_addrlen) == 0) {
+            freeaddrinfo(servinfo);
+            return socket_cliente;
+        }
+
+        close(socket_cliente);
+    }
 
     freeaddrinfo(servinfo);
-
-    return socket_cliente;
+    return -1;
 }
 
 int main(int argc, char* argv[]) {
@@ -52,11 +60,19 @@ int main(int argc, char* argv[]) {
 
     //  CONECTAR A KERNEL SCHEDULER
     int socket_kernel = crear_conexion(ip_kernel, puerto_kernel);
+if (socket_kernel == -1) {
+    log_error(logger, "No se pudo conectar a Kernel Scheduler");
+} else {
     log_info(logger, "Conectado a Kernel Scheduler");
+}
 
     //  CONECTAR A KERNEL MEMORY
-    int socket_memory = crear_conexion(ip_memory, puerto_memory);
+   int socket_memory = crear_conexion(ip_memory, puerto_memory);
+if (socket_memory == -1) {
+    log_error(logger, "No se pudo conectar a Kernel Memory");
+} else {
     log_info(logger, "Conectado a Kernel Memory");
+}
 
     // mantener vivo
     while(1);
