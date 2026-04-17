@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     
     //VARIABLES GLOBALES
     int puerto, id, delay, kernel_port;
-    char* ip,kernel_ip;
+    char* ip = NULL ,*kernel_ip = NULL;
 
     // -------------------------------------------------------------------
     // 1. Validar argumentos
@@ -82,11 +82,8 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // -------------------------------------------------------------------
-    // 5. Conectarse a Kernel Memory
-    // -------------------------------------------------------------------
-
     int fd = conectar_a_servidor(kernel_ip, kernel_port);
+    log_info(logger, "Kernel IP: %s", kernel_ip);
     if (fd < 0) {
         log_error(logger, "Kernel Memory no esta levantado o los datos son incorrectos\n");
     }
@@ -95,24 +92,24 @@ int main(int argc, char* argv[]) {
     // 6. Envio de datos propios a kernel memory 
     //    FORMATO: "MEMORYSTICK IP, MEMORYSTICK PORT"
     // -------------------------------------------------------------------
-    char* msdatos;
+    char msdatos[100];
     snprintf(msdatos, sizeof(msdatos), "%s", ip);
-    snprintf(msdatos, sizeof(msdatos), ", %s", puerto);
+    snprintf(msdatos, sizeof(msdatos), ", %d", puerto);
     uint32_t size;
     void* payload = serializar_string(msdatos, &size);
     enviar_mensaje(fd, MSG_IO_IDENTIFICACION, payload, size);
     free(payload);
 
     // -------------------------------------------------------------------
-    // 7. Creo servidor y se qued a la espera de una CPU
+    // 7. Creo servidor y se queda la espera de una CPU
     // -------------------------------------------------------------------
     int fd_servidor = crear_servidor(puerto);
     if (fd_servidor < 0) {
         log_error(logger, "Error levantando servidor\n");
     }
-    log_info(logger, "Se levanto servidor para esperar un CPU, puerto: %s\n", puerto);
+    log_info(logger, "Se levanto servidor para esperar un CPU, puerto: %i\n", puerto);
     int fd_cliente = aceptar_conexion(fd_servidor);
-    log_info(logger, "## CPU <%s> Conectada\n", fd_cliente);
+    log_info(logger, "## CPU <%i> Conectada\n", fd_cliente);
 
     
 
