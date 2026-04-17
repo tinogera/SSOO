@@ -48,6 +48,13 @@ typedef enum {
     // -----------------------------------------------------------------
     MSG_IO_IDENTIFICACION,    // IO se presenta al Kernel Scheduler con su tipo
 
+    MSG_CPU_IDENTIFICACION,   // CPU se presenta al Kernel Scheduler
+    
+    MSG_KS_IDENTIFICACION,    // Kernel Scheduler se presenta al Kernel Memory
+    
+    MSG_OK,                   // respuesta exitosa
+    
+    MSG_ERROR,
     // -----------------------------------------------------------------
     // AGREGAR ACÁ los nuevos mensajes del Check 1
     // (cada módulo agrega los suyos en esta zona antes de MSG_CANTIDAD)
