@@ -101,8 +101,6 @@ void* handshake_kernel_memory(void* arg) {
     return NULL;
 }
 
-// ---------------- THREAD CLIENTES ----------------
-
 void* atender_cliente(void* arg){
     int fd_cliente = *((int*)arg);
     free(arg);
