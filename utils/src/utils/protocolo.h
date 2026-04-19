@@ -53,13 +53,11 @@ typedef enum {
     MSG_KS_IDENTIFICACION,    // Kernel Scheduler se presenta al Kernel Memory
     
     MSG_OK,                   // respuesta exitosa
-    
-    MSG_ERROR,
-    // -----------------------------------------------------------------
-    // AGREGAR ACÁ los nuevos mensajes del Check 1
-    // (cada módulo agrega los suyos en esta zona antes de MSG_CANTIDAD)
-    // -----------------------------------------------------------------
 
+    MSG_ERROR,
+
+    MSG_MEMORY_STICK_IDENTIFICACION,  // Memory Stick → Kernel Memory
+    MSG_SWAP_IDENTIFICACION,          // Swap → Kernel Memory
 
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
