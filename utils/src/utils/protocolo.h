@@ -59,6 +59,9 @@ typedef enum {
     MSG_MEMORY_STICK_IDENTIFICACION,  // Memory Stick → Kernel Memory
     MSG_SWAP_IDENTIFICACION,          // Swap → Kernel Memory
 
+    // Check 2
+    MSG_INIT_PROC,
+
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
 } op_code;
