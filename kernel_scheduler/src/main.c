@@ -3,13 +3,36 @@
 #include <string.h>
 #include <pthread.h>
 #include <commons/log.h>
+#include <commons/collections/queue.h>
 #include <commons/config.h>
 #include <utils/sockets.h>
 #include <utils/protocolo.h>
+#include <proceso.h>
+
 t_log* logger;
+
+t_queue *cola_new;
+t_queue *cola_ready;
+t_queue *cola_exec;
+t_queue *cola_block;
+t_queue *cola_susp_block;
+t_queue *cola_susp_ready;
+t_queue *cola_exit;
+
+
+pthread_mutex_t mutex_new;
+pthread_mutex_t mutex_ready;
+pthread_mutex_t mutex_exec;
+pthread_mutex_t mutex_block;
+pthread_mutex_t mutex_susp_block;
+pthread_mutex_t mutex_susp_ready;
+pthread_mutex_t mutex_exit;
+
 
 void* atender_cliente(void* arg);
 void* handshake_kernel_memory(void* arg);
+t_proceso* crear_proceso(char* instrucc);
+
 
 int main(int argc, char* argv[]) {
     if (argc < 4)
@@ -32,7 +55,6 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // conectar a Kernel Memory
     int fd_km = conectar_a_servidor(ip_km, puerto_km_int);
     if (fd_km == -1) {
         log_error(logger, "No se pudo conectar a Kernel Memory");
@@ -48,13 +70,31 @@ int main(int argc, char* argv[]) {
     pthread_create(&thread_km, NULL, handshake_kernel_memory, fd_km_mem);
     pthread_detach(thread_km);
 
-    // crear servidor para CPUs / IO
-    int fd_servidor = crear_servidor(puerto_escucha_int);
+    int fd_servidor = crear_servidor(puerto_escucha_int); //sv modo escucha
     
     if (fd_servidor < 0) {
         log_error(logger, "Error al crear servidor");
         return EXIT_FAILURE;
     }
+
+    // inicializar colas
+    cola_new = queue_create();
+    cola_ready = queue_create();
+    cola_exec = queue_create();
+    cola_block = queue_create();
+    cola_susp_block = queue_create();
+    cola_susp_ready = queue_create();
+    cola_exit = queue_create();
+    
+
+    // inicializar mutexes
+    pthread_mutex_init(&mutex_new, NULL);
+    pthread_mutex_init(&mutex_ready, NULL);
+    pthread_mutex_init(&mutex_exec, NULL);
+    pthread_mutex_init(&mutex_block, NULL);
+    pthread_mutex_init(&mutex_susp_block, NULL);
+    pthread_mutex_init(&mutex_susp_ready, NULL);
+    pthread_mutex_init(&mutex_exit, NULL);
 
     // aceptar conexiones concurrentes
     while(1){
@@ -65,13 +105,13 @@ int main(int argc, char* argv[]) {
         *fd_cliente_mem = fd_cliente;
 
         pthread_create(&hilo, NULL, atender_cliente, fd_cliente_mem);
+        
+        
         pthread_detach(hilo);
     }
 
     return 0;
 }
-
-// ---------------- THREAD HANDSHAKE KM ----------------
 
 void* handshake_kernel_memory(void* arg) {
     int fd_km = *((int*)arg);
@@ -93,6 +133,7 @@ void* handshake_kernel_memory(void* arg) {
         free_mensaje(msg);
         return NULL;
     }
+    
 
     free_mensaje(msg);
 
@@ -105,7 +146,6 @@ void* atender_cliente(void* arg){
     int fd_cliente = *((int*)arg);
     free(arg);
     
-    // recibir handshake
     t_mensaje* msg = recibir_mensaje(fd_cliente);
     if(msg == NULL) return NULL;
     
@@ -120,7 +160,8 @@ void* atender_cliente(void* arg){
         log_info(logger, "## IO %s Conectada", tipo);
         free(tipo); 
     }
-    
+
+
     free_mensaje(msg);
     return NULL;
 }
