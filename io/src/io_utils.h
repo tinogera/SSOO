@@ -1,9 +1,12 @@
 #ifndef IO_UTILS_H_
 #define IO_UTILS_H_
 
-/**
- * Retorna 1 si el tipo es válido (STDIN, STDOUT o SLEEP), 0 si no.
- */
-int es_tipo_valido(const char* tipo);
+#include <commons/log.h>
+#include <utils/sockets.h>
+#include <utils/protocolo.h>
+
+int  es_tipo_valido(const char* tipo);
+
+void manejar_sleep(t_mensaje* msg, int fd_scheduler, t_log* logger);
 
 #endif

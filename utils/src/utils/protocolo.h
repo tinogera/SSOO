@@ -58,4 +58,28 @@ typedef enum {
     MSG_CANTIDAD
 } op_code;
 
+// ---------------------------------------------------------------------------
+// Structs de payload — Check 2
+// __attribute__((packed)) elimina el padding del compilador para que el layout
+// en memoria sea exactamente el que se envía por el socket.
+// ---------------------------------------------------------------------------
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t tiempo_ms;
+} t_payload_io_sleep;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t n_bytes;
+} t_payload_io_stdin;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+} t_payload_io_fin;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    char     nombre[]; // flexible array — el nombre del mutex sigue inmediatamente
+} t_payload_mutex;
+
 #endif
