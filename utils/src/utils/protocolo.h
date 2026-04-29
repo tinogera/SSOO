@@ -58,6 +58,7 @@ typedef enum {
 
     MSG_MEMORY_STICK_IDENTIFICACION,  // Memory Stick → Kernel Memory
     MSG_SWAP_IDENTIFICACION,          // Swap → Kernel Memory
+    MSG_CPU_A_KERNEL_MEMORY,          // CPU se presenta a Kernel Memory
 
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
