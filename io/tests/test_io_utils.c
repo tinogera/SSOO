@@ -59,7 +59,7 @@ context (io_utils) {
         it ("envía MSG_IO_FIN con el PID correcto al terminar") {
             int fds[2];
             socketpair(AF_UNIX, SOCK_STREAM, 0, fds);
-            t_log* log = log_create("/dev/null", "test", false, LOG_LEVEL_ERROR);
+            t_log* log = log_create("/tmp/io_test.log", "test", false, LOG_LEVEL_ERROR);
 
             manejar_sleep(crear_msg_sleep(99, 1), fds[1], log);
 
@@ -78,7 +78,7 @@ context (io_utils) {
         it ("no confunde el PID cuando se llama dos veces seguidas") {
             int fds[2];
             socketpair(AF_UNIX, SOCK_STREAM, 0, fds);
-            t_log* log = log_create("/dev/null", "test", false, LOG_LEVEL_ERROR);
+            t_log* log = log_create("/tmp/io_test.log", "test", false, LOG_LEVEL_ERROR);
 
             manejar_sleep(crear_msg_sleep(1, 1), fds[1], log);
             manejar_sleep(crear_msg_sleep(2, 1), fds[1], log);
@@ -97,7 +97,7 @@ context (io_utils) {
         it ("duerme al menos el tiempo solicitado") {
             int fds[2];
             socketpair(AF_UNIX, SOCK_STREAM, 0, fds);
-            t_log* log = log_create("/dev/null", "test", false, LOG_LEVEL_ERROR);
+            t_log* log = log_create("/tmp/io_test.log", "test", false, LOG_LEVEL_ERROR);
 
             struct timespec inicio, fin_ts;
             clock_gettime(CLOCK_MONOTONIC, &inicio);
