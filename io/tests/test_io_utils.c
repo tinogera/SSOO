@@ -35,16 +35,16 @@ context (io_utils) {
         } end
 
         it ("rechaza un tipo desconocido") {
-            should_bool(es_tipo_valido("FOO")) be falsy;
+            should_bool(es_tipo_valido("FOO")) not be truthy;
         } end
 
         it ("rechaza string vacío") {
-            should_bool(es_tipo_valido("")) be falsy;
+            should_bool(es_tipo_valido("")) not be truthy;
         } end
 
         it ("distingue mayúsculas y minúsculas") {
-            should_bool(es_tipo_valido("sleep")) be falsy;
-            should_bool(es_tipo_valido("Sleep")) be falsy;
+            should_bool(es_tipo_valido("sleep")) not be truthy;
+            should_bool(es_tipo_valido("Sleep")) not be truthy;
         } end
 
     } end
