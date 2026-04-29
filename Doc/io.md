@@ -2,7 +2,7 @@
 
 **Módulo:** `io/`
 **Responsable:** Nicolas
-**Estado:** Check 1 — conexión al Kernel Scheduler implementada
+**Estado:** Check 2 en curso — SLEEP implementado, STDOUT/STDIN pendientes
 
 ---
 
@@ -68,7 +68,7 @@ cd io && make
 
 ---
 
-## Qué hace al arrancar (Check 1)
+## Qué hace al arrancar
 
 1. Valida los argumentos (`[Config]` y `[Tipo]`)
 2. Crea el logger — genera `io_SLEEP.log`, `io_STDIN.log` o `io_STDOUT.log` según el tipo
@@ -76,6 +76,48 @@ cd io && make
 4. Se conecta al Kernel Scheduler por TCP
 5. Se identifica enviando su tipo con `MSG_IO_IDENTIFICACION`
 6. Imprime el log obligatorio: `## Conectado a Kernel Scheduler`
+7. Entra en el loop de atención — espera pedidos del Kernel Scheduler
+
+---
+
+## Comportamiento por tipo (Check 2)
+
+### SLEEP
+
+Recibe `MSG_IO_SLEEP` con `{ pid, tiempo_ms }`, espera el tiempo indicado y notifica al KS con `MSG_IO_FIN`.
+
+```
+Flujo: KS → MSG_IO_SLEEP → IO → usleep(tiempo_ms * 1000) → MSG_IO_FIN → KS
+```
+
+Logs obligatorios:
+```
+## PID: <PID> - Inicio de IO
+## PID: <PID> - Haciendo sleep por <TIEMPO> milisegundos
+## PID: <PID> - Fin de IO
+```
+
+### STDOUT (pendiente — issue #24)
+
+Recibe `MSG_IO_STDOUT` con `{ pid, contenido[] }`, imprime el contenido por pantalla y notifica al KS.
+
+Logs obligatorios:
+```
+## PID: <PID> - Inicio de IO
+## PID: <PID> - <CONTENIDO A IMPRIMIR>
+## PID: <PID> - Fin de IO
+```
+
+### STDIN (pendiente — issue #25)
+
+Recibe `MSG_IO_STDIN` con `{ pid, n_bytes }`, lee del teclado, trunca o rellena con `\0` según la longitud, y envía los datos al KS con `MSG_IO_STDIN_DATOS`.
+
+Logs obligatorios:
+```
+## PID: <PID> - Inicio de IO
+## PID: <PID> - Ingrese <N> caracteres:
+## PID: <PID> - Fin de IO
+```
 
 ---
 
@@ -89,9 +131,14 @@ io_STDIN.log
 io_STDOUT.log
 ```
 
-**Log obligatorio de la consigna** (debe aparecer exactamente así):
+**Logs obligatorios de la consigna** (deben aparecer exactamente así):
 ```
 ## Conectado a Kernel Scheduler
+## PID: <PID> - Inicio de IO
+## PID: <PID> - Haciendo sleep por <TIEMPO> milisegundos
+## PID: <PID> - Fin de IO
+## PID: <PID> - <CONTENIDO A IMPRIMIR>      (STDOUT)
+## PID: <PID> - Ingrese <N> caracteres:     (STDIN)
 ```
 
 ---
@@ -119,22 +166,31 @@ En la Terminal 1 van a llegar bytes — el mensaje de identificación serializad
 
 ---
 
-## Protocolo: mensaje de identificación
+## Protocolo: mensajes
 
-Al conectarse, IO envía un mensaje con:
+Ver `utils/src/utils/protocolo.h` para los valores numéricos de cada op_code. Todos los mensajes usan el formato:
 
-| Campo | Valor |
-|---|---|
-| `op_code` | `MSG_IO_IDENTIFICACION` |
-| `payload` | El tipo como string (`"STDIN"`, `"STDOUT"` o `"SLEEP"`) |
+```
+[ op_code (4B) | payload_size (4B) | payload (variable) ]
+```
 
-El Kernel Scheduler recibe este mensaje y sabe qué tipo de IO se conectó. Ver `utils/src/utils/protocolo.h` para los códigos de operación.
+| Mensaje | Dirección | Payload |
+|---|---|---|
+| `MSG_IO_IDENTIFICACION` | IO → KS | string tipo (`"SLEEP"`, `"STDOUT"`, `"STDIN"`) |
+| `MSG_IO_SLEEP` | KS → IO | `{ uint32_t pid, uint32_t tiempo_ms }` |
+| `MSG_IO_STDOUT` | KS → IO | `{ uint32_t pid, char contenido[] }` |
+| `MSG_IO_STDIN` | KS → IO | `{ uint32_t pid, uint32_t n_bytes }` |
+| `MSG_IO_FIN` | IO → KS | `{ uint32_t pid }` |
+| `MSG_IO_STDIN_DATOS` | IO → KS | `{ uint32_t pid, uint32_t n_bytes, uint8_t datos[] }` |
 
 ---
 
-## Actualizaciones previstas
+## Estado de implementación
 
-| Check | Qué se va a agregar |
+| Funcionalidad | Estado |
 |---|---|
-| Check 2 | Loop de recepción de pedidos, implementación de SLEEP/STDIN/STDOUT |
-| Check 3 | Sin cambios previstos en IO |
+| Conexión al KS e identificación | ✅ Check 1 |
+| Loop de atención en `main.c` | ✅ Check 2 |
+| IO tipo SLEEP | ✅ Check 2 (issue #23) |
+| IO tipo STDOUT | ⬜ Pendiente (issue #24) |
+| IO tipo STDIN | ⬜ Pendiente (issue #25) |
