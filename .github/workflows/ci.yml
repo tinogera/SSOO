@@ -45,3 +45,42 @@ jobs:
           mkdir -p bin
           make test
           ./bin/utils_tests
+
+  test-io:
+    name: Build y tests de IO
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar dependencias del sistema
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y build-essential libreadline-dev
+
+      - name: Instalar so-commons-library
+        run: |
+          git clone https://x-access-token:${{ github.token }}@github.com/sisoputnfrba/so-commons-library.git
+          cd so-commons-library
+          sudo make install
+
+      - name: Instalar cspecs
+        run: |
+          mkdir -p /tmp/cspec
+          curl -fsSL "https://github.com/mumuki/cspec/archive/043089d9c55871526f1d6728af4d0febdbe8c38a.tar.gz" \
+            | tar -xzC /tmp/cspec --strip-components=1
+          cd /tmp/cspec && make
+          sudo cp release/libcspecs.so /usr/lib/libcspecs.so
+          sudo mkdir -p /usr/include/cspecs
+          sudo cp cspecs/cspec.h /usr/include/cspecs/cspec.h
+
+      - name: Compilar utils
+        run: cd utils && make
+
+      - name: Compilar y ejecutar tests de IO
+        run: |
+          cd io
+          mkdir -p bin
+          make test
+          ./bin/io_tests
