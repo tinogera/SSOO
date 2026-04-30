@@ -19,6 +19,19 @@ static t_mensaje* crear_msg_sleep(uint32_t pid, uint32_t tiempo_ms) {
     return msg;
 }
 
+// Crea un t_mensaje de MSG_IO_STDIN listo para pasar a manejar_stdin.
+// manejar_stdin llama free_mensaje internamente, así que no liberar después.
+static t_mensaje* crear_msg_stdin(uint32_t pid, uint32_t n_bytes) {
+    t_mensaje* msg        = malloc(sizeof(t_mensaje));
+    t_payload_io_stdin* p = malloc(sizeof(t_payload_io_stdin));
+    p->pid     = pid;
+    p->n_bytes = n_bytes;
+    msg->op_code      = MSG_IO_STDIN;
+    msg->payload_size = sizeof(t_payload_io_stdin);
+    msg->payload      = p;
+    return msg;
+}
+
 // Crea un t_mensaje de MSG_IO_STDOUT con pid y contenido dados.
 // payload = { uint32_t pid | char contenido[len] } — sin '\0' final,
 // igual que lo enviaría el KS real (manejar_stdout lo agrega internamente).
@@ -188,6 +201,109 @@ context (io_utils) {
             free_mensaje(fin);
             log_destroy(log);
             close(fds[0]); close(fds[1]);
+        } end
+
+    } end
+
+    describe ("manejar_stdin") {
+
+        // Para simular la entrada del teclado se redirige stdin al extremo de
+        // lectura de un pipe. Se escribe la entrada en el extremo de escritura,
+        // se cierra ese extremo para que fgets reciba EOF al agotar los bytes,
+        // y al terminar el test se restaura stdin al file descriptor original.
+
+        it ("envía MSG_IO_STDIN_DATOS con el PID y n_bytes correctos") {
+            int fds_ks[2], pipe_stdin[2];
+            socketpair(AF_UNIX, SOCK_STREAM, 0, fds_ks);
+            pipe(pipe_stdin);
+            t_log* log = log_create("/tmp/io_test.log", "test", false, LOG_LEVEL_ERROR);
+
+            write(pipe_stdin[1], "hola\n", 5);
+            close(pipe_stdin[1]);
+
+            int stdin_orig = dup(STDIN_FILENO);
+            dup2(pipe_stdin[0], STDIN_FILENO);
+            close(pipe_stdin[0]);
+
+            manejar_stdin(crear_msg_stdin(55, 4), fds_ks[1], log);
+
+            dup2(stdin_orig, STDIN_FILENO);
+            close(stdin_orig);
+
+            t_mensaje* respuesta = recibir_mensaje(fds_ks[0]);
+            should_ptr(respuesta) not be null;
+            should_int(respuesta->op_code) be equal to(MSG_IO_STDIN_DATOS);
+
+            uint32_t pid_recv, n_recv;
+            memcpy(&pid_recv, respuesta->payload, sizeof(uint32_t));
+            memcpy(&n_recv, (char*)respuesta->payload + sizeof(uint32_t), sizeof(uint32_t));
+            should_int(pid_recv) be equal to(55);
+            should_int(n_recv)   be equal to(4);
+
+            free_mensaje(respuesta);
+            log_destroy(log);
+            close(fds_ks[0]); close(fds_ks[1]);
+        } end
+
+        it ("trunca la entrada si el usuario escribe más de n_bytes") {
+            int fds_ks[2], pipe_stdin[2];
+            socketpair(AF_UNIX, SOCK_STREAM, 0, fds_ks);
+            pipe(pipe_stdin);
+            t_log* log = log_create("/tmp/io_test.log", "test", false, LOG_LEVEL_ERROR);
+
+            write(pipe_stdin[1], "abcdefgh\n", 9);
+            close(pipe_stdin[1]);
+
+            int stdin_orig = dup(STDIN_FILENO);
+            dup2(pipe_stdin[0], STDIN_FILENO);
+            close(pipe_stdin[0]);
+
+            manejar_stdin(crear_msg_stdin(1, 4), fds_ks[1], log);
+
+            dup2(stdin_orig, STDIN_FILENO);
+            close(stdin_orig);
+
+            t_mensaje* respuesta = recibir_mensaje(fds_ks[0]);
+            char* datos = (char*)respuesta->payload + sizeof(uint32_t) + sizeof(uint32_t);
+            should_int(datos[0]) be equal to('a');
+            should_int(datos[1]) be equal to('b');
+            should_int(datos[2]) be equal to('c');
+            should_int(datos[3]) be equal to('d');
+
+            free_mensaje(respuesta);
+            log_destroy(log);
+            close(fds_ks[0]); close(fds_ks[1]);
+        } end
+
+        it ("rellena con ceros si el usuario escribe menos de n_bytes") {
+            int fds_ks[2], pipe_stdin[2];
+            socketpair(AF_UNIX, SOCK_STREAM, 0, fds_ks);
+            pipe(pipe_stdin);
+            t_log* log = log_create("/tmp/io_test.log", "test", false, LOG_LEVEL_ERROR);
+
+            write(pipe_stdin[1], "ab\n", 3);
+            close(pipe_stdin[1]);
+
+            int stdin_orig = dup(STDIN_FILENO);
+            dup2(pipe_stdin[0], STDIN_FILENO);
+            close(pipe_stdin[0]);
+
+            manejar_stdin(crear_msg_stdin(2, 5), fds_ks[1], log);
+
+            dup2(stdin_orig, STDIN_FILENO);
+            close(stdin_orig);
+
+            t_mensaje* respuesta = recibir_mensaje(fds_ks[0]);
+            char* datos = (char*)respuesta->payload + sizeof(uint32_t) + sizeof(uint32_t);
+            should_int(datos[0]) be equal to('a');
+            should_int(datos[1]) be equal to('b');
+            should_int(datos[2]) be equal to(0);
+            should_int(datos[3]) be equal to(0);
+            should_int(datos[4]) be equal to(0);
+
+            free_mensaje(respuesta);
+            log_destroy(log);
+            close(fds_ks[0]); close(fds_ks[1]);
         } end
 
     } end

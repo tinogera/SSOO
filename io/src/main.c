@@ -105,7 +105,9 @@ int main(int argc, char* argv[]) {
             case MSG_IO_STDOUT:
                 manejar_stdout(msg, fd_scheduler, logger);
                 break;
-            // MSG_IO_STDIN  — issue #25
+            case MSG_IO_STDIN:
+                manejar_stdin(msg, fd_scheduler, logger);
+                break;
             default:
                 log_warning(logger, "Mensaje inesperado: op_code=%u", msg->op_code);
                 free_mensaje(msg);

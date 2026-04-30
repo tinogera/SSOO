@@ -1,4 +1,5 @@
 #include "io_utils.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -24,6 +25,35 @@ void manejar_sleep(t_mensaje* msg, int fd_scheduler, t_log* logger) {
 
     t_payload_io_fin fin = { .pid = pid };
     enviar_mensaje(fd_scheduler, MSG_IO_FIN, &fin, sizeof(fin));
+}
+
+void manejar_stdin(t_mensaje* msg, int fd_scheduler, t_log* logger) {
+    t_payload_io_stdin* p = (t_payload_io_stdin*) msg->payload;
+    uint32_t pid     = p->pid;
+    uint32_t n_bytes = p->n_bytes;
+    free_mensaje(msg);
+
+    log_info(logger, "## PID: %u - Inicio de IO", pid);
+    log_info(logger, "## PID: %u - Ingrese %u caracteres:", pid, n_bytes);
+
+    char* linea = calloc(n_bytes + 2, 1);
+    if (fgets(linea, n_bytes + 2, stdin) != NULL) {
+        size_t len = strlen(linea);
+        if (len > 0 && linea[len - 1] == '\n') linea[len - 1] = '\0';
+    }
+    linea[n_bytes] = '\0';
+
+    log_info(logger, "## PID: %u - Fin de IO", pid);
+
+    uint32_t payload_size = sizeof(pid) + sizeof(n_bytes) + n_bytes;
+    void* payload_datos   = malloc(payload_size);
+    memcpy(payload_datos,                                  &pid,     sizeof(pid));
+    memcpy((char*)payload_datos + sizeof(pid),             &n_bytes, sizeof(n_bytes));
+    memcpy((char*)payload_datos + sizeof(pid) + sizeof(n_bytes), linea, n_bytes);
+    free(linea);
+
+    enviar_mensaje(fd_scheduler, MSG_IO_STDIN_DATOS, payload_datos, payload_size);
+    free(payload_datos);
 }
 
 void manejar_stdout(t_mensaje* msg, int fd_scheduler, t_log* logger) {
