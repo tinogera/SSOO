@@ -1,4 +1,5 @@
 #include "io_utils.h"
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -19,6 +20,25 @@ void manejar_sleep(t_mensaje* msg, int fd_scheduler, t_log* logger) {
 
     usleep((useconds_t)tiempo_ms * 1000);
 
+    log_info(logger, "## PID: %u - Fin de IO", pid);
+
+    t_payload_io_fin fin = { .pid = pid };
+    enviar_mensaje(fd_scheduler, MSG_IO_FIN, &fin, sizeof(fin));
+}
+
+void manejar_stdout(t_mensaje* msg, int fd_scheduler, t_log* logger) {
+    uint32_t pid;
+    memcpy(&pid, msg->payload, sizeof(pid));
+
+    size_t len = msg->payload_size - sizeof(pid);
+    char* contenido = malloc(len + 1);
+    memcpy(contenido, (char*)msg->payload + sizeof(pid), len);
+    contenido[len] = '\0';
+    free_mensaje(msg);
+
+    log_info(logger, "## PID: %u - Inicio de IO", pid);
+    log_info(logger, "## PID: %u - %s", pid, contenido);
+    free(contenido);
     log_info(logger, "## PID: %u - Fin de IO", pid);
 
     t_payload_io_fin fin = { .pid = pid };
