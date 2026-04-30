@@ -1,5 +1,4 @@
 #include "io_utils.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -36,11 +35,9 @@ void manejar_stdin(t_mensaje* msg, int fd_scheduler, t_log* logger) {
     log_info(logger, "## PID: %u - Inicio de IO", pid);
     log_info(logger, "## PID: %u - Ingrese %u caracteres:", pid, n_bytes);
 
-    char* linea = calloc(n_bytes + 2, 1);
-    if (fgets(linea, n_bytes + 2, stdin) != NULL) {
-        size_t len = strlen(linea);
-        if (len > 0 && linea[len - 1] == '\n') linea[len - 1] = '\0';
-    }
+    char* linea = calloc(n_bytes + 1, 1);
+    ssize_t leido = read(STDIN_FILENO, linea, n_bytes + 1);
+    if (leido > 0 && linea[leido - 1] == '\n') linea[leido - 1] = '\0';
     linea[n_bytes] = '\0';
 
     log_info(logger, "## PID: %u - Fin de IO", pid);
