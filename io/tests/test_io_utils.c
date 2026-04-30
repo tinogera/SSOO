@@ -2,6 +2,7 @@
 #include <sys/socket.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "io_utils.h"
 
@@ -14,6 +15,22 @@ static t_mensaje* crear_msg_sleep(uint32_t pid, uint32_t tiempo_ms) {
     p->tiempo_ms = tiempo_ms;
     msg->op_code      = MSG_IO_SLEEP;
     msg->payload_size = sizeof(t_payload_io_sleep);
+    msg->payload      = p;
+    return msg;
+}
+
+// Crea un t_mensaje de MSG_IO_STDOUT con pid y contenido dados.
+// payload = { uint32_t pid | char contenido[len] } — sin '\0' final,
+// igual que lo enviaría el KS real (manejar_stdout lo agrega internamente).
+static t_mensaje* crear_msg_stdout(uint32_t pid, const char* contenido) {
+    size_t len            = strlen(contenido);
+    uint32_t payload_size = sizeof(uint32_t) + len;
+    void* p               = malloc(payload_size);
+    memcpy(p, &pid, sizeof(uint32_t));
+    memcpy((char*)p + sizeof(uint32_t), contenido, len);
+    t_mensaje* msg    = malloc(sizeof(t_mensaje));
+    msg->op_code      = MSG_IO_STDOUT;
+    msg->payload_size = payload_size;
     msg->payload      = p;
     return msg;
 }
@@ -112,6 +129,62 @@ context (io_utils) {
             should_bool(ms >= 90) be truthy;
 
             t_mensaje* fin = recibir_mensaje(fds[0]);
+            free_mensaje(fin);
+            log_destroy(log);
+            close(fds[0]); close(fds[1]);
+        } end
+
+    } end
+
+    describe ("manejar_stdout") {
+
+        it ("envía MSG_IO_FIN con el PID correcto al terminar") {
+            int fds[2];
+            socketpair(AF_UNIX, SOCK_STREAM, 0, fds);
+            t_log* log = log_create("/tmp/io_test.log", "test", false, LOG_LEVEL_ERROR);
+
+            manejar_stdout(crear_msg_stdout(42, "Hola mundo"), fds[1], log);
+
+            t_mensaje* fin = recibir_mensaje(fds[0]);
+            should_ptr(fin) not be null;
+            should_int(fin->op_code) be equal to(MSG_IO_FIN);
+            should_int(((t_payload_io_fin*)fin->payload)->pid) be equal to(42);
+
+            free_mensaje(fin);
+            log_destroy(log);
+            close(fds[0]); close(fds[1]);
+        } end
+
+        it ("no confunde el PID cuando se llama dos veces seguidas") {
+            int fds[2];
+            socketpair(AF_UNIX, SOCK_STREAM, 0, fds);
+            t_log* log = log_create("/tmp/io_test.log", "test", false, LOG_LEVEL_ERROR);
+
+            manejar_stdout(crear_msg_stdout(10, "primero"), fds[1], log);
+            manejar_stdout(crear_msg_stdout(20, "segundo"), fds[1], log);
+
+            t_mensaje* fin1 = recibir_mensaje(fds[0]);
+            t_mensaje* fin2 = recibir_mensaje(fds[0]);
+            should_int(((t_payload_io_fin*)fin1->payload)->pid) be equal to(10);
+            should_int(((t_payload_io_fin*)fin2->payload)->pid) be equal to(20);
+
+            free_mensaje(fin1); free_mensaje(fin2);
+            log_destroy(log);
+            close(fds[0]); close(fds[1]);
+        } end
+
+        it ("funciona con contenido vacío") {
+            int fds[2];
+            socketpair(AF_UNIX, SOCK_STREAM, 0, fds);
+            t_log* log = log_create("/tmp/io_test.log", "test", false, LOG_LEVEL_ERROR);
+
+            manejar_stdout(crear_msg_stdout(7, ""), fds[1], log);
+
+            t_mensaje* fin = recibir_mensaje(fds[0]);
+            should_ptr(fin) not be null;
+            should_int(fin->op_code) be equal to(MSG_IO_FIN);
+            should_int(((t_payload_io_fin*)fin->payload)->pid) be equal to(7);
+
             free_mensaje(fin);
             log_destroy(log);
             close(fds[0]); close(fds[1]);
