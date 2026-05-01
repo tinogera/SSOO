@@ -18,51 +18,55 @@
 ---
 
 ## Fase 0 — Configuración del Entorno
-**Fecha límite:** 13/04/2026
+**Fecha límite:** 13/04/2026 — **COMPLETADA**
 
-- [ ] Instalar `so-commons-library` y verificar compilación de todos los módulos.
-- [ ] **Liderar el diseño del protocolo de comunicación** entre módulos: definir y documentar en Utils los tipos de mensaje, los structs compartidos y las convenciones de serialización que usarán todos los integrantes.
-- [ ] Crear el header compartido con los códigos de operación (enums de tipos de mensaje).
-- [ ] Coordinar con cada integrante los mensajes que necesita su módulo.
+- [x] Instalar `so-commons-library` y verificar compilación de todos los módulos.
+- [x] **Liderar el diseño del protocolo de comunicación** entre módulos: definir y documentar en Utils los tipos de mensaje, los structs compartidos y las convenciones de serialización que usarán todos los integrantes.
+- [x] Crear el header compartido con los códigos de operación (enums de tipos de mensaje).
+- [x] Coordinar con cada integrante los mensajes que necesita su módulo.
 
 ---
 
 ## Fase 1 — Check 1: Utils Base + IO Conexión
-**Fecha límite:** 18/04/2026
+**Fecha límite:** 18/04/2026 — **ENTREGADO (parcial)**
+> Check 1 entregado el 18/04 sin la parte de Luciano (Kernel Memory + Swap). Luciano completó sus módulos el 26/04. La parte de Nicolas estuvo completa a tiempo.
+
 **Ramas:** `feature/utils` · `feature/io`
 
 ### Utils (13/04 – 18/04)
-- [ ] Implementar función **crear servidor**: crear socket, bind, listen, aceptar conexiones (bloqueante con pthread).
-- [ ] Implementar función **conectar a servidor**: crear socket, connect, retornar fd.
-- [ ] Implementar función **enviar mensaje**: serializar tipo + payload + tamaño, enviar por socket.
-- [ ] Implementar función **recibir mensaje**: recibir cabecera, leer payload de tamaño indicado, deserializar.
-- [ ] Publicar header `utils.h` con las firmas de todas las funciones para que los demás módulos puedan usar la librería.
+- [x] Implementar función **crear servidor**: crear socket, bind, listen, aceptar conexiones (bloqueante con pthread).
+- [x] Implementar función **conectar a servidor**: crear socket, connect, retornar fd.
+- [x] Implementar función **enviar mensaje**: serializar tipo + payload + tamaño, enviar por socket.
+- [x] Implementar función **recibir mensaje**: recibir cabecera, leer payload de tamaño indicado, deserializar.
+- [x] Publicar header `utils.h` con las firmas de todas las funciones para que los demás módulos puedan usar la librería.
 
 ### IO (13/04 – 18/04)
-- [ ] Implementar la conexión de **IO a Kernel Scheduler**: conectarse con el tipo de IO (STDIN/STDOUT/SLEEP) como argumento.
-- [ ] Implementar log: `## Conectado a Kernel Scheduler`.
+- [x] Implementar la conexión de **IO a Kernel Scheduler**: conectarse con el tipo de IO (STDIN/STDOUT/SLEEP) como argumento.
+- [x] Implementar log: `## Conectado a Kernel Scheduler`.
 
 ---
 
 ## Fase 2 — Check 2: IO Completo + Mutex en Scheduler
-**Fecha límite:** 23/05/2026
+**Fecha límite:** 23/05/2026 — **EN CURSO** (arrancó 29/04/2026)
 **Ramas:** `feature/io` (IO completo) · `feature/kernel-scheduler/mutex-cmn` (Mutex)
 
+> Previo al desarrollo: se crearon y mergearon a develop las ramas `fix/protocolo-msg-cpu-km` (bug fix) y `feature/protocolo-msg-io-mutex` (op_codes y structs de payload para todos los mensajes de CK2).
+
 ### IO — Semanas 1–3 (19/04 – 09/05)
-- [ ] Implementar **IO tipo SLEEP**:
+- [x] Implementar **IO tipo SLEEP** — _issue #23, cerrado 29/04_ (commit `321d7c4`):
   - Recibir tiempo en ms desde Kernel Scheduler.
   - Ejecutar `usleep(tiempo * 1000)`.
   - Notificar a Kernel Scheduler que finalizó.
   - Implementar log: `## PID: <PID> - Haciendo sleep por <TIEMPO> milisegundos`.
   - Implementar log: `## PID: <PID> - Inicio de IO` y `## PID: <PID> - Fin de IO`.
 
-- [ ] Implementar **IO tipo STDOUT**:
+- [ ] Implementar **IO tipo STDOUT** — _issue #24_:
   - Recibir cadena de bytes desde Kernel Scheduler.
   - Imprimir por pantalla (stdout).
   - Notificar a Kernel Scheduler que finalizó.
   - Implementar log: `## PID: <PID> - <CONTENIDO A IMPRIMIR>`.
 
-- [ ] Implementar **IO tipo STDIN**:
+- [ ] Implementar **IO tipo STDIN** — _issue #25_:
   - Recibir cantidad de bytes a leer.
   - Leer del teclado (con `readline` o `fgets`).
   - Si entrada > bytes solicitados → cortar. Si entrada < bytes → rellenar con `\0`.
@@ -72,7 +76,7 @@
 ### Kernel Scheduler — Mutex sin herencia (10/05 – 23/05)
 > Trabaja en conjunto con Santiago, quien maneja la estructura de colas.
 
-- [ ] Implementar **MUTEX_CREATE**: crear estructura de mutex con nombre dado, estado libre/tomado, cola de espera.
+- [ ] Implementar **MUTEX_CREATE** — _issue #15_: crear estructura de mutex con nombre dado, estado libre/tomado, cola de espera.
 - [ ] Implementar **MUTEX_LOCK**: si el mutex está libre → tomarlo, loguear. Si está tomado → poner proceso en BLOCK esperando ese mutex.
 - [ ] Implementar **MUTEX_UNLOCK**: liberar el mutex, si hay procesos esperando → desbloquear el primero (política FIFO dentro de la cola de espera del mutex), loguear.
 - [ ] Implementar log: `## (<PID>) Toma el Mutex <NOMBRE>`.

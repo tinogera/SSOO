@@ -89,9 +89,30 @@ int main(int argc, char* argv[]) {
     log_info(logger, "## Conectado a Kernel Scheduler");
 
     // -------------------------------------------------------------------
-    // 6. Loop principal — Check 2
+    // 6. Loop principal — atender pedidos del Kernel Scheduler
     // -------------------------------------------------------------------
-    // TODO Check 2: implementar bucle de recepción de pedidos IO
+    while (1) {
+        t_mensaje* msg = recibir_mensaje(fd_scheduler);
+        if (msg == NULL) {
+            log_warning(logger, "Kernel Scheduler cerró la conexión");
+            break;
+        }
+
+        switch (msg->op_code) {
+            case MSG_IO_SLEEP:
+                manejar_sleep(msg, fd_scheduler, logger);
+                break;
+            case MSG_IO_STDOUT:
+                manejar_stdout(msg, fd_scheduler, logger);
+                break;
+            case MSG_IO_STDIN:
+                manejar_stdin(msg, fd_scheduler, logger);
+                break;
+            default:
+                log_warning(logger, "Mensaje inesperado: op_code=%u", msg->op_code);
+                free_mensaje(msg);
+        }
+    }
 
     close(fd_scheduler);
     config_destroy(config);
