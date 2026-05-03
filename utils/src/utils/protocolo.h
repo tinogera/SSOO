@@ -10,11 +10,11 @@
  * Siempre agregar nuevos códigos ANTES de MSG_CANTIDAD.
  *
  * PENDIENTE CHECK 3:
- *   MSG_DESPACHAR_PROCESO     → KS → CPU: mandar a ejecutar un PID
- *   MSG_DEVOLVER_PROCESO      → CPU → KS: fin de ejecución + motivo
- *   MSG_FETCH_INSTRUCCION     → CPU → KM: pedir instrucción en PC=X
- *   MSG_RESPUESTA_INSTRUCCION → KM → CPU: string de la instrucción
- *   MSG_CREAR_PROCESO         → KS → KM: inicializar contexto para un PID
+ *   MSG_FETCH_INSTRUCCION     → CPU → KM: { uint32_t pid, uint32_t pc }
+ *   MSG_RESPUESTA_INSTRUCCION → KM → CPU: { char instruccion[] }
+ *   MSG_PEDIR_CONTEXTO        → CPU → KM: { uint32_t pid }
+ *   MSG_RESPUESTA_CONTEXTO    → KM → CPU: { contexto serializado }
+ *   MSG_GUARDAR_CONTEXTO      → CPU → KM: { contexto serializado }
  *   MSG_MEM_ALLOC             → CPU → KS (syscall MEM_ALLOC)
  *   MSG_MEM_FREE              → CPU → KS (syscall MEM_FREE)
  *   MSG_LEER_MEMORIA          → CPU → Memory Stick
@@ -54,6 +54,21 @@ typedef enum {
     MSG_MUTEX_LOCK,     // CPU → KS: { uint32_t pid, char nombre[] }
     MSG_MUTEX_UNLOCK,   // CPU → KS: { uint32_t pid, char nombre[] }
 
+    // -----------------------------------------------------------------
+    // PROCESOS Y DESPACHO — Check 2
+    // -----------------------------------------------------------------
+    MSG_CREAR_PROCESO,         // KS → KM:  { uint32_t pid, char path[] }
+    MSG_DESPACHAR_PROCESO,     // KS → CPU: { uint32_t pid }
+    MSG_DEVOLVER_PROCESO,      // CPU → KS: { uint32_t pid, uint32_t motivo }
+    MSG_INTERRUPCION_QUANTUM,  // KS → CPU: sin payload
+
+    // -----------------------------------------------------------------
+    // SYSCALLS IO (CPU → KS) — Check 2
+    // SLEEP reutiliza MSG_IO_SLEEP (mismo payload { pid, tiempo_ms })
+    // -----------------------------------------------------------------
+    MSG_SYSCALL_STDOUT,  // CPU → KS: { uint32_t pid, uint32_t dir_logica, uint32_t tamanio }
+    MSG_SYSCALL_STDIN,   // CPU → KS: { uint32_t pid, uint32_t dir_logica, uint32_t n_bytes }
+
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
 } op_code;
@@ -81,5 +96,32 @@ typedef struct __attribute__((packed)) {
     uint32_t pid;
     char     nombre[]; // flexible array — el nombre del mutex sigue inmediatamente
 } t_payload_mutex;
+
+typedef enum {
+    MOTIVO_IO      = 0,
+    MOTIVO_EXIT    = 1,
+    MOTIVO_QUANTUM = 2,
+} t_motivo_devolucion;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+} t_payload_despachar;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t motivo; // t_motivo_devolucion
+} t_payload_devolver;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t dir_logica;
+    uint32_t tamanio;
+} t_payload_syscall_stdout;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t dir_logica;
+    uint32_t n_bytes;
+} t_payload_syscall_stdin;
 
 #endif
