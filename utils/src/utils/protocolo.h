@@ -1,6 +1,8 @@
 #ifndef UTILS_PROTOCOLO_H_
 #define UTILS_PROTOCOLO_H_
 
+#include <stdint.h>
+
 /*
  * protocolo.h — Códigos de operación del sistema
  *
@@ -56,6 +58,15 @@ typedef enum {
 
     // Check 2
     MSG_INIT_PROC,
+    MSG_FETCH_INSTRUCCION,
+    MSG_RESPUESTA_INSTRUCCION,
+    MSG_SYSCALL_SLEEP,
+    MSG_SYSCALL_STDOUT,
+    MSG_SYSCALL_STDIN,
+    MSG_SYSCALL_EXIT,
+    MSG_INTERRUPCION_CPU,
+    MSG_DESPACHAR_PROCESO,
+    MSG_DEVOLVER_PROCESO,
 
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
@@ -84,5 +95,52 @@ typedef struct __attribute__((packed)) {
     uint32_t pid;
     char     nombre[]; // flexible array — el nombre del mutex sigue inmediatamente
 } t_payload_mutex;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t pc;
+} t_payload_fetch_instruccion;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t tiempo_ms;
+} t_payload_syscall_sleep;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t direccion_logica;
+    uint32_t tamanio;
+} t_payload_syscall_io_memoria;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+} t_payload_syscall_exit;
+
+typedef enum {
+    MOTIVO_INTERRUPCION_QUANTUM = 0,
+    MOTIVO_INTERRUPCION_DESALOJO = 1
+} t_motivo_interrupcion_cpu;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t motivo;
+} t_payload_interrupcion_cpu;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+} t_payload_despachar_proceso;
+
+typedef enum {
+    MOTIVO_DEVOLUCION_SYSCALL = 0,
+    MOTIVO_DEVOLUCION_EXIT = 1,
+    MOTIVO_DEVOLUCION_ERROR = 2,
+    MOTIVO_DEVOLUCION_INTERRUPCION = 3
+} t_motivo_devolucion_cpu;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t motivo;
+    uint32_t pc;
+} t_payload_devolver_proceso;
 
 #endif
