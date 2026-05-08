@@ -6,6 +6,11 @@
 #include <utils/sockets.h>
 #include <utils/protocolo.h>
 
+#include "cpu_ciclo.h"
+#include "cpu_devolucion.h"
+#include "cpu_dispatch.h"
+#include "cpu_registros.h"
+
 int main(int argc, char* argv[]) {
 
     if (argc < 3) {
@@ -18,8 +23,11 @@ int main(int argc, char* argv[]) {
 
     t_config* config = config_create(config_path);
     t_log* logger = log_create("cpu.log", cpu_id, 1, LOG_LEVEL_INFO);
+    t_registros_cpu registros;
+    inicializar_registros_cpu(&registros);
 
     log_info(logger, "CPU %s iniciada", cpu_id);
+    log_info(logger, "Registros CPU inicializados - PC: %u", registros.pc);
 
     char* ip_kernel = config_get_string_value(config, "IP_KERNEL");
     int puerto_kernel = config_get_int_value(config, "PUERTO_KERNEL");
@@ -63,8 +71,32 @@ int main(int argc, char* argv[]) {
         free_mensaje(respuesta);
     }
 
-    // mantener vivo
-    while(1);
+    // Esperar procesos despachados por Kernel Scheduler
+    while(socket_kernel != -1) {
+        uint32_t pid;
+        if (!recibir_proceso_a_ejecutar(socket_kernel, &pid, logger)) {
+            break;
+        }
+
+        t_resultado_ciclo_cpu resultado_ciclo = ejecutar_ciclo_proceso(socket_kernel, socket_memory, pid, &registros, logger);
+        t_motivo_devolucion_cpu motivo_devolucion;
+        if (resultado_ciclo == CPU_CICLO_SYSCALL) {
+            motivo_devolucion = MOTIVO_DEVOLUCION_SYSCALL;
+        } else if (resultado_ciclo == CPU_CICLO_EXIT) {
+            motivo_devolucion = MOTIVO_DEVOLUCION_EXIT;
+        } else if (resultado_ciclo == CPU_CICLO_INTERRUPCION) {
+            motivo_devolucion = MOTIVO_DEVOLUCION_INTERRUPCION;
+        } else {
+            motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
+        }
+
+        devolver_proceso_a_scheduler(socket_kernel, pid, motivo_devolucion, &registros, logger);
+
+        if (motivo_devolucion == MOTIVO_DEVOLUCION_ERROR) {
+            log_error(logger, "Fallo el ciclo de instruccion para PID %u", pid);
+            break;
+        }
+    }
 
     close(socket_kernel);
     close(socket_memory);
@@ -74,4 +106,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
