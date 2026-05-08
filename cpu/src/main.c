@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     } else {
         log_info(logger, "Conectado a Kernel Scheduler");
 
-        // HANDSHAKE CPU → KS
+        // HANDSHAKE CPU -> KS
         uint32_t size;
         void* payload = serializar_string(cpu_id, &size);
         enviar_mensaje(socket_kernel, MSG_CPU_IDENTIFICACION, payload, size);
@@ -48,7 +48,19 @@ int main(int argc, char* argv[]) {
     } else {
         log_info(logger, "Conectado a Kernel Memory");
 
-        // (opcional handshake si lo piden después)
+        // HANDSHAKE CPU -> Kernel Memory
+        enviar_mensaje(socket_memory, MSG_CPU_A_KERNEL_MEMORY, NULL, 0);
+
+        t_mensaje* respuesta = recibir_mensaje(socket_memory);
+        if (respuesta == NULL) {
+            log_error(logger, "Kernel Memory cerro la conexion durante el handshake");
+        } else if (respuesta->op_code == MSG_OK) {
+            log_info(logger, "## Conectado a Kernel Memory");
+        } else {
+            log_error(logger, "Kernel Memory rechazo la conexion");
+        }
+
+        free_mensaje(respuesta);
     }
 
     // mantener vivo
