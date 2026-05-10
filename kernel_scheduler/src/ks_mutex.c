@@ -71,6 +71,12 @@ int mutex_ks_lock(uint32_t pid, int fd_cpu, const char* nombre, t_log* logger) {
         return 0;
     }
 
+    // Mutex tomado: encolar al waiter. La CPU queda bloqueada esperando
+    // la respuesta; no enviamos MSG_OK hasta que mutex_ks_unlock lo libere.
+    t_mutex_waiter* waiter = malloc(sizeof(t_mutex_waiter));
+    waiter->pid    = pid;
+    waiter->fd_cpu = fd_cpu;
+    queue_push(m->cola_espera, waiter);
     pthread_mutex_unlock(&m->lock);
-    return 1; // tomado — se completa en el siguiente commit
+    return 1;
 }
