@@ -109,7 +109,7 @@ jobs:
           mkdir -p /tmp/cspec
           curl -fsSL "https://github.com/mumuki/cspec/archive/043089d9c55871526f1d6728af4d0febdbe8c38a.tar.gz" \
             | tar -xzC /tmp/cspec --strip-components=1
-          cd /tmp/cspec && make
+          make -C /tmp/cspec
           mkdir -p kernel_scheduler/vendor/cspecs/lib
           cp /tmp/cspec/release/libcspecs.so kernel_scheduler/vendor/cspecs/lib/libcspecs.so
 
