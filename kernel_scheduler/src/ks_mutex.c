@@ -48,3 +48,29 @@ int mutex_ks_create(const char* nombre) {
     pthread_mutex_unlock(&lock_lista);
     return 0;
 }
+
+// ---------------------------------------------------------------------------
+// mutex_ks_lock — caso libre
+// ---------------------------------------------------------------------------
+int mutex_ks_lock(uint32_t pid, int fd_cpu, const char* nombre, t_log* logger) {
+    pthread_mutex_lock(&lock_lista);
+    t_ks_mutex* m = buscar_mutex(nombre);
+    if (m == NULL) {
+        pthread_mutex_unlock(&lock_lista);
+        return -1;
+    }
+    pthread_mutex_lock(&m->lock);
+    pthread_mutex_unlock(&lock_lista);
+
+    if (m->owner_pid == -1) {
+        m->owner_pid = (int)pid;
+        pthread_mutex_unlock(&m->lock);
+
+        log_info(logger, "## (%u) Toma el Mutex %s", pid, nombre);
+        enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
+        return 0;
+    }
+
+    pthread_mutex_unlock(&m->lock);
+    return 1; // tomado — se completa en el siguiente commit
+}
