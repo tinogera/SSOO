@@ -101,8 +101,8 @@ int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger) {
 
     log_info(logger, "## (%u) Libera el Mutex %s", pid, nombre);
 
-    t_mutex_waiter* siguiente = queue_pop(m->cola_espera);
-    if (siguiente != NULL) {
+    if (queue_size(m->cola_espera) > 0) {
+        t_mutex_waiter* siguiente = queue_pop(m->cola_espera);
         m->owner_pid = (int)siguiente->pid;
         pthread_mutex_unlock(&m->lock);
 
