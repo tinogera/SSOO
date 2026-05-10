@@ -261,7 +261,7 @@ static void despachar(t_proceso* proc, t_cpu_entry* cpu) {
     queue_push(cola_exec, proc);
     pthread_mutex_unlock(&mutex_exec);
 
-    t_payload_despachar payload = { .pid = htonl(proc->PID) };
+    t_payload_despachar_proceso payload = { .pid = htonl(proc->PID) };
     enviar_mensaje(cpu->fd, MSG_DESPACHAR_PROCESO, &payload, sizeof(payload));
 }
 
@@ -284,8 +284,10 @@ static void* thread_quantum_timer(void* arg) {
     }
     pthread_mutex_unlock(&mutex_exec);
 
-    if (fd_cpu_target != -1)
-        enviar_mensaje(fd_cpu_target, MSG_INTERRUPCION_QUANTUM, NULL, 0);
+    if (fd_cpu_target != -1) {
+        t_payload_interrupcion_cpu pay = { .pid = htonl(pid), .motivo = htonl(MOTIVO_INTERRUPCION_QUANTUM) };
+        enviar_mensaje(fd_cpu_target, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
+    }
 
     return NULL;
 }
@@ -392,14 +394,14 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
         switch (msg->op_code) {
 
         case MSG_DEVOLVER_PROCESO: {
-            t_payload_devolver* p = msg->payload;
+            t_payload_devolver_proceso* p = msg->payload;
             int pid    = (int)ntohl(p->pid);
             int motivo = (int)ntohl(p->motivo);
 
             t_proceso* proc = sacar_de_exec(pid);
             if (!proc) break;
 
-            if (motivo == MOTIVO_EXIT) {
+            if (motivo == MOTIVO_DEVOLUCION_EXIT) {
                 cambiar_estado(proc, EXIT);
                 log_info(logger, "## (%d) finalizó su ejecución con motivo de EXIT", pid);
                 pthread_mutex_lock(&mutex_exit);
@@ -407,7 +409,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 pthread_mutex_unlock(&mutex_exit);
                 sem_post(&sem_cpu_disponible);
 
-            } else if (motivo == MOTIVO_QUANTUM) {
+            } else if (motivo == MOTIVO_DEVOLUCION_INTERRUPCION) {
                 log_info(logger, "## (%d) - Desalojado por fin de quantum", pid);
                 cambiar_estado(proc, READY);
                 pthread_mutex_lock(&mutex_ready);
@@ -416,7 +418,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 sem_post(&sem_cpu_disponible);
 
             }
-            // MOTIVO_IO: la CPU devuelve el proceso después de que el KS
+            // MOTIVO_DEVOLUCION_SYSCALL: la CPU devuelve el proceso después de que el KS
             // ya lo movió a BLOCK en el handler de la syscall.
             break;
         }
@@ -441,7 +443,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
         }
 
         case MSG_SYSCALL_STDOUT: {
-            t_payload_syscall_stdout* p = msg->payload;
+            t_payload_syscall_io_memoria* p = msg->payload;
             int pid = (int)ntohl(p->pid);
             log_info(logger, "## (%d) - Solicitó syscall: STDOUT", pid);
 
@@ -463,9 +465,9 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
         }
 
         case MSG_SYSCALL_STDIN: {
-            t_payload_syscall_stdin* p = msg->payload;
+            t_payload_syscall_io_memoria* p = msg->payload;
             int      pid     = (int)ntohl(p->pid);
-            uint32_t n_bytes = ntohl(p->n_bytes);
+            uint32_t n_bytes = ntohl(p->tamanio);
             log_info(logger, "## (%d) - Solicitó syscall: STDIN", pid);
 
             t_proceso* proc = sacar_de_exec(pid);
