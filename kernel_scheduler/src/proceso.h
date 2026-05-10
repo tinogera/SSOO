@@ -1,26 +1,18 @@
 #ifndef KS_PROCESO_H_
 #define KS_PROCESO_H_
 
-typedef enum { 
-    // ---------------
-    // ESTADOS DE TAREAS
-    // -----------------
-    NEW, 
-    READY,
-    EXEC, 
-    BLOCK, 
-    SUSP_BLOCK, 
-    SUSP_READY, 
-    EXIT 
+#include <stdint.h>
+
+typedef enum {
+    NEW, READY, EXEC, BLOCK, SUSP_BLOCK, SUSP_READY, EXIT
 } t_estado;
 
 typedef struct {
-    int PID;
+    int      PID;
     t_estado estado;
-    uint32_t controladorDeProgramas ;//apunta a la sig estruccion
-    int prioridad;
-    // registros de CPU — Kevin
-    // memoria — Luciano
+    uint32_t controladorDeProgramas;
+    int      prioridad;
+    int      fd_cpu;   // fd de la CPU que lo ejecuta (-1 si ninguna)
 } t_proceso;
 
 #endif
