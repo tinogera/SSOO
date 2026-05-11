@@ -67,6 +67,9 @@ typedef enum {
     MSG_INTERRUPCION_CPU,
     MSG_DESPACHAR_PROCESO,
     MSG_DEVOLVER_PROCESO,
+    MSG_OBTENER_CONTEXTO,
+    MSG_RESPUESTA_CONTEXTO,
+    MSG_GUARDAR_CONTEXTO,
 
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
@@ -142,5 +145,31 @@ typedef struct __attribute__((packed)) {
     uint32_t motivo;
     uint32_t pc;
 } t_payload_devolver_proceso;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pc;
+
+    uint8_t ax;
+    uint8_t bx;
+    uint8_t cx;
+    uint8_t dx;
+
+    uint32_t eax;
+    uint32_t ebx;
+    uint32_t ecx;
+    uint32_t edx;
+
+    uint32_t si;
+    uint32_t di;
+} t_contexto_ejecucion_cpu;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+} t_payload_obtener_contexto;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    t_contexto_ejecucion_cpu contexto;
+} t_payload_contexto_cpu;
 
 #endif

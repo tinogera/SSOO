@@ -7,6 +7,7 @@
 #include <utils/protocolo.h>
 
 #include "cpu_ciclo.h"
+#include "cpu_contexto.h"
 #include "cpu_devolucion.h"
 #include "cpu_dispatch.h"
 #include "cpu_registros.h"
@@ -78,6 +79,11 @@ int main(int argc, char* argv[]) {
             break;
         }
 
+        if (!restaurar_contexto_desde_memory(socket_memory, pid, &registros, logger)) {
+            log_error(logger, "No se pudo restaurar contexto para PID %u", pid);
+            break;
+        }
+
         t_resultado_ciclo_cpu resultado_ciclo = ejecutar_ciclo_proceso(socket_kernel, socket_memory, pid, &registros, logger);
         t_motivo_devolucion_cpu motivo_devolucion;
         if (resultado_ciclo == CPU_CICLO_SYSCALL) {
@@ -87,6 +93,10 @@ int main(int argc, char* argv[]) {
         } else if (resultado_ciclo == CPU_CICLO_INTERRUPCION) {
             motivo_devolucion = MOTIVO_DEVOLUCION_INTERRUPCION;
         } else {
+            motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
+        }
+
+        if (!guardar_contexto_en_memory(socket_memory, pid, &registros, logger)) {
             motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
         }
 

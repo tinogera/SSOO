@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <pthread.h>
+#include <unistd.h>
 #include <commons/log.h>
 #include <commons/config.h>
 #include <utils/sockets.h>
@@ -10,6 +12,11 @@ t_log* logger;
 
 void* atender_cliente(void* arg);
 void* handshake_kernel_memory(void* arg);
+void atender_cpu(int fd_cpu, char* id_cpu);
+void manejar_mensaje_cpu(int fd_cpu, t_mensaje* msg);
+void despachar_proceso_a_cpu(int fd_cpu, uint32_t pid);
+const char* motivo_devolucion_to_string_kernel(uint32_t motivo);
+const char* op_code_to_string_kernel(uint32_t op_code);
 
 int main(int argc, char* argv[]) {
     if (argc < 4)
@@ -113,7 +120,10 @@ void* atender_cliente(void* arg){
     if(msg->op_code == MSG_CPU_IDENTIFICACION){
         char* id_cpu = deserializar_string(msg->payload);
         log_info(logger, "## CPU %s Conectada", id_cpu);
+        free_mensaje(msg);
+        atender_cpu(fd_cliente, id_cpu);
         free(id_cpu);
+        return NULL;
     } 
     else if(msg->op_code == MSG_IO_IDENTIFICACION){
         char* tipo = deserializar_string(msg->payload);
@@ -123,4 +133,163 @@ void* atender_cliente(void* arg){
     
     free_mensaje(msg);
     return NULL;
+}
+
+void atender_cpu(int fd_cpu, char* id_cpu) {
+    uint32_t pid_inicial = 1;
+    log_info(logger, "CPU %s queda disponible para ejecutar procesos", id_cpu);
+    despachar_proceso_a_cpu(fd_cpu, pid_inicial);
+
+    while (1) {
+        t_mensaje* msg = recibir_mensaje(fd_cpu);
+        if (msg == NULL) {
+            log_info(logger, "CPU %s desconectada", id_cpu);
+            break;
+        }
+
+        manejar_mensaje_cpu(fd_cpu, msg);
+
+        bool fue_devolucion = msg->op_code == MSG_DEVOLVER_PROCESO;
+        free_mensaje(msg);
+
+        if (fue_devolucion) {
+            log_info(logger, "CPU %s queda libre luego de devolver el proceso", id_cpu);
+            break;
+        }
+    }
+
+    close(fd_cpu);
+}
+
+void despachar_proceso_a_cpu(int fd_cpu, uint32_t pid) {
+    t_payload_despachar_proceso payload = {
+        .pid = pid
+    };
+
+    log_info(logger, "## PID: %u - Despachando proceso a CPU", pid);
+    enviar_mensaje(fd_cpu, MSG_DESPACHAR_PROCESO, &payload, sizeof(payload));
+}
+
+void manejar_mensaje_cpu(int fd_cpu, t_mensaje* msg) {
+    switch (msg->op_code) {
+        case MSG_DEVOLVER_PROCESO: {
+            if (msg->payload_size < sizeof(t_payload_devolver_proceso)) {
+                log_error(logger, "CPU envio devolucion con payload invalido");
+                enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+                return;
+            }
+
+            t_payload_devolver_proceso* payload = (t_payload_devolver_proceso*) msg->payload;
+            log_info(
+                logger,
+                "## PID: %u - Proceso devuelto por CPU - Motivo: %s - PC: %u",
+                payload->pid,
+                motivo_devolucion_to_string_kernel(payload->motivo),
+                payload->pc
+            );
+            return;
+        }
+        case MSG_SYSCALL_SLEEP: {
+            if (msg->payload_size < sizeof(t_payload_syscall_sleep)) {
+                log_error(logger, "CPU envio SLEEP con payload invalido");
+                enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+                return;
+            }
+
+            t_payload_syscall_sleep* payload = (t_payload_syscall_sleep*) msg->payload;
+            log_info(logger, "## PID: %u - Syscall recibida: SLEEP - Tiempo: %u", payload->pid, payload->tiempo_ms);
+            enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
+            return;
+        }
+        case MSG_SYSCALL_STDOUT:
+        case MSG_SYSCALL_STDIN: {
+            if (msg->payload_size < sizeof(t_payload_syscall_io_memoria)) {
+                log_error(logger, "CPU envio syscall IO con payload invalido");
+                enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+                return;
+            }
+
+            t_payload_syscall_io_memoria* payload = (t_payload_syscall_io_memoria*) msg->payload;
+            log_info(
+                logger,
+                "## PID: %u - Syscall recibida: %s - Direccion Logica: %u - Tamanio: %u",
+                payload->pid,
+                op_code_to_string_kernel(msg->op_code),
+                payload->direccion_logica,
+                payload->tamanio
+            );
+            enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
+            return;
+        }
+        case MSG_SYSCALL_EXIT: {
+            if (msg->payload_size < sizeof(t_payload_syscall_exit)) {
+                log_error(logger, "CPU envio EXIT con payload invalido");
+                enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+                return;
+            }
+
+            t_payload_syscall_exit* payload = (t_payload_syscall_exit*) msg->payload;
+            log_info(logger, "## PID: %u - Syscall recibida: EXIT", payload->pid);
+            enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
+            return;
+        }
+        case MSG_MUTEX_CREATE:
+        case MSG_MUTEX_LOCK:
+        case MSG_MUTEX_UNLOCK: {
+            if (msg->payload_size < sizeof(uint32_t) + 1) {
+                log_error(logger, "CPU envio syscall Mutex con payload invalido");
+                enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+                return;
+            }
+
+            uint32_t pid;
+            memcpy(&pid, msg->payload, sizeof(uint32_t));
+            char* nombre = (char*) msg->payload + sizeof(uint32_t);
+            log_info(logger, "## PID: %u - Syscall recibida: %s - %s", pid, op_code_to_string_kernel(msg->op_code), nombre);
+            enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
+            return;
+        }
+        default:
+            log_error(logger, "Mensaje inesperado desde CPU: %s", op_code_to_string_kernel(msg->op_code));
+            enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+            return;
+    }
+}
+
+const char* motivo_devolucion_to_string_kernel(uint32_t motivo) {
+    switch (motivo) {
+        case MOTIVO_DEVOLUCION_SYSCALL:
+            return "SYSCALL";
+        case MOTIVO_DEVOLUCION_EXIT:
+            return "EXIT";
+        case MOTIVO_DEVOLUCION_ERROR:
+            return "ERROR";
+        case MOTIVO_DEVOLUCION_INTERRUPCION:
+            return "INTERRUPCION";
+        default:
+            return "DESCONOCIDO";
+    }
+}
+
+const char* op_code_to_string_kernel(uint32_t op_code) {
+    switch (op_code) {
+        case MSG_SYSCALL_SLEEP:
+            return "SLEEP";
+        case MSG_SYSCALL_STDOUT:
+            return "STDOUT";
+        case MSG_SYSCALL_STDIN:
+            return "STDIN";
+        case MSG_SYSCALL_EXIT:
+            return "EXIT";
+        case MSG_MUTEX_CREATE:
+            return "MUTEX_CREATE";
+        case MSG_MUTEX_LOCK:
+            return "MUTEX_LOCK";
+        case MSG_MUTEX_UNLOCK:
+            return "MUTEX_UNLOCK";
+        case MSG_DEVOLVER_PROCESO:
+            return "DEVOLVER_PROCESO";
+        default:
+            return "DESCONOCIDO";
+    }
 }
