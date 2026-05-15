@@ -3,353 +3,349 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <pthread.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
-#include <errno.h>
-#include <stdint.h>
-#include <signal.h>
+#include <pthread.h>
+#include <commons/log.h>
+#include <commons/config.h>
+#include <commons/collections/list.h>
+#include <utils/sockets.h>
+#include <utils/protocolo.h>
 
-#include "../../utils/src/utils/protocol.h"
-#include "../../utils/src/utils/net_utils.h"
+// ---------------------------------------------------------------------------
+// Globales
+// ---------------------------------------------------------------------------
+t_log*    logger;
+t_config* config;
 
-#define DEFAULT_PORT 8002
-#define DEFAULT_LOG_LEVEL "INFO"
-#define DEFAULT_SEGMENT_MAX 256
-#define DEFAULT_ALLOC_STRATEGY "BEST"
-#define DEFAULT_INSTRUCTION_DELAY 500
-#define DEFAULT_COMPACTION_DELAY 30000
-#define DEFAULT_SCRIPTS_BASEPATH "/tmp"
+pthread_mutex_t mutex_contextos = PTHREAD_MUTEX_INITIALIZER;
+t_list*         contextos; // lista de t_contexto*
 
-typedef struct {
-    int port;
-    char log_level[16];
-    int segment_max_size;
-    char allocation_strategy[8];
-    int instruction_delay;
-    int compaction_delay;
-    char scripts_basepath[256];
-} t_km_config;
-
-static t_km_config g_config;
-static int g_server_fd = -1;
-static pthread_mutex_t g_log_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-#define LOG_INFO(fmt, ...) \
-    do { \
-        pthread_mutex_lock(&g_log_mutex); \
-        printf("[INFO] " fmt "\n", ##__VA_ARGS__); \
-        fflush(stdout); \
-        pthread_mutex_unlock(&g_log_mutex); \
-    } while (0)
-
-#define LOG_DEBUG(fmt, ...) \
-    do { \
-        if (strcmp(g_config.log_level, "DEBUG") == 0) { \
-            pthread_mutex_lock(&g_log_mutex); \
-            printf("[DEBUG] " fmt "\n", ##__VA_ARGS__); \
-            fflush(stdout); \
-            pthread_mutex_unlock(&g_log_mutex); \
-        } \
-    } while (0)
-
-#define LOG_ERROR(fmt, ...) \
-    do { \
-        pthread_mutex_lock(&g_log_mutex); \
-        fprintf(stderr, "[ERROR] " fmt "\n", ##__VA_ARGS__); \
-        fflush(stderr); \
-        pthread_mutex_unlock(&g_log_mutex); \
-    } while (0)
-
-static void config_defaults(void) {
-    g_config.port = DEFAULT_PORT;
-    strncpy(g_config.log_level, DEFAULT_LOG_LEVEL, sizeof(g_config.log_level));
-    g_config.segment_max_size = DEFAULT_SEGMENT_MAX;
-    strncpy(g_config.allocation_strategy, DEFAULT_ALLOC_STRATEGY, sizeof(g_config.allocation_strategy));
-    g_config.instruction_delay = DEFAULT_INSTRUCTION_DELAY;
-    g_config.compaction_delay = DEFAULT_COMPACTION_DELAY;
-    strncpy(g_config.scripts_basepath, DEFAULT_SCRIPTS_BASEPATH, sizeof(g_config.scripts_basepath));
-}
-
-static void config_load(const char *path) {
-    FILE *f = fopen(path, "r");
-    if (!f) {
-        fprintf(stderr, "No se pudo abrir config '%s', usando defaults.\n", path);
-        return;
+// ---------------------------------------------------------------------------
+// Buscar contexto por PID — requiere mutex tomado
+// ---------------------------------------------------------------------------
+static t_contexto* buscar_contexto(uint32_t pid) {
+    for (int i = 0; i < list_size(contextos); i++) {
+        t_contexto* ctx = list_get(contextos, i);
+        if (ctx->pid == pid) return ctx;
     }
-
-    char line[512];
-    while (fgets(line, sizeof(line), f)) {
-        if (line[0] == '#' || line[0] == '\n' || line[0] == '\r') continue;
-
-        char key[128], value[384];
-        if (sscanf(line, "%127[^=]=%383[^\n]", key, value) != 2) continue;
-
-        char *v = value;
-        while (*v == ' ') v++;
-
-        if (!strcmp(key, "PORT")) g_config.port = atoi(v);
-        else if (!strcmp(key, "LOG_LEVEL")) strncpy(g_config.log_level, v, sizeof(g_config.log_level));
-        else if (!strcmp(key, "SEGMENT_MAX_SIZE")) g_config.segment_max_size = atoi(v);
-        else if (!strcmp(key, "ALLOCATION_STRATEGY")) strncpy(g_config.allocation_strategy, v, sizeof(g_config.allocation_strategy));
-        else if (!strcmp(key, "INSTRUCTION_DELAY")) g_config.instruction_delay = atoi(v);
-        else if (!strcmp(key, "COMPACTION_DELAY")) g_config.compaction_delay = atoi(v);
-        else if (!strcmp(key, "SCRIPTS_BASEPATH")) strncpy(g_config.scripts_basepath, v, sizeof(g_config.scripts_basepath));
-    }
-
-    fclose(f);
-}
-
-typedef struct {
-    int client_fd;
-    struct sockaddr_in client_addr;
-} t_client_arg;
-
-static void handle_kernel_scheduler(int fd) {
-    LOG_INFO("Kernel Scheduler conectado (fd=%d)", fd);
-
-    if (send_signal(fd, MSG_HANDSHAKE_ACK) < 0) {
-        LOG_ERROR("Error enviando ACK a Kernel Scheduler (fd=%d)", fd);
-        close(fd);
-        return;
-    }
-
-    LOG_DEBUG("Esperando mensajes de Kernel Scheduler (fd=%d)", fd);
-
-    uint8_t tipo;
-    uint32_t size;
-
-    while (1) {
-        void *payload = recv_msg(fd, &tipo, &size);
-        if (!payload) {
-            LOG_INFO("Kernel Scheduler desconectado (fd=%d)", fd);
-            break;
-        }
-
-        if (size > 0) free(payload);
-
-        LOG_DEBUG("Mensaje KS tipo=0x%02X size=%u (fd=%d)", tipo, size, fd);
-        send_signal(fd, MSG_OK);
-    }
-
-    close(fd);
-}
-
-static void handle_cpu(int fd) {
-    uint8_t tipo;
-    uint32_t size;
-    void *payload = recv_msg(fd, &tipo, &size);
-
-    if (!payload || tipo != MSG_HANDSHAKE_CPU || size < sizeof(uint32_t)) {
-        LOG_ERROR("Handshake CPU inválido (fd=%d)", fd);
-        if (payload && size > 0) free(payload);
-        close(fd);
-        return;
-    }
-
-    uint32_t cpu_id;
-    memcpy(&cpu_id, payload, sizeof(uint32_t));
-    if (size > 0) free(payload);
-
-    LOG_INFO("CPU %u conectada", cpu_id);
-
-    if (send_signal(fd, MSG_HANDSHAKE_ACK) < 0) {
-        LOG_ERROR("Error enviando ACK a CPU %u (fd=%d)", cpu_id, fd);
-        close(fd);
-        return;
-    }
-
-    while (1) {
-        payload = recv_msg(fd, &tipo, &size);
-        if (!payload) {
-            LOG_INFO("CPU %u desconectada (fd=%d)", cpu_id, fd);
-            break;
-        }
-
-        if (size > 0) free(payload);
-
-        LOG_DEBUG("CPU %u msg tipo=0x%02X size=%u", cpu_id, tipo, size);
-        send_signal(fd, MSG_OK);
-    }
-
-    close(fd);
-}
-
-static void handle_memory_stick(int fd) {
-    uint8_t tipo;
-    uint32_t size;
-    void *payload = recv_msg(fd, &tipo, &size);
-
-    if (!payload || tipo != MSG_HANDSHAKE_MS || size < sizeof(uint32_t)) {
-        LOG_ERROR("Handshake Memory Stick inválido (fd=%d)", fd);
-        if (payload && size > 0) free(payload);
-        close(fd);
-        return;
-    }
-
-    uint32_t ms_size;
-    memcpy(&ms_size, payload, sizeof(uint32_t));
-    if (size > 0) free(payload);
-
-    LOG_INFO("Memory Stick conectada (%u bytes)", ms_size);
-
-    if (send_signal(fd, MSG_HANDSHAKE_ACK) < 0) {
-        LOG_ERROR("Error enviando ACK a Memory Stick (fd=%d)", fd);
-        close(fd);
-        return;
-    }
-
-    while (1) {
-        payload = recv_msg(fd, &tipo, &size);
-        if (!payload) {
-            LOG_INFO("Memory Stick desconectada (fd=%d)", fd);
-            break;
-        }
-
-        if (size > 0) free(payload);
-
-        LOG_DEBUG("Memory Stick msg tipo=0x%02X (fd=%d)", tipo, fd);
-        send_signal(fd, MSG_OK);
-    }
-
-    close(fd);
-}
-
-static void handle_swap(int fd) {
-    uint8_t tipo;
-    uint32_t size;
-    void *payload = recv_msg(fd, &tipo, &size);
-
-    if (!payload || tipo != MSG_HANDSHAKE_SWAP || size < 2 * sizeof(uint32_t)) {
-        LOG_ERROR("Handshake SWAP inválido (fd=%d)", fd);
-        if (payload && size > 0) free(payload);
-        close(fd);
-        return;
-    }
-
-    uint32_t block_size, total_size;
-    memcpy(&block_size, payload, sizeof(uint32_t));
-    memcpy(&total_size, (uint8_t *)payload + sizeof(uint32_t), sizeof(uint32_t));
-    if (size > 0) free(payload);
-
-    LOG_INFO("SWAP conectado (bloque=%u total=%u)", block_size, total_size);
-
-    if (send_signal(fd, MSG_HANDSHAKE_ACK) < 0) {
-        LOG_ERROR("Error enviando ACK a SWAP (fd=%d)", fd);
-        close(fd);
-        return;
-    }
-
-    while (1) {
-        payload = recv_msg(fd, &tipo, &size);
-        if (!payload) {
-            LOG_INFO("SWAP desconectado (fd=%d)", fd);
-            break;
-        }
-
-        if (size > 0) free(payload);
-
-        LOG_DEBUG("SWAP msg tipo=0x%02X", tipo);
-        send_signal(fd, MSG_OK);
-    }
-
-    close(fd);
-}
-
-static void *client_thread(void *arg) {
-    t_client_arg *carg = (t_client_arg *)arg;
-    int fd = carg->client_fd;
-    free(carg);
-
-    pthread_detach(pthread_self());
-
-    uint8_t client_type;
-    if (recv(fd, &client_type, sizeof(client_type), MSG_WAITALL) <= 0) {
-        LOG_ERROR("No se pudo leer tipo de cliente (fd=%d)", fd);
-        close(fd);
-        return NULL;
-    }
-
-    switch ((t_client_type)client_type) {
-        case CLIENT_KERNEL_SCHEDULER: handle_kernel_scheduler(fd); break;
-        case CLIENT_CPU: handle_cpu(fd); break;
-        case CLIENT_MEMORY_STICK: handle_memory_stick(fd); break;
-        case CLIENT_SWAP: handle_swap(fd); break;
-        default:
-            LOG_ERROR("Cliente desconocido: 0x%02X (fd=%d)", client_type, fd);
-            close(fd);
-            break;
-    }
-
     return NULL;
 }
 
-static void accept_loop(void) {
-    LOG_INFO("Escuchando en puerto %d", g_config.port);
+// ---------------------------------------------------------------------------
+// Leer instrucción en la línea PC del archivo del PID
+// Retorna string en heap, NULL si falla
+// ---------------------------------------------------------------------------
+static char* leer_instruccion(uint32_t pid, uint32_t pc) {
+    char* base = config_get_string_value(config, "SCRIPTS_BASEPATH");
+
+    char path[512];
+    snprintf(path, sizeof(path), "%s/%u.txt", base, pid);
+
+    FILE* f = fopen(path, "r");
+    if (f == NULL) {
+        log_error(logger, "No se pudo abrir archivo de instrucciones: %s", path);
+        return NULL;
+    }
+
+    char line[256];
+    uint32_t linea_actual = 0;
+    char* resultado = NULL;
+
+    while (fgets(line, sizeof(line), f)) {
+        if (linea_actual == pc) {
+            line[strcspn(line, "\n")] = '\0';
+            resultado = strdup(line);
+            break;
+        }
+        linea_actual++;
+    }
+    fclose(f);
+    return resultado;
+}
+
+// ---------------------------------------------------------------------------
+// Hilo por cliente
+// ---------------------------------------------------------------------------
+typedef struct { int fd; } t_args;
+
+static void* atender_cliente(void* arg) {
+    t_args* args = (t_args*)arg;
+    int fd = args->fd;
+    free(args);
+
+    // ------------------------------------------------------------------
+    // Identificación inicial
+    // ------------------------------------------------------------------
+    t_mensaje* msg = recibir_mensaje(fd);
+    if (msg == NULL) {
+        log_warning(logger, "Cliente desconectado antes de identificarse (fd=%d)", fd);
+        return NULL;
+    }
+
+    int identificado = 1;
+
+    switch (msg->op_code) {
+
+        case MSG_KS_IDENTIFICACION:
+            log_info(logger, "## Kernel Scheduler Conectado - FD del socket: %d", fd);
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            break;
+
+        case MSG_MEMORY_STICK_IDENTIFICACION: {
+            if (msg->payload_size >= 4) {
+                uint32_t tamanio_n;
+                memcpy(&tamanio_n, msg->payload, 4);
+                uint32_t tamanio = ntohl(tamanio_n);
+                log_info(logger, "## Memory Stick de %u bytes Conectada", tamanio);
+            } else {
+                log_warning(logger, "Memory Stick conectado sin payload (fd=%d)", fd);
+            }
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            break;
+        }
+
+        case MSG_SWAP_IDENTIFICACION: {
+            if (msg->payload_size >= 8) {
+                uint32_t swap_size_n, block_size_n;
+                memcpy(&swap_size_n,  msg->payload,     4);
+                memcpy(&block_size_n, (uint8_t*)msg->payload + 4, 4);
+                uint32_t swap_size    = ntohl(swap_size_n);
+                uint32_t block_size   = ntohl(block_size_n);
+                uint32_t cant_bloques = swap_size / block_size;
+                log_info(logger,
+                    "## Swap Conectado - FD: %d - Tamaño: %u bytes - Bloque: %u bytes - Bloques totales: %u",
+                    fd, swap_size, block_size, cant_bloques);
+            } else {
+                log_warning(logger, "Swap conectado sin payload (fd=%d)", fd);
+            }
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            break;
+        }
+
+        case MSG_CPU_IDENTIFICACION: {
+            if (msg->payload_size >= 4) {
+                uint32_t cpu_id_n;
+                memcpy(&cpu_id_n, msg->payload, 4);
+                uint32_t cpu_id = ntohl(cpu_id_n);
+                log_info(logger, "## CPU %u Conectada", cpu_id);
+            } else {
+                log_info(logger, "## CPU Conectada - FD del socket: %d", fd);
+            }
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            break;
+        }
+
+        default:
+            log_warning(logger, "op_code de identificación desconocido: %d (fd=%d)", msg->op_code, fd);
+            enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+            identificado = 0;
+            break;
+    }
+
+    free_mensaje(msg);
+    if (!identificado) return NULL;
+
+    // ------------------------------------------------------------------
+    // Loop de atención de pedidos
+    // ------------------------------------------------------------------
+    t_mensaje* pedido;
+    while ((pedido = recibir_mensaje(fd)) != NULL) {
+
+        // --------------------------------------------------------------
+        // CREAR PROCESO
+        // --------------------------------------------------------------
+        if (pedido->op_code == MSG_CREAR_PROCESO) {
+            // Payload: [pid: 4 bytes big-endian] [path: string con \0]
+            if (pedido->payload_size < 5) {
+                log_warning(logger, "MSG_CREAR_PROCESO con payload inválido");
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            uint32_t pid_n;
+            memcpy(&pid_n, pedido->payload, 4);
+            uint32_t pid = ntohl(pid_n);
+
+            pthread_mutex_lock(&mutex_contextos);
+            if (buscar_contexto(pid) != NULL) {
+                log_warning(logger, "PID %u ya existe", pid);
+                pthread_mutex_unlock(&mutex_contextos);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            t_contexto* ctx = malloc(sizeof(t_contexto));
+            memset(ctx, 0, sizeof(t_contexto));
+            ctx->pid            = pid;
+            ctx->cant_segmentos = 0;
+            ctx->segmentos      = NULL;
+            list_add(contextos, ctx);
+            pthread_mutex_unlock(&mutex_contextos);
+
+            log_info(logger, "## PID: %u - Proceso Creado", pid);
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
+        }
+
+        // --------------------------------------------------------------
+        // FETCH INSTRUCCIÓN
+        // --------------------------------------------------------------
+        else if (pedido->op_code == MSG_FETCH_INSTRUCCION) {
+            if (pedido->payload_size < 8) {
+                log_warning(logger, "MSG_FETCH_INSTRUCCION con payload inválido");
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            t_fetch_request* req = deserializar_fetch_request(pedido->payload);
+
+            int delay_ms = config_get_int_value(config, "INSTRUCTION_DELAY");
+            usleep(delay_ms * 1000);
+
+            char* instruccion = leer_instruccion(req->pid, req->pc);
+            if (instruccion == NULL) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+            } else {
+                log_info(logger, "## PID: %u - Obtener instrucción: %u - Instrucción: %s",
+                         req->pid, req->pc, instruccion);
+
+                uint32_t size;
+                void* payload = serializar_string(instruccion, &size);
+                enviar_mensaje(fd, MSG_RESPUESTA_INSTRUCCION, payload, size);
+                free(payload);
+                free(instruccion);
+            }
+            free(req);
+        }
+
+        // --------------------------------------------------------------
+        // GUARDAR CONTEXTO
+        // --------------------------------------------------------------
+        else if (pedido->op_code == MSG_GUARDAR_CONTEXTO) {
+            t_contexto* nuevo = deserializar_contexto(pedido->payload, pedido->payload_size);
+
+            pthread_mutex_lock(&mutex_contextos);
+            t_contexto* existente = buscar_contexto(nuevo->pid);
+            if (existente == NULL) {
+                log_warning(logger, "Guardar contexto: PID %u no existe", nuevo->pid);
+                pthread_mutex_unlock(&mutex_contextos);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_contexto(nuevo);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            existente->registros = nuevo->registros;
+            if (existente->segmentos) free(existente->segmentos);
+            existente->cant_segmentos = nuevo->cant_segmentos;
+            existente->segmentos      = nuevo->segmentos;
+            nuevo->segmentos = NULL; // evitar doble free
+            pthread_mutex_unlock(&mutex_contextos);
+
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            free_contexto(nuevo);
+        }
+
+        // --------------------------------------------------------------
+        // RESTAURAR CONTEXTO
+        // --------------------------------------------------------------
+        else if (pedido->op_code == MSG_RESTAURAR_CONTEXTO) {
+            if (pedido->payload_size < 4) {
+                log_warning(logger, "MSG_RESTAURAR_CONTEXTO con payload inválido");
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            uint32_t pid_n;
+            memcpy(&pid_n, pedido->payload, 4);
+            uint32_t pid = ntohl(pid_n);
+
+            pthread_mutex_lock(&mutex_contextos);
+            t_contexto* ctx = buscar_contexto(pid);
+            if (ctx == NULL) {
+                pthread_mutex_unlock(&mutex_contextos);
+                log_warning(logger, "Restaurar contexto: PID %u no existe", pid);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            uint32_t size;
+            void* payload = serializar_contexto(ctx, &size);
+            pthread_mutex_unlock(&mutex_contextos);
+
+            enviar_mensaje(fd, MSG_RESTAURAR_CONTEXTO, payload, size);
+            free(payload);
+        }
+
+        else {
+            log_warning(logger, "op_code desconocido en loop: %d", pedido->op_code);
+            enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+        }
+
+        free_mensaje(pedido);
+    }
+
+    log_info(logger, "Cliente desconectado (fd=%d)", fd);
+    return NULL;
+}
+
+// ---------------------------------------------------------------------------
+// main
+// ---------------------------------------------------------------------------
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        fprintf(stderr, "Uso: %s [Archivo Config]\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    config = config_create(argv[1]);
+    if (config == NULL) {
+        fprintf(stderr, "No se pudo leer el config: %s\n", argv[1]);
+        return EXIT_FAILURE;
+    }
+
+    logger = log_create("kernel_memory.log", "KernelMemory", true, LOG_LEVEL_INFO);
+    if (logger == NULL) {
+        fprintf(stderr, "Error al crear el logger\n");
+        config_destroy(config);
+        return EXIT_FAILURE;
+    }
+
+    contextos = list_create();
+
+    int puerto = config_get_int_value(config, "KERNEL_MEMORY_PORT");
+
+    int servidor_fd = crear_servidor(puerto);
+    if (servidor_fd < 0) {
+        log_error(logger, "No se pudo levantar el servidor en puerto %d", puerto);
+        config_destroy(config);
+        log_destroy(logger);
+        return EXIT_FAILURE;
+    }
+
+    log_info(logger, "Kernel Memory escuchando en puerto %d", puerto);
 
     while (1) {
-        t_client_arg *arg = malloc(sizeof(t_client_arg));
-        if (!arg) {
-            LOG_ERROR("malloc fallido");
+        int cliente_fd = aceptar_conexion(servidor_fd);
+        if (cliente_fd < 0) {
+            log_warning(logger, "Error al aceptar cliente");
             continue;
         }
 
-        socklen_t len = sizeof(arg->client_addr);
-        arg->client_fd = accept(g_server_fd, (struct sockaddr *)&arg->client_addr, &len);
+        t_args* args = malloc(sizeof(t_args));
+        args->fd = cliente_fd;
 
-        if (arg->client_fd < 0) {
-            free(arg);
-            if (errno == EINTR) continue;
-            if (errno == EBADF) break;
-            perror("accept");
-            continue;
-        }
-
-        pthread_t tid;
-        if (pthread_create(&tid, NULL, client_thread, arg) != 0) {
-            LOG_ERROR("Error creando hilo (fd=%d)", arg->client_fd);
-            close(arg->client_fd);
-            free(arg);
-        }
-    }
-}
-
-static void sighandler(int sig) {
-    (void)sig;
-    printf("\n[INFO] Cerrando...\n");
-    if (g_server_fd >= 0) close(g_server_fd);
-    exit(0);
-}
-
-int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        fprintf(stderr, "Uso: %s [config]\n", argv[0]);
-        return EXIT_FAILURE;
+        pthread_t hilo;
+        pthread_create(&hilo, NULL, atender_cliente, args);
+        pthread_detach(hilo);
     }
 
-    config_defaults();
-    config_load(argv[1]);
-
-    printf("[INFO] Iniciando\n");
-    printf("[INFO] Log level: %s\n", g_config.log_level);
-    printf("[INFO] Puerto: %d\n", g_config.port);
-    printf("[INFO] Segment max: %d\n", g_config.segment_max_size);
-    printf("[INFO] Strategy: %s\n", g_config.allocation_strategy);
-    printf("[INFO] Basepath: %s\n", g_config.scripts_basepath);
-
-    signal(SIGINT, sighandler);
-    signal(SIGTERM, sighandler);
-    signal(SIGPIPE, SIG_IGN);
-
-    g_server_fd = create_server(g_config.port);
-    if (g_server_fd < 0) {
-        fprintf(stderr, "No se pudo iniciar servidor\n");
-        return EXIT_FAILURE;
-    }
-
-    accept_loop();
-
-    close(g_server_fd);
+    list_destroy_and_destroy_elements(contextos, (void*)free_contexto);
+    config_destroy(config);
+    log_destroy(logger);
     return EXIT_SUCCESS;
 }
