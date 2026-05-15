@@ -76,6 +76,13 @@ typedef enum {
     MSG_SYSCALL_STDIN,   // 27  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
     MSG_SYSCALL_EXIT,    // 28  CPU → KS: { uint32_t pid }
 
+    // -----------------------------------------------------------------
+    // MS ↔ CPU — Check 2 (28–31)
+    // -----------------------------------------------------------------
+    MSG_MEMORY_WRITE,
+    MSG_MEMORY_READ,
+    MSG_MEMORY_READ_RESPUESTA,
+
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
 } op_code;
