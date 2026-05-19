@@ -26,14 +26,14 @@ typedef enum {
     // -----------------------------------------------------------------
     // IDENTIFICACIÓN — Check 1 (valores 0–7, no modificar)
     // -----------------------------------------------------------------
-    MSG_IO_IDENTIFICACION,              // 0  IO → KS
-    MSG_CPU_IDENTIFICACION,             // 1  CPU → KS
-    MSG_KS_IDENTIFICACION,              // 2  KS → KM
-    MSG_OK,                             // 3
-    MSG_ERROR,                          // 4
-    MSG_MEMORY_STICK_IDENTIFICACION,    // 5  MS → KM
-    MSG_SWAP_IDENTIFICACION,            // 6  Swap → KM
-    MSG_CPU_A_KERNEL_MEMORY,            // 7  CPU → KM
+    MSG_IO_IDENTIFICACION,              // 0  IO → KS:  payload: string tipo ("SLEEP"/"STDOUT"/"STDIN")
+    MSG_CPU_IDENTIFICACION,             // 1  CPU → KS: payload: string id_cpu
+    MSG_KS_IDENTIFICACION,              // 2  KS → KM:  sin payload
+    MSG_OK,                             // 3  respuesta exitosa — sin payload
+    MSG_ERROR,                          // 4  respuesta de error — sin payload
+    MSG_MEMORY_STICK_IDENTIFICACION,    // 5  MS → KM:  payload: uint32_t tamanio
+    MSG_SWAP_IDENTIFICACION,            // 6  Swap → KM: payload: uint32_t swap_size, uint32_t block_size
+    MSG_CPU_A_KERNEL_MEMORY,            // 7  CPU → KM: sin payload
 
     // -----------------------------------------------------------------
     // IO — Check 2 (8–12)
@@ -54,7 +54,7 @@ typedef enum {
     // -----------------------------------------------------------------
     // CPU ↔ KS — Check 2 (16–19)
     // -----------------------------------------------------------------
-    MSG_INIT_PROC,          // 16  CPU → KS: { uint32_t pid, char archivo[], uint32_t prioridad }
+    MSG_INIT_PROC,          // 16  CPU → KS: syscall INIT_PROC { uint32_t pid, char archivo[], uint32_t prioridad }
     MSG_DESPACHAR_PROCESO,  // 17  KS → CPU: { uint32_t pid }
     MSG_DEVOLVER_PROCESO,   // 18  CPU → KS: { uint32_t pid, uint32_t motivo, uint32_t pc }
     MSG_INTERRUPCION_CPU,   // 19  KS → CPU: { uint32_t pid, uint32_t motivo }
@@ -66,7 +66,7 @@ typedef enum {
     MSG_RESPUESTA_INSTRUCCION,  // 21  KM → CPU: payload: string instrucción
     MSG_CREAR_PROCESO,          // 22  KS → KM:  { uint32_t pid, char path[] }
     MSG_GUARDAR_CONTEXTO,       // 23  CPU → KM: t_contexto serializado
-    MSG_RESTAURAR_CONTEXTO,     // 24  KM → CPU: t_contexto serializado
+    MSG_RESTAURAR_CONTEXTO,     // 24  KM → CPU: t_contexto serializado (respuesta a pedido por pid)
 
     // -----------------------------------------------------------------
     // Syscalls CPU → KS — Check 2 (25–28)
@@ -80,7 +80,9 @@ typedef enum {
 } op_code;
 
 // ---------------------------------------------------------------------------
-// Structs de payload — __attribute__((packed)) elimina padding
+// Structs de payload
+// __attribute__((packed)) elimina el padding del compilador para que el layout
+// en memoria sea exactamente el que se envía por el socket.
 // ---------------------------------------------------------------------------
 
 // --- IO ---
@@ -110,7 +112,7 @@ typedef struct __attribute__((packed)) {
     uint32_t pc;
 } t_payload_fetch_instruccion;
 
-// --- CPU ↔ KS ---
+// --- CPU ↔ KS: despacho y devolución ---
 typedef struct __attribute__((packed)) {
     uint32_t pid;
 } t_payload_despachar_proceso;

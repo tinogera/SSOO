@@ -3,6 +3,9 @@ bin/
 obj/
 *.log
 
+# Vendor: solo trackear los fuentes, no los binarios compilados
+vendor/cspecs/lib/
+
 # Eclipse files
 .settings/
 .cproject

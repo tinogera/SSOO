@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout del repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Instalar dependencias del sistema
         run: |
@@ -52,7 +52,7 @@ jobs:
 
     steps:
       - name: Checkout del repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Instalar dependencias del sistema
         run: |
@@ -84,3 +84,41 @@ jobs:
           mkdir -p bin
           make test
           ./bin/io_tests
+
+  test-kernel-scheduler:
+    name: Build y tests de Kernel Scheduler
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v5
+
+      - name: Instalar dependencias del sistema
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y build-essential libreadline-dev
+
+      - name: Instalar so-commons-library
+        run: |
+          git clone https://x-access-token:${{ github.token }}@github.com/sisoputnfrba/so-commons-library.git
+          cd so-commons-library
+          sudo make install
+
+      - name: Compilar cspecs y copiar a vendor
+        run: |
+          mkdir -p /tmp/cspec
+          curl -fsSL "https://github.com/mumuki/cspec/archive/043089d9c55871526f1d6728af4d0febdbe8c38a.tar.gz" \
+            | tar -xzC /tmp/cspec --strip-components=1
+          make -C /tmp/cspec
+          mkdir -p kernel_scheduler/vendor/cspecs/lib
+          cp /tmp/cspec/release/libcspecs.so kernel_scheduler/vendor/cspecs/lib/libcspecs.so
+
+      - name: Compilar utils
+        run: cd utils && make
+
+      - name: Compilar y ejecutar tests de Kernel Scheduler
+        run: |
+          cd kernel_scheduler
+          mkdir -p bin
+          make test
+          ./bin/kernel_scheduler_tests
