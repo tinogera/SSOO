@@ -8,6 +8,8 @@
 #include <commons/config.h>
 #include <utils/sockets.h>
 #include <utils/protocolo.h>
+#include "ks_mutex.h"
+
 t_log* logger;
 
 void* atender_cliente(void* arg);
@@ -63,6 +65,8 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
+    mutexes_init();
+
     // aceptar conexiones concurrentes
     while(1){
         int fd_cliente = aceptar_conexion(fd_servidor);
@@ -111,27 +115,65 @@ void* handshake_kernel_memory(void* arg) {
 void* atender_cliente(void* arg){
     int fd_cliente = *((int*)arg);
     free(arg);
-    
-    // recibir handshake
+
+    // --- identificación inicial ---
     t_mensaje* msg = recibir_mensaje(fd_cliente);
     if(msg == NULL) return NULL;
-    
-    // log según quien se conecta
+
+    int es_cpu = 0;
+
     if(msg->op_code == MSG_CPU_IDENTIFICACION){
         char* id_cpu = deserializar_string(msg->payload);
         log_info(logger, "## CPU %s Conectada", id_cpu);
         free_mensaje(msg);
         atender_cpu(fd_cliente, id_cpu);
         free(id_cpu);
-        return NULL;
-    } 
+        enviar_mensaje(fd_cliente, MSG_OK, NULL, 0);
+        es_cpu = 1;
+    }
     else if(msg->op_code == MSG_IO_IDENTIFICACION){
         char* tipo = deserializar_string(msg->payload);
         log_info(logger, "## IO %s Conectada", tipo);
-        free(tipo); 
+        free(tipo);
+        enviar_mensaje(fd_cliente, MSG_OK, NULL, 0);
     }
-    
+    else {
+        log_warning(logger, "Identificación desconocida: op_code=%u", msg->op_code);
+    }
+
     free_mensaje(msg);
+
+    // --- loop de atención (solo CPUs por ahora) ---
+    if (!es_cpu) return NULL;
+
+    t_mensaje* pedido;
+    while((pedido = recibir_mensaje(fd_cliente)) != NULL) {
+
+        if (pedido->op_code == MSG_MUTEX_CREATE) {
+            t_payload_mutex* p = pedido->payload;
+            mutex_ks_create(p->nombre);
+            enviar_mensaje(fd_cliente, MSG_OK, NULL, 0);
+        }
+        else if (pedido->op_code == MSG_MUTEX_LOCK) {
+            t_payload_mutex* p = pedido->payload;
+            uint32_t pid = p->pid;
+            // mutex_ks_lock responde MSG_OK directamente si el mutex está libre,
+            // o no responde hasta que mutex_ks_unlock desbloquee al waiter.
+            mutex_ks_lock(pid, fd_cliente, p->nombre, logger);
+        }
+        else if (pedido->op_code == MSG_MUTEX_UNLOCK) {
+            t_payload_mutex* p = pedido->payload;
+            mutex_ks_unlock(p->pid, p->nombre, logger);
+            enviar_mensaje(fd_cliente, MSG_OK, NULL, 0);
+        }
+        else {
+            log_warning(logger, "op_code no manejado en KS: %u", pedido->op_code);
+            enviar_mensaje(fd_cliente, MSG_ERROR, NULL, 0);
+        }
+
+        free_mensaje(pedido);
+    }
+
     return NULL;
 }
 

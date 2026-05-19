@@ -184,25 +184,76 @@ char* deserializar_string(void* payload) {
 // =============================================================================
 // ZONA DE EXTENSIÓN — Check 2 en adelante
 // =============================================================================
-// Agregar acá la implementación de las funciones de serialización para
-// estructuras propias de cada módulo (declaradas en sockets.h).
-//
-// Patrón de serialización recomendado para estructuras con campos de tamaño fijo:
-//
-//   void* serializar_contexto(t_contexto* ctx, uint32_t* out_size) {
-//       *out_size = sizeof(t_contexto);
-//       void* buf = malloc(*out_size);
-//       memcpy(buf, ctx, *out_size);
-//       return buf;
-//   }
-//
-//   t_contexto* deserializar_contexto(void* payload) {
-//       t_contexto* ctx = malloc(sizeof(t_contexto));
-//       memcpy(ctx, payload, sizeof(t_contexto));
-//       return ctx;
-//   }
-//
-// Para estructuras con strings o listas (tamaño variable), se serializa campo
-// por campo: primero el tamaño de cada campo (uint32_t en network byte order),
-// luego los bytes del campo. Consultar con Nicolas si tienen dudas.
-// =============================================================================
+
+// Formato wire del contexto (big-endian):
+//   pid:             4B
+//   pc:              4B
+//   ax, bx, cx, dx:  1B c/u
+//   eax,ebx,ecx,edx: 4B c/u
+//   si, di:          4B c/u
+//   cant_segmentos:  4B
+// CK2: cant_segmentos siempre 0, sin datos de segmentos.
+#define CTX_WIRE_SIZE (4 + 4 + 4 + (4 * 4) + (4 * 2) + 4)  // 40 bytes
+
+void* serializar_contexto(t_contexto* ctx, uint32_t* out_size) {
+    *out_size = CTX_WIRE_SIZE;
+    uint8_t* buf = malloc(CTX_WIRE_SIZE);
+    uint8_t* p   = buf;
+    uint32_t n;
+
+    n = htonl(ctx->pid);                memcpy(p, &n, 4); p += 4;
+    n = htonl(ctx->registros.pc);       memcpy(p, &n, 4); p += 4;
+    *p++ = ctx->registros.ax;
+    *p++ = ctx->registros.bx;
+    *p++ = ctx->registros.cx;
+    *p++ = ctx->registros.dx;
+    n = htonl(ctx->registros.eax);      memcpy(p, &n, 4); p += 4;
+    n = htonl(ctx->registros.ebx);      memcpy(p, &n, 4); p += 4;
+    n = htonl(ctx->registros.ecx);      memcpy(p, &n, 4); p += 4;
+    n = htonl(ctx->registros.edx);      memcpy(p, &n, 4); p += 4;
+    n = htonl(ctx->registros.si);       memcpy(p, &n, 4); p += 4;
+    n = htonl(ctx->registros.di);       memcpy(p, &n, 4); p += 4;
+    n = htonl(ctx->cant_segmentos);     memcpy(p, &n, 4); p += 4;
+
+    return buf;
+}
+
+t_contexto* deserializar_contexto(void* payload, uint32_t size) {
+    (void)size;
+    t_contexto* ctx = malloc(sizeof(t_contexto));
+    uint8_t* p = (uint8_t*)payload;
+    uint32_t n;
+
+    memcpy(&n, p, 4); ctx->pid              = ntohl(n); p += 4;
+    memcpy(&n, p, 4); ctx->registros.pc     = ntohl(n); p += 4;
+    ctx->registros.ax = *p++;
+    ctx->registros.bx = *p++;
+    ctx->registros.cx = *p++;
+    ctx->registros.dx = *p++;
+    memcpy(&n, p, 4); ctx->registros.eax    = ntohl(n); p += 4;
+    memcpy(&n, p, 4); ctx->registros.ebx    = ntohl(n); p += 4;
+    memcpy(&n, p, 4); ctx->registros.ecx    = ntohl(n); p += 4;
+    memcpy(&n, p, 4); ctx->registros.edx    = ntohl(n); p += 4;
+    memcpy(&n, p, 4); ctx->registros.si     = ntohl(n); p += 4;
+    memcpy(&n, p, 4); ctx->registros.di     = ntohl(n); p += 4;
+    memcpy(&n, p, 4); ctx->cant_segmentos   = ntohl(n); p += 4;
+    ctx->segmentos = NULL;
+
+    return ctx;
+}
+
+t_fetch_request* deserializar_fetch_request(void* payload) {
+    t_fetch_request* req = malloc(sizeof(t_fetch_request));
+    uint32_t pid_n, pc_n;
+    memcpy(&pid_n, payload,                       sizeof(uint32_t));
+    memcpy(&pc_n,  (uint8_t*)payload + sizeof(uint32_t), sizeof(uint32_t));
+    req->pid = ntohl(pid_n);
+    req->pc  = ntohl(pc_n);
+    return req;
+}
+
+void free_contexto(t_contexto* ctx) {
+    if (ctx == NULL) return;
+    if (ctx->segmentos != NULL) free(ctx->segmentos);
+    free(ctx);
+}

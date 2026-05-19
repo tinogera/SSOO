@@ -96,18 +96,33 @@ char* deserializar_string(void* payload);
  * =====================================================================
  * ZONA DE EXTENSIÓN — Check 2 en adelante
  * =====================================================================
- * Agregar acá las declaraciones de las funciones de serialización para
- * las estructuras propias de cada módulo.
- *
- * Convención de nombres:
- *   void*   serializar_<nombre>(t_<nombre>* obj, uint32_t* out_size);
- *   t_<nombre>* deserializar_<nombre>(void* payload);
- *
- * Cada función serializar_* retorna un buffer en heap que hay que liberar
- * con free() después de pasarlo a enviar_mensaje().
- * Cada función deserializar_* retorna una estructura en heap que el
- * receptor es responsable de liberar.
- * =====================================================================
  */
+
+// Registros de la CPU — usados en t_contexto
+typedef struct {
+    uint32_t pc;
+    uint8_t  ax, bx, cx, dx;
+    uint32_t eax, ebx, ecx, edx;
+    uint32_t si, di;
+} t_registros_cpu;
+
+// Contexto de ejecución de un proceso — guardado/restaurado por Kernel Memory
+typedef struct {
+    uint32_t        pid;
+    t_registros_cpu registros;
+    uint32_t        cant_segmentos; // 0 en CK2
+    void*           segmentos;      // NULL en CK2
+} t_contexto;
+
+// Pedido de fetch de instrucción — CPU → KM
+typedef struct {
+    uint32_t pid;
+    uint32_t pc;
+} t_fetch_request;
+
+void*            serializar_contexto(t_contexto* ctx, uint32_t* out_size);
+t_contexto*      deserializar_contexto(void* payload, uint32_t size);
+t_fetch_request* deserializar_fetch_request(void* payload);
+void             free_contexto(t_contexto* ctx);
 
 #endif

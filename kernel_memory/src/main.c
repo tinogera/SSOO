@@ -1,48 +1,87 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include <pthread.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+#include <pthread.h>
 #include <commons/log.h>
 #include <commons/config.h>
+#include <commons/collections/list.h>
 #include <utils/sockets.h>
 #include <utils/protocolo.h>
 
-t_log* logger;
+// ---------------------------------------------------------------------------
+// Globales
+// ---------------------------------------------------------------------------
+t_log*    logger;
+t_config* config;
 
-typedef struct {
-    int fd;
-} t_cliente_args;
+pthread_mutex_t mutex_contextos = PTHREAD_MUTEX_INITIALIZER;
+t_list*         contextos; // lista de t_contexto*
 
-typedef struct {
-    uint32_t pid;
-    t_contexto_ejecucion_cpu contexto;
-    bool ocupado;
-} t_contexto_por_pid;
+// ---------------------------------------------------------------------------
+// Buscar contexto por PID — requiere mutex tomado
+// ---------------------------------------------------------------------------
+static t_contexto* buscar_contexto(uint32_t pid) {
+    for (int i = 0; i < list_size(contextos); i++) {
+        t_contexto* ctx = list_get(contextos, i);
+        if (ctx->pid == pid) return ctx;
+    }
+    return NULL;
+}
 
-#define MAX_CONTEXTO_PROCESOS 128
+// ---------------------------------------------------------------------------
+// Leer instrucción en la línea PC del archivo del PID
+// Retorna string en heap, NULL si falla
+// ---------------------------------------------------------------------------
+static char* leer_instruccion(uint32_t pid, uint32_t pc) {
+    char* base = config_get_string_value(config, "SCRIPTS_BASEPATH");
 
-static t_contexto_por_pid contextos[MAX_CONTEXTO_PROCESOS];
-static pthread_mutex_t mutex_contextos = PTHREAD_MUTEX_INITIALIZER;
+    char path[512];
+    snprintf(path, sizeof(path), "%s/%u.txt", base, pid);
 
-static void atender_cpu(int fd);
-static void atender_fetch_instruccion(int fd, t_mensaje* msg);
-static void atender_obtener_contexto(int fd, t_mensaje* msg);
-static void atender_guardar_contexto(int fd, t_mensaje* msg);
-static t_contexto_ejecucion_cpu* obtener_o_crear_contexto(uint32_t pid);
-static const char* obtener_instruccion_mock(uint32_t pid, uint32_t pc);
+    FILE* f = fopen(path, "r");
+    if (f == NULL) {
+        log_error(logger, "No se pudo abrir archivo de instrucciones: %s", path);
+        return NULL;
+    }
+
+    char line[256];
+    uint32_t linea_actual = 0;
+    char* resultado = NULL;
+
+    while (fgets(line, sizeof(line), f)) {
+        if (linea_actual == pc) {
+            line[strcspn(line, "\n")] = '\0';
+            resultado = strdup(line);
+            break;
+        }
+        linea_actual++;
+    }
+    fclose(f);
+    return resultado;
+}
+
+// ---------------------------------------------------------------------------
+// Hilo por cliente
+// ---------------------------------------------------------------------------
+typedef struct { int fd; } t_args;
 
 static void* atender_cliente(void* arg) {
-    t_cliente_args* args = (t_cliente_args*)arg;
+    t_args* args = (t_args*)arg;
     int fd = args->fd;
     free(args);
 
+    // ------------------------------------------------------------------
+    // Identificación inicial
+    // ------------------------------------------------------------------
     t_mensaje* msg = recibir_mensaje(fd);
     if (msg == NULL) {
         log_warning(logger, "Cliente desconectado antes de identificarse (fd=%d)", fd);
         return NULL;
     }
+
+    int identificado = 1;
 
     switch (msg->op_code) {
 
@@ -51,191 +90,218 @@ static void* atender_cliente(void* arg) {
             enviar_mensaje(fd, MSG_OK, NULL, 0);
             break;
 
-        case MSG_MEMORY_STICK_IDENTIFICACION:
-            log_info(logger, "## Memory Stick Conectado - FD del socket: %d", fd);
+        case MSG_MEMORY_STICK_IDENTIFICACION: {
+            if (msg->payload_size >= 4) {
+                uint32_t tamanio_n;
+                memcpy(&tamanio_n, msg->payload, 4);
+                uint32_t tamanio = ntohl(tamanio_n);
+                log_info(logger, "## Memory Stick de %u bytes Conectada", tamanio);
+            } else {
+                log_warning(logger, "Memory Stick conectado sin payload (fd=%d)", fd);
+            }
             enviar_mensaje(fd, MSG_OK, NULL, 0);
             break;
+        }
 
-        case MSG_SWAP_IDENTIFICACION:
-            log_info(logger, "## Swap Conectado - FD del socket: %d", fd);
+        case MSG_SWAP_IDENTIFICACION: {
+            if (msg->payload_size >= 8) {
+                uint32_t swap_size_n, block_size_n;
+                memcpy(&swap_size_n,  msg->payload,     4);
+                memcpy(&block_size_n, (uint8_t*)msg->payload + 4, 4);
+                uint32_t swap_size    = ntohl(swap_size_n);
+                uint32_t block_size   = ntohl(block_size_n);
+                uint32_t cant_bloques = swap_size / block_size;
+                log_info(logger,
+                    "## Swap Conectado - FD: %d - Tamaño: %u bytes - Bloque: %u bytes - Bloques totales: %u",
+                    fd, swap_size, block_size, cant_bloques);
+            } else {
+                log_warning(logger, "Swap conectado sin payload (fd=%d)", fd);
+            }
             enviar_mensaje(fd, MSG_OK, NULL, 0);
             break;
+        }
 
-        case MSG_CPU_A_KERNEL_MEMORY:
-            log_info(logger, "## CPU Conectada - FD del socket: %d", fd);
+        case MSG_CPU_IDENTIFICACION: {
+            if (msg->payload_size >= 4) {
+                uint32_t cpu_id_n;
+                memcpy(&cpu_id_n, msg->payload, 4);
+                uint32_t cpu_id = ntohl(cpu_id_n);
+                log_info(logger, "## CPU %u Conectada", cpu_id);
+            } else {
+                log_info(logger, "## CPU Conectada - FD del socket: %d", fd);
+            }
             enviar_mensaje(fd, MSG_OK, NULL, 0);
-            free_mensaje(msg);
-            atender_cpu(fd);
-            return NULL;
+            break;
+        }
 
         default:
-            log_warning(logger, "op_code desconocido: %d (fd=%d)", msg->op_code, fd);
+            log_warning(logger, "op_code de identificación desconocido: %d (fd=%d)", msg->op_code, fd);
             enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+            identificado = 0;
             break;
     }
 
     free_mensaje(msg);
-    // Check 1: cerramos después de identificar. Check 2: acá irá el loop de atención.
+    if (!identificado) return NULL;
+
+    // ------------------------------------------------------------------
+    // Loop de atención de pedidos
+    // ------------------------------------------------------------------
+    t_mensaje* pedido;
+    while ((pedido = recibir_mensaje(fd)) != NULL) {
+
+        // --------------------------------------------------------------
+        // CREAR PROCESO
+        // --------------------------------------------------------------
+        if (pedido->op_code == MSG_CREAR_PROCESO) {
+            // Payload: [pid: 4 bytes big-endian] [path: string con \0]
+            if (pedido->payload_size < 5) {
+                log_warning(logger, "MSG_CREAR_PROCESO con payload inválido");
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            uint32_t pid_n;
+            memcpy(&pid_n, pedido->payload, 4);
+            uint32_t pid = ntohl(pid_n);
+
+            pthread_mutex_lock(&mutex_contextos);
+            if (buscar_contexto(pid) != NULL) {
+                log_warning(logger, "PID %u ya existe", pid);
+                pthread_mutex_unlock(&mutex_contextos);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            t_contexto* ctx = malloc(sizeof(t_contexto));
+            memset(ctx, 0, sizeof(t_contexto));
+            ctx->pid            = pid;
+            ctx->cant_segmentos = 0;
+            ctx->segmentos      = NULL;
+            list_add(contextos, ctx);
+            pthread_mutex_unlock(&mutex_contextos);
+
+            log_info(logger, "## PID: %u - Proceso Creado", pid);
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
+        }
+
+        // --------------------------------------------------------------
+        // FETCH INSTRUCCIÓN
+        // --------------------------------------------------------------
+        else if (pedido->op_code == MSG_FETCH_INSTRUCCION) {
+            if (pedido->payload_size < 8) {
+                log_warning(logger, "MSG_FETCH_INSTRUCCION con payload inválido");
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            t_fetch_request* req = deserializar_fetch_request(pedido->payload);
+
+            int delay_ms = config_get_int_value(config, "INSTRUCTION_DELAY");
+            usleep(delay_ms * 1000);
+
+            char* instruccion = leer_instruccion(req->pid, req->pc);
+            if (instruccion == NULL) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+            } else {
+                log_info(logger, "## PID: %u - Obtener instrucción: %u - Instrucción: %s",
+                         req->pid, req->pc, instruccion);
+
+                uint32_t size;
+                void* payload = serializar_string(instruccion, &size);
+                enviar_mensaje(fd, MSG_RESPUESTA_INSTRUCCION, payload, size);
+                free(payload);
+                free(instruccion);
+            }
+            free(req);
+        }
+
+        // --------------------------------------------------------------
+        // GUARDAR CONTEXTO
+        // --------------------------------------------------------------
+        else if (pedido->op_code == MSG_GUARDAR_CONTEXTO) {
+            t_contexto* nuevo = deserializar_contexto(pedido->payload, pedido->payload_size);
+
+            pthread_mutex_lock(&mutex_contextos);
+            t_contexto* existente = buscar_contexto(nuevo->pid);
+            if (existente == NULL) {
+                log_warning(logger, "Guardar contexto: PID %u no existe", nuevo->pid);
+                pthread_mutex_unlock(&mutex_contextos);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_contexto(nuevo);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            existente->registros = nuevo->registros;
+            if (existente->segmentos) free(existente->segmentos);
+            existente->cant_segmentos = nuevo->cant_segmentos;
+            existente->segmentos      = nuevo->segmentos;
+            nuevo->segmentos = NULL; // evitar doble free
+            pthread_mutex_unlock(&mutex_contextos);
+
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            free_contexto(nuevo);
+        }
+
+        // --------------------------------------------------------------
+        // RESTAURAR CONTEXTO
+        // --------------------------------------------------------------
+        else if (pedido->op_code == MSG_RESTAURAR_CONTEXTO) {
+            if (pedido->payload_size < 4) {
+                log_warning(logger, "MSG_RESTAURAR_CONTEXTO con payload inválido");
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            uint32_t pid_n;
+            memcpy(&pid_n, pedido->payload, 4);
+            uint32_t pid = ntohl(pid_n);
+
+            pthread_mutex_lock(&mutex_contextos);
+            t_contexto* ctx = buscar_contexto(pid);
+            if (ctx == NULL) {
+                pthread_mutex_unlock(&mutex_contextos);
+                log_warning(logger, "Restaurar contexto: PID %u no existe", pid);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
+            uint32_t size;
+            void* payload = serializar_contexto(ctx, &size);
+            pthread_mutex_unlock(&mutex_contextos);
+
+            enviar_mensaje(fd, MSG_RESTAURAR_CONTEXTO, payload, size);
+            free(payload);
+        }
+
+        else {
+            log_warning(logger, "op_code desconocido en loop: %d", pedido->op_code);
+            enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+        }
+
+        free_mensaje(pedido);
+    }
+
+    log_info(logger, "Cliente desconectado (fd=%d)", fd);
     return NULL;
 }
 
-static void atender_cpu(int fd) {
-    while (1) {
-        t_mensaje* msg = recibir_mensaje(fd);
-        if (msg == NULL) {
-            log_info(logger, "CPU desconectada de Kernel Memory - FD del socket: %d", fd);
-            break;
-        }
-
-        switch (msg->op_code) {
-            case MSG_FETCH_INSTRUCCION:
-                atender_fetch_instruccion(fd, msg);
-                break;
-            case MSG_OBTENER_CONTEXTO:
-                atender_obtener_contexto(fd, msg);
-                break;
-            case MSG_GUARDAR_CONTEXTO:
-                atender_guardar_contexto(fd, msg);
-                break;
-            default:
-                log_warning(logger, "Mensaje inesperado de CPU en Kernel Memory: %d", msg->op_code);
-                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-                break;
-        }
-
-        free_mensaje(msg);
-    }
-
-    close(fd);
-}
-
-static void atender_fetch_instruccion(int fd, t_mensaje* msg) {
-    if (msg->payload_size != sizeof(t_payload_fetch_instruccion)) {
-        log_error(logger, "Payload invalido para fetch de instruccion");
-        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-        return;
-    }
-
-    t_payload_fetch_instruccion* pedido = (t_payload_fetch_instruccion*) msg->payload;
-    const char* instruccion = obtener_instruccion_mock(pedido->pid, pedido->pc);
-
-    log_info(
-        logger,
-        "## PID: %u - Obtener instruccion: %u - Instruccion: %s",
-        pedido->pid,
-        pedido->pc,
-        instruccion
-    );
-
-    uint32_t payload_size;
-    void* payload = serializar_string((char*) instruccion, &payload_size);
-    enviar_mensaje(fd, MSG_RESPUESTA_INSTRUCCION, payload, payload_size);
-    free(payload);
-}
-
-static void atender_obtener_contexto(int fd, t_mensaje* msg) {
-    if (msg->payload_size != sizeof(t_payload_obtener_contexto)) {
-        log_error(logger, "Payload invalido para obtener contexto");
-        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-        return;
-    }
-
-    t_payload_obtener_contexto* pedido = (t_payload_obtener_contexto*) msg->payload;
-
-    pthread_mutex_lock(&mutex_contextos);
-    t_contexto_ejecucion_cpu* contexto = obtener_o_crear_contexto(pedido->pid);
-    if (contexto == NULL) {
-        pthread_mutex_unlock(&mutex_contextos);
-        log_error(logger, "No hay espacio para crear contexto del PID %u", pedido->pid);
-        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-        return;
-    }
-
-    t_payload_contexto_cpu respuesta = {
-        .pid = pedido->pid,
-        .contexto = *contexto
-    };
-    pthread_mutex_unlock(&mutex_contextos);
-
-    log_info(logger, "## PID: %u - Contexto enviado - PC: %u", respuesta.pid, respuesta.contexto.pc);
-    enviar_mensaje(fd, MSG_RESPUESTA_CONTEXTO, &respuesta, sizeof(respuesta));
-}
-
-static void atender_guardar_contexto(int fd, t_mensaje* msg) {
-    if (msg->payload_size != sizeof(t_payload_contexto_cpu)) {
-        log_error(logger, "Payload invalido para guardar contexto");
-        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-        return;
-    }
-
-    t_payload_contexto_cpu* payload = (t_payload_contexto_cpu*) msg->payload;
-
-    pthread_mutex_lock(&mutex_contextos);
-    t_contexto_ejecucion_cpu* contexto = obtener_o_crear_contexto(payload->pid);
-    if (contexto == NULL) {
-        pthread_mutex_unlock(&mutex_contextos);
-        log_error(logger, "No hay espacio para guardar contexto del PID %u", payload->pid);
-        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-        return;
-    }
-
-    *contexto = payload->contexto;
-    pthread_mutex_unlock(&mutex_contextos);
-
-    log_info(logger, "## PID: %u - Contexto guardado - PC: %u", payload->pid, payload->contexto.pc);
-    enviar_mensaje(fd, MSG_OK, NULL, 0);
-}
-
-static t_contexto_ejecucion_cpu* obtener_o_crear_contexto(uint32_t pid) {
-    int libre = -1;
-
-    for (int i = 0; i < MAX_CONTEXTO_PROCESOS; i++) {
-        if (contextos[i].ocupado && contextos[i].pid == pid) {
-            return &contextos[i].contexto;
-        }
-
-        if (!contextos[i].ocupado && libre == -1) {
-            libre = i;
-        }
-    }
-
-    if (libre == -1) {
-        return NULL;
-    }
-
-    contextos[libre].pid = pid;
-    memset(&contextos[libre].contexto, 0, sizeof(contextos[libre].contexto));
-    contextos[libre].ocupado = true;
-    log_info(logger, "## PID: %u - Proceso Creado", pid);
-
-    return &contextos[libre].contexto;
-}
-
-static const char* obtener_instruccion_mock(uint32_t pid, uint32_t pc) {
-    (void) pid;
-
-    static const char* instrucciones[] = {
-        "SET AX 2",
-        "SET BX 3",
-        "SUM AX BX",
-        "EXIT"
-    };
-
-    uint32_t cantidad_instrucciones = sizeof(instrucciones) / sizeof(instrucciones[0]);
-    if (pc >= cantidad_instrucciones) {
-        return "EXIT";
-    }
-
-    return instrucciones[pc];
-}
-
+// ---------------------------------------------------------------------------
+// main
+// ---------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         fprintf(stderr, "Uso: %s [Archivo Config]\n", argv[0]);
         return EXIT_FAILURE;
     }
 
-    t_config* config = config_create(argv[1]);
+    config = config_create(argv[1]);
     if (config == NULL) {
         fprintf(stderr, "No se pudo leer el config: %s\n", argv[1]);
         return EXIT_FAILURE;
@@ -244,8 +310,11 @@ int main(int argc, char* argv[]) {
     logger = log_create("kernel_memory.log", "KernelMemory", true, LOG_LEVEL_INFO);
     if (logger == NULL) {
         fprintf(stderr, "Error al crear el logger\n");
+        config_destroy(config);
         return EXIT_FAILURE;
     }
+
+    contextos = list_create();
 
     int puerto = config_get_int_value(config, "KERNEL_MEMORY_PORT");
 
@@ -259,7 +328,6 @@ int main(int argc, char* argv[]) {
 
     log_info(logger, "Kernel Memory escuchando en puerto %d", puerto);
 
-    // Loop: acepta conexiones indefinidamente, una por hilo
     while (1) {
         int cliente_fd = aceptar_conexion(servidor_fd);
         if (cliente_fd < 0) {
@@ -267,7 +335,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
 
-        t_cliente_args* args = malloc(sizeof(t_cliente_args));
+        t_args* args = malloc(sizeof(t_args));
         args->fd = cliente_fd;
 
         pthread_t hilo;
@@ -275,6 +343,7 @@ int main(int argc, char* argv[]) {
         pthread_detach(hilo);
     }
 
+    list_destroy_and_destroy_elements(contextos, (void*)free_contexto);
     config_destroy(config);
     log_destroy(logger);
     return EXIT_SUCCESS;
