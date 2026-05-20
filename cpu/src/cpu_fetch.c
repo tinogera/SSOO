@@ -1,5 +1,6 @@
 #include "cpu_fetch.h"
 
+#include <arpa/inet.h>
 #include <stdlib.h>
 #include <utils/protocolo.h>
 #include <utils/sockets.h>
@@ -10,8 +11,8 @@ char* fetch_instruccion(int socket_memory, uint32_t pid, t_registros_cpu* regist
     log_cpu_fetch(logger, pid, registros->pc);
 
     t_payload_fetch_instruccion pedido = {
-        .pid = pid,
-        .pc = registros->pc
+        .pid = htonl(pid),
+        .pc = htonl(registros->pc)
     };
 
     enviar_mensaje(socket_memory, MSG_FETCH_INSTRUCCION, &pedido, sizeof(pedido));

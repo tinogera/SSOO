@@ -48,6 +48,19 @@ int main(int argc, char* argv[]) {
         void* payload = serializar_string(cpu_id, &size);
         enviar_mensaje(socket_kernel, MSG_CPU_IDENTIFICACION, payload, size);
         free(payload);
+
+        t_mensaje* respuesta_kernel = recibir_mensaje(socket_kernel);
+        if (respuesta_kernel == NULL) {
+            log_error(logger, "Kernel Scheduler cerro la conexion durante la identificacion");
+            socket_kernel = -1;
+        } else if (respuesta_kernel->op_code == MSG_OK) {
+            log_info(logger, "## Conectado a Kernel Scheduler");
+        } else {
+            log_error(logger, "Kernel Scheduler rechazo la identificacion");
+            socket_kernel = -1;
+        }
+
+        free_mensaje(respuesta_kernel);
     }
 
     // CONEXION A KERNEL MEMORY
