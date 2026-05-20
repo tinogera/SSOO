@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 
 int es_tipo_valido(const char* tipo) {
     return strcmp(tipo, "STDIN")  == 0 ||
@@ -11,8 +12,8 @@ int es_tipo_valido(const char* tipo) {
 
 void manejar_sleep(t_mensaje* msg, int fd_scheduler, t_log* logger) {
     t_payload_io_sleep* p = (t_payload_io_sleep*) msg->payload;
-    uint32_t pid       = p->pid;
-    uint32_t tiempo_ms = p->tiempo_ms;
+    uint32_t pid       = ntohl(p->pid);
+    uint32_t tiempo_ms = ntohl(p->tiempo_ms);
     free_mensaje(msg);
 
     log_info(logger, "## PID: %u - Inicio de IO", pid);
@@ -28,8 +29,8 @@ void manejar_sleep(t_mensaje* msg, int fd_scheduler, t_log* logger) {
 
 void manejar_stdin(t_mensaje* msg, int fd_scheduler, t_log* logger) {
     t_payload_io_stdin* p = (t_payload_io_stdin*) msg->payload;
-    uint32_t pid     = p->pid;
-    uint32_t n_bytes = p->n_bytes;
+    uint32_t pid     = ntohl(p->pid);
+    uint32_t n_bytes = ntohl(p->n_bytes);
     free_mensaje(msg);
 
     log_info(logger, "## PID: %u - Inicio de IO", pid);
