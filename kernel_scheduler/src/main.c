@@ -423,7 +423,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             break;
         }
 
-        case MSG_IO_SLEEP: {
+        case MSG_SYSCALL_SLEEP: {
             t_payload_io_sleep* p = msg->payload;
             int      pid       = (int)ntohl(p->pid);
             uint32_t tiempo_ms = ntohl(p->tiempo_ms);
