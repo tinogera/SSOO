@@ -384,6 +384,20 @@ static t_proceso* sacar_de_block(int pid) {
 }
 
 
+static t_proceso* sacar_de_susp_block(int pid) {
+    pthread_mutex_lock(&mutex_susp_block);
+    t_proceso* proc = NULL;
+    int sz = queue_size(cola_susp_block);
+    for (int i = 0; i < sz; i++) {
+        t_proceso* q = queue_pop(cola_susp_block);
+        if (q->PID == pid) proc = q;
+        else queue_push(cola_susp_block, q);
+    }
+    pthread_mutex_unlock(&mutex_susp_block);
+    return proc;
+}
+
+
 static void atender_cpu(int fd, t_cpu_entry* entry) {
     while (1) {
         t_mensaje* msg = recibir_mensaje(fd);
