@@ -637,27 +637,51 @@ static void atender_io(int fd, char* tipo) {
 
             t_proceso* proc = sacar_de_block(pid);
             if (proc) {
+                // IO terminó antes del timeout: BLOCK → READY
                 cambiar_estado(proc, READY);
                 log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
                 pthread_mutex_lock(&mutex_ready);
                 queue_push(cola_ready, proc);
                 pthread_mutex_unlock(&mutex_ready);
                 sem_post(&sem_cpu_disponible);
+            } else {
+                // IO terminó después del timeout: SUSP. BLOCK → SUSP. READY
+                proc = sacar_de_susp_block(pid);
+                if (proc) {
+                    cambiar_estado(proc, SUSP_READY);
+                    log_info(logger, "## (%d) finalizó IO y pasa a SUSP. READY", pid);
+                    pthread_mutex_lock(&mutex_susp_ready);
+                    queue_push(cola_susp_ready, proc);
+                    pthread_mutex_unlock(&mutex_susp_ready);
+                    sem_post(&sem_largo_plazo);
+                }
             }
 
         } else if (msg->op_code == MSG_IO_STDIN_DATOS) {
             uint32_t pid_n;
             memcpy(&pid_n, msg->payload, sizeof(uint32_t));
             int pid = (int)ntohl(pid_n);
-            // Check 2: KM mockea la escritura → solo desbloquear el proceso
+
             t_proceso* proc = sacar_de_block(pid);
             if (proc) {
+                // IO terminó antes del timeout: BLOCK → READY (CK2: KM mockea escritura)
                 cambiar_estado(proc, READY);
                 log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
                 pthread_mutex_lock(&mutex_ready);
                 queue_push(cola_ready, proc);
                 pthread_mutex_unlock(&mutex_ready);
                 sem_post(&sem_cpu_disponible);
+            } else {
+                // IO terminó después del timeout: SUSP. BLOCK → SUSP. READY
+                proc = sacar_de_susp_block(pid);
+                if (proc) {
+                    cambiar_estado(proc, SUSP_READY);
+                    log_info(logger, "## (%d) finalizó IO y pasa a SUSP. READY", pid);
+                    pthread_mutex_lock(&mutex_susp_ready);
+                    queue_push(cola_susp_ready, proc);
+                    pthread_mutex_unlock(&mutex_susp_ready);
+                    sem_post(&sem_largo_plazo);
+                }
             }
         }
 
