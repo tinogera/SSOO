@@ -298,7 +298,7 @@ static void* thread_planificador(void* _) {
         sem_wait(&sem_cpu_disponible);
 
         pthread_mutex_lock(&mutex_ready);
-        t_proceso* proc = queue_pop(cola_ready);
+        t_proceso* proc = queue_size(cola_ready) > 0 ? queue_pop(cola_ready) : NULL;
         pthread_mutex_unlock(&mutex_ready);
 
         if (!proc) continue;
