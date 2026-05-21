@@ -2,7 +2,7 @@
 
 **Módulo:** `utils/`  
 **Responsable:** Nicolas  
-**Estado:** Check 2 — op_codes de IO y Mutex agregados
+**Estado:** Check 2 completo — ciclo CPU/KM, IO, Mutex, SUSPENSION_TIMEOUT implementados
 
 ---
 
@@ -306,17 +306,38 @@ if (msg == NULL) {
 
 ---
 
-## Actualizaciones previstas — Check 3
+## Check 2 — Ciclo CPU/KM e instrucciones
+
+Implementados junto con el ciclo de instrucción del CPU:
+
+| Op_code | Dirección | Descripción |
+|---------|-----------|-------------|
+| `MSG_DESPACHAR_PROCESO` | KS → CPU | Enviar proceso a ejecutar `{ uint32_t pid, uint32_t pc, registros[] }` |
+| `MSG_DEVOLVER_PROCESO` | CPU → KS | Fin de ciclo `{ uint32_t pid, uint32_t motivo, uint32_t pc }` |
+| `MSG_INTERRUPCION_CPU` | KS → CPU | Señal de desalojo por quantum o syscall `{ uint32_t pid, uint32_t motivo }` |
+| `MSG_FETCH_INSTRUCCION` | CPU → KM | Pedir instrucción en PC actual `{ uint32_t pid, uint32_t pc }` |
+| `MSG_RESPUESTA_INSTRUCCION` | KM → CPU | String de la instrucción |
+| `MSG_RESTAURAR_CONTEXTO` | KM → CPU | Contexto del proceso `{ registros }` |
+| `MSG_GUARDAR_CONTEXTO` | CPU → KM | Guardar registros al final del ciclo |
+| `MSG_CREAR_PROCESO` | KS → KM | Inicializar espacio para un PID `{ uint32_t pid, char path[] }` |
+| `MSG_SYSCALL_SLEEP` | CPU → KS | `{ uint32_t pid, uint32_t tiempo_ms }` |
+| `MSG_SYSCALL_STDOUT` | CPU → KS | `{ uint32_t pid, uint32_t dir_logica, uint32_t tamanio }` |
+| `MSG_SYSCALL_STDIN` | CPU → KS | `{ uint32_t pid, uint32_t dir_logica, uint32_t tamanio }` |
+| `MSG_SYSCALL_EXIT` | CPU → KS | `{ uint32_t pid }` |
+
+## Check 2 — Memory Stick
+
+| Op_code | Dirección | Descripción |
+|---------|-----------|-------------|
+| `MSG_MEMORY_WRITE` | CPU → MS | `{ uint32_t direccion, uint32_t tamanio, datos[] }` |
+| `MSG_MEMORY_READ` | CPU → MS | `{ uint32_t direccion, uint32_t tamanio }` |
+| `MSG_MEMORY_READ_RESPUESTA` | MS → CPU | `{ datos[] }` |
+
+## Pendiente — Check 3
 
 | Op_code | Descripción |
 |---------|-------------|
-| `MSG_DESPACHAR_PROCESO` | KS → CPU: mandar a ejecutar un PID |
-| `MSG_DEVOLVER_PROCESO` | CPU → KS: fin de ciclo + motivo |
-| `MSG_FETCH_INSTRUCCION` | CPU → KM: pedir instrucción en PC actual |
-| `MSG_RESPUESTA_INSTRUCCION` | KM → CPU: string de la instrucción |
-| `MSG_CREAR_PROCESO` | KS → KM: inicializar contexto para un PID |
-| `MSG_MEM_ALLOC` / `MSG_MEM_FREE` | CPU → KS (syscalls de memoria) |
-| `MSG_LEER_MEMORIA` / `MSG_ESCRIBIR_MEMORIA` | CPU → Memory Stick |
-| `MSG_COMPACTAR` / `MSG_FIN_COMPACTACION` | KM ↔ KS |
-| `MSG_SUSPENDER_PROCESO` | KM → Swap |
-| `MSG_BSOD` | KM → KS |
+| `MSG_MEM_ALLOC` / `MSG_MEM_FREE` | CPU → KS: syscalls de asignación/liberación de segmentos |
+| `MSG_COMPACTAR` / `MSG_FIN_COMPACTACION` | KM ↔ KS: compactación de memoria |
+| `MSG_SUSPENDER_PROCESO` | KM → Swap: enviar segmentos al archivo de swap |
+| `MSG_BSOD` | KM → KS: error irrecuperable de memoria |

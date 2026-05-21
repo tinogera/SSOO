@@ -17,7 +17,7 @@
 | Hito | Fecha | Estado | Observaciones |
 |---|---|---|---|
 | Check 1 | 18/04/2026 | Entregado (parcial) | Faltó Kernel Memory + Swap (Luciano). Completados el 26/04. |
-| Check 2 | 23/05/2026 | En curso | IO SLEEP listo. IO STDOUT/STDIN y Mutex pendientes. |
+| Check 2 | 23/05/2026 | Implementado | FIFO/RR, BLOCK, IO (SLEEP/STDOUT/STDIN), Mutex, SUSPENSION_TIMEOUT, Memory Stick READ/WRITE. |
 | Check 3 | 20/06/2026 | Pendiente | — |
 | Entrega Final | 11/07/2026 | Pendiente | — |
 

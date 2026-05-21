@@ -121,8 +121,25 @@ make --version
 
 ---
 
+## Configuración
+
+Cada módulo trae un archivo `*.config.example` con todas las claves disponibles y sus valores por defecto. Antes de ejecutar, copiar y editar:
+
+```bash
+cp kernel_memory/kernel_memory.config.example  kernel_memory/kernel_memory.config
+cp kernel_scheduler/kernel_scheduler.config.example kernel_scheduler/kernel_scheduler.config
+cp cpu/cpu.config.example   cpu/cpu.config
+cp io/io.config.example     io/io.config
+cp memory_stick/memory_stick.config.example memory_stick/memory_stick.config
+cp swap/swap.config.example swap/swap.config
+```
+
+Los archivos `.config` **no se commitean** (están en `.gitignore`). Cada integrante mantiene el suyo local con las IPs y puertos del entorno donde está corriendo.
+
+---
+
 ## Notas
 
 - Las pruebas de integración se corren en **entorno distribuido** (múltiples máquinas). Cada máquina debe cumplir estos requisitos.
-- El orden de inicio de los módulos en ejecución es: Memory Sticks → Swap → Kernel Memory → Kernel Scheduler → CPU(s) → IO(s).
-- Los archivos de configuración de cada módulo deben ajustarse con las IPs y puertos correctos según el entorno de despliegue.
+- **Orden de inicio obligatorio:** Kernel Memory → Swap → Memory Stick(s) → Kernel Scheduler → IO(s) → CPU(s). Kernel Memory debe estar levantado antes que cualquier otro módulo porque todos se conectan a él al arrancar.
+- Para el procedimiento completo de despliegue en VMs (incluyendo cómo descubrir la IP de cada máquina del laboratorio), ver `instalacion.md` en la raíz del repositorio.
