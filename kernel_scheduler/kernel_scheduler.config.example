@@ -1,0 +1,17 @@
+LOG_LEVEL=INFO
+
+# IP y puerto donde escucha el Kernel Memory
+KERNEL_MEMORY_IP=127.0.0.1
+KERNEL_MEMORY_PORT=37215
+
+# Puerto donde este módulo acepta conexiones de CPU e IO
+KERNEL_SCHEDULER_PORT=37214
+
+# Algoritmo de planificación: FIFO o RR
+PLANIFICATION_ALGORITHM=FIFO
+
+# Quantum para Round Robin (en milisegundos)
+RR_QUANTUM=1000
+
+# Tiempo máximo en BLOCK antes de pasar a SUSP. BLOCK (en milisegundos)
+SUSPENSION_TIMEOUT=5000
