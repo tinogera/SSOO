@@ -76,7 +76,6 @@ typedef enum {
     MSG_SYSCALL_STDIN,   // 27  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
     MSG_SYSCALL_EXIT,    // 28  CPU → KS: { uint32_t pid }
 
-    // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
 } op_code;
 
@@ -104,7 +103,7 @@ typedef struct __attribute__((packed)) {
 // --- Mutex ---
 typedef struct __attribute__((packed)) {
     uint32_t pid;
-    char     nombre[]; // flexible array — el nombre del mutex sigue inmediatamente
+    char     nombre[];
 } t_payload_mutex;
 
 // --- CPU ↔ KM ---
