@@ -52,6 +52,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry);
 static void atender_io(int fd, char* tipo);
 static void* thread_planificador(void* _);
 static void* thread_quantum_timer(void* arg);
+static void* thread_suspension_timer(void* arg);
 
 static const char* estado_str(t_estado e) {
     switch (e) {
@@ -367,6 +368,12 @@ static void mover_a_block(t_proceso* proc) {
     queue_push(cola_block, proc);
     pthread_mutex_unlock(&mutex_block);
     sem_post(&sem_cpu_disponible);
+
+    int* pid_heap = malloc(sizeof(int));
+    *pid_heap = proc->PID;
+    pthread_t t;
+    pthread_create(&t, NULL, thread_suspension_timer, pid_heap);
+    pthread_detach(t);
 }
 
 // Saca el proceso de cola_block por PID. Retorna el proceso o NULL.
@@ -397,6 +404,27 @@ static t_proceso* sacar_de_susp_block(int pid) {
     return proc;
 }
 
+
+static void* thread_suspension_timer(void* arg) {
+    int pid = *((int*)arg);
+    free(arg);
+
+    struct timespec ts = {
+        .tv_sec  = suspension_timeout_ms / 1000,
+        .tv_nsec = (long)(suspension_timeout_ms % 1000) * 1000000L
+    };
+    nanosleep(&ts, NULL);
+
+    t_proceso* proc = sacar_de_block(pid);
+    if (!proc) return NULL;
+
+    log_info(logger, "## (%d) - Timeout de IO: suspendiendo proceso", pid);
+    cambiar_estado(proc, SUSP_BLOCK);
+    pthread_mutex_lock(&mutex_susp_block);
+    queue_push(cola_susp_block, proc);
+    pthread_mutex_unlock(&mutex_susp_block);
+    return NULL;
+}
 
 static void atender_cpu(int fd, t_cpu_entry* entry) {
     while (1) {
