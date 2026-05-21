@@ -29,6 +29,7 @@ static pthread_mutex_t mutex_pid = PTHREAD_MUTEX_INITIALIZER;
 
 static char algoritmo[8];
 static int  rr_quantum_ms;
+static int  suspension_timeout_ms;
 
 typedef struct {
     int fd;
@@ -38,6 +39,7 @@ typedef struct {
 static t_list*         lista_cpus = NULL;
 static pthread_mutex_t mutex_cpus = PTHREAD_MUTEX_INITIALIZER;
 static sem_t           sem_cpu_disponible;
+static sem_t           sem_largo_plazo;
 
 static int             fd_io_sleep  = -1;
 static int             fd_io_stdout = -1;
@@ -88,7 +90,8 @@ int main(int argc, char* argv[]) {
     int puerto_km = config_get_int_value(config, "KERNEL_MEMORY_PORT");
     int puerto_ks = config_get_int_value(config, "KERNEL_SCHEDULER_PORT");
     strncpy(algoritmo, config_get_string_value(config, "PLANIFICATION_ALGORITHM"), sizeof(algoritmo) - 1);
-    rr_quantum_ms = config_get_int_value(config, "RR_QUANTUM");
+    rr_quantum_ms         = config_get_int_value(config, "RR_QUANTUM");
+    suspension_timeout_ms = config_get_int_value(config, "SUSPENSION_TIMEOUT");
 
     // Conectar a KM sincrónicamente antes de crear PID 0
     fd_km = conectar_a_servidor(ip_km, puerto_km);
@@ -125,6 +128,7 @@ int main(int argc, char* argv[]) {
 
     lista_cpus = list_create();
     sem_init(&sem_cpu_disponible, 0, 0);
+    sem_init(&sem_largo_plazo,    0, 0);
     mutexes_init();
 
     // Servidor
