@@ -52,6 +52,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry);
 static void atender_io(int fd, char* tipo);
 static void* thread_planificador(void* _);
 static void* thread_quantum_timer(void* arg);
+static void* thread_largo_plazo(void* _);
 static void* thread_suspension_timer(void* arg);
 
 static const char* estado_str(t_estado e) {
@@ -143,6 +144,10 @@ int main(int argc, char* argv[]) {
     pthread_t t_plan;
     pthread_create(&t_plan, NULL, thread_planificador, NULL);
     pthread_detach(t_plan);
+
+    pthread_t t_largo;
+    pthread_create(&t_largo, NULL, thread_largo_plazo, NULL);
+    pthread_detach(t_largo);
 
     // PID 0
     if (!crear_proceso(argv[2], 0)) {
@@ -423,6 +428,27 @@ static void* thread_suspension_timer(void* arg) {
     pthread_mutex_lock(&mutex_susp_block);
     queue_push(cola_susp_block, proc);
     pthread_mutex_unlock(&mutex_susp_block);
+    return NULL;
+}
+
+static void* thread_largo_plazo(void* _) {
+    (void)_;
+    while (1) {
+        sem_wait(&sem_largo_plazo);
+
+        pthread_mutex_lock(&mutex_susp_ready);
+        t_proceso* proc = queue_size(cola_susp_ready) > 0 ? queue_pop(cola_susp_ready) : NULL;
+        pthread_mutex_unlock(&mutex_susp_ready);
+
+        if (!proc) continue;
+
+        // CK2: KM mockea espacio libre — siempre admitimos de SUSP. READY
+        cambiar_estado(proc, READY);
+        pthread_mutex_lock(&mutex_ready);
+        queue_push(cola_ready, proc);
+        pthread_mutex_unlock(&mutex_ready);
+        sem_post(&sem_cpu_disponible);
+    }
     return NULL;
 }
 
