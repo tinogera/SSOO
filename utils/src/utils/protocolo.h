@@ -28,7 +28,7 @@ typedef enum {
     // -----------------------------------------------------------------
     MSG_IO_IDENTIFICACION,              // 0  IO → KS:  payload: string tipo ("SLEEP"/"STDOUT"/"STDIN")
     MSG_CPU_IDENTIFICACION,             // 1  CPU → KS: payload: string id_cpu
-    MSG_KS_IDENTIFICACION,             // 2  KS → KM:  sin payload
+    MSG_KS_IDENTIFICACION,              // 2  KS → KM:  sin payload
     MSG_OK,                             // 3  respuesta exitosa — sin payload
     MSG_ERROR,                          // 4  respuesta de error — sin payload
     MSG_MEMORY_STICK_IDENTIFICACION,    // 5  MS → KM:  payload: uint32_t tamanio
@@ -66,7 +66,7 @@ typedef enum {
     MSG_RESPUESTA_INSTRUCCION,  // 21  KM → CPU: payload: string instrucción
     MSG_CREAR_PROCESO,          // 22  KS → KM:  { uint32_t pid, char path[] }
     MSG_GUARDAR_CONTEXTO,       // 23  CPU → KM: t_contexto serializado
-    MSG_RESTAURAR_CONTEXTO,     // 24  CPU → KM: { uint32_t pid } / KM → CPU: t_contexto serializado
+    MSG_RESTAURAR_CONTEXTO,     // 24  KM → CPU: t_contexto serializado (respuesta a pedido por pid)
 
     // -----------------------------------------------------------------
     // Syscalls CPU → KS — Check 2 (25–28)
@@ -76,6 +76,14 @@ typedef enum {
     MSG_SYSCALL_STDIN,   // 27  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
     MSG_SYSCALL_EXIT,    // 28  CPU → KS: { uint32_t pid }
 
+    // -----------------------------------------------------------------
+    // MS ↔ CPU — Check 2 (28–31)
+    // -----------------------------------------------------------------
+    MSG_MEMORY_WRITE,
+    MSG_MEMORY_READ,
+    MSG_MEMORY_READ_RESPUESTA,
+
+    // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
 } op_code;
 
@@ -103,7 +111,7 @@ typedef struct __attribute__((packed)) {
 // --- Mutex ---
 typedef struct __attribute__((packed)) {
     uint32_t pid;
-    char     nombre[];
+    char     nombre[]; // flexible array — el nombre del mutex sigue inmediatamente
 } t_payload_mutex;
 
 // --- CPU ↔ KM ---
