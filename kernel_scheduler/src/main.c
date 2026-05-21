@@ -501,6 +501,46 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             break;
         }
 
+        case MSG_SYSCALL_EXIT: {
+            t_payload_syscall_exit* p = msg->payload;
+            int pid = (int)ntohl(p->pid);
+
+            log_info(logger, "## (%d) - Solicitó syscall: EXIT", pid);
+
+            t_proceso* proc = sacar_de_exec(pid);
+            if (proc) {
+                cambiar_estado(proc, EXIT);
+                log_info(logger, "## (%d) finalizó su ejecución con motivo de EXIT", pid);
+                pthread_mutex_lock(&mutex_exit);
+                queue_push(cola_exit, proc);
+                pthread_mutex_unlock(&mutex_exit);
+                sem_post(&sem_cpu_disponible);
+            }
+
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            break;
+        }
+
+        case MSG_INIT_PROC: {
+            if (msg->payload_size < sizeof(uint32_t)) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                break;
+            }
+            // Layout del payload: { uint32_t pid_padre, char path[], uint32_t prioridad }
+            // pid_padre se reserva para CK3.
+            char* path_hijo = (char*)msg->payload + sizeof(uint32_t);
+            size_t path_len = strlen(path_hijo) + 1;
+            uint32_t prioridad_n;
+            memcpy(&prioridad_n,
+                   (char*)msg->payload + sizeof(uint32_t) + path_len,
+                   sizeof(uint32_t));
+            int prioridad = (int)ntohl(prioridad_n);
+
+            crear_proceso(path_hijo, prioridad);
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            break;
+        }
+
         default:
             log_warning(logger, "## KS: op_code desconocido %u", msg->op_code);
             break;
