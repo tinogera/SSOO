@@ -1,6 +1,7 @@
 # Borradores personales
 borrador_*.md
 resumen_*.md
+instalacion.md
 
 # Archivos de configuración local (no commitear, cada uno tiene el suyo)
 *.config
