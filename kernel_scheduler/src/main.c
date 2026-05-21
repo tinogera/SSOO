@@ -29,6 +29,7 @@ static pthread_mutex_t mutex_pid = PTHREAD_MUTEX_INITIALIZER;
 
 static char algoritmo[8];
 static int  rr_quantum_ms;
+static int  suspension_timeout_ms;
 
 typedef struct {
     int fd;
@@ -38,6 +39,7 @@ typedef struct {
 static t_list*         lista_cpus = NULL;
 static pthread_mutex_t mutex_cpus = PTHREAD_MUTEX_INITIALIZER;
 static sem_t           sem_cpu_disponible;
+static sem_t           sem_largo_plazo;
 
 static int             fd_io_sleep  = -1;
 static int             fd_io_stdout = -1;
@@ -50,6 +52,8 @@ static void atender_cpu(int fd, t_cpu_entry* entry);
 static void atender_io(int fd, char* tipo);
 static void* thread_planificador(void* _);
 static void* thread_quantum_timer(void* arg);
+static void* thread_largo_plazo(void* _);
+static void* thread_suspension_timer(void* arg);
 
 static const char* estado_str(t_estado e) {
     switch (e) {
@@ -88,7 +92,8 @@ int main(int argc, char* argv[]) {
     int puerto_km = config_get_int_value(config, "KERNEL_MEMORY_PORT");
     int puerto_ks = config_get_int_value(config, "KERNEL_SCHEDULER_PORT");
     strncpy(algoritmo, config_get_string_value(config, "PLANIFICATION_ALGORITHM"), sizeof(algoritmo) - 1);
-    rr_quantum_ms = config_get_int_value(config, "RR_QUANTUM");
+    rr_quantum_ms         = config_get_int_value(config, "RR_QUANTUM");
+    suspension_timeout_ms = config_get_int_value(config, "SUSPENSION_TIMEOUT");
 
     // Conectar a KM sincrónicamente antes de crear PID 0
     fd_km = conectar_a_servidor(ip_km, puerto_km);
@@ -125,6 +130,7 @@ int main(int argc, char* argv[]) {
 
     lista_cpus = list_create();
     sem_init(&sem_cpu_disponible, 0, 0);
+    sem_init(&sem_largo_plazo,    0, 0);
     mutexes_init();
 
     // Servidor
@@ -138,6 +144,10 @@ int main(int argc, char* argv[]) {
     pthread_t t_plan;
     pthread_create(&t_plan, NULL, thread_planificador, NULL);
     pthread_detach(t_plan);
+
+    pthread_t t_largo;
+    pthread_create(&t_largo, NULL, thread_largo_plazo, NULL);
+    pthread_detach(t_largo);
 
     // PID 0
     if (!crear_proceso(argv[2], 0)) {
@@ -363,6 +373,12 @@ static void mover_a_block(t_proceso* proc) {
     queue_push(cola_block, proc);
     pthread_mutex_unlock(&mutex_block);
     sem_post(&sem_cpu_disponible);
+
+    int* pid_heap = malloc(sizeof(int));
+    *pid_heap = proc->PID;
+    pthread_t t;
+    pthread_create(&t, NULL, thread_suspension_timer, pid_heap);
+    pthread_detach(t);
 }
 
 // Saca el proceso de cola_block por PID. Retorna el proceso o NULL.
@@ -379,6 +395,62 @@ static t_proceso* sacar_de_block(int pid) {
     return proc;
 }
 
+
+static t_proceso* sacar_de_susp_block(int pid) {
+    pthread_mutex_lock(&mutex_susp_block);
+    t_proceso* proc = NULL;
+    int sz = queue_size(cola_susp_block);
+    for (int i = 0; i < sz; i++) {
+        t_proceso* q = queue_pop(cola_susp_block);
+        if (q->PID == pid) proc = q;
+        else queue_push(cola_susp_block, q);
+    }
+    pthread_mutex_unlock(&mutex_susp_block);
+    return proc;
+}
+
+
+static void* thread_suspension_timer(void* arg) {
+    int pid = *((int*)arg);
+    free(arg);
+
+    struct timespec ts = {
+        .tv_sec  = suspension_timeout_ms / 1000,
+        .tv_nsec = (long)(suspension_timeout_ms % 1000) * 1000000L
+    };
+    nanosleep(&ts, NULL);
+
+    t_proceso* proc = sacar_de_block(pid);
+    if (!proc) return NULL;
+
+    log_info(logger, "## (%d) - Timeout de IO: suspendiendo proceso", pid);
+    cambiar_estado(proc, SUSP_BLOCK);
+    pthread_mutex_lock(&mutex_susp_block);
+    queue_push(cola_susp_block, proc);
+    pthread_mutex_unlock(&mutex_susp_block);
+    return NULL;
+}
+
+static void* thread_largo_plazo(void* _) {
+    (void)_;
+    while (1) {
+        sem_wait(&sem_largo_plazo);
+
+        pthread_mutex_lock(&mutex_susp_ready);
+        t_proceso* proc = queue_size(cola_susp_ready) > 0 ? queue_pop(cola_susp_ready) : NULL;
+        pthread_mutex_unlock(&mutex_susp_ready);
+
+        if (!proc) continue;
+
+        // CK2: KM mockea espacio libre — siempre admitimos de SUSP. READY
+        cambiar_estado(proc, READY);
+        pthread_mutex_lock(&mutex_ready);
+        queue_push(cola_ready, proc);
+        pthread_mutex_unlock(&mutex_ready);
+        sem_post(&sem_cpu_disponible);
+    }
+    return NULL;
+}
 
 static void atender_cpu(int fd, t_cpu_entry* entry) {
     while (1) {
@@ -565,27 +637,51 @@ static void atender_io(int fd, char* tipo) {
 
             t_proceso* proc = sacar_de_block(pid);
             if (proc) {
+                // IO terminó antes del timeout: BLOCK → READY
                 cambiar_estado(proc, READY);
                 log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
                 pthread_mutex_lock(&mutex_ready);
                 queue_push(cola_ready, proc);
                 pthread_mutex_unlock(&mutex_ready);
                 sem_post(&sem_cpu_disponible);
+            } else {
+                // IO terminó después del timeout: SUSP. BLOCK → SUSP. READY
+                proc = sacar_de_susp_block(pid);
+                if (proc) {
+                    cambiar_estado(proc, SUSP_READY);
+                    log_info(logger, "## (%d) finalizó IO y pasa a SUSP. READY", pid);
+                    pthread_mutex_lock(&mutex_susp_ready);
+                    queue_push(cola_susp_ready, proc);
+                    pthread_mutex_unlock(&mutex_susp_ready);
+                    sem_post(&sem_largo_plazo);
+                }
             }
 
         } else if (msg->op_code == MSG_IO_STDIN_DATOS) {
             uint32_t pid_n;
             memcpy(&pid_n, msg->payload, sizeof(uint32_t));
             int pid = (int)ntohl(pid_n);
-            // Check 2: KM mockea la escritura → solo desbloquear el proceso
+
             t_proceso* proc = sacar_de_block(pid);
             if (proc) {
+                // IO terminó antes del timeout: BLOCK → READY (CK2: KM mockea escritura)
                 cambiar_estado(proc, READY);
                 log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
                 pthread_mutex_lock(&mutex_ready);
                 queue_push(cola_ready, proc);
                 pthread_mutex_unlock(&mutex_ready);
                 sem_post(&sem_cpu_disponible);
+            } else {
+                // IO terminó después del timeout: SUSP. BLOCK → SUSP. READY
+                proc = sacar_de_susp_block(pid);
+                if (proc) {
+                    cambiar_estado(proc, SUSP_READY);
+                    log_info(logger, "## (%d) finalizó IO y pasa a SUSP. READY", pid);
+                    pthread_mutex_lock(&mutex_susp_ready);
+                    queue_push(cola_susp_ready, proc);
+                    pthread_mutex_unlock(&mutex_susp_ready);
+                    sem_post(&sem_largo_plazo);
+                }
             }
         }
 
