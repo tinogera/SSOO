@@ -1,8 +1,8 @@
 # Utils — Guía de uso para el equipo
 
-**Módulo:** `utils/`
-**Responsable:** Nicolas
-**Estado:** Check 1 — sockets y protocolo base implementados
+**Módulo:** `utils/`  
+**Responsable:** Nicolas  
+**Estado:** Check 2 completo — ciclo CPU/KM, IO, Mutex, SUSPENSION_TIMEOUT implementados
 
 ---
 
@@ -12,196 +12,332 @@
 
 Genera `utils/lib/libutils.a`, que se enlaza automáticamente cuando hacen `make` en su módulo.
 
-**No tienen que tocar el Makefile de su módulo** — ya está configurado para buscar utils en `../utils/lib` y los headers en `../utils/src`.
-
----
-
-## Cómo incluir utils en su módulo
-
-En cualquier `.c` de su módulo:
-
-```c
-#include <utils/sockets.h>    // sockets, t_mensaje, serialización
-#include <utils/protocolo.h>  // enum op_code con los tipos de mensaje
-```
-
 ---
 
 ## Compilación
 
-Siempre compilar utils **antes** de compilar su módulo, porque los demás dependen de la librería estática que genera:
+Siempre compilar utils **antes** de compilar su módulo:
 
 ```bash
-# Desde la raíz del proyecto
 cd utils && make && cd ..
 cd su_modulo && make
 ```
 
-Si cambian algo en utils, tienen que recompilar utils antes de recompilar su módulo.
+Si cambian algo en utils, recompilen utils antes que su módulo.
+
+---
+
+## Cómo incluir utils
+
+```c
+#include <utils/sockets.h>    // sockets, t_mensaje, serialización
+#include <utils/protocolo.h>  // enum op_code con todos los tipos de mensaje
+```
+
+---
+
+## Esquema de conexiones del sistema
+
+```
+                         ┌─────────────────────────────────────┐
+                         │         Kernel Memory (KM)          │
+                         │  escucha en KERNEL_MEMORY_PORT      │
+                         └──┬──────────┬────────────┬──────────┘
+             se conecta a KM│          │            │           │
+         ┌──────────────────┘    ┌─────┘      ┌────┘     ┌─────┘
+         ▼                       ▼            ▼           ▼
+  ┌─────────────┐        ┌────────────┐  ┌────────┐  ┌────────┐
+  │Kernel Sched.│        │    CPU     │  │  Swap  │  │Memory  │
+  │(KS)         │        │            │  │        │  │ Stick  │
+  └──────┬──────┘        └────────────┘  └────────┘  └────────┘
+         │ escucha en KS_PORT
+         │ ← se conectan CPU e IO
+    ┌────┴────┐
+    │         │
+    ▼         ▼
+┌───────┐ ┌───────┐
+│  CPU  │ │  IO   │
+└───────┘ └───────┘
+```
 
 ---
 
 ## Protocolo de mensajes
 
-Todos los mensajes entre módulos siguen este formato en el socket:
+Todos los mensajes entre módulos usan el mismo formato:
 
 ```
 [ op_code (4 bytes) ][ payload_size (4 bytes) ][ payload (variable) ]
 ```
 
-- `op_code`: identifica qué tipo de mensaje es (ver `protocolo.h`)
-- `payload_size`: cantidad de bytes del payload (puede ser 0)
-- `payload`: los datos del mensaje
+- `op_code`: identifica el tipo de mensaje (ver tabla abajo)
+- `payload_size`: cantidad de bytes del payload (0 si no hay datos)
+- `payload`: los datos del mensaje — formato específico por op_code
 
-### Códigos de operación disponibles (`protocolo.h`)
-
-| Código | Valor | Descripción | Usado por |
-|---|---|---|---|
-| `MSG_IO_IDENTIFICACION` | 0 | IO se presenta al Kernel Scheduler con su tipo | IO → Kernel Scheduler |
-
-> **Check 2 y Check 3:** a medida que cada módulo necesite nuevos tipos de mensaje, se agregan en `protocolo.h`. Coordinar con Nicolas para no pisar valores del enum.
+**Formato de campos numéricos en el payload:** `uint32_t` en network byte order (`htonl`/`ntohl`).  
+**Formato de strings en el payload:** null-terminated, siempre al final del payload.
 
 ---
 
-## Funciones disponibles
+## Tabla de op_codes
 
-### Crear un servidor (escuchar conexiones entrantes)
+### Check 1 — Identificación inicial
 
-```c
-int fd_servidor = crear_servidor(37214);
-if (fd_servidor < 0) {
-    // error — ver perror en stderr
-}
+| Código | Valor | Dirección | Payload |
+|--------|-------|-----------|---------|
+| `MSG_IO_IDENTIFICACION` | 0 | IO → KS | `char tipo[]` — `"SLEEP"`, `"STDOUT"` o `"STDIN"` |
+| `MSG_CPU_IDENTIFICACION` | 1 | CPU → KS | `char id_cpu[]` — identificador de la CPU |
+| `MSG_KS_IDENTIFICACION` | 2 | KS → KM | sin payload |
+| `MSG_OK` | 3 | cualquiera | sin payload — respuesta exitosa |
+| `MSG_ERROR` | 4 | cualquiera | sin payload — respuesta de error |
+| `MSG_MEMORY_STICK_IDENTIFICACION` | 5 | MS → KM | sin payload |
+| `MSG_SWAP_IDENTIFICACION` | 6 | Swap → KM | sin payload |
+| `MSG_CPU_A_KERNEL_MEMORY` | 7 | CPU → KM | sin payload |
+
+### Check 2 — IO
+
+| Código | Valor | Dirección | Payload |
+|--------|-------|-----------|---------|
+| `MSG_IO_SLEEP` | 8 | KS → IO SLEEP | `uint32_t pid` + `uint32_t tiempo_ms` |
+| `MSG_IO_STDOUT` | 9 | KS → IO STDOUT | `uint32_t pid` + `char contenido[]` |
+| `MSG_IO_STDIN` | 10 | KS → IO STDIN | `uint32_t pid` + `uint32_t n_bytes` |
+| `MSG_IO_FIN` | 11 | IO → KS | `uint32_t pid` |
+| `MSG_IO_STDIN_DATOS` | 12 | IO → KS | `uint32_t pid` + `uint32_t n_bytes` + `uint8_t datos[]` |
+
+### Check 2 — Mutex
+
+| Código | Valor | Dirección | Payload |
+|--------|-------|-----------|---------|
+| `MSG_MUTEX_CREATE` | 13 | CPU → KS | `uint32_t pid` + `char nombre[]` |
+| `MSG_MUTEX_LOCK` | 14 | CPU → KS | `uint32_t pid` + `char nombre[]` |
+| `MSG_MUTEX_UNLOCK` | 15 | CPU → KS | `uint32_t pid` + `char nombre[]` |
+
+---
+
+## Flujos de comunicación — Check 2
+
+### IO tipo SLEEP
+
+```
+KS                              IO (SLEEP)
+│                                    │
+│──── MSG_IO_SLEEP ─────────────────►│  payload: { pid, tiempo_ms }
+│                               usleep(tiempo_ms * 1000)
+│◄─── MSG_IO_FIN ────────────────────│  payload: { pid }
+│                                    │
 ```
 
-Retorna el file descriptor del servidor. Pasa ese fd a `aceptar_conexion` para esperar clientes.
-
-### Aceptar una conexión
-
-```c
-int fd_cliente = aceptar_conexion(fd_servidor);
+**Log obligatorio en IO:**
+```
+## PID: <PID> - Inicio de IO
+## PID: <PID> - Haciendo sleep por <TIEMPO> milisegundos
+## PID: <PID> - Fin de IO
 ```
 
-Bloquea hasta que alguien se conecte. Retorna el fd del cliente. Llamar una vez por cliente esperado, o en un loop para múltiples clientes.
+---
 
-### Conectarse a otro módulo
+### IO tipo STDOUT
 
-```c
-int fd = conectar_a_servidor("127.0.0.1", 37214);
-if (fd < 0) {
-    // error — el servidor no está arriba todavía
-}
+```
+KS                              IO (STDOUT)
+│                                    │
+│──── MSG_IO_STDOUT ────────────────►│  payload: { pid, contenido\0 }
+│                               printf / log contenido
+│◄─── MSG_IO_FIN ────────────────────│  payload: { pid }
+│                                    │
 ```
 
-Usar la IP y puerto del archivo de configuración del módulo.
+**Log obligatorio en IO:**
+```
+## PID: <PID> - Inicio de IO
+## PID: <PID> - <CONTENIDO A IMPRIMIR>
+## PID: <PID> - Fin de IO
+```
 
-### Enviar un mensaje
+---
+
+### IO tipo STDIN
+
+```
+KS                              IO (STDIN)
+│                                    │
+│──── MSG_IO_STDIN ─────────────────►│  payload: { pid, n_bytes }
+│                               leer teclado, truncar/padear a n_bytes
+│◄─── MSG_IO_STDIN_DATOS ────────────│  payload: { pid, n_bytes, datos[] }
+│                                    │
+```
+
+**Log obligatorio en IO:**
+```
+## PID: <PID> - Inicio de IO
+## PID: <PID> - Ingrese <N> caracteres:
+## PID: <PID> - Fin de IO
+```
+
+---
+
+### Mutex (MUTEX_CREATE / LOCK / UNLOCK)
+
+```
+CPU                             KS
+│                                │
+│──── MSG_MUTEX_CREATE ─────────►│  payload: { pid, nombre\0 }
+│◄─── MSG_OK ────────────────────│
+│                                │
+│──── MSG_MUTEX_LOCK ───────────►│  payload: { pid, nombre\0 }
+│   (si mutex libre)             │
+│◄─── MSG_OK ────────────────────│  → CPU sigue ejecutando
+│   (si mutex tomado)            │
+│                    proceso pasa a BLOCK, CPU no recibe respuesta
+│                    hasta que otro proceso haga UNLOCK
+│                                │
+│──── MSG_MUTEX_UNLOCK ─────────►│  payload: { pid, nombre\0 }
+│◄─── MSG_OK ────────────────────│
+│                                │
+```
+
+**Logs obligatorios en KS:**
+```
+## (<PID>) Toma el Mutex <NOMBRE>
+## (<PID>) Libera el Mutex <NOMBRE>
+```
+
+---
+
+## Formato de payload — detalle por tipo
+
+### Solo campos numéricos (SLEEP, STDIN, FIN)
+
+Usar struct empaquetado en `protocolo.h`:
 
 ```c
-// Sin payload (solo op_code)
-enviar_mensaje(fd, MSG_IO_IDENTIFICACION, NULL, 0);
+typedef struct __attribute__((packed)) { uint32_t pid; uint32_t tiempo_ms; } t_payload_io_sleep;
+typedef struct __attribute__((packed)) { uint32_t pid; uint32_t n_bytes;   } t_payload_io_stdin;
+typedef struct __attribute__((packed)) { uint32_t pid;                      } t_payload_io_fin;
+```
 
-// Con payload (string serializado)
+**Enviar:**
+```c
+t_payload_io_sleep p = { .pid = pid, .tiempo_ms = tiempo_ms };
+enviar_mensaje(fd, MSG_IO_SLEEP, &p, sizeof(p));
+```
+
+**Recibir:**
+```c
+t_payload_io_sleep* p = (t_payload_io_sleep*) msg->payload;
+uint32_t pid       = p->pid;
+uint32_t tiempo_ms = p->tiempo_ms;
+```
+
+### Campos numérico + string (STDOUT, MUTEX_*)
+
+Layout en memoria: `[ uint32_t pid (4 bytes) ][ string\0 (variable) ]`
+
+**Enviar:**
+```c
+// helper disponible en sockets.h (a agregar en CK2)
 uint32_t size;
-void* payload = serializar_string("SLEEP", &size);
-enviar_mensaje(fd, MSG_IO_IDENTIFICACION, payload, size);
+void* payload = serializar_uint32_string(pid, nombre, &size);
+enviar_mensaje(fd, MSG_MUTEX_LOCK, payload, size);
 free(payload);
 ```
 
-### Recibir un mensaje
+**Recibir:**
+```c
+uint32_t pid;
+char* nombre;
+deserializar_uint32_string(msg->payload, &pid, &nombre);
+// nombre apunta dentro del payload — usar o strdup() si necesitás copia propia
+```
+
+### STDIN_DATOS (numérico + buffer raw)
+
+Layout: `[ uint32_t pid (4B) ][ uint32_t n_bytes (4B) ][ datos (n_bytes B) ]`
+
+```c
+// Armar manualmente
+uint32_t psize = 4 + 4 + n_bytes;
+void* payload  = malloc(psize);
+memcpy(payload,     &pid,     4);
+memcpy(payload + 4, &n_bytes, 4);
+memcpy(payload + 8, datos,    n_bytes);
+enviar_mensaje(fd, MSG_IO_STDIN_DATOS, payload, psize);
+free(payload);
+```
+
+---
+
+## Funciones disponibles en sockets.h
+
+### Servidor / cliente
+
+```c
+int crear_servidor(int puerto);               // retorna fd servidor, -1 si falla
+int aceptar_conexion(int fd_servidor);        // bloquea hasta que llegue un cliente
+int conectar_a_servidor(char* ip, int puerto);// retorna fd conexión, -1 si falla
+```
+
+### Enviar y recibir
+
+```c
+void       enviar_mensaje(int fd, uint32_t op_code, void* payload, uint32_t size);
+t_mensaje* recibir_mensaje(int fd);   // retorna NULL si la conexión se cerró
+void       free_mensaje(t_mensaje* msg);
+```
+
+### Serialización
+
+```c
+void*  serializar_string(char* str, uint32_t* out_size);  // incluye el '\0'
+char*  deserializar_string(void* payload);                 // retorna copia en heap
+```
+
+### Manejo de desconexión
+
+`recibir_mensaje` retorna `NULL` cuando el otro extremo cerró el socket. Siempre verificar:
 
 ```c
 t_mensaje* msg = recibir_mensaje(fd);
 if (msg == NULL) {
-    // conexión cerrada por el otro lado
-}
-
-switch (msg->op_code) {
-    case MSG_IO_IDENTIFICACION:
-        char* tipo = deserializar_string(msg->payload);
-        // ... usar tipo ...
-        free(tipo);
-        break;
-    // otros casos...
-}
-
-free_mensaje(msg);  // siempre liberar al terminar
-```
-
-### Serialización de strings
-
-```c
-// Serializar (para poner en el payload de un mensaje)
-uint32_t size;
-void* buf = serializar_string("hola", &size);
-enviar_mensaje(fd, algún_opcode, buf, size);
-free(buf);
-
-// Deserializar (al recibir un mensaje con string en el payload)
-char* str = deserializar_string(msg->payload);
-// ... usar str ...
-free(str);
-```
-
----
-
-## Ejemplo completo: módulo servidor
-
-```c
-#include <utils/sockets.h>
-#include <utils/protocolo.h>
-
-int fd_servidor = crear_servidor(37214);
-
-// Aceptar una conexión
-int fd_cliente = aceptar_conexion(fd_servidor);
-
-// Recibir identificación de IO
-t_mensaje* msg = recibir_mensaje(fd_cliente);
-if (msg->op_code == MSG_IO_IDENTIFICACION) {
-    char* tipo = deserializar_string(msg->payload);
-    // tipo es "STDIN", "STDOUT" o "SLEEP"
-    free(tipo);
-}
-free_mensaje(msg);
-```
-
-## Ejemplo completo: módulo cliente
-
-```c
-#include <utils/sockets.h>
-#include <utils/protocolo.h>
-
-int fd = conectar_a_servidor("127.0.0.1", 37214);
-
-// Enviar identificación
-uint32_t size;
-void* payload = serializar_string("SLEEP", &size);
-enviar_mensaje(fd, MSG_IO_IDENTIFICACION, payload, size);
-free(payload);
-```
-
----
-
-## Manejo de desconexión
-
-`recibir_mensaje` retorna `NULL` cuando el otro extremo cerró la conexión. Siempre checkear:
-
-```c
-t_mensaje* msg = recibir_mensaje(fd);
-if (msg == NULL) {
-    log_error(logger, "Conexión cerrada inesperadamente");
-    // manejar la desconexión según el módulo
+    // conexión cerrada — manejar según el módulo
+    break;
 }
 ```
 
 ---
 
-## Actualizaciones previstas
+## Check 2 — Ciclo CPU/KM e instrucciones
 
-| Check | Qué se va a agregar |
-|---|---|
-| Check 2 | Nuevos `op_code` para planificación, IO real, y fetch de instrucciones |
-| Check 3 | Serialización de estructuras complejas (contexto CPU, segmentos) |
+Implementados junto con el ciclo de instrucción del CPU:
 
-Cada vez que se agregue funcionalidad, este documento se actualiza.
+| Op_code | Dirección | Descripción |
+|---------|-----------|-------------|
+| `MSG_DESPACHAR_PROCESO` | KS → CPU | Enviar proceso a ejecutar `{ uint32_t pid, uint32_t pc, registros[] }` |
+| `MSG_DEVOLVER_PROCESO` | CPU → KS | Fin de ciclo `{ uint32_t pid, uint32_t motivo, uint32_t pc }` |
+| `MSG_INTERRUPCION_CPU` | KS → CPU | Señal de desalojo por quantum o syscall `{ uint32_t pid, uint32_t motivo }` |
+| `MSG_FETCH_INSTRUCCION` | CPU → KM | Pedir instrucción en PC actual `{ uint32_t pid, uint32_t pc }` |
+| `MSG_RESPUESTA_INSTRUCCION` | KM → CPU | String de la instrucción |
+| `MSG_RESTAURAR_CONTEXTO` | KM → CPU | Contexto del proceso `{ registros }` |
+| `MSG_GUARDAR_CONTEXTO` | CPU → KM | Guardar registros al final del ciclo |
+| `MSG_CREAR_PROCESO` | KS → KM | Inicializar espacio para un PID `{ uint32_t pid, char path[] }` |
+| `MSG_SYSCALL_SLEEP` | CPU → KS | `{ uint32_t pid, uint32_t tiempo_ms }` |
+| `MSG_SYSCALL_STDOUT` | CPU → KS | `{ uint32_t pid, uint32_t dir_logica, uint32_t tamanio }` |
+| `MSG_SYSCALL_STDIN` | CPU → KS | `{ uint32_t pid, uint32_t dir_logica, uint32_t tamanio }` |
+| `MSG_SYSCALL_EXIT` | CPU → KS | `{ uint32_t pid }` |
+
+## Check 2 — Memory Stick
+
+| Op_code | Dirección | Descripción |
+|---------|-----------|-------------|
+| `MSG_MEMORY_WRITE` | CPU → MS | `{ uint32_t direccion, uint32_t tamanio, datos[] }` |
+| `MSG_MEMORY_READ` | CPU → MS | `{ uint32_t direccion, uint32_t tamanio }` |
+| `MSG_MEMORY_READ_RESPUESTA` | MS → CPU | `{ datos[] }` |
+
+## Pendiente — Check 3
+
+| Op_code | Descripción |
+|---------|-------------|
+| `MSG_MEM_ALLOC` / `MSG_MEM_FREE` | CPU → KS: syscalls de asignación/liberación de segmentos |
+| `MSG_COMPACTAR` / `MSG_FIN_COMPACTACION` | KM ↔ KS: compactación de memoria |
+| `MSG_SUSPENDER_PROCESO` | KM → Swap: enviar segmentos al archivo de swap |
+| `MSG_BSOD` | KM → KS: error irrecuperable de memoria |

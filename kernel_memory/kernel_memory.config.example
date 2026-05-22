@@ -1,0 +1,8 @@
+# Puerto donde este módulo acepta conexiones de KS, CPU, MS y Swap
+KERNEL_MEMORY_PORT=37215
+
+# Directorio donde están los archivos de instrucciones (un .txt por proceso, nombrado por PID)
+SCRIPTS_BASEPATH=/home/utnso/scripts
+
+# Retardo artificial al leer una instrucción (en milisegundos)
+INSTRUCTION_DELAY=0

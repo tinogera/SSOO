@@ -14,12 +14,12 @@
 
 ## Cronograma de Checkpoints
 
-| Hito | Fecha | Descripción |
-|---|---|---|
-| Check 1 | 18/04/2026 | Arquitectura y conexiones entre módulos |
-| Check 2 | 23/05/2026 | Planificación FIFO/RR, IO, Mutex (sin herencia) |
-| Check 3 | 20/06/2026 | CPU completa, segmentación, herencia de prioridades |
-| Entrega Final | 11/07/2026 | Sistema completo integrado y testeado |
+| Hito | Fecha | Estado | Observaciones |
+|---|---|---|---|
+| Check 1 | 18/04/2026 | Entregado (parcial) | Faltó Kernel Memory + Swap (Luciano). Completados el 26/04. |
+| Check 2 | 23/05/2026 | Implementado | FIFO/RR, BLOCK, IO (SLEEP/STDOUT/STDIN), Mutex, SUSPENSION_TIMEOUT, Memory Stick READ/WRITE. |
+| Check 3 | 20/06/2026 | Pendiente | — |
+| Entrega Final | 11/07/2026 | Pendiente | — |
 
 ---
 
@@ -101,36 +101,44 @@ main
 ---
 
 ### Fase 1 — Check 1: Conexiones Iniciales
-**Período:** 13/04 – 18/04/2026  
+**Período:** 13/04 – 18/04/2026 — **ENTREGADO (parcial)**
 **Objetivo:** Todos los módulos se conectan correctamente entre sí por sockets.
 
-| Módulo | Tarea | Rama |
-|---|---|---|
-| Utils | Wrapper de sockets (conectar, escuchar, enviar, recibir) + serialización | `feature/utils` |
-| Kernel Scheduler | Servidor de sockets: acepta Kernel Memory, CPUs e IOs | `feature/kernel-scheduler/planificacion-basica` |
-| Kernel Memory | Servidor de sockets: acepta Scheduler, CPUs, Memory Sticks y Swap | `feature/kernel-memory/conexiones-instrucciones` |
-| CPU | Cliente: conecta a Kernel Scheduler y Kernel Memory | `feature/cpu/ciclo-basico` |
-| Memory Stick | Cliente a Kernel Memory + servidor para CPUs | `feature/memory-stick` |
-| Swap | Cliente a Kernel Memory, informa capacidad | `feature/swap` |
-| IO | Cliente a Kernel Scheduler | `feature/io` |
+| Módulo | Tarea | Rama | Estado |
+|---|---|---|---|
+| Utils | Wrapper de sockets + serialización | `feature/utils` | ✅ Completo |
+| Kernel Scheduler | Servidor: acepta KM, CPUs e IOs | `feature/kernel-scheduler/planificacion-basica` | ✅ Completo |
+| Kernel Memory | Servidor: acepta Scheduler, CPUs, MS y Swap | `feature/kernel-memory/conexiones-instrucciones` | ✅ Completo (26/04) |
+| CPU | Conecta a Kernel Scheduler y Kernel Memory | `feature/cpu/ciclo-basico` | ✅ Completo |
+| Memory Stick | Cliente a KM + servidor para CPUs | `feature/memory-stick` | ✅ Completo |
+| Swap | Cliente a Kernel Memory | `feature/swap` | ✅ Completo (26/04) |
+| IO | Cliente a Kernel Scheduler | `feature/io` | ✅ Completo |
 
-> Al llegar al Check 1 se mergean todas las feature branches activas a `develop` y luego `develop` → `main`.
+> Kernel Memory y Swap fueron completados por Luciano el 26/04, después de la fecha del checkpoint.
 
 **Criterio de éxito:** Todos los módulos levantan, se conectan y loguean la conexión establecida.
 
 ---
 
 ### Fase 2 — Check 2: Planificación y Ciclo de CPU
-**Período:** 19/04 – 23/05/2026  
+**Período:** 19/04 – 23/05/2026 — **EN CURSO**
 **Objetivo:** Planificación básica funcionando de punta a punta con CPU ejecutando instrucciones simples.
 
-| Módulo | Tareas | Rama |
-|---|---|---|
-| Kernel Scheduler | Estados NEW/READY/EXEC/BLOCK/EXIT, FIFO, RR, manejo de IO (SLEEP/STDIN/STDOUT) | `feature/kernel-scheduler/planificacion-basica` |
-| Kernel Scheduler | Mutex sin herencia | `feature/kernel-scheduler/mutex-cmn` |
-| CPU | Registros, fetch, decode, instrucciones básicas (NOOP, SET, SUM, SUB, JNZ), syscalls, interrupciones | `feature/cpu/ciclo-basico` |
-| Kernel Memory | Retorno de instrucciones desde pseudocódigo, gestión de contextos mock | `feature/kernel-memory/conexiones-instrucciones` |
-| IO | SLEEP, STDOUT y STDIN completos | `feature/io` |
+| Módulo | Tareas | Rama | Estado |
+|---|---|---|---|
+| Kernel Scheduler | Estados NEW/READY/EXEC/BLOCK/EXIT, FIFO, RR, IO | `feature/kernel-scheduler/planificacion-basica` | 🔄 En curso (Santiago) |
+| Kernel Scheduler | Mutex sin herencia | `feature/kernel-scheduler/mutex-cmn` | 🔄 En curso (Nicolas) |
+| CPU | Registros, fetch, decode, instrucciones básicas, syscalls, interrupciones | `feature/cpu/ciclo-basico` | 🔄 En curso (Kevin) |
+| Kernel Memory | Instrucciones desde pseudocódigo, gestión de contextos | `feature/kernel-memory/conexiones-instrucciones` | 🔄 En curso (Luciano/Kevin) |
+| IO | SLEEP, STDOUT y STDIN completos | `feature/io` | 🔄 En curso (Nicolas) |
+
+**Progreso al 29/04/2026:**
+- ✅ `fix/protocolo-msg-cpu-km` mergeado a develop — bug fix de `MSG_CPU_A_KERNEL_MEMORY`
+- ✅ `feature/protocolo-msg-io-mutex` mergeado a develop — op_codes y structs de CK2 definidos
+- ✅ IO tipo SLEEP implementado y testeado (issue #23, cerrado)
+- ⬜ IO tipo STDOUT (issue #24)
+- ⬜ IO tipo STDIN (issue #25)
+- ⬜ Mutex: MUTEX_CREATE / LOCK / UNLOCK (issue #15)
 
 > Al llegar al Check 2: mergear a `develop` y luego `develop` → `main`.
 

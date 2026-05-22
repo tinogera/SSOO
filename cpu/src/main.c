@@ -6,6 +6,12 @@
 #include <utils/sockets.h>
 #include <utils/protocolo.h>
 
+#include "cpu_ciclo.h"
+#include "cpu_contexto.h"
+#include "cpu_devolucion.h"
+#include "cpu_dispatch.h"
+#include "cpu_registros.h"
+
 int main(int argc, char* argv[]) {
 
     if (argc < 3) {
@@ -18,8 +24,11 @@ int main(int argc, char* argv[]) {
 
     t_config* config = config_create(config_path);
     t_log* logger = log_create("cpu.log", cpu_id, 1, LOG_LEVEL_INFO);
+    t_registros_cpu registros;
+    inicializar_registros_cpu(&registros);
 
     log_info(logger, "CPU %s iniciada", cpu_id);
+    log_info(logger, "Registros CPU inicializados - PC: %u", registros.pc);
 
     char* ip_kernel = config_get_string_value(config, "IP_KERNEL");
     int puerto_kernel = config_get_int_value(config, "PUERTO_KERNEL");
@@ -34,11 +43,24 @@ int main(int argc, char* argv[]) {
     } else {
         log_info(logger, "Conectado a Kernel Scheduler");
 
-        // HANDSHAKE CPU → KS
+        // HANDSHAKE CPU -> KS
         uint32_t size;
         void* payload = serializar_string(cpu_id, &size);
         enviar_mensaje(socket_kernel, MSG_CPU_IDENTIFICACION, payload, size);
         free(payload);
+
+        t_mensaje* respuesta_kernel = recibir_mensaje(socket_kernel);
+        if (respuesta_kernel == NULL) {
+            log_error(logger, "Kernel Scheduler cerro la conexion durante la identificacion");
+            socket_kernel = -1;
+        } else if (respuesta_kernel->op_code == MSG_OK) {
+            log_info(logger, "## Conectado a Kernel Scheduler");
+        } else {
+            log_error(logger, "Kernel Scheduler rechazo la identificacion");
+            socket_kernel = -1;
+        }
+
+        free_mensaje(respuesta_kernel);
     }
 
     // CONEXION A KERNEL MEMORY
@@ -48,11 +70,56 @@ int main(int argc, char* argv[]) {
     } else {
         log_info(logger, "Conectado a Kernel Memory");
 
-        // (opcional handshake si lo piden después)
+        // HANDSHAKE CPU -> Kernel Memory
+        enviar_mensaje(socket_memory, MSG_CPU_IDENTIFICACION, NULL, 0);
+
+        t_mensaje* respuesta = recibir_mensaje(socket_memory);
+        if (respuesta == NULL) {
+            log_error(logger, "Kernel Memory cerro la conexion durante el handshake");
+        } else if (respuesta->op_code == MSG_OK) {
+            log_info(logger, "## Conectado a Kernel Memory");
+        } else {
+            log_error(logger, "Kernel Memory rechazo la conexion");
+        }
+
+        free_mensaje(respuesta);
     }
 
-    // mantener vivo
-    while(1);
+    // Esperar procesos despachados por Kernel Scheduler
+    while(socket_kernel != -1) {
+        uint32_t pid;
+        if (!recibir_proceso_a_ejecutar(socket_kernel, &pid, logger)) {
+            break;
+        }
+
+        if (!restaurar_contexto_desde_memory(socket_memory, pid, &registros, logger)) {
+            log_error(logger, "No se pudo restaurar contexto para PID %u", pid);
+            break;
+        }
+
+        t_resultado_ciclo_cpu resultado_ciclo = ejecutar_ciclo_proceso(socket_kernel, socket_memory, pid, &registros, logger);
+        t_motivo_devolucion_cpu motivo_devolucion;
+        if (resultado_ciclo == CPU_CICLO_SYSCALL) {
+            motivo_devolucion = MOTIVO_DEVOLUCION_SYSCALL;
+        } else if (resultado_ciclo == CPU_CICLO_EXIT) {
+            motivo_devolucion = MOTIVO_DEVOLUCION_EXIT;
+        } else if (resultado_ciclo == CPU_CICLO_INTERRUPCION) {
+            motivo_devolucion = MOTIVO_DEVOLUCION_INTERRUPCION;
+        } else {
+            motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
+        }
+
+        if (!guardar_contexto_en_memory(socket_memory, pid, &registros, logger)) {
+            motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
+        }
+
+        devolver_proceso_a_scheduler(socket_kernel, pid, motivo_devolucion, &registros, logger);
+
+        if (motivo_devolucion == MOTIVO_DEVOLUCION_ERROR) {
+            log_error(logger, "Fallo el ciclo de instruccion para PID %u", pid);
+            break;
+        }
+    }
 
     close(socket_kernel);
     close(socket_memory);
@@ -62,4 +129,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
