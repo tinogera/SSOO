@@ -489,9 +489,15 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 pthread_mutex_unlock(&mutex_ready);
                 sem_post(&sem_cpu_disponible);
 
+            } else {
+                // MOTIVO_DEVOLUCION_SYSCALL con proceso todavía en exec: la syscall
+                // fue no bloqueante (MUTEX_CREATE, MUTEX_UNLOCK, MUTEX_LOCK libre).
+                cambiar_estado(proc, READY);
+                pthread_mutex_lock(&mutex_ready);
+                queue_push(cola_ready, proc);
+                pthread_mutex_unlock(&mutex_ready);
+                sem_post(&sem_cpu_disponible);
             }
-            // MOTIVO_DEVOLUCION_SYSCALL: la CPU devuelve el proceso después de que el KS
-            // ya lo movió a BLOCK en el handler de la syscall.
             break;
         }
 
