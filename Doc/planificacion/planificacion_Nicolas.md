@@ -47,40 +47,40 @@
 ---
 
 ## Fase 2 — Check 2: IO Completo + Mutex en Scheduler
-**Fecha límite:** 23/05/2026 — **EN CURSO** (arrancó 29/04/2026)
+**Fecha límite:** 23/05/2026 — **COMPLETADA** (merge a main el 22/05/2026, commit `29f8611`)
 **Ramas:** `feature/io` (IO completo) · `feature/kernel-scheduler/mutex-cmn` (Mutex)
 
 > Previo al desarrollo: se crearon y mergearon a develop las ramas `fix/protocolo-msg-cpu-km` (bug fix) y `feature/protocolo-msg-io-mutex` (op_codes y structs de payload para todos los mensajes de CK2).
 
 ### IO — Semanas 1–3 (19/04 – 09/05)
-- [x] Implementar **IO tipo SLEEP** — _issue #23, cerrado 29/04_ (commit `321d7c4`):
+- [x] Implementar **IO tipo SLEEP** — _issue #14, cerrado 22/05_:
   - Recibir tiempo en ms desde Kernel Scheduler.
   - Ejecutar `usleep(tiempo * 1000)`.
   - Notificar a Kernel Scheduler que finalizó.
   - Implementar log: `## PID: <PID> - Haciendo sleep por <TIEMPO> milisegundos`.
   - Implementar log: `## PID: <PID> - Inicio de IO` y `## PID: <PID> - Fin de IO`.
 
-- [ ] Implementar **IO tipo STDOUT** — _issue #24_:
+- [x] Implementar **IO tipo STDOUT** — _issue #14, cerrado 22/05_:
   - Recibir cadena de bytes desde Kernel Scheduler.
   - Imprimir por pantalla (stdout).
   - Notificar a Kernel Scheduler que finalizó.
   - Implementar log: `## PID: <PID> - <CONTENIDO A IMPRIMIR>`.
 
-- [ ] Implementar **IO tipo STDIN** — _issue #25_:
+- [x] Implementar **IO tipo STDIN** — _issue #14, cerrado 22/05_:
   - Recibir cantidad de bytes a leer.
-  - Leer del teclado (con `readline` o `fgets`).
+  - Leer del teclado con `read()`.
   - Si entrada > bytes solicitados → cortar. Si entrada < bytes → rellenar con `\0`.
-  - Enviar datos al Kernel Scheduler para que los escriba en memoria.
+  - Enviar datos al Kernel Scheduler.
   - Implementar log: `## PID: <PID> - Ingrese <N> caracteres:`.
 
 ### Kernel Scheduler — Mutex sin herencia (10/05 – 23/05)
 > Trabaja en conjunto con Santiago, quien maneja la estructura de colas.
 
-- [ ] Implementar **MUTEX_CREATE** — _issue #15_: crear estructura de mutex con nombre dado, estado libre/tomado, cola de espera.
-- [ ] Implementar **MUTEX_LOCK**: si el mutex está libre → tomarlo, loguear. Si está tomado → poner proceso en BLOCK esperando ese mutex.
-- [ ] Implementar **MUTEX_UNLOCK**: liberar el mutex, si hay procesos esperando → desbloquear el primero (política FIFO dentro de la cola de espera del mutex), loguear.
-- [ ] Implementar log: `## (<PID>) Toma el Mutex <NOMBRE>`.
-- [ ] Implementar log: `## (<PID>) Libera el Mutex <NOMBRE>`.
+- [x] Implementar **MUTEX_CREATE** — _issue cerrado 22/05_: estructura `t_ks_mutex` con nombre, `owner_pid` y cola de espera FIFO.
+- [x] Implementar **MUTEX_LOCK**: si libre → tomar y responder MSG_OK. Si tomado → encolar waiter, CPU queda bloqueada esperando respuesta.
+- [x] Implementar **MUTEX_UNLOCK**: liberar, si hay waiters → transferir al primero (FIFO) y responderle MSG_OK.
+- [x] Implementar log: `## (<PID>) Toma el Mutex <NOMBRE>`.
+- [x] Implementar log: `## (<PID>) Libera el Mutex <NOMBRE>`.
 
 ---
 
