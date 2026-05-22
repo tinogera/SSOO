@@ -26,18 +26,14 @@ jobs:
           cd so-commons-library
           sudo make install
 
-      - name: Instalar cspecs
+      - name: Compilar cspecs y copiar a vendor
         run: |
           mkdir -p /tmp/cspec
           curl -fsSL "https://github.com/mumuki/cspec/archive/043089d9c55871526f1d6728af4d0febdbe8c38a.tar.gz" \
             | tar -xzC /tmp/cspec --strip-components=1
-          cd /tmp/cspec && make
-          sudo cp release/libcspecs.so /usr/lib/libcspecs.so
-          sudo mkdir -p /usr/include/cspecs
-          sudo cp cspecs/cspec.h /usr/include/cspecs/cspec.h
-
-      - name: Compilar utils
-        run: cd utils && make
+          make -C /tmp/cspec
+          mkdir -p utils/vendor/cspecs/lib
+          cp /tmp/cspec/release/libcspecs.so utils/vendor/cspecs/lib/libcspecs.so
 
       - name: Compilar y ejecutar tests
         run: |
@@ -65,15 +61,16 @@ jobs:
           cd so-commons-library
           sudo make install
 
-      - name: Instalar cspecs
+      - name: Compilar cspecs y copiar a vendor
         run: |
           mkdir -p /tmp/cspec
           curl -fsSL "https://github.com/mumuki/cspec/archive/043089d9c55871526f1d6728af4d0febdbe8c38a.tar.gz" \
             | tar -xzC /tmp/cspec --strip-components=1
-          cd /tmp/cspec && make
-          sudo cp release/libcspecs.so /usr/lib/libcspecs.so
-          sudo mkdir -p /usr/include/cspecs
-          sudo cp cspecs/cspec.h /usr/include/cspecs/cspec.h
+          make -C /tmp/cspec
+          mkdir -p utils/vendor/cspecs/lib
+          cp /tmp/cspec/release/libcspecs.so utils/vendor/cspecs/lib/libcspecs.so
+          mkdir -p io/vendor/cspecs/lib
+          cp /tmp/cspec/release/libcspecs.so io/vendor/cspecs/lib/libcspecs.so
 
       - name: Compilar utils
         run: cd utils && make

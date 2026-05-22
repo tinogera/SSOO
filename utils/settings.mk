@@ -2,7 +2,7 @@
 LIBS=commons pthread readline m
 
 # Custom libraries' paths
-SHARED_LIBPATHS=
+SHARED_LIBPATHS=vendor/cspecs
 STATIC_LIBPATHS=
 
 # Compiler flags
