@@ -10,6 +10,7 @@ jobs:
   test-utils:
     name: Build y tests de utils
     runs-on: ubuntu-22.04
+    timeout-minutes: 15
 
     steps:
       - name: Checkout del repositorio
@@ -45,6 +46,7 @@ jobs:
   test-io:
     name: Build y tests de IO
     runs-on: ubuntu-22.04
+    timeout-minutes: 15
 
     steps:
       - name: Checkout del repositorio
@@ -85,6 +87,7 @@ jobs:
   test-kernel-scheduler:
     name: Build y tests de Kernel Scheduler
     runs-on: ubuntu-22.04
+    timeout-minutes: 15
 
     steps:
       - name: Checkout del repositorio
