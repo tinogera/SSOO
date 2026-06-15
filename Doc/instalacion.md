@@ -17,6 +17,7 @@
 9. [Despliegue distribuido en VMs](#9-despliegue-distribuido-en-vms)
 10. [Scripts de proceso](#10-scripts-de-proceso)
 11. [Prueba de integración CK2](#11-prueba-de-integración-ck2)
+12. [Pruebas preliminares](#12-pruebas-preliminares)
 
 ---
 
@@ -387,3 +388,81 @@ EXIT
 ```
 
 El proceso que llega segundo a `MUTEX_LOCK` debe quedar en BLOCK hasta que el primero ejecute `MUTEX_UNLOCK`.
+
+---
+
+## 12. Pruebas preliminares
+
+Los scripts de prueba oficiales están en el repositorio `sisoputnfrba/plug-n-pray-pruebas`. Clonar junto al TP o copiar los `.prc` al `SCRIPTS_BASEPATH` del Kernel Memory antes de correr cada suite.
+
+```bash
+git clone https://github.com/sisoputnfrba/plug-n-pray-pruebas.git
+```
+
+### 12.1 Planificación preliminar
+
+**Objetivo:** validar la planificación de corto plazo sin involucrar memoria.
+
+**Requisitos de configuración:**
+- 1 sola CPU conectada.
+- `SUSPENSION_TIMEOUT` alto (p. ej. `60000`) para no entrar en suspensión durante la prueba. Si se quiere verificar la suspensión, bajar el valor a menos de `20000`.
+
+**Scripts:**
+
+| Archivo | Prioridad | Descripción |
+|---|---|---|
+| `PLANI_PRE_0.prc` | — | Script maestro. Lanza los subprocesos y termina con EXIT. |
+| `PLANI_PRE_1.prc` | 3 (×2) | `SET` de registros + `SLEEP 20000` (dos veces) + EXIT. Activa la suspensión si `SUSPENSION_TIMEOUT < 20000`. |
+| `PLANI_PRE_2.prc` | 2 (×2) | Countdown de AX=50 con `SUB AX BX` + `JNZ AX` — loop con salto condicional. |
+| `PLANI_PRE_3.prc` | 1 (×1) | SET de todos los registros + `SLEEP 100` (repetido 4 veces) + EXIT. |
+
+**Contenido de `PLANI_PRE_0.prc`:**
+```
+INIT_PROC PLANI_PRE_1.prc 3
+INIT_PROC PLANI_PRE_1.prc 3
+INIT_PROC PLANI_PRE_2.prc 2
+INIT_PROC PLANI_PRE_2.prc 2
+INIT_PROC PLANI_PRE_3.prc 1
+EXIT
+```
+
+**Ejecución:** pasar `PLANI_PRE_0.prc` como script inicial al Kernel Scheduler.
+
+**Resultado esperado:** los cinco procesos hijos se crean, ejecutan y terminan. En los logs del KS deben verse transiciones `NEW → READY → EXEC → EXIT` para cada uno. Si `SUSPENSION_TIMEOUT` es menor al `SLEEP` de `PLANI_PRE_1`, los procesos de prioridad 3 deben pasar a `SUSP. BLOCK` y luego regresar a `SUSP. READY → READY`.
+
+---
+
+### 12.2 Memoria preliminar
+
+**Objetivo:** validar la creación, escritura, lectura y eliminación de segmentos de memoria.
+
+**Requisitos de configuración:**
+- Al menos 1 Memory Stick con buffer de **256 bytes**.
+- `SEGMENT_MAX_SIZE=128` en el Kernel Memory.
+- Para probar segmentos distribuidos entre varios Memory Sticks, levantar múltiples instancias con buffers más chicos (p. ej. 64 bytes cada una).
+
+**Scripts:**
+
+| Archivo | Descripción |
+|---|---|
+| `MEMORIA_PRE_0.prc` | Script maestro. Lanza `MEMORIA_PRE_3` (segfault inmediato), espera 10 segundos, luego lanza `MEMORIA_PRE_1` y `MEMORIA_PRE_2`. |
+| `MEMORIA_PRE_1.prc` | Alloc de 4 segmentos de 32 B, escribe en cada uno con `MOV_OUT`, libera los segmentos 0 y 2, re-alloca 1 segmento de 128 B, lee con `MOV_IN`. Verifica compactación/reuso de espacio. |
+| `MEMORIA_PRE_2.prc` | Alloc de 1 segmento de 64 B, lee por `STDIN` y escribe por `STDOUT`. Requiere IO STDIN e IO STDOUT activos. |
+| `MEMORIA_PRE_3.prc` | `MEM_ALLOC` + `MOV_OUT` a un segmento sin espacio válido → termina con **segmentation fault**. Finalización esperada: el proceso termina de forma abrupta. |
+
+**Contenido de `MEMORIA_PRE_0.prc`:**
+```
+INIT_PROC MEMORIA_PRE_3.prc 1
+SLEEP 10000
+INIT_PROC MEMORIA_PRE_1.prc 2
+INIT_PROC MEMORIA_PRE_2.prc 2
+EXIT
+```
+
+**Ejecución:** pasar `MEMORIA_PRE_0.prc` como script inicial al Kernel Scheduler.
+
+**Resultado esperado:**
+1. `MEMORIA_PRE_3` termina rápidamente con segmentation fault (comportamiento correcto).
+2. Tras los 10 segundos del `SLEEP`, se crean `MEMORIA_PRE_1` y `MEMORIA_PRE_2`.
+3. `MEMORIA_PRE_1` completa el ciclo alloc → write → free → realloc → read sin errores.
+4. `MEMORIA_PRE_2` bloquea en STDIN esperando input; al recibirlo, lo escribe por STDOUT y termina.
