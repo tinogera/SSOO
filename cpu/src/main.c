@@ -92,7 +92,8 @@ int main(int argc, char* argv[]) {
             break;
         }
 
-        if (!restaurar_contexto_desde_memory(socket_memory, pid, &registros, logger)) {
+        t_contexto* contexto = NULL;
+        if (!restaurar_contexto_desde_memory(socket_memory, pid, &contexto, &registros, logger)) {
             log_error(logger, "No se pudo restaurar contexto para PID %u", pid);
             break;
         }
@@ -109,9 +110,10 @@ int main(int argc, char* argv[]) {
             motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
         }
 
-        if (!guardar_contexto_en_memory(socket_memory, pid, &registros, logger)) {
+        if (!guardar_contexto_en_memory(socket_memory, contexto, &registros, logger)) {
             motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
         }
+        liberar_contexto_cpu(contexto);
 
         devolver_proceso_a_scheduler(socket_kernel, pid, motivo_devolucion, &registros, logger);
 
