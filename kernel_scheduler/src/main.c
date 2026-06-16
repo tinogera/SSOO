@@ -231,6 +231,24 @@ void manejar_mensaje_cpu(int fd_cpu, t_mensaje* msg) {
             );
             return;
         }
+        case MSG_INIT_PROC: {
+            if (msg->payload_size < sizeof(t_payload_syscall_init_proc) + 1) {
+                log_error(logger, "CPU envio INIT_PROC con payload invalido");
+                enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+                return;
+            }
+
+            t_payload_syscall_init_proc* payload = (t_payload_syscall_init_proc*) msg->payload;
+            log_info(
+                logger,
+                "## PID: %u - Syscall recibida: INIT_PROC - Archivo: %s - Prioridad: %u",
+                payload->pid,
+                payload->archivo,
+                payload->prioridad
+            );
+            enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
+            return;
+        }
         case MSG_SYSCALL_SLEEP: {
             if (msg->payload_size < sizeof(t_payload_syscall_sleep)) {
                 log_error(logger, "CPU envio SLEEP con payload invalido");
@@ -272,6 +290,41 @@ void manejar_mensaje_cpu(int fd_cpu, t_mensaje* msg) {
 
             t_payload_syscall_exit* payload = (t_payload_syscall_exit*) msg->payload;
             log_info(logger, "## PID: %u - Syscall recibida: EXIT", payload->pid);
+            enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
+            return;
+        }
+        case MSG_MEM_ALLOC: {
+            if (msg->payload_size < sizeof(t_payload_syscall_mem_alloc)) {
+                log_error(logger, "CPU envio MEM_ALLOC con payload invalido");
+                enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+                return;
+            }
+
+            t_payload_syscall_mem_alloc* payload = (t_payload_syscall_mem_alloc*) msg->payload;
+            log_info(
+                logger,
+                "## PID: %u - Syscall recibida: MEM_ALLOC - Segmento: %u - Tamanio: %u",
+                payload->pid,
+                payload->id_segmento,
+                payload->tamanio
+            );
+            enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
+            return;
+        }
+        case MSG_MEM_FREE: {
+            if (msg->payload_size < sizeof(t_payload_syscall_mem_free)) {
+                log_error(logger, "CPU envio MEM_FREE con payload invalido");
+                enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+                return;
+            }
+
+            t_payload_syscall_mem_free* payload = (t_payload_syscall_mem_free*) msg->payload;
+            log_info(
+                logger,
+                "## PID: %u - Syscall recibida: MEM_FREE - Segmento: %u",
+                payload->pid,
+                payload->id_segmento
+            );
             enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
             return;
         }
@@ -317,12 +370,18 @@ const char* op_code_to_string_kernel(uint32_t op_code) {
     switch (op_code) {
         case MSG_SYSCALL_SLEEP:
             return "SLEEP";
+        case MSG_INIT_PROC:
+            return "INIT_PROC";
         case MSG_SYSCALL_STDOUT:
             return "STDOUT";
         case MSG_SYSCALL_STDIN:
             return "STDIN";
         case MSG_SYSCALL_EXIT:
             return "EXIT";
+        case MSG_MEM_ALLOC:
+            return "MEM_ALLOC";
+        case MSG_MEM_FREE:
+            return "MEM_FREE";
         case MSG_MUTEX_CREATE:
             return "MUTEX_CREATE";
         case MSG_MUTEX_LOCK:

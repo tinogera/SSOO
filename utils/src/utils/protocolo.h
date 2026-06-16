@@ -54,7 +54,7 @@ typedef enum {
     // -----------------------------------------------------------------
     // CPU ↔ KS — Check 2 (16–19)
     // -----------------------------------------------------------------
-    MSG_INIT_PROC,          // 16  CPU → KS: syscall INIT_PROC { uint32_t pid, char archivo[], uint32_t prioridad }
+    MSG_INIT_PROC,          // 16  CPU → KS: syscall INIT_PROC { uint32_t pid, uint32_t prioridad, char archivo[] }
     MSG_DESPACHAR_PROCESO,  // 17  KS → CPU: { uint32_t pid }
     MSG_DEVOLVER_PROCESO,   // 18  CPU → KS: { uint32_t pid, uint32_t motivo, uint32_t pc }
     MSG_INTERRUPCION_CPU,   // 19  KS → CPU: { uint32_t pid, uint32_t motivo }
@@ -75,6 +75,11 @@ typedef enum {
     MSG_SYSCALL_STDOUT,  // 26  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
     MSG_SYSCALL_STDIN,   // 27  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
     MSG_SYSCALL_EXIT,    // 28  CPU → KS: { uint32_t pid }
+    MSG_LEER_MEMORIA,    // CPU → Memory Stick: { uint32_t direccion_fisica, uint32_t tamanio }
+    MSG_RESPUESTA_LEER_MEMORIA, // Memory Stick → CPU: bytes leidos
+    MSG_ESCRIBIR_MEMORIA, // CPU → Memory Stick: { uint32_t direccion_fisica, uint32_t tamanio, uint8_t datos[] }
+    MSG_MEM_ALLOC,       // CPU → KS: { uint32_t pid, uint32_t id_segmento, uint32_t tamanio }
+    MSG_MEM_FREE,        // CPU → KS: { uint32_t pid, uint32_t id_segmento }
 
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
@@ -132,6 +137,12 @@ typedef struct __attribute__((packed)) {
 // --- Syscalls CPU → KS ---
 typedef struct __attribute__((packed)) {
     uint32_t pid;
+    uint32_t prioridad;
+    char archivo[];
+} t_payload_syscall_init_proc;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
     uint32_t tiempo_ms;
 } t_payload_syscall_sleep;
 
@@ -145,6 +156,28 @@ typedef struct __attribute__((packed)) {
     uint32_t pid;
 } t_payload_syscall_exit;
 
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t id_segmento;
+    uint32_t tamanio;
+} t_payload_syscall_mem_alloc;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t id_segmento;
+} t_payload_syscall_mem_free;
+
+typedef struct __attribute__((packed)) {
+    uint32_t direccion_fisica;
+    uint32_t tamanio;
+} t_payload_leer_memoria;
+
+typedef struct __attribute__((packed)) {
+    uint32_t direccion_fisica;
+    uint32_t tamanio;
+    uint8_t datos[];
+} t_payload_escribir_memoria;
+
 // --- Enums de motivos ---
 typedef enum {
     MOTIVO_INTERRUPCION_QUANTUM  = 0,
@@ -155,7 +188,8 @@ typedef enum {
     MOTIVO_DEVOLUCION_SYSCALL      = 0,
     MOTIVO_DEVOLUCION_EXIT         = 1,
     MOTIVO_DEVOLUCION_ERROR        = 2,
-    MOTIVO_DEVOLUCION_INTERRUPCION = 3
+    MOTIVO_DEVOLUCION_INTERRUPCION = 3,
+    MOTIVO_DEVOLUCION_SEG_FAULT    = 4
 } t_motivo_devolucion_cpu;
 
 #endif

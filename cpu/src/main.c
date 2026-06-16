@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <arpa/inet.h>
 #include <commons/log.h>
 #include <commons/config.h>
 #include <unistd.h>
@@ -35,6 +36,10 @@ int main(int argc, char* argv[]) {
 
     char* ip_memory = config_get_string_value(config, "IP_MEMORY");
     int puerto_memory = config_get_int_value(config, "PUERTO_MEMORY");
+    uint32_t tamanio_max_segmento = 256;
+    if (config_has_property(config, "SEGMENT_MAX_SIZE")) {
+        tamanio_max_segmento = (uint32_t) config_get_int_value(config, "SEGMENT_MAX_SIZE");
+    }
 
      // CONEXION A KERNEL SCHEDULER
     int socket_kernel = conectar_a_servidor(ip_kernel, puerto_kernel);
@@ -85,6 +90,31 @@ int main(int argc, char* argv[]) {
         free_mensaje(respuesta);
     }
 
+    int socket_memoria_usuario = -1;
+    if (config_has_property(config, "IP_MEMORY_STICK") && config_has_property(config, "PUERTO_MEMORY_STICK")) {
+        char* ip_memory_stick = config_get_string_value(config, "IP_MEMORY_STICK");
+        int puerto_memory_stick = config_get_int_value(config, "PUERTO_MEMORY_STICK");
+
+        socket_memoria_usuario = conectar_a_servidor(ip_memory_stick, puerto_memory_stick);
+        if (socket_memoria_usuario == -1) {
+            log_error(logger, "No se pudo conectar a Memory Stick");
+        } else {
+            uint32_t cpu_id_n = htonl((uint32_t) atoi(cpu_id));
+            enviar_mensaje(socket_memoria_usuario, MSG_CPU_IDENTIFICACION, &cpu_id_n, sizeof(cpu_id_n));
+
+            t_mensaje* respuesta_ms = recibir_mensaje(socket_memoria_usuario);
+            if (respuesta_ms == NULL || respuesta_ms->op_code != MSG_OK) {
+                log_error(logger, "Memory Stick rechazo la conexion de CPU");
+                close(socket_memoria_usuario);
+                socket_memoria_usuario = -1;
+            } else {
+                log_info(logger, "## Conectado a Memory Stick");
+            }
+
+            free_mensaje(respuesta_ms);
+        }
+    }
+
     // Esperar procesos despachados por Kernel Scheduler
     while(socket_kernel != -1) {
         uint32_t pid;
@@ -98,7 +128,16 @@ int main(int argc, char* argv[]) {
             break;
         }
 
-        t_resultado_ciclo_cpu resultado_ciclo = ejecutar_ciclo_proceso(socket_kernel, socket_memory, pid, &registros, logger);
+        t_resultado_ciclo_cpu resultado_ciclo = ejecutar_ciclo_proceso(
+            socket_kernel,
+            socket_memory,
+            socket_memoria_usuario,
+            pid,
+            contexto,
+            &registros,
+            tamanio_max_segmento,
+            logger
+        );
         t_motivo_devolucion_cpu motivo_devolucion;
         if (resultado_ciclo == CPU_CICLO_SYSCALL) {
             motivo_devolucion = MOTIVO_DEVOLUCION_SYSCALL;
@@ -106,6 +145,8 @@ int main(int argc, char* argv[]) {
             motivo_devolucion = MOTIVO_DEVOLUCION_EXIT;
         } else if (resultado_ciclo == CPU_CICLO_INTERRUPCION) {
             motivo_devolucion = MOTIVO_DEVOLUCION_INTERRUPCION;
+        } else if (resultado_ciclo == CPU_CICLO_SEG_FAULT) {
+            motivo_devolucion = MOTIVO_DEVOLUCION_SEG_FAULT;
         } else {
             motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
         }
@@ -125,6 +166,9 @@ int main(int argc, char* argv[]) {
 
     close(socket_kernel);
     close(socket_memory);
+    if (socket_memoria_usuario != -1) {
+        close(socket_memoria_usuario);
+    }
 
     log_destroy(logger);
     config_destroy(config);

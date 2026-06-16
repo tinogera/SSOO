@@ -58,6 +58,44 @@ context (cpu_registros) {
 
     } end
 
+    describe ("escribir_valor_registro_cpu") {
+
+        it ("escribe registros de 8 bits truncando el valor") {
+            t_registros_cpu registros;
+            inicializar_registros_cpu(&registros);
+
+            should_bool(escribir_valor_registro_cpu(&registros, "AX", 300)) be truthy;
+            should_int(registros.ax) be equal to(44);
+        } end
+
+        it ("escribe registros de 32 bits") {
+            t_registros_cpu registros;
+            inicializar_registros_cpu(&registros);
+
+            should_bool(escribir_valor_registro_cpu(&registros, "EAX", 1024)) be truthy;
+            should_int(registros.eax) be equal to(1024);
+        } end
+
+    } end
+
+    describe ("tamanio_registro_cpu") {
+
+        it ("devuelve 1 byte para registros chicos") {
+            uint32_t tamanio = 0;
+
+            should_bool(tamanio_registro_cpu("AX", &tamanio)) be truthy;
+            should_int(tamanio) be equal to(1);
+        } end
+
+        it ("devuelve 4 bytes para registros grandes") {
+            uint32_t tamanio = 0;
+
+            should_bool(tamanio_registro_cpu("EAX", &tamanio)) be truthy;
+            should_int(tamanio) be equal to(4);
+        } end
+
+    } end
+
 }
 
 context (cpu_devolucion) {
@@ -69,6 +107,7 @@ context (cpu_devolucion) {
             should_string(motivo_devolucion_to_string(MOTIVO_DEVOLUCION_EXIT)) be equal to("EXIT");
             should_string(motivo_devolucion_to_string(MOTIVO_DEVOLUCION_ERROR)) be equal to("ERROR");
             should_string(motivo_devolucion_to_string(MOTIVO_DEVOLUCION_INTERRUPCION)) be equal to("INTERRUPCION");
+            should_string(motivo_devolucion_to_string(MOTIVO_DEVOLUCION_SEG_FAULT)) be equal to("SEG_FAULT");
         } end
 
     } end

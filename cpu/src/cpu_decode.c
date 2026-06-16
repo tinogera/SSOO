@@ -14,6 +14,12 @@ static t_opcode_cpu obtener_opcode(const char* nombre) {
     if (strcmp(nombre, "SLEEP") == 0) return CPU_INST_SLEEP;
     if (strcmp(nombre, "STDOUT") == 0) return CPU_INST_STDOUT;
     if (strcmp(nombre, "STDIN") == 0) return CPU_INST_STDIN;
+    if (strcmp(nombre, "MEM_ALLOC") == 0) return CPU_INST_MEM_ALLOC;
+    if (strcmp(nombre, "MEM_FREE") == 0) return CPU_INST_MEM_FREE;
+    if (strcmp(nombre, "INIT_PROC") == 0) return CPU_INST_INIT_PROC;
+    if (strcmp(nombre, "MOV_IN") == 0) return CPU_INST_MOV_IN;
+    if (strcmp(nombre, "MOV_OUT") == 0) return CPU_INST_MOV_OUT;
+    if (strcmp(nombre, "COPY_MEM") == 0) return CPU_INST_COPY_MEM;
     if (strcmp(nombre, "EXIT") == 0) return CPU_INST_EXIT;
     return CPU_INST_UNKNOWN;
 }
@@ -70,6 +76,12 @@ const char* opcode_cpu_to_string(t_opcode_cpu opcode) {
         case CPU_INST_SLEEP: return "SLEEP";
         case CPU_INST_STDOUT: return "STDOUT";
         case CPU_INST_STDIN: return "STDIN";
+        case CPU_INST_MEM_ALLOC: return "MEM_ALLOC";
+        case CPU_INST_MEM_FREE: return "MEM_FREE";
+        case CPU_INST_INIT_PROC: return "INIT_PROC";
+        case CPU_INST_MOV_IN: return "MOV_IN";
+        case CPU_INST_MOV_OUT: return "MOV_OUT";
+        case CPU_INST_COPY_MEM: return "COPY_MEM";
         case CPU_INST_EXIT: return "EXIT";
         default: return "UNKNOWN";
     }

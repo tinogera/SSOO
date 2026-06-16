@@ -96,6 +96,63 @@ bool enviar_syscall_stdin(int socket_kernel, uint32_t pid, uint32_t direccion_lo
     return enviar_syscall_io_memoria(socket_kernel, MSG_SYSCALL_STDIN, pid, direccion_logica, tamanio, "STDIN", logger);
 }
 
+bool enviar_syscall_mem_alloc(int socket_kernel, uint32_t pid, uint32_t id_segmento, uint32_t tamanio, t_log* logger) {
+    t_payload_syscall_mem_alloc payload = {
+        .pid = pid,
+        .id_segmento = id_segmento,
+        .tamanio = tamanio
+    };
+
+    log_info(
+        logger,
+        "## PID: %u - Syscall: MEM_ALLOC - Segmento: %u - Tamanio: %u",
+        pid,
+        id_segmento,
+        tamanio
+    );
+    enviar_mensaje(socket_kernel, MSG_MEM_ALLOC, &payload, sizeof(payload));
+
+    return esperar_ok_kernel(socket_kernel, "MEM_ALLOC", logger);
+}
+
+bool enviar_syscall_mem_free(int socket_kernel, uint32_t pid, uint32_t id_segmento, t_log* logger) {
+    t_payload_syscall_mem_free payload = {
+        .pid = pid,
+        .id_segmento = id_segmento
+    };
+
+    log_info(logger, "## PID: %u - Syscall: MEM_FREE - Segmento: %u", pid, id_segmento);
+    enviar_mensaje(socket_kernel, MSG_MEM_FREE, &payload, sizeof(payload));
+
+    return esperar_ok_kernel(socket_kernel, "MEM_FREE", logger);
+}
+
+bool enviar_syscall_init_proc(int socket_kernel, uint32_t pid, const char* archivo, uint32_t prioridad, t_log* logger) {
+    uint32_t archivo_size = strlen(archivo) + 1;
+    uint32_t payload_size = sizeof(t_payload_syscall_init_proc) + archivo_size;
+    void* payload = malloc(payload_size);
+    if (payload == NULL) {
+        return false;
+    }
+
+    t_payload_syscall_init_proc* pedido = (t_payload_syscall_init_proc*) payload;
+    pedido->pid = pid;
+    pedido->prioridad = prioridad;
+    memcpy(pedido->archivo, archivo, archivo_size);
+
+    log_info(
+        logger,
+        "## PID: %u - Syscall: INIT_PROC - Archivo: %s - Prioridad: %u",
+        pid,
+        archivo,
+        prioridad
+    );
+    enviar_mensaje(socket_kernel, MSG_INIT_PROC, payload, payload_size);
+
+    free(payload);
+    return esperar_ok_kernel(socket_kernel, "INIT_PROC", logger);
+}
+
 bool enviar_syscall_exit(int socket_kernel, uint32_t pid, t_log* logger) {
     t_payload_syscall_exit payload = {
         .pid = pid

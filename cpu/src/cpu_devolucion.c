@@ -12,6 +12,8 @@ const char* motivo_devolucion_to_string(t_motivo_devolucion_cpu motivo) {
             return "ERROR";
         case MOTIVO_DEVOLUCION_INTERRUPCION:
             return "INTERRUPCION";
+        case MOTIVO_DEVOLUCION_SEG_FAULT:
+            return "SEG_FAULT";
         default:
             return "DESCONOCIDO";
     }
