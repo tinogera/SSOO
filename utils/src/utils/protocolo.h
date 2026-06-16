@@ -3,97 +3,98 @@
 
 #include <stdint.h>
 
-/*
- * protocolo.h — Códigos de operación del sistema
- *
- * REGLA: nunca reordenar ni cambiar el valor de un código ya existente.
- * El enum asigna valores 0, 1, 2... en orden. Reordenar rompe la comunicación
- * con módulos que ya compilaron contra una versión anterior.
- * Siempre agregar nuevos códigos ANTES de MSG_CANTIDAD.
- *
- * PENDIENTE CHECK 3:
- *   MSG_MEM_ALLOC          → CPU → KS (syscall MEM_ALLOC)
- *   MSG_MEM_FREE           → CPU → KS (syscall MEM_FREE)
- *   MSG_LEER_MEMORIA       → CPU → Memory Stick
- *   MSG_ESCRIBIR_MEMORIA   → CPU → Memory Stick
- *   MSG_COMPACTAR          → KM → KS: pedir compactación
- *   MSG_FIN_COMPACTACION   → KS → KM: CPUs desalojadas, podés compactar
- *   MSG_SUSPENDER_PROCESO  → KM → Swap: mover segmentos
- *   MSG_BSOD               → KM → KS: Memory Stick caído
- */
-
 typedef enum {
     // -----------------------------------------------------------------
-    // IDENTIFICACIÓN — Check 1 (valores 0–7, no modificar)
+    // IDENTIFICACIÓN — Check 1
     // -----------------------------------------------------------------
-    MSG_IO_IDENTIFICACION,              // 0  IO → KS:  payload: string tipo ("SLEEP"/"STDOUT"/"STDIN")
-    MSG_CPU_IDENTIFICACION,             // 1  CPU → KS: payload: string id_cpu
-    MSG_KS_IDENTIFICACION,              // 2  KS → KM:  sin payload
-    MSG_OK,                             // 3  respuesta exitosa — sin payload
-    MSG_ERROR,                          // 4  respuesta de error — sin payload
-    MSG_MEMORY_STICK_IDENTIFICACION,    // 5  MS → KM:  payload: uint32_t tamanio
-    MSG_SWAP_IDENTIFICACION,            // 6  Swap → KM: payload: uint32_t swap_size, uint32_t block_size
-    MSG_CPU_A_KERNEL_MEMORY,            // 7  CPU → KM: sin payload
+    MSG_IO_IDENTIFICACION,              // 0
+    MSG_CPU_IDENTIFICACION,             // 1
+    MSG_KS_IDENTIFICACION,              // 2
+    MSG_OK,                             // 3
+    MSG_ERROR,                          // 4
+    MSG_MEMORY_STICK_IDENTIFICACION,    // 5
+    MSG_SWAP_IDENTIFICACION,            // 6
+    MSG_CPU_A_KERNEL_MEMORY,            // 7
 
     // -----------------------------------------------------------------
-    // IO — Check 2 (8–12)
+    // IO — Check 2
     // -----------------------------------------------------------------
-    MSG_IO_SLEEP,       // 8   KS → IO SLEEP:  { uint32_t pid, uint32_t tiempo_ms }
-    MSG_IO_STDOUT,      // 9   KS → IO STDOUT: { uint32_t pid, char contenido[] }
-    MSG_IO_STDIN,       // 10  KS → IO STDIN:  { uint32_t pid, uint32_t n_bytes }
-    MSG_IO_FIN,         // 11  IO → KS:        { uint32_t pid }
-    MSG_IO_STDIN_DATOS, // 12  IO → KS:        { uint32_t pid, uint32_t n_bytes, uint8_t datos[] }
+    MSG_IO_SLEEP,       // 8
+    MSG_IO_STDOUT,      // 9
+    MSG_IO_STDIN,       // 10
+    MSG_IO_FIN,         // 11
+    MSG_IO_STDIN_DATOS, // 12
 
     // -----------------------------------------------------------------
-    // MUTEX — Check 2 (13–15)
+    // MUTEX — Check 2
     // -----------------------------------------------------------------
-    MSG_MUTEX_CREATE,   // 13  CPU → KS: { uint32_t pid, char nombre[] }
-    MSG_MUTEX_LOCK,     // 14  CPU → KS: { uint32_t pid, char nombre[] }
-    MSG_MUTEX_UNLOCK,   // 15  CPU → KS: { uint32_t pid, char nombre[] }
+    MSG_MUTEX_CREATE,   // 13
+    MSG_MUTEX_LOCK,     // 14
+    MSG_MUTEX_UNLOCK,   // 15
 
     // -----------------------------------------------------------------
-    // CPU ↔ KS — Check 2 (16–19)
+    // CPU ↔ KS — Check 2
     // -----------------------------------------------------------------
-    MSG_INIT_PROC,          // 16  CPU → KS: syscall INIT_PROC { uint32_t pid, char archivo[], uint32_t prioridad }
-    MSG_DESPACHAR_PROCESO,  // 17  KS → CPU: { uint32_t pid }
-    MSG_DEVOLVER_PROCESO,   // 18  CPU → KS: { uint32_t pid, uint32_t motivo, uint32_t pc }
-    MSG_INTERRUPCION_CPU,   // 19  KS → CPU: { uint32_t pid, uint32_t motivo }
+    MSG_INIT_PROC,          // 16
+    MSG_DESPACHAR_PROCESO,  // 17
+    MSG_DEVOLVER_PROCESO,   // 18
+    MSG_INTERRUPCION_CPU,   // 19
 
     // -----------------------------------------------------------------
-    // CPU ↔ KM — Check 2 (20–24)
+    // CPU ↔ KM — Check 2
     // -----------------------------------------------------------------
-    MSG_FETCH_INSTRUCCION,      // 20  CPU → KM: { uint32_t pid, uint32_t pc }
-    MSG_RESPUESTA_INSTRUCCION,  // 21  KM → CPU: payload: string instrucción
-    MSG_CREAR_PROCESO,          // 22  KS → KM:  { uint32_t pid, char path[] }
-    MSG_GUARDAR_CONTEXTO,       // 23  CPU → KM: t_contexto serializado
-    MSG_RESTAURAR_CONTEXTO,     // 24  KM → CPU: t_contexto serializado (respuesta a pedido por pid)
+    MSG_FETCH_INSTRUCCION,      // 20
+    MSG_RESPUESTA_INSTRUCCION,  // 21
+    MSG_CREAR_PROCESO,          // 22
+    MSG_GUARDAR_CONTEXTO,       // 23
+    MSG_RESTAURAR_CONTEXTO,     // 24
 
     // -----------------------------------------------------------------
-    // Syscalls CPU → KS — Check 2 (25–28)
+    // Syscalls CPU → KS — Check 2
     // -----------------------------------------------------------------
-    MSG_SYSCALL_SLEEP,   // 25  CPU → KS: { uint32_t pid, uint32_t tiempo_ms }
-    MSG_SYSCALL_STDOUT,  // 26  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
-    MSG_SYSCALL_STDIN,   // 27  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
-    MSG_SYSCALL_EXIT,    // 28  CPU → KS: { uint32_t pid }
+    MSG_SYSCALL_SLEEP,   // 25
+    MSG_SYSCALL_STDOUT,  // 26
+    MSG_SYSCALL_STDIN,   // 27
+    MSG_SYSCALL_EXIT,    // 28
 
     // -----------------------------------------------------------------
-    // MS ↔ CPU — Check 2 (28–31)
+    // MS ↔ CPU — Check 2
     // -----------------------------------------------------------------
-    MSG_MEMORY_WRITE,
-    MSG_MEMORY_READ,
-    MSG_MEMORY_READ_RESPUESTA,
+    MSG_MEMORY_WRITE,           // 29
+    MSG_MEMORY_READ,            // 30
+    MSG_MEMORY_READ_RESPUESTA,  // 31
 
-    // Marcador de fin — SIEMPRE tiene que ser el último
+    // -----------------------------------------------------------------
+    // Check 3 — Memoria, segmentos, compactación, suspensión
+    // -----------------------------------------------------------------
+    MSG_MEM_ALLOC,              // 32  CPU → KS: syscall MEM_ALLOC { pid, id_seg, tamanio }
+    MSG_MEM_FREE,               // 33  CPU → KS: syscall MEM_FREE  { pid, id_seg }
+    MSG_CREAR_SEGMENTO,         // 34  KS → KM:  { pid, id_seg, tamanio }
+    MSG_ELIMINAR_SEGMENTO,      // 35  KS → KM:  { pid, id_seg }
+    MSG_LEER_MEMORIA,           // 36  KM → MS:  { dir_fisica, tamanio }
+    MSG_LEER_MEMORIA_RESP,      // 37  MS → KM:  { bytes[] }
+    MSG_ESCRIBIR_MEMORIA,       // 38  KM → MS:  { dir_fisica, tamanio, bytes[] }
+    MSG_LEER_DATOS,             // 39  KS → KM:  { pid, dir_logica, tamanio }
+    MSG_LEER_DATOS_RESP,        // 40  KM → KS:  { bytes[] }
+    MSG_ESCRIBIR_DATOS,         // 41  KS → KM:  { pid, dir_logica, tamanio, bytes[] }
+    MSG_COMPACTAR,              // 42  KM → KS:  sin payload — pedir desalojo CPUs
+    MSG_FIN_COMPACTACION,       // 43  KS → KM:  sin payload — CPUs desalojadas
+    MSG_SUSPENDER_PROCESO,      // 44  KS → KM:  { uint32_t pid }
+    MSG_DESSUSPENDER_PROCESO,   // 45  KS → KM:  { uint32_t pid }
+    MSG_MAS_MEMORIA,            // 46  KM → KS:  sin payload — nuevo MS conectado
+    MSG_BSOD,                   // 47  KM → KS:  sin payload — MS caído
+    MSG_SWAP_LEER,              // 48  KM → Swap: { uint32_t nro_bloque }
+    MSG_SWAP_LEER_RESP,         // 49  Swap → KM: { bytes[] }
+    MSG_SWAP_ESCRIBIR,          // 50  KM → Swap: { uint32_t nro_bloque, bytes[] }
+    MSG_TABLA_SEGMENTOS,        // 51  KM → CPU (en contexto restaurado): segmentos actualizados
+
     MSG_CANTIDAD
 } op_code;
 
 // ---------------------------------------------------------------------------
-// Structs de payload
-// __attribute__((packed)) elimina el padding del compilador para que el layout
-// en memoria sea exactamente el que se envía por el socket.
+// Structs de payload (packed — sin padding)
 // ---------------------------------------------------------------------------
 
-// --- IO ---
 typedef struct __attribute__((packed)) {
     uint32_t pid;
     uint32_t tiempo_ms;
@@ -108,19 +109,16 @@ typedef struct __attribute__((packed)) {
     uint32_t pid;
 } t_payload_io_fin;
 
-// --- Mutex ---
 typedef struct __attribute__((packed)) {
     uint32_t pid;
-    char     nombre[]; // flexible array — el nombre del mutex sigue inmediatamente
+    char     nombre[];
 } t_payload_mutex;
 
-// --- CPU ↔ KM ---
 typedef struct __attribute__((packed)) {
     uint32_t pid;
     uint32_t pc;
 } t_payload_fetch_instruccion;
 
-// --- CPU ↔ KS: despacho y devolución ---
 typedef struct __attribute__((packed)) {
     uint32_t pid;
 } t_payload_despachar_proceso;
@@ -136,7 +134,6 @@ typedef struct __attribute__((packed)) {
     uint32_t motivo;
 } t_payload_interrupcion_cpu;
 
-// --- Syscalls CPU → KS ---
 typedef struct __attribute__((packed)) {
     uint32_t pid;
     uint32_t tiempo_ms;
@@ -152,7 +149,43 @@ typedef struct __attribute__((packed)) {
     uint32_t pid;
 } t_payload_syscall_exit;
 
-// --- Enums de motivos ---
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t id_segmento;
+    uint32_t tamanio;
+} t_payload_crear_segmento;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t id_segmento;
+} t_payload_eliminar_segmento;
+
+typedef struct __attribute__((packed)) {
+    uint32_t dir_fisica;
+    uint32_t tamanio;
+} t_payload_leer_memoria;
+
+typedef struct __attribute__((packed)) {
+    uint32_t dir_fisica;
+    uint32_t tamanio;
+    // bytes siguen inmediatamente
+} t_payload_escribir_memoria;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t dir_logica;
+    uint32_t tamanio;
+} t_payload_acceso_datos;
+
+typedef struct __attribute__((packed)) {
+    uint32_t nro_bloque;
+} t_payload_swap_leer;
+
+typedef struct __attribute__((packed)) {
+    uint32_t nro_bloque;
+    // bytes del bloque siguen inmediatamente
+} t_payload_swap_escribir;
+
 typedef enum {
     MOTIVO_INTERRUPCION_QUANTUM  = 0,
     MOTIVO_INTERRUPCION_DESALOJO = 1
