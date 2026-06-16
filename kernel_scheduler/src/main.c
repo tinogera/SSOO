@@ -15,8 +15,11 @@
 #include "ks_mutex.h"
 
 t_log* logger;
-static int             fd_km    = -1;
-static pthread_mutex_t mutex_km = PTHREAD_MUTEX_INITIALIZER;
+static int             fd_km         = -1;
+static pthread_mutex_t mutex_km_send  = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t mutex_km_resp  = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t  cond_km_resp   = PTHREAD_COND_INITIALIZER;
+static t_mensaje*      km_pending_resp = NULL;
 
 t_queue *cola_new, *cola_ready, *cola_exec;
 t_queue *cola_block, *cola_susp_block, *cola_susp_ready, *cola_exit;
@@ -46,6 +49,8 @@ static int             fd_io_stdout = -1;
 static int             fd_io_stdin  = -1;
 static pthread_mutex_t mutex_io     = PTHREAD_MUTEX_INITIALIZER;
 
+static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size);
+static void*      thread_km_listener(void* _);
 t_proceso* crear_proceso(char* path, int prioridad);
 void*      atender_cliente(void* arg);
 static void atender_cpu(int fd, t_cpu_entry* entry);
@@ -74,6 +79,53 @@ static void cambiar_estado(t_proceso* proc, t_estado nuevo) {
     proc->estado = nuevo;
 }
 
+
+static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size) {
+    pthread_mutex_lock(&mutex_km_send);
+    enviar_mensaje(fd_km, op, payload, size);
+
+    pthread_mutex_lock(&mutex_km_resp);
+    while (km_pending_resp == NULL)
+        pthread_cond_wait(&cond_km_resp, &mutex_km_resp);
+    t_mensaje* resp = km_pending_resp;
+    km_pending_resp = NULL;
+    pthread_mutex_unlock(&mutex_km_resp);
+
+    pthread_mutex_unlock(&mutex_km_send);
+    return resp;
+}
+
+static void* thread_km_listener(void* _) {
+    (void)_;
+    while (1) {
+        t_mensaje* msg = recibir_mensaje(fd_km);
+        if (!msg) {
+            log_error(logger, "KM cerró la conexión");
+            break;
+        }
+        switch (msg->op_code) {
+        case MSG_OK:
+        case MSG_ERROR:
+            pthread_mutex_lock(&mutex_km_resp);
+            km_pending_resp = msg;
+            pthread_cond_signal(&cond_km_resp);
+            pthread_mutex_unlock(&mutex_km_resp);
+            break;
+        case MSG_MAS_MEMORIA:
+            free_mensaje(msg);
+            // TODO Día 2: disparar des-suspensión
+            break;
+        case MSG_BSOD:
+            free_mensaje(msg);
+            // TODO Día 2: manejar BSOD
+            break;
+        default:
+            log_warning(logger, "KM: op_code inesperado %u", msg->op_code);
+            free_mensaje(msg);
+        }
+    }
+    return NULL;
+}
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
@@ -110,6 +162,10 @@ int main(int argc, char* argv[]) {
     }
     free_mensaje(resp_km);
     log_info(logger, "## Conectado a Kernel Memory");
+
+    pthread_t t_km;
+    pthread_create(&t_km, NULL, thread_km_listener, NULL);
+    pthread_detach(t_km);
 
     // Inicializar colas
     cola_new        = queue_create();
@@ -192,11 +248,8 @@ t_proceso* crear_proceso(char* path, int prioridad) {
     memcpy(payload, &pid_n, sizeof(uint32_t));
     memcpy((char*)payload + sizeof(uint32_t), path, path_len);
 
-    pthread_mutex_lock(&mutex_km);
-    enviar_mensaje(fd_km, MSG_CREAR_PROCESO, payload, payload_size);
+    t_mensaje* resp = km_request(MSG_CREAR_PROCESO, payload, payload_size);
     free(payload);
-    t_mensaje* resp = recibir_mensaje(fd_km);
-    pthread_mutex_unlock(&mutex_km);
 
     if (!resp || resp->op_code != MSG_OK) {
         log_error(logger, "KM rechazo la creacion del proceso %u", pid);
@@ -428,6 +481,13 @@ static void* thread_suspension_timer(void* arg) {
     pthread_mutex_lock(&mutex_susp_block);
     queue_push(cola_susp_block, proc);
     pthread_mutex_unlock(&mutex_susp_block);
+
+    uint32_t pid_n = htonl((uint32_t)pid);
+    t_mensaje* resp = km_request(MSG_SUSPENDER_PROCESO, &pid_n, sizeof(uint32_t));
+    if (!resp || resp->op_code != MSG_OK)
+        log_error(logger, "KM rechazó suspender proceso %d", pid);
+    if (resp) free_mensaje(resp);
+
     return NULL;
 }
 
@@ -489,9 +549,16 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 pthread_mutex_unlock(&mutex_ready);
                 sem_post(&sem_cpu_disponible);
 
+            } else if (motivo == MOTIVO_DEVOLUCION_ERROR) {
+                cambiar_estado(proc, EXIT);
+                log_info(logger, "## (%d) finalizó su ejecución con motivo de SEG_FAULT", pid);
+                pthread_mutex_lock(&mutex_exit);
+                queue_push(cola_exit, proc);
+                pthread_mutex_unlock(&mutex_exit);
+                sem_post(&sem_cpu_disponible);
+
             } else {
-                // MOTIVO_DEVOLUCION_SYSCALL con proceso todavía en exec: la syscall
-                // fue no bloqueante (MUTEX_CREATE, MUTEX_UNLOCK, MUTEX_LOCK libre).
+                // MOTIVO_DEVOLUCION_SYSCALL: syscall no bloqueante (MUTEX_CREATE, MUTEX_UNLOCK, MUTEX_LOCK libre)
                 cambiar_estado(proc, READY);
                 pthread_mutex_lock(&mutex_ready);
                 queue_push(cola_ready, proc);
