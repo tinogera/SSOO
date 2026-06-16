@@ -80,6 +80,21 @@
 - [ ] Implementar syscall **MEM_FREE \<ID Segmento\>**: enviar pedido a Kernel Scheduler, esperar confirmación, eliminar entrada de tabla de segmentos local.
 - [ ] Testear el ciclo completo: MEM_ALLOC → MOV_OUT → MOV_IN → MEM_FREE.
 
+### Ajustes por v1.1 del enunciado (08/06/2026)
+
+- [ ] **STDOUT y STDIN envían dirección física al KS** (`cpu_ciclo.c`):
+  - Antes de enviar `MSG_SYSCALL_STDOUT` o `MSG_SYSCALL_STDIN`, la MMU debe traducir el contenido de SI/DI a dirección física.
+  - Renombrar `direccion_logica` → `direccion_fisica` en `t_payload_syscall_io_memoria` (`protocolo.h`), en conjunto con Nicolas.
+
+- [ ] **MEM_ALLOC/MEM_FREE: la CPU no espera respuesta bloqueante**:
+  - Siguiendo el cambio de v1.1, la CPU no espera `MSG_OK` del KS para MEM_ALLOC/MEM_FREE.
+  - Flujo: CPU envía la syscall → guarda contexto → devuelve PID al KS → CPU libre.
+  - El KS resuelve con KM y redespacha el proceso a la **misma CPU** que hizo la llamada.
+
+- [ ] **Memory Stick recibe offsets dentro de su propio buffer** (coordinar con Luciano):
+  - El KM ahora calcula el offset local del MS a partir de la dirección física global.
+  - El MS sigue recibiendo una dirección como offset dentro de su propio buffer; el cambio está en cómo el KM calcula ese offset. Confirmar el protocolo actualizado.
+
 ---
 
 ## Fase 4 — Integración y Entrega Final

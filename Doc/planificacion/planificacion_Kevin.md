@@ -76,6 +76,13 @@
 - [ ] Implementar en CPU la syscall **INIT_PROC** (crear proceso hijo): falta en `cpu_decode.c` y `cpu_ciclo.c`.
 - [ ] Implementar en Kernel Memory log obligatorio: `## PID: <PID> - Obtener instrucción: <PC> - Instrucción: <INSTRUCCIÓN> <...ARGS>`.
 
+### Ajustes por v1.1 del enunciado (08/06/2026)
+
+- [ ] **EXIT no espera MSG_OK** (`cpu_syscalls.c`):
+  - Eliminar la llamada a `esperar_ok_kernel` en `enviar_syscall_exit`.
+  - El flujo correcto es: CPU incrementa PC → guarda contexto en KM → envía `MSG_DEVOLVER_PROCESO` con `MOTIVO_DEVOLUCION_EXIT`. El KS lo maneja al recibir el devolver.
+  - Coordinar con Nicolas para asegurar que el KS interprete correctamente el EXIT al recibir `MSG_DEVOLVER_PROCESO`.
+
 ---
 
 ## Fase 4 — Integración y Entrega Final

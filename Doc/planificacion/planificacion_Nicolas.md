@@ -110,6 +110,30 @@
   - Una vez finalizada la compactación → reinsertar los procesos desalojados al **inicio** de su cola READY (caso excepcional).
   - Implementar log: `## Inicio de compactación` y `## Fin de compactación`.
 
+### Ajustes por v1.1 del enunciado (08/06/2026)
+
+- [ ] **Syscalls liberan CPU sin esperar MSG_OK** (`cpu_syscalls.c`):
+  - Eliminar llamada a `esperar_ok_kernel` en `enviar_syscall_mutex_create` y `enviar_syscall_mutex_unlock`.
+  - Coordinar con Kevin que EXIT tampoco espere MSG_OK.
+  - El KS ya no envía MSG_OK a la CPU para estas syscalls; redespacha al proceso por el planificador normal.
+
+- [ ] **MUTEX_LOCK bloqueante pasa al KS** (`ks_mutex.c`):
+  - Eliminar el `fd_cpu` del `t_mutex_waiter`; solo guardar el PID.
+  - Si el mutex está tomado: mover el proceso a `BLOCK` en el KS (no quedarse esperando en la CPU).
+  - Cuando se haga `MUTEX_UNLOCK`: sacar el proceso de BLOCK y ponerlo en READY.
+
+- [ ] **Flujo real STDOUT** (`kernel_scheduler/src/main.c` + coordinación con Luciano):
+  - Al recibir `MSG_SYSCALL_STDOUT` con dirección física: pedir bytes al KM (`MSG_KM_LEER_MEMORIA`), recibir respuesta, enviar bytes a IO STDOUT.
+  - Agregar `MSG_KM_LEER_MEMORIA` y `MSG_KM_LEER_MEMORIA_RESP` al protocolo.
+
+- [ ] **Flujo real STDIN** (`kernel_scheduler/src/main.c` + coordinación con Luciano):
+  - Al recibir datos de IO STDIN (`MSG_IO_STDIN_DATOS`): pedir al KM que escriba en dirección física (`MSG_KM_ESCRIBIR_MEMORIA`).
+  - Agregar `MSG_KM_ESCRIBIR_MEMORIA` al protocolo.
+
+- [ ] **Syscalls MEM_ALLOC/MEM_FREE: reenviar a misma CPU**:
+  - Guardar el `fd_cpu` del proceso cuando entra una syscall de memoria.
+  - Una vez que KM resuelva, redespachar el proceso a esa CPU específica.
+
 ---
 
 ## Fase 4 — Integración y Entrega Final

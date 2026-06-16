@@ -18,6 +18,7 @@
 10. [Scripts de proceso](#10-scripts-de-proceso)
 11. [Prueba de integración CK2](#11-prueba-de-integración-ck2)
 12. [Pruebas preliminares](#12-pruebas-preliminares)
+13. [Cambios introducidos en v1.1 del enunciado](#13-cambios-introducidos-en-v11-del-enunciado)
 
 ---
 
@@ -466,3 +467,101 @@ EXIT
 2. Tras los 10 segundos del `SLEEP`, se crean `MEMORIA_PRE_1` y `MEMORIA_PRE_2`.
 3. `MEMORIA_PRE_1` completa el ciclo alloc → write → free → realloc → read sin errores.
 4. `MEMORIA_PRE_2` bloquea en STDIN esperando input; al recibirlo, lo escribe por STDOUT y termina.
+
+---
+
+## 13. Cambios introducidos en v1.1 del enunciado
+
+La versión 1.1 del enunciado (publicada 08/06/2026) introduce aclaraciones y correcciones que **impactan directamente en la implementación de CK3**. A continuación se detallan los cambios y su impacto técnico.
+
+### 13.1 Syscalls deben liberar la CPU
+
+**Sección afectada:** Kernel Scheduler — nueva sección "Atención de Syscalls".
+
+Ante cualquier syscall, la CPU debe seguir este flujo sin excepción:
+
+1. Incrementar el Program Counter (PC) en 1.
+2. Guardar el contexto de ejecución en el Kernel Memory.
+3. Enviar el PID al Kernel Scheduler (via `MSG_DEVOLVER_PROCESO` con motivo `SYSCALL`).
+4. Quedar libre para ejecutar otro proceso.
+
+El KS es quien decide cuándo redespachar el proceso (inmediatamente si la syscall es no bloqueante, o cuando se resuelva el bloqueo).
+
+**Impacto en el código:**
+- `cpu/src/cpu_syscalls.c`: las funciones `enviar_syscall_mutex_create`, `enviar_syscall_mutex_unlock` y `enviar_syscall_exit` actualmente esperan un `MSG_OK` del KS antes de retornar. Deben modificarse para **no esperar respuesta**.
+- `kernel_scheduler/src/main.c`: para MUTEX_CREATE y MUTEX_UNLOCK, el KS ya no envía `MSG_OK` a la CPU. Redespacha al proceso vía el planificador normal.
+
+### 13.2 MUTEX_LOCK bloqueante: el bloqueo pasa al KS
+
+Con el cambio anterior, la CPU nunca queda bloqueada esperando un mutex. El bloqueo por `MUTEX_LOCK` cuando el mutex está tomado ahora es responsabilidad **exclusiva del KS**:
+
+- Si el mutex está libre: KS asigna el mutex y redespacha el proceso inmediatamente.
+- Si el mutex está tomado: KS mueve el proceso a `BLOCK` (no lo redespacha). Cuando se haga `MUTEX_UNLOCK`, el KS mueve el proceso de `BLOCK` a `READY`.
+
+**Impacto:** la cola de waiters del mutex en `ks_mutex.c` ya no necesita guardar el `fd_cpu` — solo necesita guardar el PID del proceso en espera. El redespacho ocurre a través del planificador normal.
+
+### 13.3 STDIN y STDOUT usan dirección física, no lógica
+
+**Cambio de protocolo:** la CPU ahora envía al KS una **dirección física** (ya traducida por la MMU) en lugar de una dirección lógica.
+
+| | v1.0 | v1.1 |
+|---|---|---|
+| CPU → KS (STDOUT) | `{ pid, dir_logica, tamanio }` | `{ pid, dir_fisica, tamanio }` |
+| CPU → KS (STDIN) | `{ pid, dir_logica, tamanio }` | `{ pid, dir_fisica, tamanio }` |
+
+**Impacto en el código:**
+- `utils/src/utils/protocolo.h`: renombrar `direccion_logica` → `direccion_fisica` en `t_payload_syscall_io_memoria`.
+- `cpu/src/cpu_ciclo.c`: antes de enviar STDOUT/STDIN al KS, traducir la dirección lógica (registros SI/DI) a dirección física usando la MMU.
+- `kernel_scheduler/src/main.c`: al recibir STDOUT, pedir los bytes al KM con la dirección física recibida, luego reenviarlos a IO STDOUT. Al recibir STDIN, cuando IO devuelva los datos, pedirle al KM que los escriba en la dirección física.
+
+### 13.4 Flujo real de STDOUT y STDIN con Kernel Memory
+
+Con la dirección física disponible en el KS, el flujo completo para CK3 es:
+
+**STDOUT:**
+```
+CPU → KS: MSG_SYSCALL_STDOUT { pid, dir_fisica, tamanio }
+KS  → KM: MSG_KM_LEER_MEMORIA { dir_fisica, tamanio }
+KM  → KS: MSG_KM_LEER_MEMORIA_RESP { bytes[] }
+KS  → IO STDOUT: MSG_IO_STDOUT { pid, bytes[] }
+IO  → KS: MSG_IO_FIN { pid }
+KS: proceso BLOCK → READY
+```
+
+**STDIN:**
+```
+CPU → KS: MSG_SYSCALL_STDIN { pid, dir_fisica, tamanio }
+KS  → IO STDIN: MSG_IO_STDIN { pid, n_bytes }
+IO: lee del teclado
+IO  → KS: MSG_IO_STDIN_DATOS { pid, n_bytes, datos[] }
+KS  → KM: MSG_KM_ESCRIBIR_MEMORIA { dir_fisica, datos[] }
+KM  → KS: MSG_OK
+KS: proceso BLOCK → READY
+```
+
+### 13.5 Syscalls de memoria (MEM_ALLOC/MEM_FREE): reenviar a la misma CPU
+
+Las syscalls relacionadas a memoria (`MEM_ALLOC`, `MEM_FREE`) tienen una regla especial: una vez que el KM resuelve la operación, el proceso **debe ser reenviado a la misma CPU que hizo la llamada**, no a cualquier CPU libre.
+
+Adicionalmente, si al crear un segmento hay espacio suficiente pero no es contiguo, el KM debe disparar una compactación antes de asignar.
+
+### 13.6 Orden FIFO en el desbloqueo de Mutex
+
+Al liberar un mutex que tiene procesos en espera, los procesos deben desbloquearse **en el orden en que solicitaron el mutex** (FIFO). La implementación actual con `queue_push`/`queue_pop` ya cumple esto.
+
+### 13.7 Des-suspensión usa algoritmo de búsqueda de huecos
+
+Al des-suspender un proceso (restaurar segmentos de SWAP a memoria principal), el KM debe usar el **algoritmo de búsqueda de huecos configurado** (BEST FIT o WORST FIT) para ubicar los segmentos, en lugar de colocarlos en cualquier lugar disponible.
+
+### 13.8 Direcciones físicas de Memory Sticks son globales
+
+**Cambio importante:** se elimina la restricción de que las direcciones físicas de cada Memory Stick arranquen en 0. Las direcciones físicas son **globales** a todo el espacio de memoria del sistema.
+
+**Impacto:**
+- El KM lleva un registro de qué rango de dirección física corresponde a cada MS (p. ej., MS1 cubre 0–255, MS2 cubre 256–511).
+- Cuando el KM recibe una lectura o escritura con una dirección física, calcula a qué MS(s) corresponde y divide la operación si cruza fronteras entre sticks.
+- El Memory Stick recibe sus pedidos con offsets que reflejan la dirección global, no relativa.
+
+### 13.9 IO tiene 1 solo hilo de ejecución
+
+Cada módulo IO opera con **un único hilo** que atiende pedidos del KS de forma secuencial. La implementación actual ya cumple esto (el `main` de IO no crea hilos adicionales).

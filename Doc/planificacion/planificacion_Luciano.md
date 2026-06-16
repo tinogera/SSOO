@@ -89,6 +89,20 @@
 - [ ] Implementar **suspensión de proceso**: para cada segmento del PID, solicitar bloques libres a Swap, copiar datos al Swap, liberar espacio en Memory Sticks.
 - [ ] Implementar **des-suspensión de proceso**: recuperar segmentos desde Swap, reasignar espacio en Memory Sticks, restaurar tabla de segmentos del PID.
 
+### Ajustes por v1.1 del enunciado (08/06/2026)
+
+- [ ] **Des-suspensión usa algoritmo de búsqueda de huecos**: al restaurar segmentos de SWAP, aplicar BEST FIT o WORST FIT (según `FITTING_ALGORITHM` config) para ubicar cada segmento. No asignar en posición arbitraria.
+
+- [ ] **Direcciones físicas son globales, no relativas a cada Memory Stick**:
+  - El KM asigna direcciones físicas únicas y globales a cada segmento (no reinicia en 0 por cada stick).
+  - Llevar un mapa global de rangos: qué rango de dirección física corresponde a cada MS (p. ej., MS1: 0–255, MS2: 256–511).
+  - Al atender una lectura o escritura con dirección física, calcular a qué MS(s) pertenece y, si cruza fronteras, dividir la operación.
+  - Coordinar con Juan Manuel el nuevo formato del protocolo KM↔MS (ya no se asume offset 0).
+
+- [ ] **Implementar lectura/escritura desde KS** (flujo STDOUT/STDIN completo):
+  - Agregar handlers en KM para `MSG_KM_LEER_MEMORIA` (devolver bytes) y `MSG_KM_ESCRIBIR_MEMORIA` (escribir bytes en dir física).
+  - Estos mensajes llegan del KS, no de la CPU.
+
 ### Swap — Semana 3–4 (07/06 – 20/06)
 - [ ] Implementar el **servidor de Swap**: crear/abrir archivo binario del tamaño configurado (`SWAP_FILE_SIZE`).
 - [ ] Implementar **escritura de bloque**: recibir número de bloque + contenido (tamaño = `BLOCK_SIZE`) → escribir en posición `numero_bloque * BLOCK_SIZE` → confirmar.

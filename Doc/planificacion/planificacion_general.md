@@ -143,6 +143,8 @@ main
 **Período:** 24/05 – 20/06/2026  
 **Objetivo:** CPU con MMU completa, memoria segmentada real, planificación avanzada.
 
+#### Tareas originales
+
 | Módulo | Tareas | Rama |
 |---|---|---|
 | CPU | MMU (dir. lógica → física), MOV_IN, MOV_OUT, COPY_MEM, MEM_ALLOC, MEM_FREE, comunicación con Memory Sticks | `feature/cpu/mmu` |
@@ -155,9 +157,22 @@ main
 | Memory Stick | ~~Implementación completa con MEMORY_DELAY~~ ✅ Completado en CK2 | — |
 | Swap | Implementación completa con bloques | `feature/swap` |
 
+#### Tareas adicionales por cambios en v1.1 (08/06/2026)
+
+| Módulo | Tarea | Responsable | Issue |
+|---|---|---|---|
+| CPU + KS | Syscalls no esperan MSG_OK: eliminar `esperar_ok_kernel` en MUTEX_CREATE, MUTEX_UNLOCK y EXIT | Kevin + Nicolas | #— |
+| CPU + KS | MUTEX_LOCK bloqueante: CPU no queda bloqueada; el KS mueve el proceso a BLOCK | Nicolas | #— |
+| protocolo + CPU + KS | STDOUT/STDIN cambian de dirección lógica a dirección física | Juan Manuel + Nicolas | #— |
+| KS + KM | Flujo real STDOUT: KS pide bytes a KM con dir física y los reenvía a IO | Nicolas + Luciano | #— |
+| KS + KM | Flujo real STDIN: IO envía datos al KS; KS pide a KM escribir en dir física | Nicolas + Luciano | #— |
+| KS + KM | Syscalls MEM_ALLOC/MEM_FREE: reenviar proceso a la misma CPU que hizo la llamada | Nicolas + Luciano | #— |
+| KM | Des-suspensión usa algoritmo de búsqueda de huecos (BEST/WORST FIT) | Luciano | #— |
+| KM + MS | Direcciones físicas son globales: KM divide peticiones entre sticks por rango | Luciano + Juan Manuel | #— |
+
 > Al llegar al Check 3: mergear a `develop` y luego `develop` → `main`.
 
-**Criterio de éxito:** Procesos con allocación de memoria real, MMU funcional, planificación CMN con desalojo, herencia de prioridades en mutex, suspensión por timeout.
+**Criterio de éxito:** Procesos con allocación de memoria real, MMU funcional, planificación CMN con desalojo, herencia de prioridades en mutex, suspensión por timeout, flujos STDOUT/STDIN completos con KM, syscalls liberando la CPU correctamente.
 
 ---
 
