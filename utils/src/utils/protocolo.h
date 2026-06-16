@@ -1,61 +1,201 @@
 #ifndef UTILS_PROTOCOLO_H_
 #define UTILS_PROTOCOLO_H_
 
-/*
- * protocolo.h — Códigos de operación del sistema
- *
- * Este enum define todos los tipos de mensaje que se intercambian entre módulos.
- * Cada vez que un módulo necesita un nuevo tipo de mensaje, tiene que agregarlo acá.
- *
- * REGLA: nunca cambiar el valor numérico de un código ya existente ni reordenar
- * los que ya están — eso rompería la comunicación con módulos que ya compilan.
- * Siempre agregar nuevos códigos ANTES de MSG_CANTIDAD.
- *
- * PARA EL CHECK 1 (conexión inicial):
- *   - Cada módulo que se conecta a otro tiene que identificarse al conectarse.
- *   - Agregar un MSG_<MODULO>_IDENTIFICACION por cada conexión nueva.
- *   Ejemplos de lo que van a necesitar:
- *     MSG_CPU_IDENTIFICACION        → CPU se conecta al Kernel Scheduler
- *     MSG_CPU_A_KERNEL_MEMORY       → CPU se conecta a Kernel Memory
- *     MSG_MEMORY_STICK_CONEXION     → Memory Stick se conecta a Kernel Memory
- *     MSG_SWAP_CONEXION             → Swap se conecta a Kernel Memory
- *
- * PARA EL CHECK 2 (funcionalidad básica):
- *   Agregar los mensajes propios de cada módulo. Ejemplos orientativos:
- *     MSG_DESPACHAR_PROCESO         → Kernel Scheduler → CPU: mandá a ejecutar este PID
- *     MSG_DEVOLVER_PROCESO          → CPU → Kernel Scheduler: terminé, acá el motivo
- *     MSG_FETCH_INSTRUCCION         → CPU → Kernel Memory: dame la instrucción en PC=X
- *     MSG_RESPUESTA_INSTRUCCION     → Kernel Memory → CPU: la instrucción es esta
- *     MSG_CREAR_PROCESO             → Kernel Scheduler → Kernel Memory: creá contexto para PID
- *     MSG_IO_PEDIDO                 → Kernel Scheduler → IO: hacé esta operación
- *     MSG_IO_FIN                    → IO → Kernel Scheduler: terminé la operación
- *
- * PARA EL CHECK 3 (memoria real, compactación, suspensión):
- *   Agregar los mensajes de memoria, compactación y suspensión. Ejemplos:
- *     MSG_LEER_MEMORIA              → CPU → Memory Stick: leé N bytes en dirección X
- *     MSG_ESCRIBIR_MEMORIA          → CPU → Memory Stick: escribí estos bytes en dirección X
- *     MSG_CREAR_SEGMENTO            → CPU → Kernel Memory (syscall MEM_ALLOC)
- *     MSG_ELIMINAR_SEGMENTO         → CPU → Kernel Memory (syscall MEM_FREE)
- *     MSG_COMPACTAR                 → Kernel Memory → Kernel Scheduler: necesito compactar
- *     MSG_FIN_COMPACTACION          → Kernel Scheduler → Kernel Memory: todas las CPUs desalojadas
- *     MSG_SUSPENDER_PROCESO         → Kernel Memory → Swap: guardá estos segmentos
- *     MSG_BSOD                      → Kernel Memory → Kernel Scheduler: Memory Stick caído
- */
+#include <stdint.h>
 
 typedef enum {
     // -----------------------------------------------------------------
     // IDENTIFICACIÓN — Check 1
     // -----------------------------------------------------------------
-    MSG_IO_IDENTIFICACION,    // IO se presenta al Kernel Scheduler con su tipo
+    MSG_IO_IDENTIFICACION,              // 0
+    MSG_CPU_IDENTIFICACION,             // 1
+    MSG_KS_IDENTIFICACION,              // 2
+    MSG_OK,                             // 3
+    MSG_ERROR,                          // 4
+    MSG_MEMORY_STICK_IDENTIFICACION,    // 5
+    MSG_SWAP_IDENTIFICACION,            // 6
+    MSG_CPU_A_KERNEL_MEMORY,            // 7
 
     // -----------------------------------------------------------------
-    // AGREGAR ACÁ los nuevos mensajes del Check 1
-    // (cada módulo agrega los suyos en esta zona antes de MSG_CANTIDAD)
+    // IO — Check 2
     // -----------------------------------------------------------------
+    MSG_IO_SLEEP,       // 8
+    MSG_IO_STDOUT,      // 9
+    MSG_IO_STDIN,       // 10
+    MSG_IO_FIN,         // 11
+    MSG_IO_STDIN_DATOS, // 12
 
+    // -----------------------------------------------------------------
+    // MUTEX — Check 2
+    // -----------------------------------------------------------------
+    MSG_MUTEX_CREATE,   // 13
+    MSG_MUTEX_LOCK,     // 14
+    MSG_MUTEX_UNLOCK,   // 15
 
-    // Marcador de fin — SIEMPRE tiene que ser el último
+    // -----------------------------------------------------------------
+    // CPU ↔ KS — Check 2
+    // -----------------------------------------------------------------
+    MSG_INIT_PROC,          // 16
+    MSG_DESPACHAR_PROCESO,  // 17
+    MSG_DEVOLVER_PROCESO,   // 18
+    MSG_INTERRUPCION_CPU,   // 19
+
+    // -----------------------------------------------------------------
+    // CPU ↔ KM — Check 2
+    // -----------------------------------------------------------------
+    MSG_FETCH_INSTRUCCION,      // 20
+    MSG_RESPUESTA_INSTRUCCION,  // 21
+    MSG_CREAR_PROCESO,          // 22
+    MSG_GUARDAR_CONTEXTO,       // 23
+    MSG_RESTAURAR_CONTEXTO,     // 24
+
+    // -----------------------------------------------------------------
+    // Syscalls CPU → KS — Check 2
+    // -----------------------------------------------------------------
+    MSG_SYSCALL_SLEEP,   // 25
+    MSG_SYSCALL_STDOUT,  // 26
+    MSG_SYSCALL_STDIN,   // 27
+    MSG_SYSCALL_EXIT,    // 28
+
+    // -----------------------------------------------------------------
+    // MS ↔ CPU — Check 2
+    // -----------------------------------------------------------------
+    MSG_MEMORY_WRITE,           // 29
+    MSG_MEMORY_READ,            // 30
+    MSG_MEMORY_READ_RESPUESTA,  // 31
+
+    // -----------------------------------------------------------------
+    // Check 3 — Memoria, segmentos, compactación, suspensión
+    // -----------------------------------------------------------------
+    MSG_MEM_ALLOC,              // 32  CPU → KS: syscall MEM_ALLOC { pid, id_seg, tamanio }
+    MSG_MEM_FREE,               // 33  CPU → KS: syscall MEM_FREE  { pid, id_seg }
+    MSG_CREAR_SEGMENTO,         // 34  KS → KM:  { pid, id_seg, tamanio }
+    MSG_ELIMINAR_SEGMENTO,      // 35  KS → KM:  { pid, id_seg }
+    MSG_LEER_MEMORIA,           // 36  KM → MS:  { dir_fisica, tamanio }
+    MSG_LEER_MEMORIA_RESP,      // 37  MS → KM:  { bytes[] }
+    MSG_ESCRIBIR_MEMORIA,       // 38  KM → MS:  { dir_fisica, tamanio, bytes[] }
+    MSG_LEER_DATOS,             // 39  KS → KM:  { pid, dir_logica, tamanio }
+    MSG_LEER_DATOS_RESP,        // 40  KM → KS:  { bytes[] }
+    MSG_ESCRIBIR_DATOS,         // 41  KS → KM:  { pid, dir_logica, tamanio, bytes[] }
+    MSG_COMPACTAR,              // 42  KM → KS:  sin payload — pedir desalojo CPUs
+    MSG_FIN_COMPACTACION,       // 43  KS → KM:  sin payload — CPUs desalojadas
+    MSG_SUSPENDER_PROCESO,      // 44  KS → KM:  { uint32_t pid }
+    MSG_DESSUSPENDER_PROCESO,   // 45  KS → KM:  { uint32_t pid }
+    MSG_MAS_MEMORIA,            // 46  KM → KS:  sin payload — nuevo MS conectado
+    MSG_BSOD,                   // 47  KM → KS:  sin payload — MS caído
+    MSG_SWAP_LEER,              // 48  KM → Swap: { uint32_t nro_bloque }
+    MSG_SWAP_LEER_RESP,         // 49  Swap → KM: { bytes[] }
+    MSG_SWAP_ESCRIBIR,          // 50  KM → Swap: { uint32_t nro_bloque, bytes[] }
+    MSG_TABLA_SEGMENTOS,        // 51  KM → CPU (en contexto restaurado): segmentos actualizados
+
     MSG_CANTIDAD
 } op_code;
+
+// ---------------------------------------------------------------------------
+// Structs de payload (packed — sin padding)
+// ---------------------------------------------------------------------------
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t tiempo_ms;
+} t_payload_io_sleep;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t n_bytes;
+} t_payload_io_stdin;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+} t_payload_io_fin;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    char     nombre[];
+} t_payload_mutex;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t pc;
+} t_payload_fetch_instruccion;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+} t_payload_despachar_proceso;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t motivo;
+    uint32_t pc;
+} t_payload_devolver_proceso;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t motivo;
+} t_payload_interrupcion_cpu;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t tiempo_ms;
+} t_payload_syscall_sleep;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t direccion_logica;
+    uint32_t tamanio;
+} t_payload_syscall_io_memoria;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+} t_payload_syscall_exit;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t id_segmento;
+    uint32_t tamanio;
+} t_payload_crear_segmento;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t id_segmento;
+} t_payload_eliminar_segmento;
+
+typedef struct __attribute__((packed)) {
+    uint32_t dir_fisica;
+    uint32_t tamanio;
+} t_payload_leer_memoria;
+
+typedef struct __attribute__((packed)) {
+    uint32_t dir_fisica;
+    uint32_t tamanio;
+    // bytes siguen inmediatamente
+} t_payload_escribir_memoria;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t dir_logica;
+    uint32_t tamanio;
+} t_payload_acceso_datos;
+
+typedef struct __attribute__((packed)) {
+    uint32_t nro_bloque;
+} t_payload_swap_leer;
+
+typedef struct __attribute__((packed)) {
+    uint32_t nro_bloque;
+    // bytes del bloque siguen inmediatamente
+} t_payload_swap_escribir;
+
+typedef enum {
+    MOTIVO_INTERRUPCION_QUANTUM  = 0,
+    MOTIVO_INTERRUPCION_DESALOJO = 1
+} t_motivo_interrupcion_cpu;
+
+typedef enum {
+    MOTIVO_DEVOLUCION_SYSCALL      = 0,
+    MOTIVO_DEVOLUCION_EXIT         = 1,
+    MOTIVO_DEVOLUCION_ERROR        = 2,
+    MOTIVO_DEVOLUCION_INTERRUPCION = 3
+} t_motivo_devolucion_cpu;
 
 #endif
