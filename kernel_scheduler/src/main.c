@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <arpa/inet.h>
 #include <pthread.h>
@@ -50,6 +51,8 @@ static int             fd_io_stdin  = -1;
 static pthread_mutex_t mutex_io     = PTHREAD_MUTEX_INITIALIZER;
 
 static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size);
+static void       manejar_bsod(void);
+static void       manejar_mas_memoria(void);
 static void*      thread_km_listener(void* _);
 t_proceso* crear_proceso(char* path, int prioridad);
 void*      atender_cliente(void* arg);
@@ -79,6 +82,108 @@ static void cambiar_estado(t_proceso* proc, t_estado nuevo) {
     proc->estado = nuevo;
 }
 
+
+static void finalizar_proceso_bsod(t_proceso* proc) {
+    cambiar_estado(proc, EXIT);
+    log_info(logger, "## (%d) finalizó su ejecución con motivo de BSOD", proc->PID);
+    pthread_mutex_lock(&mutex_exit);
+    queue_push(cola_exit, proc);
+    pthread_mutex_unlock(&mutex_exit);
+}
+
+static void manejar_bsod(void) {
+    log_warning(logger, "## BSOD: Memory Stick desconectado — finalizando todos los procesos");
+
+    // Interrumpir CPUs en EXEC antes de vaciar la cola
+    pthread_mutex_lock(&mutex_exec);
+    int sz = queue_size(cola_exec);
+    for (int i = 0; i < sz; i++) {
+        t_proceso* proc = queue_pop(cola_exec);
+        t_payload_interrupcion_cpu pay = {
+            .pid    = htonl((uint32_t)proc->PID),
+            .motivo = htonl(MOTIVO_INTERRUPCION_DESALOJO)
+        };
+        enviar_mensaje(proc->fd_cpu, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
+        proc->fd_cpu = -1;
+        finalizar_proceso_bsod(proc);
+    }
+    pthread_mutex_unlock(&mutex_exec);
+
+    // Vaciar el resto de las colas
+    pthread_mutex_lock(&mutex_ready);
+    while (queue_size(cola_ready) > 0)
+        finalizar_proceso_bsod(queue_pop(cola_ready));
+    pthread_mutex_unlock(&mutex_ready);
+
+    pthread_mutex_lock(&mutex_block);
+    while (queue_size(cola_block) > 0)
+        finalizar_proceso_bsod(queue_pop(cola_block));
+    pthread_mutex_unlock(&mutex_block);
+
+    pthread_mutex_lock(&mutex_susp_block);
+    while (queue_size(cola_susp_block) > 0)
+        finalizar_proceso_bsod(queue_pop(cola_susp_block));
+    pthread_mutex_unlock(&mutex_susp_block);
+
+    pthread_mutex_lock(&mutex_susp_ready);
+    while (queue_size(cola_susp_ready) > 0)
+        finalizar_proceso_bsod(queue_pop(cola_susp_ready));
+    pthread_mutex_unlock(&mutex_susp_ready);
+
+    log_warning(logger, "## BSOD: sistema finalizado");
+    exit(EXIT_FAILURE);
+}
+
+static bool cmp_suspension(void* a, void* b) {
+    t_proceso* pa = (t_proceso*)a;
+    t_proceso* pb = (t_proceso*)b;
+    if (pa->prioridad != pb->prioridad)
+        return pa->prioridad > pb->prioridad;          // mayor prioridad primero
+    return pa->tiempo_suspension < pb->tiempo_suspension; // más viejo primero
+}
+
+static void manejar_mas_memoria(void) {
+    // Vaciar cola_susp_ready en una lista local para ordenar y procesar
+    pthread_mutex_lock(&mutex_susp_ready);
+    t_list* candidatos = list_create();
+    while (queue_size(cola_susp_ready) > 0)
+        list_add(candidatos, queue_pop(cola_susp_ready));
+    pthread_mutex_unlock(&mutex_susp_ready);
+
+    if (list_size(candidatos) == 0) {
+        list_destroy(candidatos);
+        return;
+    }
+
+    list_sort(candidatos, cmp_suspension);
+
+    for (int i = 0; i < list_size(candidatos); i++) {
+        t_proceso* proc = list_get(candidatos, i);
+
+        uint32_t pid_n = htonl((uint32_t)proc->PID);
+        t_mensaje* resp = km_request(MSG_DESSUSPENDER_PROCESO, &pid_n, sizeof(uint32_t));
+
+        if (resp && resp->op_code == MSG_OK) {
+            free_mensaje(resp);
+            cambiar_estado(proc, READY);
+            log_info(logger, "## (%d) finalizó IO y pasa a READY", proc->PID);
+            pthread_mutex_lock(&mutex_ready);
+            queue_push(cola_ready, proc);
+            pthread_mutex_unlock(&mutex_ready);
+            sem_post(&sem_cpu_disponible);
+        } else {
+            // Sin espacio — devolver este y los restantes a cola_susp_ready
+            if (resp) free_mensaje(resp);
+            pthread_mutex_lock(&mutex_susp_ready);
+            for (int j = i; j < list_size(candidatos); j++)
+                queue_push(cola_susp_ready, list_get(candidatos, j));
+            pthread_mutex_unlock(&mutex_susp_ready);
+            break;
+        }
+    }
+
+    list_destroy(candidatos);
+}
 
 static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size) {
     pthread_mutex_lock(&mutex_km_send);
@@ -477,6 +582,7 @@ static void* thread_suspension_timer(void* arg) {
     if (!proc) return NULL;
 
     log_info(logger, "## (%d) - Timeout de IO: suspendiendo proceso", pid);
+    proc->tiempo_suspension = time(NULL);
     cambiar_estado(proc, SUSP_BLOCK);
     pthread_mutex_lock(&mutex_susp_block);
     queue_push(cola_susp_block, proc);
