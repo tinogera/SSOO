@@ -63,6 +63,46 @@ static void* thread_largo_plazo(void* _);
 static void* thread_suspension_timer(void* arg);
 
 // Encola el proceso en la cola de su prioridad y señala al planificador.
+static void encolar_en_ready(t_proceso* proc);
+
+// Encola al FRENTE de la cola (para procesos desalojados por preemption o compactación).
+static void encolar_al_frente_en_ready(t_proceso* proc) {
+    int nivel = proc->prioridad;
+    if (nivel < 0 || nivel >= n_colas) nivel = n_colas - 1;
+    pthread_mutex_lock(&mutex_colas_ready[nivel]);
+    list_add_in_index(colas_ready[nivel]->elements, 0, proc);
+    pthread_mutex_unlock(&mutex_colas_ready[nivel]);
+    sem_post(&sem_cpu_disponible);
+}
+
+// Si QUEUE_PREEMPTION está activo, interrumpe el proceso en EXEC con menor prioridad
+// que 'entrante' (si existe).
+static void verificar_preemption(t_proceso* entrante) {
+    if (!queue_preemption) return;
+
+    pthread_mutex_lock(&mutex_exec);
+    t_proceso* victima = NULL;
+    for (int i = 0; i < (int)queue_size(cola_exec); i++) {
+        t_proceso* p = list_get(cola_exec->elements, i);
+        if (p->prioridad > entrante->prioridad) {
+            victima = p;
+            break;
+        }
+    }
+    if (victima) {
+        victima->preemptado = 1;
+        log_info(logger,
+            "## (%d) Prioridad: %d - Desalojado por cola más prioritaria por el proceso %d con prioridad %d",
+            victima->PID, victima->prioridad, entrante->PID, entrante->prioridad);
+        t_payload_interrupcion_cpu pay = {
+            .pid    = htonl(victima->PID),
+            .motivo = htonl(MOTIVO_INTERRUPCION_DESALOJO)
+        };
+        enviar_mensaje(victima->fd_cpu, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
+    }
+    pthread_mutex_unlock(&mutex_exec);
+}
+
 static void encolar_en_ready(t_proceso* proc) {
     int nivel = proc->prioridad;
     if (nivel < 0 || nivel >= n_colas) nivel = n_colas - 1;
@@ -70,6 +110,7 @@ static void encolar_en_ready(t_proceso* proc) {
     queue_push(colas_ready[nivel], proc);
     pthread_mutex_unlock(&mutex_colas_ready[nivel]);
     sem_post(&sem_cpu_disponible);
+    verificar_preemption(proc);
 }
 
 static const char* estado_str(t_estado e) {
@@ -212,6 +253,7 @@ t_proceso* crear_proceso(char* path, int prioridad) {
     proc->controladorDeProgramas = 0;
     proc->prioridad              = prioridad;
     proc->fd_cpu                 = -1;
+    proc->preemptado             = 0;
 
     log_info(logger, "## (%u) Se crea el proceso - Estado: NEW", pid);
 
@@ -515,9 +557,14 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 sem_post(&sem_cpu_disponible);
 
             } else if (motivo == MOTIVO_DEVOLUCION_INTERRUPCION) {
-                log_info(logger, "## (%d) - Desalojado por fin de quantum", pid);
                 cambiar_estado(proc, READY);
-                encolar_en_ready(proc);
+                if (proc->preemptado) {
+                    proc->preemptado = 0;
+                    encolar_al_frente_en_ready(proc);
+                } else {
+                    log_info(logger, "## (%d) - Desalojado por fin de quantum", pid);
+                    encolar_en_ready(proc);
+                }
 
             } else {
                 // MOTIVO_DEVOLUCION_SYSCALL con proceso todavía en exec: la syscall
