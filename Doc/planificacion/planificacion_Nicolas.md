@@ -88,6 +88,12 @@
 **Fecha límite:** 20/06/2026
 **Ramas:** `feature/kernel-scheduler/mutex-cmn` (CMN, QUEUE_PREEMPTION) · `feature/kernel-scheduler/herencia-compactacion` (herencia, compactación)
 
+> Rama `feature/kernel-scheduler/mutex-cmn` creada el 18/06/2026 desde develop actualizado.
+
+### Ajustes v1.1 (completados primero, base para CK3)
+- [x] `fix(cpu)`: quitar `esperar_ok_kernel` de MUTEX_CREATE, MUTEX_LOCK y MUTEX_UNLOCK en `cpu/src/cpu_syscalls.c` — commit `2e2fa9e`
+- [ ] `fix(ks)`: MUTEX_LOCK bloqueante mueve proceso a BLOCK en KS (eliminar `fd_cpu` de `t_mutex_waiter`)
+
 ### Semana 1–2 (24/05 – 06/06)
 - [ ] Implementar algoritmo **CMN (Colas Multinivel)**:
   - N colas (configuradas en `QUEUES_ALGORITHMS`), cada una con su propio algoritmo (FIFO o RR).

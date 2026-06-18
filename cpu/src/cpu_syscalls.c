@@ -35,7 +35,7 @@ static bool enviar_syscall_mutex(int socket_kernel, uint32_t op_code, uint32_t p
     enviar_mensaje(socket_kernel, op_code, payload, payload_size);
 
     free(payload);
-    return esperar_ok_kernel(socket_kernel, nombre_syscall, logger);
+    return true;
 }
 
 bool enviar_syscall_mutex_create(int socket_kernel, uint32_t pid, const char* nombre, t_log* logger) {

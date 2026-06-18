@@ -1,5 +1,6 @@
 #include <cspecs/cspec.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,8 +12,8 @@
 static t_mensaje* crear_msg_sleep(uint32_t pid, uint32_t tiempo_ms) {
     t_mensaje* msg        = malloc(sizeof(t_mensaje));
     t_payload_io_sleep* p = malloc(sizeof(t_payload_io_sleep));
-    p->pid       = pid;
-    p->tiempo_ms = tiempo_ms;
+    p->pid       = htonl(pid);
+    p->tiempo_ms = htonl(tiempo_ms);
     msg->op_code      = MSG_IO_SLEEP;
     msg->payload_size = sizeof(t_payload_io_sleep);
     msg->payload      = p;
@@ -24,8 +25,8 @@ static t_mensaje* crear_msg_sleep(uint32_t pid, uint32_t tiempo_ms) {
 static t_mensaje* crear_msg_stdin(uint32_t pid, uint32_t n_bytes) {
     t_mensaje* msg        = malloc(sizeof(t_mensaje));
     t_payload_io_stdin* p = malloc(sizeof(t_payload_io_stdin));
-    p->pid     = pid;
-    p->n_bytes = n_bytes;
+    p->pid     = htonl(pid);
+    p->n_bytes = htonl(n_bytes);
     msg->op_code      = MSG_IO_STDIN;
     msg->payload_size = sizeof(t_payload_io_stdin);
     msg->payload      = p;

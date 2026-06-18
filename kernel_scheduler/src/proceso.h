@@ -12,7 +12,8 @@ typedef struct {
     t_estado estado;
     uint32_t controladorDeProgramas;
     int      prioridad;
-    int      fd_cpu;   // fd de la CPU que lo ejecuta (-1 si ninguna)
+    int      fd_cpu;       // fd de la CPU que lo ejecuta (-1 si ninguna)
+    int      preemptado;   // 1 si fue desalojado por QUEUE_PREEMPTION (va al frente de READY)
 } t_proceso;
 
 #endif
