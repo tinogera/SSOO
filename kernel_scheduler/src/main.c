@@ -18,11 +18,17 @@ t_log* logger;
 static int             fd_km    = -1;
 static pthread_mutex_t mutex_km = PTHREAD_MUTEX_INITIALIZER;
 
-t_queue *cola_new, *cola_ready, *cola_exec;
+t_queue *cola_new, *cola_exec;
 t_queue *cola_block, *cola_susp_block, *cola_susp_ready, *cola_exit;
 
-pthread_mutex_t mutex_new, mutex_ready, mutex_exec;
+pthread_mutex_t mutex_new, mutex_exec;
 pthread_mutex_t mutex_block, mutex_susp_block, mutex_susp_ready, mutex_exit;
+
+#define MAX_COLAS 16
+static int             n_colas = 1;
+static char            algoritmos_cola[MAX_COLAS][8];
+static t_queue*        colas_ready[MAX_COLAS];
+static pthread_mutex_t mutex_colas_ready[MAX_COLAS];
 
 static uint32_t        next_pid  = 0;
 static pthread_mutex_t mutex_pid = PTHREAD_MUTEX_INITIALIZER;
@@ -30,6 +36,7 @@ static pthread_mutex_t mutex_pid = PTHREAD_MUTEX_INITIALIZER;
 static char algoritmo[8];
 static int  rr_quantum_ms;
 static int  suspension_timeout_ms;
+static int  queue_preemption = 0;
 
 typedef struct {
     int fd;
@@ -54,6 +61,36 @@ static void* thread_planificador(void* _);
 static void* thread_quantum_timer(void* arg);
 static void* thread_largo_plazo(void* _);
 static void* thread_suspension_timer(void* arg);
+
+// Parsea "QUEUES_ALGORITHMS=[FIFO,RR,RR,FIFO]" y carga el array out[][8].
+// Retorna la cantidad de colas.
+static int parsear_queues_algorithms(const char* str, char out[][8]) {
+    char buf[256];
+    strncpy(buf, str, sizeof(buf) - 1);
+    buf[sizeof(buf) - 1] = '\0';
+    int n = 0;
+    char* p = buf;
+    if (*p == '[') p++;
+    char* tok = strtok(p, ",]");
+    while (tok && n < MAX_COLAS) {
+        while (*tok == ' ') tok++;
+        strncpy(out[n], tok, 7);
+        out[n][7] = '\0';
+        n++;
+        tok = strtok(NULL, ",]");
+    }
+    return n > 0 ? n : 1;
+}
+
+// Encola el proceso en la cola de su prioridad y señala al planificador.
+static void encolar_en_ready(t_proceso* proc) {
+    int nivel = proc->prioridad;
+    if (nivel < 0 || nivel >= n_colas) nivel = n_colas - 1;
+    pthread_mutex_lock(&mutex_colas_ready[nivel]);
+    queue_push(colas_ready[nivel], proc);
+    pthread_mutex_unlock(&mutex_colas_ready[nivel]);
+    sem_post(&sem_cpu_disponible);
+}
 
 static const char* estado_str(t_estado e) {
     switch (e) {
@@ -95,6 +132,16 @@ int main(int argc, char* argv[]) {
     rr_quantum_ms         = config_get_int_value(config, "RR_QUANTUM");
     suspension_timeout_ms = config_get_int_value(config, "SUSPENSION_TIMEOUT");
 
+    if (strcmp(algoritmo, "CMN") == 0) {
+        char* qs = config_get_string_value(config, "QUEUES_ALGORITHMS");
+        n_colas = parsear_queues_algorithms(qs, algoritmos_cola);
+        char* qp = config_get_string_value(config, "QUEUE_PREEMPTION");
+        queue_preemption = (strcmp(qp, "TRUE") == 0) ? 1 : 0;
+    } else {
+        n_colas = 1;
+        strncpy(algoritmos_cola[0], algoritmo, sizeof(algoritmos_cola[0]) - 1);
+    }
+
     // Conectar a KM sincrónicamente antes de crear PID 0
     fd_km = conectar_a_servidor(ip_km, puerto_km);
     if (fd_km == -1) {
@@ -113,7 +160,6 @@ int main(int argc, char* argv[]) {
 
     // Inicializar colas
     cola_new        = queue_create();
-    cola_ready      = queue_create();
     cola_exec       = queue_create();
     cola_block      = queue_create();
     cola_susp_block = queue_create();
@@ -121,12 +167,16 @@ int main(int argc, char* argv[]) {
     cola_exit       = queue_create();
 
     pthread_mutex_init(&mutex_new,        NULL);
-    pthread_mutex_init(&mutex_ready,      NULL);
     pthread_mutex_init(&mutex_exec,       NULL);
     pthread_mutex_init(&mutex_block,      NULL);
     pthread_mutex_init(&mutex_susp_block, NULL);
     pthread_mutex_init(&mutex_susp_ready, NULL);
     pthread_mutex_init(&mutex_exit,       NULL);
+
+    for (int i = 0; i < n_colas; i++) {
+        colas_ready[i] = queue_create();
+        pthread_mutex_init(&mutex_colas_ready[i], NULL);
+    }
 
     lista_cpus = list_create();
     sem_init(&sem_cpu_disponible, 0, 0);
@@ -206,11 +256,7 @@ t_proceso* crear_proceso(char* path, int prioridad) {
     free_mensaje(resp);
 
     cambiar_estado(proc, READY);
-    pthread_mutex_lock(&mutex_ready);
-    queue_push(cola_ready, proc);
-    pthread_mutex_unlock(&mutex_ready);
-
-    sem_post(&sem_cpu_disponible);
+    encolar_en_ready(proc);
     return proc;
 }
 
@@ -307,9 +353,18 @@ static void* thread_planificador(void* _) {
     while (1) {
         sem_wait(&sem_cpu_disponible);
 
-        pthread_mutex_lock(&mutex_ready);
-        t_proceso* proc = queue_size(cola_ready) > 0 ? queue_pop(cola_ready) : NULL;
-        pthread_mutex_unlock(&mutex_ready);
+        // Seleccionar el proceso de la cola no vacía de mayor prioridad (índice 0 = mayor)
+        t_proceso* proc = NULL;
+        int nivel_elegido = 0;
+        for (int i = 0; i < n_colas; i++) {
+            pthread_mutex_lock(&mutex_colas_ready[i]);
+            if (queue_size(colas_ready[i]) > 0) {
+                proc = queue_pop(colas_ready[i]);
+                nivel_elegido = i;
+            }
+            pthread_mutex_unlock(&mutex_colas_ready[i]);
+            if (proc) break;
+        }
 
         if (!proc) continue;
 
@@ -322,16 +377,17 @@ static void* thread_planificador(void* _) {
         pthread_mutex_unlock(&mutex_cpus);
 
         if (!cpu) {
-            // No hay CPU libre todavía — devolver proceso y esperar
-            pthread_mutex_lock(&mutex_ready);
-            queue_push(cola_ready, proc);
-            pthread_mutex_unlock(&mutex_ready);
+            // No hay CPU libre: devolver al fondo de su cola sin señal adicional
+            int nivel = proc->prioridad < n_colas ? proc->prioridad : n_colas - 1;
+            pthread_mutex_lock(&mutex_colas_ready[nivel]);
+            queue_push(colas_ready[nivel], proc);
+            pthread_mutex_unlock(&mutex_colas_ready[nivel]);
             continue;
         }
 
         despachar(proc, cpu);
 
-        if (strcmp(algoritmo, "RR") == 0) {
+        if (strcmp(algoritmos_cola[nivel_elegido], "RR") == 0) {
             int* pid_heap = malloc(sizeof(int));
             *pid_heap = proc->PID;
             pthread_t t;
@@ -444,10 +500,7 @@ static void* thread_largo_plazo(void* _) {
 
         // CK2: KM mockea espacio libre — siempre admitimos de SUSP. READY
         cambiar_estado(proc, READY);
-        pthread_mutex_lock(&mutex_ready);
-        queue_push(cola_ready, proc);
-        pthread_mutex_unlock(&mutex_ready);
-        sem_post(&sem_cpu_disponible);
+        encolar_en_ready(proc);
     }
     return NULL;
 }
@@ -484,19 +537,13 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             } else if (motivo == MOTIVO_DEVOLUCION_INTERRUPCION) {
                 log_info(logger, "## (%d) - Desalojado por fin de quantum", pid);
                 cambiar_estado(proc, READY);
-                pthread_mutex_lock(&mutex_ready);
-                queue_push(cola_ready, proc);
-                pthread_mutex_unlock(&mutex_ready);
-                sem_post(&sem_cpu_disponible);
+                encolar_en_ready(proc);
 
             } else {
                 // MOTIVO_DEVOLUCION_SYSCALL con proceso todavía en exec: la syscall
                 // fue no bloqueante (MUTEX_CREATE, MUTEX_UNLOCK, MUTEX_LOCK libre).
                 cambiar_estado(proc, READY);
-                pthread_mutex_lock(&mutex_ready);
-                queue_push(cola_ready, proc);
-                pthread_mutex_unlock(&mutex_ready);
-                sem_post(&sem_cpu_disponible);
+                encolar_en_ready(proc);
             }
             break;
         }
@@ -582,10 +629,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             if (resultado == 0) {
                 // Mutex libre: proceso vuelve a READY
                 cambiar_estado(proc, READY);
-                pthread_mutex_lock(&mutex_ready);
-                queue_push(cola_ready, proc);
-                pthread_mutex_unlock(&mutex_ready);
-                sem_post(&sem_cpu_disponible);
+                encolar_en_ready(proc);
             } else if (resultado == 1) {
                 // Mutex tomado: proceso va a BLOCK hasta que se libere
                 mover_a_block(proc);
@@ -605,10 +649,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 t_proceso* waiter = sacar_de_block(waiter_pid);
                 if (waiter) {
                     cambiar_estado(waiter, READY);
-                    pthread_mutex_lock(&mutex_ready);
-                    queue_push(cola_ready, waiter);
-                    pthread_mutex_unlock(&mutex_ready);
-                    sem_post(&sem_cpu_disponible);
+                    encolar_en_ready(waiter);
                 } else {
                     waiter = sacar_de_susp_block(waiter_pid);
                     if (waiter) {
@@ -690,10 +731,7 @@ static void atender_io(int fd, char* tipo) {
                 // IO terminó antes del timeout: BLOCK → READY
                 cambiar_estado(proc, READY);
                 log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
-                pthread_mutex_lock(&mutex_ready);
-                queue_push(cola_ready, proc);
-                pthread_mutex_unlock(&mutex_ready);
-                sem_post(&sem_cpu_disponible);
+                encolar_en_ready(proc);
             } else {
                 // IO terminó después del timeout: SUSP. BLOCK → SUSP. READY
                 proc = sacar_de_susp_block(pid);
@@ -717,10 +755,7 @@ static void atender_io(int fd, char* tipo) {
                 // IO terminó antes del timeout: BLOCK → READY (CK2: KM mockea escritura)
                 cambiar_estado(proc, READY);
                 log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
-                pthread_mutex_lock(&mutex_ready);
-                queue_push(cola_ready, proc);
-                pthread_mutex_unlock(&mutex_ready);
-                sem_post(&sem_cpu_disponible);
+                encolar_en_ready(proc);
             } else {
                 // IO terminó después del timeout: SUSP. BLOCK → SUSP. READY
                 proc = sacar_de_susp_block(pid);
