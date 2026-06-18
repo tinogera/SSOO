@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <commons/log.h>
 #include <commons/config.h>
 #include <commons/collections/list.h>
@@ -59,6 +60,12 @@ uint32_t swap_cant_bloques = 0;
 uint8_t* swap_bitmap       = NULL; // 0=libre, 1=ocupado
 
 uint32_t next_ms_id = 0;
+
+// NOTA LUCIANO [semáforo de compactación]: sincroniza el flujo entre el hilo
+// que recibe MSG_CREAR_SEGMENTO (necesita compactar) y el hilo que recibe
+// MSG_FIN_COMPACTACION desde el KS. El primero bloquea en sem_wait; el segundo
+// señala con sem_post una vez que compactar() terminó.
+sem_t sem_compactacion_lista;
 
 // ---------------------------------------------------------------------------
 // Helpers — contextos
@@ -770,12 +777,35 @@ static void* atender_cliente(void* arg) {
             pthread_mutex_unlock(&mutex_contextos);
 
             if (res == 1) {
-                // Necesita compactación — pedir al KS
+                // NOTA LUCIANO [FIX compactación en MSG_CREAR_SEGMENTO]:
+                // El flujo original respondía MSG_COMPACTAR al caller (KS) como
+                // si fuera un error, sin esperar a que la compactación ocurriera.
+                // Esto dejaba al KS sin tabla de segmentos y rompía el flujo.
+                //
+                // El fix correcto es:
+                //   1. Avisar al KS con MSG_COMPACTAR para que desaloje las CPUs.
+                //   2. Bloquear este hilo en sem_wait hasta que el hilo que maneja
+                //      MSG_FIN_COMPACTACION haga sem_post (ver más abajo).
+                //   3. Reintentar crear_segmento sobre la memoria ya compactada.
+                //   4. Responder MSG_TABLA_SEGMENTOS normalmente.
+                //
+                // Importante: sem_compactacion_lista es un semáforo binario (init=0)
+                // que garantiza que el hilo espera exactamente una señal por ciclo.
                 if (fd_ks >= 0) enviar_mensaje(fd_ks, MSG_COMPACTAR, NULL, 0);
-                // Esperar MSG_FIN_COMPACTACION (llega por el hilo del KS)
-                // Por ahora respondemos que hay que reintentar
-                enviar_mensaje(fd, MSG_COMPACTAR, NULL, 0);
-            } else if (res == 0) {
+                sem_wait(&sem_compactacion_lista);  // bloqueamos hasta que KS confirme
+
+                pthread_mutex_lock(&mutex_contextos);
+                ctx = buscar_contexto(pid);
+                if (!ctx) {
+                    pthread_mutex_unlock(&mutex_contextos);
+                    enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                    free_mensaje(pedido); continue;
+                }
+                res = crear_segmento(ctx, id_seg, tamanio);
+                pthread_mutex_unlock(&mutex_contextos);
+            }
+
+            if (res == 0) {
                 // Devolver tabla de segmentos actualizada
                 pthread_mutex_lock(&mutex_contextos);
                 uint32_t sz; void* pl = serializar_contexto(ctx, &sz);
@@ -870,12 +900,22 @@ static void* atender_cliente(void* arg) {
 
         // FIN COMPACTACIÓN (KS avisa que CPUs fueron desalojadas)
         else if (pedido->op_code == MSG_FIN_COMPACTACION) {
+            // NOTA LUCIANO [FIX MSG_FIN_COMPACTACION]:
+            // El flujo original hacía dos cosas incorrectas:
+            //   1. Enviaba MSG_OK al fd (correcto).
+            //   2. Luego enviaba MSG_FIN_COMPACTACION de vuelta al fd_ks.
+            //      Esto era un bug: fd == fd_ks en esta conexión, así que el
+            //      KS recibía un MSG_FIN_COMPACTACION fantasma que podía
+            //      disparar una segunda compactación o confundir al hilo del KS.
+            //
+            // La señal correcta al completar la compactación es sem_post sobre
+            // sem_compactacion_lista, que desbloquea el hilo que espera en
+            // MSG_CREAR_SEGMENTO (ver arriba) para que reintente y responda.
             log_info(logger, "## Inicio de compactación");
             compactar();
             log_info(logger, "## Fin de compactación");
             enviar_mensaje(fd, MSG_OK, NULL, 0);
-            // Notificar al KS que terminó
-            if (fd_ks >= 0) enviar_mensaje(fd_ks, MSG_FIN_COMPACTACION, NULL, 0);
+            sem_post(&sem_compactacion_lista);  // despertar hilo bloqueado en MSG_CREAR_SEGMENTO
         }
 
         // SUSPENDER PROCESO
@@ -949,6 +989,10 @@ int main(int argc, char* argv[]) {
     memory_sticks = list_create();
     huecos        = list_create();
     swap_metadata = list_create();
+
+    // NOTA LUCIANO: sem_compactacion_lista arranca en 0 (bloqueado) para que
+    // sem_wait en MSG_CREAR_SEGMENTO espere la señal de MSG_FIN_COMPACTACION.
+    sem_init(&sem_compactacion_lista, 0, 0);
 
     int puerto = config_get_int_value(config, "KERNEL_MEMORY_PORT");
     int srv    = crear_servidor(puerto);
