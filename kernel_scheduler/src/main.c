@@ -14,6 +14,7 @@
 #include <proceso.h>
 #include "ks_mutex.h"
 #include "ks_cmn.h"
+#include "ks_compact.h"
 
 t_log* logger;
 static int             fd_km     = -1;
@@ -315,25 +316,14 @@ static void handle_compactar(void) {
 
 static void* thread_km_listener(void* _) {
     (void)_;
-    while (1) {
-        t_mensaje* msg = recibir_mensaje(fd_km);
-        if (!msg) {
-            log_error(logger, "## KM desconectado");
-            break;
-        }
-
-        if (msg->op_code == MSG_COMPACTAR) {
-            free_mensaje(msg);
-            handle_compactar();
-        } else {
-            // Respuesta sincrónica (MSG_OK u otro): despertar al hilo que la espera.
-            pthread_mutex_lock(&mutex_km_resp);
-            ultimo_resp_km = msg;
-            pthread_cond_signal(&cond_km_resp);
-            pthread_mutex_unlock(&mutex_km_resp);
-        }
-    }
-    return NULL;
+    static t_km_listener_ctx ctx;
+    ctx.fd_km               = fd_km;
+    ctx.on_compactar        = handle_compactar;
+    ctx.mutex_km_resp       = &mutex_km_resp;
+    ctx.cond_km_resp        = &cond_km_resp;
+    ctx.ultimo_resp_km_ptr  = &ultimo_resp_km;
+    ctx.logger              = logger;
+    return km_listener_run(&ctx);
 }
 
 
