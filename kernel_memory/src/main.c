@@ -340,8 +340,13 @@ static int crear_segmento(t_contexto* ctx, uint32_t id_seg, uint32_t tamanio) {
 
     // Actualizar hueco
     if (h->tamanio == tamanio) {
-        list_remove_and_destroy_element(huecos,
-            list_get_index(huecos, h), free);
+        // NOTA LUCIANO [FIX list_get_index en crear_segmento]:
+        // list_get_index() no existe en so-commons. La API correcta para
+        // eliminar un elemento por puntero es list_remove_element(), que
+        // lo busca por igualdad de puntero y lo saca de la lista sin destruirlo.
+        // Llamamos free(h) manualmente porque list_remove_element no lo hace.
+        list_remove_element(huecos, h);
+        free(h);
     } else {
         h->base_global += tamanio;
         h->tamanio     -= tamanio;
@@ -529,8 +534,11 @@ static int dessuspender_proceso(uint32_t pid) {
         t_hueco* h = seleccionar_hueco(tamanio);
         uint32_t base = h->base_global;
         if (h->tamanio == tamanio) {
-            list_remove_and_destroy_element(huecos,
-                list_get_index(huecos, h), free);
+            // NOTA LUCIANO [FIX list_get_index en dessuspender_proceso]:
+            // Mismo problema que en crear_segmento: list_get_index() no existe.
+            // Ver comentario en crear_segmento para la explicación completa.
+            list_remove_element(huecos, h);
+            free(h);
         } else {
             h->base_global += tamanio;
             h->tamanio     -= tamanio;
@@ -575,6 +583,14 @@ static int dessuspender_proceso(uint32_t pid) {
 }
 
 // ---------------------------------------------------------------------------
+// NOTA LUCIANO [FIX leer_instruccion — forward declaration]:
+// leer_instruccion() está definida más abajo en el archivo (después de main)
+// pero se usa dentro de atender_cliente(). En C, una función estática debe
+// declararse antes de su primer uso; sin esto, el compilador asume que
+// devuelve int y lanza un error de "conflicting types" al encontrar la
+// definición real. La solución es agregar esta declaración adelantada.
+static char* leer_instruccion(uint32_t pid, uint32_t pc);
+
 // Hilo por cliente
 // ---------------------------------------------------------------------------
 typedef struct { int fd; } t_args;
