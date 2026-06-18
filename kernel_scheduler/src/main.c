@@ -13,6 +13,7 @@
 #include <utils/protocolo.h>
 #include <proceso.h>
 #include "ks_mutex.h"
+#include "ks_cmn.h"
 
 t_log* logger;
 static int             fd_km    = -1;
@@ -24,7 +25,6 @@ t_queue *cola_block, *cola_susp_block, *cola_susp_ready, *cola_exit;
 pthread_mutex_t mutex_new, mutex_exec;
 pthread_mutex_t mutex_block, mutex_susp_block, mutex_susp_ready, mutex_exit;
 
-#define MAX_COLAS 16
 static int             n_colas = 1;
 static char            algoritmos_cola[MAX_COLAS][8];
 static t_queue*        colas_ready[MAX_COLAS];
@@ -61,26 +61,6 @@ static void* thread_planificador(void* _);
 static void* thread_quantum_timer(void* arg);
 static void* thread_largo_plazo(void* _);
 static void* thread_suspension_timer(void* arg);
-
-// Parsea "QUEUES_ALGORITHMS=[FIFO,RR,RR,FIFO]" y carga el array out[][8].
-// Retorna la cantidad de colas.
-static int parsear_queues_algorithms(const char* str, char out[][8]) {
-    char buf[256];
-    strncpy(buf, str, sizeof(buf) - 1);
-    buf[sizeof(buf) - 1] = '\0';
-    int n = 0;
-    char* p = buf;
-    if (*p == '[') p++;
-    char* tok = strtok(p, ",]");
-    while (tok && n < MAX_COLAS) {
-        while (*tok == ' ') tok++;
-        strncpy(out[n], tok, 7);
-        out[n][7] = '\0';
-        n++;
-        tok = strtok(NULL, ",]");
-    }
-    return n > 0 ? n : 1;
-}
 
 // Encola el proceso en la cola de su prioridad y señala al planificador.
 static void encolar_en_ready(t_proceso* proc) {
