@@ -16,8 +16,17 @@
 #include "ks_cmn.h"
 
 t_log* logger;
-static int             fd_km    = -1;
-static pthread_mutex_t mutex_km = PTHREAD_MUTEX_INITIALIZER;
+static int             fd_km     = -1;
+static pthread_mutex_t mutex_km_req  = PTHREAD_MUTEX_INITIALIZER; // serializa envíos a KM
+static pthread_mutex_t mutex_km_resp = PTHREAD_MUTEX_INITIALIZER; // protege ultimo_resp_km
+static pthread_cond_t  cond_km_resp  = PTHREAD_COND_INITIALIZER;
+static t_mensaje*      ultimo_resp_km = NULL;
+
+// Compactación
+static int             compactando       = 0;
+static pthread_mutex_t mutex_compactando = PTHREAD_MUTEX_INITIALIZER;
+static sem_t           sem_cpus_devueltas;  // señalado por cada CPU que devuelve durante compactación
+static sem_t           sem_planificador_ok; // 1=normal, 0=compactando (bloquea thread_planificador)
 
 t_queue *cola_new, *cola_exec;
 t_queue *cola_block, *cola_susp_block, *cola_susp_ready, *cola_exit;
@@ -61,6 +70,8 @@ static void* thread_planificador(void* _);
 static void* thread_quantum_timer(void* arg);
 static void* thread_largo_plazo(void* _);
 static void* thread_suspension_timer(void* arg);
+static void  handle_compactar(void);
+static void* thread_km_listener(void* _);
 
 // Encola el proceso en la cola de su prioridad y señala al planificador.
 static void encolar_en_ready(t_proceso* proc);
@@ -200,8 +211,10 @@ int main(int argc, char* argv[]) {
     }
 
     lista_cpus = list_create();
-    sem_init(&sem_cpu_disponible, 0, 0);
-    sem_init(&sem_largo_plazo,    0, 0);
+    sem_init(&sem_cpu_disponible,  0, 0);
+    sem_init(&sem_largo_plazo,     0, 0);
+    sem_init(&sem_cpus_devueltas,  0, 0);
+    sem_init(&sem_planificador_ok, 0, 1);
     mutexes_init();
 
     // Servidor
@@ -210,6 +223,11 @@ int main(int argc, char* argv[]) {
         log_error(logger, "Error al crear servidor en puerto %d", puerto_ks);
         config_destroy(config); log_destroy(logger); return EXIT_FAILURE;
     }
+
+    // Lanzar listener de KM (toma ownership de fd_km desde aquí)
+    pthread_t t_km;
+    pthread_create(&t_km, NULL, thread_km_listener, NULL);
+    pthread_detach(t_km);
 
     // Lanzar thread planificador
     pthread_t t_plan;
@@ -242,6 +260,83 @@ int main(int argc, char* argv[]) {
 }
 
 
+static void handle_compactar(void) {
+    log_info(logger, "## Inicio de compactación");
+
+    // Bloquear el planificador para que no despache durante la compactación.
+    sem_wait(&sem_planificador_ok);
+
+    pthread_mutex_lock(&mutex_compactando);
+    compactando = 1;
+    pthread_mutex_unlock(&mutex_compactando);
+
+    // Interrumpir todas las CPUs que estén ejecutando un proceso.
+    pthread_mutex_lock(&mutex_exec);
+    int n = (int)queue_size(cola_exec);
+    for (int i = 0; i < n; i++) {
+        t_proceso* p = list_get(cola_exec->elements, i);
+        p->preemptado = 1;
+        t_payload_interrupcion_cpu pay = {
+            .pid    = htonl(p->PID),
+            .motivo = htonl(MOTIVO_INTERRUPCION_DESALOJO)
+        };
+        enviar_mensaje(p->fd_cpu, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
+    }
+    pthread_mutex_unlock(&mutex_exec);
+
+    // Esperar a que todas las CPUs devuelvan sus procesos.
+    for (int i = 0; i < n; i++) {
+        sem_wait(&sem_cpus_devueltas);
+    }
+
+    // Notificar a KM que las CPUs están ociosas y esperar su confirmación.
+    pthread_mutex_lock(&mutex_km_req);
+    enviar_mensaje(fd_km, MSG_FIN_COMPACTACION, NULL, 0);
+
+    pthread_mutex_lock(&mutex_km_resp);
+    ultimo_resp_km = NULL;
+    while (ultimo_resp_km == NULL)
+        pthread_cond_wait(&cond_km_resp, &mutex_km_resp);
+    free_mensaje(ultimo_resp_km);
+    ultimo_resp_km = NULL;
+    pthread_mutex_unlock(&mutex_km_resp);
+    pthread_mutex_unlock(&mutex_km_req);
+
+    pthread_mutex_lock(&mutex_compactando);
+    compactando = 0;
+    pthread_mutex_unlock(&mutex_compactando);
+
+    log_info(logger, "## Fin de compactación");
+
+    // Habilitar el planificador y señalarlo para que redespaché los procesos en READY.
+    sem_post(&sem_planificador_ok);
+    sem_post(&sem_cpu_disponible);
+}
+
+static void* thread_km_listener(void* _) {
+    (void)_;
+    while (1) {
+        t_mensaje* msg = recibir_mensaje(fd_km);
+        if (!msg) {
+            log_error(logger, "## KM desconectado");
+            break;
+        }
+
+        if (msg->op_code == MSG_COMPACTAR) {
+            free_mensaje(msg);
+            handle_compactar();
+        } else {
+            // Respuesta sincrónica (MSG_OK u otro): despertar al hilo que la espera.
+            pthread_mutex_lock(&mutex_km_resp);
+            ultimo_resp_km = msg;
+            pthread_cond_signal(&cond_km_resp);
+            pthread_mutex_unlock(&mutex_km_resp);
+        }
+    }
+    return NULL;
+}
+
+
 t_proceso* crear_proceso(char* path, int prioridad) {
     pthread_mutex_lock(&mutex_pid);
     uint32_t pid = next_pid++;
@@ -264,11 +359,17 @@ t_proceso* crear_proceso(char* path, int prioridad) {
     memcpy(payload, &pid_n, sizeof(uint32_t));
     memcpy((char*)payload + sizeof(uint32_t), path, path_len);
 
-    pthread_mutex_lock(&mutex_km);
+    pthread_mutex_lock(&mutex_km_req);
+    pthread_mutex_lock(&mutex_km_resp);
+    ultimo_resp_km = NULL;
     enviar_mensaje(fd_km, MSG_CREAR_PROCESO, payload, payload_size);
     free(payload);
-    t_mensaje* resp = recibir_mensaje(fd_km);
-    pthread_mutex_unlock(&mutex_km);
+    while (ultimo_resp_km == NULL)
+        pthread_cond_wait(&cond_km_resp, &mutex_km_resp);
+    t_mensaje* resp = ultimo_resp_km;
+    ultimo_resp_km = NULL;
+    pthread_mutex_unlock(&mutex_km_resp);
+    pthread_mutex_unlock(&mutex_km_req);
 
     if (!resp || resp->op_code != MSG_OK) {
         log_error(logger, "KM rechazo la creacion del proceso %u", pid);
@@ -374,6 +475,9 @@ static void* thread_planificador(void* _) {
     (void)_;
     while (1) {
         sem_wait(&sem_cpu_disponible);
+        // Bloquea mientras haya una compactación en curso; se libera al terminar.
+        sem_wait(&sem_planificador_ok);
+        sem_post(&sem_planificador_ok);
 
         // Seleccionar el proceso de la cola no vacía de mayor prioridad (índice 0 = mayor)
         t_proceso* proc = NULL;
@@ -582,6 +686,10 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 if (proc->preemptado) {
                     proc->preemptado = 0;
                     encolar_al_frente_en_ready(proc);
+                    // Si estamos en compactación, avisar que esta CPU ya devolvió su proceso.
+                    pthread_mutex_lock(&mutex_compactando);
+                    if (compactando) sem_post(&sem_cpus_devueltas);
+                    pthread_mutex_unlock(&mutex_compactando);
                 } else {
                     log_info(logger, "## (%d) - Desalojado por fin de quantum", pid);
                     encolar_en_ready(proc);
