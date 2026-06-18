@@ -52,7 +52,7 @@ static pthread_mutex_t mutex_io     = PTHREAD_MUTEX_INITIALIZER;
 
 static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size);
 static void       manejar_bsod(void);
-static void       manejar_mas_memoria(void);
+static void*      manejar_mas_memoria(void* _);
 static void*      thread_km_listener(void* _);
 t_proceso* crear_proceso(char* path, int prioridad);
 void*      atender_cliente(void* arg);
@@ -142,7 +142,8 @@ static bool cmp_suspension(void* a, void* b) {
     return pa->tiempo_suspension < pb->tiempo_suspension; // más viejo primero
 }
 
-static void manejar_mas_memoria(void) {
+static void* manejar_mas_memoria(void* _) {
+    (void)_;
     // Vaciar cola_susp_ready en una lista local para ordenar y procesar
     pthread_mutex_lock(&mutex_susp_ready);
     t_list* candidatos = list_create();
@@ -152,7 +153,7 @@ static void manejar_mas_memoria(void) {
 
     if (list_size(candidatos) == 0) {
         list_destroy(candidatos);
-        return;
+        return NULL;
     }
 
     list_sort(candidatos, cmp_suspension);
@@ -166,7 +167,6 @@ static void manejar_mas_memoria(void) {
         if (resp && resp->op_code == MSG_OK) {
             free_mensaje(resp);
             cambiar_estado(proc, READY);
-            log_info(logger, "## (%d) finalizó IO y pasa a READY", proc->PID);
             pthread_mutex_lock(&mutex_ready);
             queue_push(cola_ready, proc);
             pthread_mutex_unlock(&mutex_ready);
@@ -183,6 +183,7 @@ static void manejar_mas_memoria(void) {
     }
 
     list_destroy(candidatos);
+    return NULL;
 }
 
 static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size) {
@@ -218,11 +219,15 @@ static void* thread_km_listener(void* _) {
             break;
         case MSG_MAS_MEMORIA:
             free_mensaje(msg);
-            // TODO Día 2: disparar des-suspensión
+            {
+                pthread_t t;
+                pthread_create(&t, NULL, manejar_mas_memoria, NULL);
+                pthread_detach(t);
+            }
             break;
         case MSG_BSOD:
             free_mensaje(msg);
-            // TODO Día 2: manejar BSOD
+            manejar_bsod();
             break;
         default:
             log_warning(logger, "KM: op_code inesperado %u", msg->op_code);
@@ -601,19 +606,7 @@ static void* thread_largo_plazo(void* _) {
     (void)_;
     while (1) {
         sem_wait(&sem_largo_plazo);
-
-        pthread_mutex_lock(&mutex_susp_ready);
-        t_proceso* proc = queue_size(cola_susp_ready) > 0 ? queue_pop(cola_susp_ready) : NULL;
-        pthread_mutex_unlock(&mutex_susp_ready);
-
-        if (!proc) continue;
-
-        // CK2: KM mockea espacio libre — siempre admitimos de SUSP. READY
-        cambiar_estado(proc, READY);
-        pthread_mutex_lock(&mutex_ready);
-        queue_push(cola_ready, proc);
-        pthread_mutex_unlock(&mutex_ready);
-        sem_post(&sem_cpu_disponible);
+        manejar_mas_memoria(NULL);
     }
     return NULL;
 }
