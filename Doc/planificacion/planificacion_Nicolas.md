@@ -11,9 +11,9 @@
 | `feature/utils` | Wrapper de sockets, serialización/deserialización de mensajes |
 | `feature/io` | Conexión a KScheduler, SLEEP, STDOUT, STDIN |
 | `feature/kernel-scheduler/mutex-cmn` | Mutex sin herencia, CMN, QUEUE_PREEMPTION |
-| `feature/kernel-scheduler/herencia-compactacion` | Herencia de prioridades, manejo de compactación |
+| `feature/kernel-scheduler/herencia-compactacion` | Planificada para herencia + compactación — finalmente incluida en la rama anterior |
 
-> Crear `feature/utils` y `feature/io` desde `develop` al iniciar Fase 1 (Nicolas es el primero en crear ramas porque Utils es dependencia de todos). Crear las ramas de Scheduler desde `develop` en Fase 2 y 3 respectivamente.
+> Crear `feature/utils` y `feature/io` desde `develop` al iniciar Fase 1. Las ramas de Scheduler se crean desde `develop` en Fase 2 y 3. En la práctica, herencia y compactación se implementaron directamente en `feature/kernel-scheduler/mutex-cmn` sin crear la segunda rama.
 
 ---
 
@@ -85,48 +85,45 @@
 ---
 
 ## Fase 3 — Check 3: CMN, Herencia de Prioridades y Compactación
-**Fecha límite:** 20/06/2026
-**Ramas:** `feature/kernel-scheduler/mutex-cmn` (CMN, QUEUE_PREEMPTION) · `feature/kernel-scheduler/herencia-compactacion` (herencia, compactación)
-
-> Rama `feature/kernel-scheduler/mutex-cmn` creada el 18/06/2026 desde develop actualizado.
+**Fecha límite:** 20/06/2026 — **COMPLETADA** (merge a develop 18/06/2026)
+**Rama:** `feature/kernel-scheduler/mutex-cmn` (todo el trabajo de CK3 en esta rama)
 
 ### Ajustes v1.1 (completados primero, base para CK3)
 - [x] `fix(cpu)`: quitar `esperar_ok_kernel` de MUTEX_CREATE, MUTEX_LOCK y MUTEX_UNLOCK en `cpu/src/cpu_syscalls.c` — commit `2e2fa9e`
-- [ ] `fix(ks)`: MUTEX_LOCK bloqueante mueve proceso a BLOCK en KS (eliminar `fd_cpu` de `t_mutex_waiter`)
+- [x] `fix(ks)`: MUTEX_LOCK bloqueante mueve proceso a BLOCK en KS — commit `892d745`
 
 ### Semana 1–2 (24/05 – 06/06)
-- [ ] Implementar algoritmo **CMN (Colas Multinivel)**:
+- [x] Implementar algoritmo **CMN (Colas Multinivel)** — commit `caa9672`:
   - N colas (configuradas en `QUEUES_ALGORITHMS`), cada una con su propio algoritmo (FIFO o RR).
   - Cada proceso tiene una prioridad que determina en qué cola se ubica (0 = mayor prioridad).
   - Siempre se despacha de la cola no vacía de mayor prioridad.
-- [ ] Implementar log: `## (<PID>) Prioridad: <PRIORIDAD_DESALOJADO> - Desalojado por cola más prioritaria por el proceso <PID> con prioridad <PRIORIDAD_NUEVA>`.
+- [x] Implementar log: `## (<PID>) Prioridad: <PRIORIDAD_DESALOJADO> - Desalojado por cola más prioritaria por el proceso <PID> con prioridad <PRIORIDAD_NUEVA>`.
 
 ### Semana 3 (07/06 – 13/06)
-- [ ] Implementar **QUEUE_PREEMPTION**: si un proceso de mayor prioridad llega a READY y hay un proceso de menor prioridad ejecutándose → enviar interrupción a CPU para desalojarlo → el desalojado vuelve al inicio de su cola READY.
-- [ ] Implementar **herencia de prioridades en Mutex**:
+- [x] Implementar **QUEUE_PREEMPTION** — commit `822b32d`: si un proceso de mayor prioridad llega a READY y hay un proceso de menor prioridad ejecutándose → enviar interrupción a CPU para desalojarlo → el desalojado vuelve al inicio de su cola READY.
+- [x] Implementar **herencia de prioridades en Mutex** — commit `ea342fa`:
   - Si proceso de baja prioridad tiene un mutex tomado y un proceso de alta prioridad necesita ese mutex → proceso de baja prioridad hereda la prioridad del proceso bloqueado.
   - Al liberar el mutex → restaurar la prioridad original.
   - Implementar log: `## <PID> Cambio de prioridad: <ANTERIOR> - <NUEVA>`.
 
 ### Semana 4 (14/06 – 20/06)
-- [ ] Implementar el manejo de **compactación** en Kernel Scheduler:
+- [x] Implementar el manejo de **compactación** en Kernel Scheduler — commit `89f4ba1`:
   - Cuando Kernel Memory indica que no hay espacio contiguo y es necesario compactar → desalojar todos los procesos de las CPUs.
-  - Esperar a que todas las CPUs estuelvan el contexto.
+  - Esperar a que todas las CPUs devuelvan el contexto.
   - Notificar a Kernel Memory para que compacte.
   - Una vez finalizada la compactación → reinsertar los procesos desalojados al **inicio** de su cola READY (caso excepcional).
   - Implementar log: `## Inicio de compactación` y `## Fin de compactación`.
 
 ### Ajustes por v1.1 del enunciado (08/06/2026)
 
-- [ ] **Syscalls liberan CPU sin esperar MSG_OK** (`cpu_syscalls.c`):
+- [x] **Syscalls liberan CPU sin esperar MSG_OK** (`cpu_syscalls.c`) — commit `2e2fa9e`:
   - Eliminar llamada a `esperar_ok_kernel` en `enviar_syscall_mutex_create` y `enviar_syscall_mutex_unlock`.
-  - Coordinar con Kevin que EXIT tampoco espere MSG_OK.
   - El KS ya no envía MSG_OK a la CPU para estas syscalls; redespacha al proceso por el planificador normal.
 
-- [ ] **MUTEX_LOCK bloqueante pasa al KS** (`ks_mutex.c`):
-  - Eliminar el `fd_cpu` del `t_mutex_waiter`; solo guardar el PID.
-  - Si el mutex está tomado: mover el proceso a `BLOCK` en el KS (no quedarse esperando en la CPU).
-  - Cuando se haga `MUTEX_UNLOCK`: sacar el proceso de BLOCK y ponerlo en READY.
+- [x] **MUTEX_LOCK bloqueante pasa al KS** (`ks_mutex.c`) — commit `892d745`:
+  - Eliminado el `fd_cpu` del `t_mutex_waiter`; solo se guarda el PID.
+  - Si el mutex está tomado: el proceso va a `BLOCK` en el KS (no se bloquea la CPU).
+  - En `MUTEX_UNLOCK`: se saca el proceso de BLOCK y se pone en READY.
 
 - [ ] **Flujo real STDOUT** (`kernel_scheduler/src/main.c` + coordinación con Luciano):
   - Al recibir `MSG_SYSCALL_STDOUT` con dirección física: pedir bytes al KM (`MSG_KM_LEER_MEMORIA`), recibir respuesta, enviar bytes a IO STDOUT.
