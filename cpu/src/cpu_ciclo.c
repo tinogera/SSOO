@@ -10,6 +10,8 @@
 #include "cpu_interrupciones.h"
 #include "cpu_logs.h"
 #include "cpu_syscalls.h"
+#include "cpu_contexto.h"
+#include "cpu_mmu.h"
 
 static void armar_parametros(t_instruccion_decodificada* instruccion, char* parametros, size_t parametros_size) {
     parametros[0] = '\0';
@@ -120,8 +122,13 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
             return instruccion.opcode == CPU_INST_EXIT ? CPU_CICLO_EXIT : CPU_CICLO_SYSCALL;
         }
 
-        t_resultado_ejecucion resultado = ejecutar_instruccion(&instruccion, registros, pid, logger);
-        if (resultado != CPU_EXEC_OK) {
+        t_resultado_ejecucion resultado = ejecutar_instruccion(&instruccion, registros, contexto_actual, socket_memory, pid, logger);
+        if(resultado == CPU_EXEC_SEG_FAULT) {
+            log_error(logger, "PID %u - SEGMENTATION FAULT", pid);
+            return CPU_CICLO_ERROR_EXECUTE;
+        }
+
+        if(resultado == CPU_EXEC_ERROR) {
             log_error(logger, "No se pudo ejecutar la instruccion del PID %u", pid);
             return CPU_CICLO_ERROR_EXECUTE;
         }

@@ -196,8 +196,11 @@ char* deserializar_string(void* payload) {
 #define CTX_WIRE_SIZE (4 + 4 + 4 + (4 * 4) + (4 * 2) + 4)  // 40 bytes
 
 void* serializar_contexto(t_contexto* ctx, uint32_t* out_size) {
-    *out_size = CTX_WIRE_SIZE;
-    uint8_t* buf = malloc(CTX_WIRE_SIZE);
+    *out_size = CTX_WIRE_SIZE + 4 + (ctx->cant_segmentos * 16);
+    // CTX_WIRE_SIZE = contexto viejo = 40
+    // 4  = segment_max_size
+    // 16 = cada segmento
+    uint8_t* buf = malloc(*out_size);
     uint8_t* p   = buf;
     uint32_t n;
 
@@ -213,7 +216,15 @@ void* serializar_contexto(t_contexto* ctx, uint32_t* out_size) {
     n = htonl(ctx->registros.edx);      memcpy(p, &n, 4); p += 4;
     n = htonl(ctx->registros.si);       memcpy(p, &n, 4); p += 4;
     n = htonl(ctx->registros.di);       memcpy(p, &n, 4); p += 4;
+    n = htonl(ctx->segment_max_size);   memcpy(p, &n, 4); p += 4;
     n = htonl(ctx->cant_segmentos);     memcpy(p, &n, 4); p += 4;
+
+    for(uint32_t i = 0; i < ctx->cant_segmentos; i++) {
+        n = htonl(ctx->segmentos[i].id_segmento); memcpy(p, &n, 4); p += 4;
+        n = htonl(ctx->segmentos[i].id_memory_stick); memcpy(p, &n, 4); p += 4;
+        n = htonl(ctx->segmentos[i].base); memcpy(p, &n, 4); p += 4;
+        n = htonl(ctx->segmentos[i].limite); memcpy(p, &n, 4); p += 4;
+    }
 
     return buf;
 }
@@ -236,8 +247,18 @@ t_contexto* deserializar_contexto(void* payload, uint32_t size) {
     memcpy(&n, p, 4); ctx->registros.edx    = ntohl(n); p += 4;
     memcpy(&n, p, 4); ctx->registros.si     = ntohl(n); p += 4;
     memcpy(&n, p, 4); ctx->registros.di     = ntohl(n); p += 4;
+    memcpy(&n, p, 4); ctx->segment_max_size = ntohl(n); p += 4;
     memcpy(&n, p, 4); ctx->cant_segmentos   = ntohl(n); p += 4;
-    ctx->segmentos = NULL;
+
+    ctx->segmentos = malloc(sizeof(t_entrada_segmento) * ctx->cant_segmentos);
+    
+    for(uint32_t i = 0; i < ctx->cant_segmentos; i++) {
+        memcpy(&n, p, 4); ctx->segmentos[i].id_segmento = ntohl(n); p += 4;
+        memcpy(&n, p, 4); ctx->segmentos[i].id_memory_stick = ntohl(n); p += 4;
+        memcpy(&n, p, 4); ctx->segmentos[i].base = ntohl(n); p += 4;
+        memcpy(&n, p, 4); ctx->segmentos[i].limite = ntohl(n); p += 4;
+    }
+
 
     return ctx;
 }

@@ -39,10 +39,12 @@ typedef struct {
 } t_entrada_segmento;
 
 // Contexto de ejecución completo
+// Agrego segment max size
 typedef struct {
-    uint32_t          pid;
-    t_registros_cpu   registros;
-    uint32_t          cant_segmentos;
+    uint32_t            pid;
+    t_registros_cpu     registros;
+    uint32_t            segment_max_size;
+    uint32_t            cant_segmentos;
     t_entrada_segmento* segmentos;   // heap, cant_segmentos entradas
 } t_contexto;
 
@@ -56,5 +58,4 @@ void*              serializar_contexto(t_contexto* ctx, uint32_t* out_size);
 t_contexto*        deserializar_contexto(void* payload, uint32_t size);
 t_fetch_request*   deserializar_fetch_request(void* payload);
 void               free_contexto(t_contexto* ctx);
-
 #endif

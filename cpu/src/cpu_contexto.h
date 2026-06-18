@@ -10,4 +10,6 @@
 bool restaurar_contexto_desde_memory(int socket_memory, uint32_t pid, t_registros_cpu* registros, t_log* logger);
 bool guardar_contexto_en_memory(int socket_memory, uint32_t pid, t_registros_cpu* registros, t_log* logger);
 
+//lo necesito para la tabla de segmentos
+extern t_contexto* contexto_actual;
 #endif

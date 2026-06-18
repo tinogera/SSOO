@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "cpu_logs.h"
+#include "cpu_mmu.h"
 
 typedef enum {
     REGISTRO_8_BITS,
@@ -51,6 +52,22 @@ static bool tamanio_registro(const char* nombre, t_tamanio_registro* tamanio) {
     }
 
     return false;
+}
+
+static uint32_t obtener_bytes_registro( const char* nombre ){
+    t_tamanio_registro tipo;
+
+    if(!tamanio_registro(nombre, &tipo))
+    {
+        return 0;
+    }
+
+    if(tipo == REGISTRO_8_BITS)
+    {
+        return 1;
+    }
+
+    return 4;
 }
 
 static bool escribir_registro(t_registros_cpu* registros, const char* nombre, uint32_t valor) {
@@ -180,6 +197,8 @@ static t_resultado_ejecucion ejecutar_jnz(t_instruccion_decodificada* instruccio
 t_resultado_ejecucion ejecutar_instruccion(
     t_instruccion_decodificada* instruccion,
     t_registros_cpu* registros,
+    t_contexto* contexto,
+    int socket_memory,
     uint32_t pid,
     t_log* logger
 ) {
@@ -200,7 +219,83 @@ t_resultado_ejecucion ejecutar_instruccion(
             return ejecutar_sub(instruccion, registros);
         case CPU_INST_JNZ:
             return ejecutar_jnz(instruccion, registros);
+        case CPU_INST_MOV_IN:
+            return ejecutar_mov_in(instruccion, registros, contexto, segment_max_size, pid, logger);
+        case CPU_INST_MOV_OUT:
+            return ejecutar_mov_out(instruccion, registros, contexto, segment_max_size, pid, logger);
         default:
             return CPU_EXEC_ERROR;
     }
+}
+
+static t_resultado_ejecucion ejecutar_mov_in(t_instruccion_decodificada* instruccion, t_registros_cpu* registros, t_contexto* contexto, int socket_ms, uint32_t pid, t_log* logger) {
+
+    if(instruccion->cantidad_parametros != 1) {
+        return CPU_EXEC_ERROR;
+    }
+
+    uint32_t direccion_logica = registros->si;
+    uint32_t bytes = tamanio_registro_bytes(instruccion->parametros[0]);
+
+    t_traduccion trad;
+
+    if(!mmu_traducir(contexto, direccion_logica, bytes, &trad)) {
+        return CPU_EXEC_SEG_FAULT;
+    }
+
+    uint32_t valor = 0;
+
+    if(!memoria_read(socket_ms, trad.direccion_fisica, bytes, &valor)) {
+        return CPU_EXEC_ERROR;
+    }
+
+    escribir_registro(registros, instruccion->parametros[0], valor);
+
+    log_info(logger, "PID: %u - Acción: LEER - Dirección Física: %u - Valor: %u", pid, trad.direccion_fisica, valor);
+
+    registros->pc++;
+
+    return CPU_EXEC_OK;
+}
+
+static t_resultado_ejecucion ejecutar_mov_out(t_instruccion_decodificada* instruccion, t_registros_cpu* registros, t_contexto* contexto, int socket_ms, uint32_t pid, t_log* logger) {
+
+    if(instruccion->cantidad_parametros != 1) {
+        return CPU_EXEC_ERROR;
+    }
+
+    uint32_t valor;
+
+    if(!leer_registro(registros, instruccion->parametros[0], &valor)) {
+        return CPU_EXEC_ERROR;
+    }
+
+    uint32_t direccion_logica = registros->di;
+    uint32_t bytes = tamanio_registro_bytes(instruccion->parametros[0]);
+
+    t_traduccion trad;
+
+    if(!mmu_traducir(contexto, direccion_logica, bytes, &trad)) {
+        return CPU_EXEC_SEG_FAULT;
+    }
+
+    if(!memoria_write(socket_ms, trad.direccion_fisica, bytes, &valor)) {
+        return CPU_EXEC_ERROR;
+    }
+
+    log_info(logger, "PID: %u - Acción: ESCRIBIR - Dirección Física: %u - Valor: %u", pid, trad.direccion_fisica, valor);
+
+    registros->pc++;
+
+    return CPU_EXEC_OK;
+}
+
+static uint32_t tamanio_registro_bytes(const char* nombre) {
+
+    if(strcmp(nombre, "AX") == 0) return 1;
+    if(strcmp(nombre, "BX") == 0) return 1;
+    if(strcmp(nombre, "CX") == 0) return 1;
+    if(strcmp(nombre, "DX") == 0) return 1;
+
+    return 4;
 }

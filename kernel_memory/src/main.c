@@ -21,6 +21,10 @@ typedef struct {
     int      fd;
     uint32_t tamanio;
     uint32_t offset_global; // dónde empieza en el espacio de memoria total
+
+    char ip[32];
+    uint32_t puerto;
+    uint32_t id;
 } t_memory_stick;
 
 // Un hueco libre en memoria
@@ -591,8 +595,12 @@ static void* atender_cliente(void* arg) {
             break;
 
         case MSG_MEMORY_STICK_IDENTIFICACION: {
-            if (msg->payload_size >= 4) {
-                uint32_t tn; memcpy(&tn, msg->payload, 4);
+            if (msg->payload_size >= 40) {
+                uint32_t in; memcpy(&in, msg->payload, 32);
+                uint32_t ip = ntohl(in);
+                uint32_t pn; memcpy(&pn, msg->payload + 32, 4);
+                uint32_t puerto = ntohl(pn);
+                uint32_t tn; memcpy(&tn, msg->payload + 36, 4);
                 uint32_t tamanio = ntohl(tn);
                 log_info(logger, "## Memory Stick de %u bytes Conectada", tamanio);
 
@@ -600,6 +608,8 @@ static void* atender_cliente(void* arg) {
                 t_memory_stick* ms = malloc(sizeof(t_memory_stick));
                 ms->id           = next_ms_id++;
                 ms->fd           = fd;
+                ms->ip           = ip;
+                ms->puerto       = puerto;
                 ms->tamanio      = tamanio;
                 ms->offset_global = memoria_total();
                 list_add(memory_sticks, ms);

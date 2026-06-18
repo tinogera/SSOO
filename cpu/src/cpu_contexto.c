@@ -4,6 +4,8 @@
 #include <utils/protocolo.h>
 #include <utils/sockets.h>
 
+t_contexto* contexto_actual = NULL;
+
 bool restaurar_contexto_desde_memory(int socket_memory, uint32_t pid, t_registros_cpu* registros, t_log* logger) {
     uint32_t pid_n = htonl(pid);
     enviar_mensaje(socket_memory, MSG_RESTAURAR_CONTEXTO, &pid_n, sizeof(pid_n));
@@ -23,10 +25,16 @@ bool restaurar_contexto_desde_memory(int socket_memory, uint32_t pid, t_registro
     t_contexto* ctx = deserializar_contexto(respuesta->payload, respuesta->payload_size);
     free_mensaje(respuesta);
 
-    *registros = ctx->registros;
+    if(contexto_actual != NULL){
+        free_contexto(contexto_actual);
+    }
+
+    contexto_actual = ctx;
+
+    *registros = contexto_actual->registros;
+    
     log_info(logger, "## PID: %u - Contexto restaurado - PC: %u", pid, registros->pc);
 
-    free_contexto(ctx);
     return true;
 }
 

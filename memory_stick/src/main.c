@@ -32,10 +32,15 @@ typedef struct {
 
 } t_memory_stick;
 
+typedef struct {
+    char ip[32];
+    uint32_t puerto;
+    uint32_t tamanio;
+    
+} t_ms_identificacion;
+
 t_log* logger;
 t_memory_stick memoria_global;
-
-int id = 1;
 
 int main(int argc, char* argv[]) {
     // -------------------------------------------------------------------
@@ -50,7 +55,7 @@ int main(int argc, char* argv[]) {
     // -------------------------------------------------------------------
 
 
-    if (argc < 3) {
+    if (argc < 4) {
         fprintf(stderr, "Uso: %s [Archivo Config] [Tamaño]\n", argv[0]);
         return EXIT_FAILURE;
     }
@@ -86,14 +91,16 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // int   ip          = config_get_int_value(config,    "MEMORY_STICK_IP");
-    int   puerto      = config_get_int_value(config,    "MEMORY_STICK_PORT");
+    t_ms_identificacion ms;
+
+    char * ip         = config_get_string_value(config,    "MEMORY_STICK_IP");
+    ms.puerto         = config_get_int_value(config,    "MEMORY_STICK_PORT");
           delay       = config_get_int_value(config,    "MEMORY_DELAY");
     int   kernel_port = config_get_int_value(config,    "KERNEL_MEMORY_PORT");
     char* kernel_ip   = config_get_string_value(config, "KERNEL_MEMORY_IP");
     char* logLevel    = config_get_string_value(config, "LOG_LEVEL");
-
-
+    strcpy(ms.ip, ip);
+    ms.tamanio        = tamanio;
     // -------------------------------------------------------------------
     // 3. Inicializar logger
     // -------------------------------------------------------------------
@@ -107,8 +114,6 @@ int main(int argc, char* argv[]) {
         config_destroy(config);
         return EXIT_FAILURE;
     }
-
-    log_info(logger, "id: %d", id);
     // -------------------------------------------------------------------
     // 4. Conectarse al Kernel Memory
     // -------------------------------------------------------------------
@@ -149,9 +154,15 @@ int main(int argc, char* argv[]) {
     }
 
     // Identificarse con tamaño en el payload
-    uint8_t  payload[4];
+    //  4 + 4 + 32
+    u_int64_t  payload[40];
+    uint32_t ip_n = htonl(ms.ip);
+    memcpy(payload, &ip_n, 32);
+    uint32_t puerto_n = htonl(ms.puerto);
+    memcpy(payload, &puerto_n, 4);
     uint32_t tamanio_n = htonl(tamanio);
     memcpy(payload, &tamanio_n, 4);
+
 
     enviar_mensaje(fd_km, MSG_MEMORY_STICK_IDENTIFICACION, payload, sizeof(payload));
 
