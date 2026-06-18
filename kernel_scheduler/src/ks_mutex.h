@@ -9,12 +9,11 @@
 
 /*
  * Entrada de la cola de espera de un mutex.
- * Guardamos el fd del socket de la CPU que está bloqueada para poder
- * enviarle MSG_OK cuando el mutex se libere.
+ * Solo guardamos el PID; el KS mueve el proceso a BLOCK y lo re-despacha
+ * por el planificador normal cuando el mutex se libera.
  */
 typedef struct {
     uint32_t pid;
-    int      fd_cpu;
 } t_mutex_waiter;
 
 /*
@@ -39,18 +38,20 @@ void mutexes_init(void);
 int mutex_ks_create(const char* nombre);
 
 /*
- * Intenta tomar el mutex en nombre del proceso pid / fd_cpu.
- * - Si está libre: lo toma, loguea y responde MSG_OK al fd_cpu.
- * - Si está tomado: encola al waiter; NO responde (la CPU queda bloqueada
- *   esperando la respuesta, lo que bloquea el hilo del KS que atiende esa CPU).
- * Devuelve 1 si quedó bloqueado (la CPU espera), 0 si tomó sin bloqueo, -1 si error.
+ * Intenta tomar el mutex en nombre del proceso pid.
+ * - Si está libre: toma el mutex, loguea y devuelve 0.
+ * - Si está tomado: encola al waiter (solo PID) y devuelve 1.
+ * El llamador es responsable de mover el proceso a READY (libre) o BLOCK (tomado).
+ * Devuelve -1 si el mutex no existe.
  */
-int mutex_ks_lock(uint32_t pid, int fd_cpu, const char* nombre, t_log* logger);
+int mutex_ks_lock(uint32_t pid, const char* nombre, t_log* logger);
 
 /*
  * Libera el mutex en nombre del proceso pid.
- * Si hay waiters, desencola el primero y le envía MSG_OK (lo desbloquea).
- * Devuelve 0 en éxito, -1 si el mutex no existe o pid no es el owner.
+ * Si hay waiters, desencola el primero y lo convierte en el nuevo owner.
+ * Devuelve el PID del nuevo owner (>= 0) si había waiter, -1 si no había
+ * o si el mutex no existe / pid no es el owner.
+ * El llamador es responsable de mover ese proceso de BLOCK a READY.
  */
 int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger);
 

@@ -563,19 +563,63 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
 
         case MSG_MUTEX_CREATE: {
             t_payload_mutex* p = msg->payload;
+            int pid = (int)ntohl(p->pid);
+            log_info(logger, "## (%d) - Solicitó syscall: MUTEX_CREATE", pid);
             mutex_ks_create(p->nombre);
-            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            // No se envía MSG_OK: CPU ya devolvió el proceso, KS re-despacha
+            // por el planificador vía MSG_DEVOLVER_PROCESO.
             break;
         }
         case MSG_MUTEX_LOCK: {
             t_payload_mutex* p = msg->payload;
-            mutex_ks_lock(ntohl(p->pid), fd, p->nombre, logger);
+            int pid = (int)ntohl(p->pid);
+            log_info(logger, "## (%d) - Solicitó syscall: MUTEX_LOCK", pid);
+
+            t_proceso* proc = sacar_de_exec(pid);
+            if (!proc) break;
+
+            int resultado = mutex_ks_lock(pid, p->nombre, logger);
+            if (resultado == 0) {
+                // Mutex libre: proceso vuelve a READY
+                cambiar_estado(proc, READY);
+                pthread_mutex_lock(&mutex_ready);
+                queue_push(cola_ready, proc);
+                pthread_mutex_unlock(&mutex_ready);
+                sem_post(&sem_cpu_disponible);
+            } else if (resultado == 1) {
+                // Mutex tomado: proceso va a BLOCK hasta que se libere
+                mover_a_block(proc);
+            }
             break;
         }
         case MSG_MUTEX_UNLOCK: {
             t_payload_mutex* p = msg->payload;
-            mutex_ks_unlock(ntohl(p->pid), p->nombre, logger);
-            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            int pid = (int)ntohl(p->pid);
+            log_info(logger, "## (%d) - Solicitó syscall: MUTEX_UNLOCK", pid);
+
+            // No se envía MSG_OK: CPU ya devolvió el proceso, KS re-despacha
+            // por el planificador vía MSG_DEVOLVER_PROCESO.
+            int waiter_pid = mutex_ks_unlock(pid, p->nombre, logger);
+            if (waiter_pid >= 0) {
+                // Mover al waiter de BLOCK → READY (o SUSP_BLOCK → SUSP_READY)
+                t_proceso* waiter = sacar_de_block(waiter_pid);
+                if (waiter) {
+                    cambiar_estado(waiter, READY);
+                    pthread_mutex_lock(&mutex_ready);
+                    queue_push(cola_ready, waiter);
+                    pthread_mutex_unlock(&mutex_ready);
+                    sem_post(&sem_cpu_disponible);
+                } else {
+                    waiter = sacar_de_susp_block(waiter_pid);
+                    if (waiter) {
+                        cambiar_estado(waiter, SUSP_READY);
+                        pthread_mutex_lock(&mutex_susp_ready);
+                        queue_push(cola_susp_ready, waiter);
+                        pthread_mutex_unlock(&mutex_susp_ready);
+                        sem_post(&sem_largo_plazo);
+                    }
+                }
+            }
             break;
         }
 

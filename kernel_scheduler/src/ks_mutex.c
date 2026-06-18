@@ -50,9 +50,9 @@ int mutex_ks_create(const char* nombre) {
 }
 
 // ---------------------------------------------------------------------------
-// mutex_ks_lock — caso libre
+// mutex_ks_lock
 // ---------------------------------------------------------------------------
-int mutex_ks_lock(uint32_t pid, int fd_cpu, const char* nombre, t_log* logger) {
+int mutex_ks_lock(uint32_t pid, const char* nombre, t_log* logger) {
     pthread_mutex_lock(&lock_lista);
     t_ks_mutex* m = buscar_mutex(nombre);
     if (m == NULL) {
@@ -65,17 +65,14 @@ int mutex_ks_lock(uint32_t pid, int fd_cpu, const char* nombre, t_log* logger) {
     if (m->owner_pid == -1) {
         m->owner_pid = (int)pid;
         pthread_mutex_unlock(&m->lock);
-
         log_info(logger, "## (%u) Toma el Mutex %s", pid, nombre);
-        enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
         return 0;
     }
 
-    // Mutex tomado: encolar al waiter. La CPU queda bloqueada esperando
-    // la respuesta; no enviamos MSG_OK hasta que mutex_ks_unlock lo libere.
+    // Mutex tomado: encolar al waiter (solo PID). El KS mueve el proceso a
+    // BLOCK y lo re-despacha por el planificador cuando el mutex se libere.
     t_mutex_waiter* waiter = malloc(sizeof(t_mutex_waiter));
-    waiter->pid    = pid;
-    waiter->fd_cpu = fd_cpu;
+    waiter->pid = pid;
     queue_push(m->cola_espera, waiter);
     pthread_mutex_unlock(&m->lock);
     return 1;
@@ -103,16 +100,15 @@ int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger) {
 
     if (queue_size(m->cola_espera) > 0) {
         t_mutex_waiter* siguiente = queue_pop(m->cola_espera);
-        m->owner_pid = (int)siguiente->pid;
-        pthread_mutex_unlock(&m->lock);
-
-        log_info(logger, "## (%u) Toma el Mutex %s", siguiente->pid, nombre);
-        enviar_mensaje(siguiente->fd_cpu, MSG_OK, NULL, 0);
+        uint32_t waiter_pid = siguiente->pid;
+        m->owner_pid = (int)waiter_pid;
         free(siguiente);
-    } else {
-        m->owner_pid = -1;
         pthread_mutex_unlock(&m->lock);
+        log_info(logger, "## (%u) Toma el Mutex %s", waiter_pid, nombre);
+        return (int)waiter_pid;
     }
 
-    return 0;
+    m->owner_pid = -1;
+    pthread_mutex_unlock(&m->lock);
+    return -1;
 }
