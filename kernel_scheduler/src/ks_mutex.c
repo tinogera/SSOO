@@ -38,9 +38,10 @@ int mutex_ks_create(const char* nombre) {
     }
 
     t_ks_mutex* m = malloc(sizeof(t_ks_mutex));
-    m->nombre     = strdup(nombre);
-    m->owner_pid  = -1;
-    m->cola_espera = queue_create();
+    m->nombre                   = strdup(nombre);
+    m->owner_pid                = -1;
+    m->owner_prioridad_original = -1;
+    m->cola_espera              = queue_create();
     pthread_mutex_init(&m->lock, NULL);
 
     list_add(lista_mutexes, m);
@@ -52,7 +53,11 @@ int mutex_ks_create(const char* nombre) {
 // ---------------------------------------------------------------------------
 // mutex_ks_lock
 // ---------------------------------------------------------------------------
-int mutex_ks_lock(uint32_t pid, const char* nombre, t_log* logger) {
+int mutex_ks_lock(uint32_t pid, int prioridad, const char* nombre, t_log* logger,
+                  int* owner_a_elevar, int* nueva_prioridad_owner) {
+    *owner_a_elevar       = -1;
+    *nueva_prioridad_owner = -1;
+
     pthread_mutex_lock(&lock_lista);
     t_ks_mutex* m = buscar_mutex(nombre);
     if (m == NULL) {
@@ -63,17 +68,26 @@ int mutex_ks_lock(uint32_t pid, const char* nombre, t_log* logger) {
     pthread_mutex_unlock(&lock_lista);
 
     if (m->owner_pid == -1) {
-        m->owner_pid = (int)pid;
+        m->owner_pid                = (int)pid;
+        m->owner_prioridad_original = prioridad;
         pthread_mutex_unlock(&m->lock);
         log_info(logger, "## (%u) Toma el Mutex %s", pid, nombre);
         return 0;
     }
 
-    // Mutex tomado: encolar al waiter (solo PID). El KS mueve el proceso a
-    // BLOCK y lo re-despacha por el planificador cuando el mutex se libere.
+    // Mutex tomado: encolar al waiter con su prioridad para herencia posterior.
     t_mutex_waiter* waiter = malloc(sizeof(t_mutex_waiter));
-    waiter->pid = pid;
+    waiter->pid      = pid;
+    waiter->prioridad = prioridad;
     queue_push(m->cola_espera, waiter);
+
+    // Herencia de prioridades: si el waiter tiene mayor prioridad (número menor)
+    // que la prioridad original del owner, señalamos al llamador que eleve al owner.
+    if (prioridad < m->owner_prioridad_original) {
+        *owner_a_elevar        = m->owner_pid;
+        *nueva_prioridad_owner = prioridad;
+    }
+
     pthread_mutex_unlock(&m->lock);
     return 1;
 }
@@ -81,7 +95,10 @@ int mutex_ks_lock(uint32_t pid, const char* nombre, t_log* logger) {
 // ---------------------------------------------------------------------------
 // mutex_ks_unlock
 // ---------------------------------------------------------------------------
-int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger) {
+int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger,
+                    int* prioridad_restaurar) {
+    *prioridad_restaurar = -1;
+
     pthread_mutex_lock(&lock_lista);
     t_ks_mutex* m = buscar_mutex(nombre);
     if (m == NULL) {
@@ -97,18 +114,21 @@ int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger) {
     }
 
     log_info(logger, "## (%u) Libera el Mutex %s", pid, nombre);
+    *prioridad_restaurar = m->owner_prioridad_original;
 
     if (queue_size(m->cola_espera) > 0) {
         t_mutex_waiter* siguiente = queue_pop(m->cola_espera);
-        uint32_t waiter_pid = siguiente->pid;
-        m->owner_pid = (int)waiter_pid;
+        uint32_t waiter_pid       = siguiente->pid;
+        m->owner_pid                = (int)waiter_pid;
+        m->owner_prioridad_original = siguiente->prioridad;
         free(siguiente);
         pthread_mutex_unlock(&m->lock);
         log_info(logger, "## (%u) Toma el Mutex %s", waiter_pid, nombre);
         return (int)waiter_pid;
     }
 
-    m->owner_pid = -1;
+    m->owner_pid                = -1;
+    m->owner_prioridad_original = -1;
     pthread_mutex_unlock(&m->lock);
     return -1;
 }

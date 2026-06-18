@@ -488,6 +488,27 @@ static t_proceso* sacar_de_susp_block(int pid) {
 }
 
 
+// Busca un proceso por PID en exec y en las colas de ready sin sacarlo.
+// Retorna puntero al t_proceso o NULL. Usado para herencia de prioridades.
+static t_proceso* buscar_proceso_activo(int pid) {
+    pthread_mutex_lock(&mutex_exec);
+    for (int i = 0; i < (int)queue_size(cola_exec); i++) {
+        t_proceso* p = list_get(cola_exec->elements, i);
+        if (p->PID == pid) { pthread_mutex_unlock(&mutex_exec); return p; }
+    }
+    pthread_mutex_unlock(&mutex_exec);
+
+    for (int nivel = 0; nivel < n_colas; nivel++) {
+        pthread_mutex_lock(&mutex_colas_ready[nivel]);
+        for (int i = 0; i < (int)queue_size(colas_ready[nivel]); i++) {
+            t_proceso* p = list_get(colas_ready[nivel]->elements, i);
+            if (p->PID == pid) { pthread_mutex_unlock(&mutex_colas_ready[nivel]); return p; }
+        }
+        pthread_mutex_unlock(&mutex_colas_ready[nivel]);
+    }
+    return NULL;
+}
+
 static void* thread_suspension_timer(void* arg) {
     int pid = *((int*)arg);
     free(arg);
@@ -652,13 +673,22 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             t_proceso* proc = sacar_de_exec(pid);
             if (!proc) break;
 
-            int resultado = mutex_ks_lock(pid, p->nombre, logger);
+            int owner_a_elevar, nueva_prioridad_owner;
+            int resultado = mutex_ks_lock(pid, proc->prioridad, p->nombre, logger,
+                                          &owner_a_elevar, &nueva_prioridad_owner);
             if (resultado == 0) {
-                // Mutex libre: proceso vuelve a READY
                 cambiar_estado(proc, READY);
                 encolar_en_ready(proc);
             } else if (resultado == 1) {
-                // Mutex tomado: proceso va a BLOCK hasta que se libere
+                // Herencia de prioridades: elevar al owner si corresponde.
+                if (owner_a_elevar >= 0) {
+                    t_proceso* owner = buscar_proceso_activo(owner_a_elevar);
+                    if (owner && owner->prioridad > nueva_prioridad_owner) {
+                        log_info(logger, "## %d Cambio de prioridad: %d - %d",
+                                 owner->PID, owner->prioridad, nueva_prioridad_owner);
+                        owner->prioridad = nueva_prioridad_owner;
+                    }
+                }
                 mover_a_block(proc);
             }
             break;
@@ -670,7 +700,19 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
 
             // No se envía MSG_OK: CPU ya devolvió el proceso, KS re-despacha
             // por el planificador vía MSG_DEVOLVER_PROCESO.
-            int waiter_pid = mutex_ks_unlock(pid, p->nombre, logger);
+            int prioridad_restaurar;
+            int waiter_pid = mutex_ks_unlock(pid, p->nombre, logger, &prioridad_restaurar);
+
+            // Restaurar la prioridad original del owner si fue elevada por herencia.
+            if (prioridad_restaurar >= 0) {
+                t_proceso* owner = buscar_proceso_activo(pid);
+                if (owner && owner->prioridad != prioridad_restaurar) {
+                    log_info(logger, "## %d Cambio de prioridad: %d - %d",
+                             owner->PID, owner->prioridad, prioridad_restaurar);
+                    owner->prioridad = prioridad_restaurar;
+                }
+            }
+
             if (waiter_pid >= 0) {
                 // Mover al waiter de BLOCK → READY (o SUSP_BLOCK → SUSP_READY)
                 t_proceso* waiter = sacar_de_block(waiter_pid);

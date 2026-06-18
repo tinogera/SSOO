@@ -9,21 +9,25 @@
 
 /*
  * Entrada de la cola de espera de un mutex.
- * Solo guardamos el PID; el KS mueve el proceso a BLOCK y lo re-despacha
- * por el planificador normal cuando el mutex se libera.
+ * Guardamos PID y prioridad: cuando el waiter se convierte en owner
+ * su prioridad se usa como nuevo owner_prioridad_original.
  */
 typedef struct {
     uint32_t pid;
+    int      prioridad;
 } t_mutex_waiter;
 
 /*
  * Representa un mutex del sistema.
  * owner_pid == -1 indica que el mutex está libre.
+ * owner_prioridad_original: prioridad del owner antes de cualquier herencia;
+ *   se restaura cuando el owner libera el mutex.
  * cola_espera contiene t_mutex_waiter* en orden FIFO.
  */
 typedef struct {
     char*           nombre;
     int             owner_pid;
+    int             owner_prioridad_original;
     t_queue*        cola_espera;
     pthread_mutex_t lock;
 } t_ks_mutex;
@@ -38,21 +42,27 @@ void mutexes_init(void);
 int mutex_ks_create(const char* nombre);
 
 /*
- * Intenta tomar el mutex en nombre del proceso pid.
+ * Intenta tomar el mutex en nombre del proceso pid con prioridad dada.
  * - Si está libre: toma el mutex, loguea y devuelve 0.
- * - Si está tomado: encola al waiter (solo PID) y devuelve 1.
- * El llamador es responsable de mover el proceso a READY (libre) o BLOCK (tomado).
+ * - Si está tomado: encola al waiter y devuelve 1.
+ *   Si el waiter tiene mayor prioridad que el owner (prioridad < owner_prioridad_original),
+ *   activa herencia: *owner_a_elevar = PID del owner, *nueva_prioridad_owner = prioridad del waiter.
+ *   El llamador debe elevar la prioridad del owner y loguear el cambio.
  * Devuelve -1 si el mutex no existe.
+ * En caso de no herencia, *owner_a_elevar = -1.
  */
-int mutex_ks_lock(uint32_t pid, const char* nombre, t_log* logger);
+int mutex_ks_lock(uint32_t pid, int prioridad, const char* nombre, t_log* logger,
+                  int* owner_a_elevar, int* nueva_prioridad_owner);
 
 /*
  * Libera el mutex en nombre del proceso pid.
  * Si hay waiters, desencola el primero y lo convierte en el nuevo owner.
- * Devuelve el PID del nuevo owner (>= 0) si había waiter, -1 si no había
- * o si el mutex no existe / pid no es el owner.
- * El llamador es responsable de mover ese proceso de BLOCK a READY.
+ * Devuelve el PID del nuevo owner (>= 0) si había waiter, -1 si no había.
+ * *prioridad_restaurar: prioridad original del owner antes de cualquier herencia.
+ *   El llamador debe restaurar la prioridad del owner (pid) a este valor si cambió.
+ *   Es -1 si el mutex no existía o pid no era el owner.
  */
-int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger);
+int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger,
+                    int* prioridad_restaurar);
 
 #endif
