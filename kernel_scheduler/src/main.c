@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <arpa/inet.h>
 #include <pthread.h>
@@ -17,11 +18,11 @@
 #include "ks_compact.h"
 
 t_log* logger;
-static int             fd_km     = -1;
-static pthread_mutex_t mutex_km_req  = PTHREAD_MUTEX_INITIALIZER; // serializa envíos a KM
-static pthread_mutex_t mutex_km_resp = PTHREAD_MUTEX_INITIALIZER; // protege ultimo_resp_km
-static pthread_cond_t  cond_km_resp  = PTHREAD_COND_INITIALIZER;
-static t_mensaje*      ultimo_resp_km = NULL;
+static int             fd_km          = -1;
+static pthread_mutex_t mutex_km_req   = PTHREAD_MUTEX_INITIALIZER; // serializa envíos a KM
+static pthread_mutex_t mutex_km_resp  = PTHREAD_MUTEX_INITIALIZER; // protege ultimo_resp_km
+static pthread_cond_t  cond_km_resp   = PTHREAD_COND_INITIALIZER;
+static t_mensaje*      ultimo_resp_km  = NULL;
 
 // Compactación
 static int             compactando       = 0;
@@ -63,6 +64,10 @@ static int             fd_io_stdout = -1;
 static int             fd_io_stdin  = -1;
 static pthread_mutex_t mutex_io     = PTHREAD_MUTEX_INITIALIZER;
 
+static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size);
+static void       manejar_bsod(void);
+static void*      manejar_mas_memoria(void* _);
+static void*      thread_km_listener(void* _);
 t_proceso* crear_proceso(char* path, int prioridad);
 void*      atender_cliente(void* arg);
 static void atender_cpu(int fd, t_cpu_entry* entry);
@@ -72,7 +77,6 @@ static void* thread_quantum_timer(void* arg);
 static void* thread_largo_plazo(void* _);
 static void* thread_suspension_timer(void* arg);
 static void  handle_compactar(void);
-static void* thread_km_listener(void* _);
 
 // Encola el proceso en la cola de su prioridad y señala al planificador.
 static void encolar_en_ready(t_proceso* proc);
@@ -144,6 +148,172 @@ static void cambiar_estado(t_proceso* proc, t_estado nuevo) {
     proc->estado = nuevo;
 }
 
+
+static void finalizar_proceso_bsod(t_proceso* proc) {
+    cambiar_estado(proc, EXIT);
+    log_info(logger, "## (%d) finalizó su ejecución con motivo de BSOD", proc->PID);
+    pthread_mutex_lock(&mutex_exit);
+    queue_push(cola_exit, proc);
+    pthread_mutex_unlock(&mutex_exit);
+}
+
+static void manejar_bsod(void) {
+    log_warning(logger, "## BSOD: Memory Stick desconectado — finalizando todos los procesos");
+
+    // Interrumpir CPUs en EXEC antes de vaciar la cola
+    pthread_mutex_lock(&mutex_exec);
+    int sz = queue_size(cola_exec);
+    for (int i = 0; i < sz; i++) {
+        t_proceso* proc = queue_pop(cola_exec);
+        t_payload_interrupcion_cpu pay = {
+            .pid    = htonl((uint32_t)proc->PID),
+            .motivo = htonl(MOTIVO_INTERRUPCION_DESALOJO)
+        };
+        enviar_mensaje(proc->fd_cpu, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
+        proc->fd_cpu = -1;
+        finalizar_proceso_bsod(proc);
+    }
+    pthread_mutex_unlock(&mutex_exec);
+
+    // Vaciar el resto de las colas
+    for (int i = 0; i < n_colas; i++) {
+        pthread_mutex_lock(&mutex_colas_ready[i]);
+        while (queue_size(colas_ready[i]) > 0)
+            finalizar_proceso_bsod(queue_pop(colas_ready[i]));
+        pthread_mutex_unlock(&mutex_colas_ready[i]);
+    }
+
+    pthread_mutex_lock(&mutex_block);
+    while (queue_size(cola_block) > 0)
+        finalizar_proceso_bsod(queue_pop(cola_block));
+    pthread_mutex_unlock(&mutex_block);
+
+    pthread_mutex_lock(&mutex_susp_block);
+    while (queue_size(cola_susp_block) > 0)
+        finalizar_proceso_bsod(queue_pop(cola_susp_block));
+    pthread_mutex_unlock(&mutex_susp_block);
+
+    pthread_mutex_lock(&mutex_susp_ready);
+    while (queue_size(cola_susp_ready) > 0)
+        finalizar_proceso_bsod(queue_pop(cola_susp_ready));
+    pthread_mutex_unlock(&mutex_susp_ready);
+
+    log_warning(logger, "## BSOD: sistema finalizado");
+    exit(EXIT_FAILURE);
+}
+
+static bool cmp_suspension(void* a, void* b) {
+    t_proceso* pa = (t_proceso*)a;
+    t_proceso* pb = (t_proceso*)b;
+    if (pa->prioridad != pb->prioridad)
+        return pa->prioridad > pb->prioridad;          // mayor prioridad primero
+    return pa->tiempo_suspension < pb->tiempo_suspension; // más viejo primero
+}
+
+static void* manejar_mas_memoria(void* _) {
+    (void)_;
+    // Vaciar cola_susp_ready en una lista local para ordenar y procesar
+    pthread_mutex_lock(&mutex_susp_ready);
+    t_list* candidatos = list_create();
+    while (queue_size(cola_susp_ready) > 0)
+        list_add(candidatos, queue_pop(cola_susp_ready));
+    pthread_mutex_unlock(&mutex_susp_ready);
+
+    if (list_size(candidatos) == 0) {
+        list_destroy(candidatos);
+        return NULL;
+    }
+
+    list_sort(candidatos, cmp_suspension);
+
+    for (int i = 0; i < list_size(candidatos); i++) {
+        t_proceso* proc = list_get(candidatos, i);
+
+        uint32_t pid_n = htonl((uint32_t)proc->PID);
+        t_mensaje* resp = km_request(MSG_DESSUSPENDER_PROCESO, &pid_n, sizeof(uint32_t));
+
+        if (resp && resp->op_code == MSG_OK) {
+            free_mensaje(resp);
+            cambiar_estado(proc, READY);
+            encolar_en_ready(proc);
+        } else {
+            // Sin espacio — devolver este y los restantes a cola_susp_ready
+            if (resp) free_mensaje(resp);
+            pthread_mutex_lock(&mutex_susp_ready);
+            for (int j = i; j < list_size(candidatos); j++)
+                queue_push(cola_susp_ready, list_get(candidatos, j));
+            pthread_mutex_unlock(&mutex_susp_ready);
+            break;
+        }
+    }
+
+    list_destroy(candidatos);
+    return NULL;
+}
+
+static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size) {
+    pthread_mutex_lock(&mutex_km_req);
+    enviar_mensaje(fd_km, op, payload, size);
+
+    pthread_mutex_lock(&mutex_km_resp);
+    while (ultimo_resp_km == NULL)
+        pthread_cond_wait(&cond_km_resp, &mutex_km_resp);
+    t_mensaje* resp = ultimo_resp_km;
+    ultimo_resp_km = NULL;
+    pthread_mutex_unlock(&mutex_km_resp);
+
+    pthread_mutex_unlock(&mutex_km_req);
+    return resp;
+}
+
+static void* thread_km_listener(void* _) {
+    (void)_;
+    while (1) {
+        t_mensaje* msg = recibir_mensaje(fd_km);
+        if (!msg) {
+            log_error(logger, "KM cerró la conexión");
+            break;
+        }
+        switch (msg->op_code) {
+        case MSG_OK:
+        case MSG_ERROR:
+        case MSG_TABLA_SEGMENTOS:
+            pthread_mutex_lock(&mutex_km_resp);
+            ultimo_resp_km = msg;
+            pthread_cond_signal(&cond_km_resp);
+            pthread_mutex_unlock(&mutex_km_resp);
+            break;
+        case MSG_COMPACTAR:
+            free_mensaje(msg);
+            {
+                // Despachamos en un hilo separado para que el listener quede libre
+                // de recibir el MSG_OK que KM enviará al final de la compactación.
+                // Llamar handle_compactar() directo causaría deadlock: el listener
+                // quedaría bloqueado esperando una respuesta que él mismo debería leer.
+                pthread_t t;
+                pthread_create(&t, NULL, (void*(*)(void*))handle_compactar, NULL);
+                pthread_detach(t);
+            }
+            break;
+        case MSG_MAS_MEMORIA:
+            free_mensaje(msg);
+            {
+                pthread_t t;
+                pthread_create(&t, NULL, manejar_mas_memoria, NULL);
+                pthread_detach(t);
+            }
+            break;
+        case MSG_BSOD:
+            free_mensaje(msg);
+            manejar_bsod();
+            break;
+        default:
+            log_warning(logger, "KM: op_code inesperado %u", msg->op_code);
+            free_mensaje(msg);
+        }
+    }
+    return NULL;
+}
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
@@ -291,17 +461,8 @@ static void handle_compactar(void) {
     }
 
     // Notificar a KM que las CPUs están ociosas y esperar su confirmación.
-    pthread_mutex_lock(&mutex_km_req);
-    enviar_mensaje(fd_km, MSG_FIN_COMPACTACION, NULL, 0);
-
-    pthread_mutex_lock(&mutex_km_resp);
-    ultimo_resp_km = NULL;
-    while (ultimo_resp_km == NULL)
-        pthread_cond_wait(&cond_km_resp, &mutex_km_resp);
-    free_mensaje(ultimo_resp_km);
-    ultimo_resp_km = NULL;
-    pthread_mutex_unlock(&mutex_km_resp);
-    pthread_mutex_unlock(&mutex_km_req);
+    t_mensaje* resp_compactar = km_request(MSG_FIN_COMPACTACION, NULL, 0);
+    if (resp_compactar) free_mensaje(resp_compactar);
 
     pthread_mutex_lock(&mutex_compactando);
     compactando = 0;
@@ -313,19 +474,6 @@ static void handle_compactar(void) {
     sem_post(&sem_planificador_ok);
     sem_post(&sem_cpu_disponible);
 }
-
-static void* thread_km_listener(void* _) {
-    (void)_;
-    static t_km_listener_ctx ctx;
-    ctx.fd_km               = fd_km;
-    ctx.on_compactar        = handle_compactar;
-    ctx.mutex_km_resp       = &mutex_km_resp;
-    ctx.cond_km_resp        = &cond_km_resp;
-    ctx.ultimo_resp_km_ptr  = &ultimo_resp_km;
-    ctx.logger              = logger;
-    return km_listener_run(&ctx);
-}
-
 
 t_proceso* crear_proceso(char* path, int prioridad) {
     pthread_mutex_lock(&mutex_pid);
@@ -339,6 +487,7 @@ t_proceso* crear_proceso(char* path, int prioridad) {
     proc->prioridad              = prioridad;
     proc->fd_cpu                 = -1;
     proc->preemptado             = 0;
+    proc->tiempo_suspension      = 0;
 
     log_info(logger, "## (%u) Se crea el proceso - Estado: NEW", pid);
 
@@ -349,17 +498,8 @@ t_proceso* crear_proceso(char* path, int prioridad) {
     memcpy(payload, &pid_n, sizeof(uint32_t));
     memcpy((char*)payload + sizeof(uint32_t), path, path_len);
 
-    pthread_mutex_lock(&mutex_km_req);
-    pthread_mutex_lock(&mutex_km_resp);
-    ultimo_resp_km = NULL;
-    enviar_mensaje(fd_km, MSG_CREAR_PROCESO, payload, payload_size);
+    t_mensaje* resp = km_request(MSG_CREAR_PROCESO, payload, payload_size);
     free(payload);
-    while (ultimo_resp_km == NULL)
-        pthread_cond_wait(&cond_km_resp, &mutex_km_resp);
-    t_mensaje* resp = ultimo_resp_km;
-    ultimo_resp_km = NULL;
-    pthread_mutex_unlock(&mutex_km_resp);
-    pthread_mutex_unlock(&mutex_km_req);
 
     if (!resp || resp->op_code != MSG_OK) {
         log_error(logger, "KM rechazo la creacion del proceso %u", pid);
@@ -617,10 +757,18 @@ static void* thread_suspension_timer(void* arg) {
     if (!proc) return NULL;
 
     log_info(logger, "## (%d) - Timeout de IO: suspendiendo proceso", pid);
+    proc->tiempo_suspension = time(NULL);
     cambiar_estado(proc, SUSP_BLOCK);
     pthread_mutex_lock(&mutex_susp_block);
     queue_push(cola_susp_block, proc);
     pthread_mutex_unlock(&mutex_susp_block);
+
+    uint32_t pid_n = htonl((uint32_t)pid);
+    t_mensaje* resp = km_request(MSG_SUSPENDER_PROCESO, &pid_n, sizeof(uint32_t));
+    if (!resp || resp->op_code != MSG_OK)
+        log_error(logger, "KM rechazó suspender proceso %d", pid);
+    if (resp) free_mensaje(resp);
+
     return NULL;
 }
 
@@ -628,16 +776,7 @@ static void* thread_largo_plazo(void* _) {
     (void)_;
     while (1) {
         sem_wait(&sem_largo_plazo);
-
-        pthread_mutex_lock(&mutex_susp_ready);
-        t_proceso* proc = queue_size(cola_susp_ready) > 0 ? queue_pop(cola_susp_ready) : NULL;
-        pthread_mutex_unlock(&mutex_susp_ready);
-
-        if (!proc) continue;
-
-        // CK2: KM mockea espacio libre — siempre admitimos de SUSP. READY
-        cambiar_estado(proc, READY);
-        encolar_en_ready(proc);
+        manejar_mas_memoria(NULL);
     }
     return NULL;
 }
@@ -685,9 +824,16 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                     encolar_en_ready(proc);
                 }
 
+            } else if (motivo == MOTIVO_DEVOLUCION_ERROR) {
+                cambiar_estado(proc, EXIT);
+                log_info(logger, "## (%d) finalizó su ejecución con motivo de SEG_FAULT", pid);
+                pthread_mutex_lock(&mutex_exit);
+                queue_push(cola_exit, proc);
+                pthread_mutex_unlock(&mutex_exit);
+                sem_post(&sem_cpu_disponible);
+
             } else {
-                // MOTIVO_DEVOLUCION_SYSCALL con proceso todavía en exec: la syscall
-                // fue no bloqueante (MUTEX_CREATE, MUTEX_UNLOCK, MUTEX_LOCK libre).
+                // MOTIVO_DEVOLUCION_SYSCALL: syscall no bloqueante (MUTEX_CREATE, MUTEX_UNLOCK, MUTEX_LOCK libre)
                 cambiar_estado(proc, READY);
                 encolar_en_ready(proc);
             }
