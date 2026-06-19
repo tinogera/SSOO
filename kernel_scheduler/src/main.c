@@ -430,7 +430,6 @@ int main(int argc, char* argv[]) {
     return EXIT_SUCCESS;
 }
 
-
 static void handle_compactar(void) {
     log_info(logger, "## Inicio de compactación");
 
@@ -805,6 +804,14 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             if (motivo == MOTIVO_DEVOLUCION_EXIT) {
                 cambiar_estado(proc, EXIT);
                 log_info(logger, "## (%d) finalizó su ejecución con motivo de EXIT", pid);
+                pthread_mutex_lock(&mutex_exit);
+                queue_push(cola_exit, proc);
+                pthread_mutex_unlock(&mutex_exit);
+                sem_post(&sem_cpu_disponible);
+
+            } else if (motivo == MOTIVO_DEVOLUCION_ERROR) {
+                cambiar_estado(proc, EXIT);
+                log_info(logger, "## (%d) finalizó su ejecución con motivo de SEG_FAULT", pid);
                 pthread_mutex_lock(&mutex_exit);
                 queue_push(cola_exit, proc);
                 pthread_mutex_unlock(&mutex_exit);
