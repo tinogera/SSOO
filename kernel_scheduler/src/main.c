@@ -289,6 +289,7 @@ static void* thread_km_listener(void* _) {
         case MSG_OK:
         case MSG_ERROR:
         case MSG_TABLA_SEGMENTOS:
+        case MSG_LEER_DATOS_RESP:
             pthread_mutex_lock(&mutex_km_resp);
             ultimo_resp_km = msg;
             pthread_cond_signal(&cond_km_resp);
