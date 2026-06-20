@@ -11,6 +11,8 @@
 #include "cpu_logs.h"
 #include "cpu_memoria.h"
 #include "cpu_syscalls.h"
+#include "cpu_contexto.h"
+#include "cpu_mmu.h"
 
 static void armar_parametros(t_instruccion_decodificada* instruccion, char* parametros, size_t parametros_size) {
     parametros[0] = '\0';
@@ -101,6 +103,17 @@ static bool ejecutar_syscall(
         case CPU_INST_EXIT:
             return instruccion->cantidad_parametros == 0 &&
                    enviar_syscall_exit(socket_kernel, pid, logger);
+        case CPU_INST_MEM_ALLOC:
+
+            if(instruccion->cantidad_parametros != 2) {
+                return false;
+            }
+
+            return enviar_syscall_mem_alloc(socket_kernel, pid, parsear_uint32(instruccion->parametros[0]),
+                parsear_uint32(instruccion->parametros[1]), logger);
+        case CPU_INST_MEM_FREE:
+            return instruccion->cantidad_parametros == 1 &&
+                   enviar_syscall_mem_free(socket_kernel, pid, parsear_uint32(instruccion->parametros[0]), logger);
         default:
             return false;
     }

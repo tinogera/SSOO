@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+<<<<<<< HEAD
 #include <commons/log.h>
 #include <utils/sockets.h>
 
@@ -29,3 +30,10 @@ t_resultado_memoria_cpu ejecutar_instruccion_memoria(
 );
 
 #endif
+=======
+
+bool memoria_write(int socket_ms, uint32_t direccion, uint32_t tamanio, void* datos);
+bool memoria_read(int socket_ms, uint32_t direccion, uint32_t tamanio, void* destino);
+
+#endif
+>>>>>>> feature/cpu/mmu

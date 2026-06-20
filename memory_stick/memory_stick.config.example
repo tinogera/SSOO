@@ -1,0 +1,11 @@
+LOG_LEVEL=INFO
+
+# Puerto donde este módulo acepta conexiones de CPU
+MEMORY_STICK_PORT=37216
+
+# IP y puerto del Kernel Memory
+KERNEL_MEMORY_IP=127.0.0.1
+KERNEL_MEMORY_PORT=37215
+
+# Retardo artificial por operación de lectura/escritura (en microsegundos)
+MEMORY_DELAY=500

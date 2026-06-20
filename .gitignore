@@ -1,6 +1,6 @@
 # Borradores personales
 borrador_*.md
-resumen_nicolas.md
+resumen_*.md
 instalacion.md
 
 # Archivos de configuración local (no commitear, cada uno tiene el suyo)
@@ -70,5 +70,3 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-borrador_nicolas.md
-resumen_nicolas.md

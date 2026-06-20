@@ -15,60 +15,60 @@
 ---
 
 ## Fase 0 — Configuración del Entorno
-**Fecha límite:** 13/04/2026
+**Fecha límite:** 13/04/2026 — **COMPLETADA**
 
-- [ ] Instalar `so-commons-library` y verificar compilación del módulo `kernel_scheduler`.
-- [ ] Leer y entender completamente la sección de Kernel Scheduler en la consigna: estados de proceso, algoritmos de planificación, manejo de IO.
-- [ ] Coordinar con Nicolas el diseño del protocolo de mensajes que el Scheduler envía/recibe de CPUs, IO y Kernel Memory.
+- [x] Instalar `so-commons-library` y verificar compilación del módulo `kernel_scheduler`.
+- [x] Leer y entender completamente la sección de Kernel Scheduler en la consigna: estados de proceso, algoritmos de planificación, manejo de IO.
+- [x] Coordinar con Nicolas el diseño del protocolo de mensajes que el Scheduler envía/recibe de CPUs, IO y Kernel Memory.
 
 ---
 
 ## Fase 1 — Check 1: Conexiones
-**Fecha límite:** 18/04/2026
+**Fecha límite:** 18/04/2026 — **ENTREGADO (parcial)**
 **Rama:** `feature/kernel-scheduler/planificacion-basica`
 
-- [ ] Implementar el **servidor de sockets** en Kernel Scheduler:
+- [x] Implementar el **servidor de sockets** en Kernel Scheduler:
   - Conexión entrante desde **Kernel Memory** (establecida al inicio).
   - Conexiones dinámicas de **CPUs** (multihilo, una conexión por CPU).
   - Conexiones dinámicas de módulos **IO**.
-- [ ] Lograr que Kernel Scheduler levante, acepte conexiones y loguee cada conexión establecida.
-- [ ] Implementar el **log obligatorio**: `## Conectado a Kernel Memory`.
-- [ ] Implementar el **log obligatorio**: `## CPU <ID CPU> Conectada`.
+- [x] Lograr que Kernel Scheduler levante, acepte conexiones y loguee cada conexión establecida.
+- [x] Implementar el **log obligatorio**: `## Conectado a Kernel Memory`.
+- [x] Implementar el **log obligatorio**: `## CPU <ID CPU> Conectada`.
 
 **Dependencias:** Coordinarse con Nicolas para usar el wrapper de sockets de Utils. Coordinarse con Luciano para el handshake con Kernel Memory.
 
 ---
 
 ## Fase 2 — Check 2: Planificación Básica
-**Fecha límite:** 23/05/2026
-**Rama:** `feature/kernel-scheduler/planificacion-basica`
+**Fecha límite:** 23/05/2026 — **COMPLETADA** (merge a main el 22/05/2026, commit `29f8611`)
+**Ramas:** `feature/kernel-scheduler/planificacion-basica` · `feature/ks-largo-plazo`
 
 ### Semana 1–2 (19/04 – 02/05)
-- [ ] Implementar la **estructura de proceso**: PID, estado, prioridad, cola de origen, tiempos.
-- [ ] Implementar las **colas de estado**: NEW, READY, EXEC, BLOCK, SUSP. BLOCK, SUSP. READY, EXIT.
-- [ ] Implementar la **creación de proceso**: leer path de archivo de instrucciones, asignar PID, notificar a Kernel Memory, pasar a NEW → READY.
-- [ ] Implementar log: `## (<PID>) Se crea el proceso - Estado: NEW`.
-- [ ] Implementar log: `## (<PID>) Pasa del estado <ANTERIOR> al estado <ACTUAL>`.
+- [x] Implementar la **estructura de proceso**: PID, estado, prioridad, cola de origen, tiempos.
+- [x] Implementar las **colas de estado**: NEW, READY, EXEC, BLOCK, SUSP. BLOCK, SUSP. READY, EXIT.
+- [x] Implementar la **creación de proceso**: leer path de archivo de instrucciones, asignar PID, notificar a Kernel Memory, pasar a NEW → READY.
+- [x] Implementar log: `## (<PID>) Se crea el proceso - Estado: NEW`.
+- [x] Implementar log: `## (<PID>) Pasa del estado <ANTERIOR> al estado <ACTUAL>`.
 
 ### Semana 3 (03/05 – 09/05)
-- [ ] Implementar algoritmo **FIFO**: despachar el proceso al tope de la cola READY a la CPU libre, sin preempción.
-- [ ] Implementar algoritmo **Round Robin (RR)**: igual que FIFO pero con quantum configurable (`RR_QUANTUM`). Al expirar el quantum, interrumpir la CPU y volver el proceso al final de READY.
-- [ ] Implementar envío de **interrupción de fin de quantum** a la CPU.
-- [ ] Implementar log: `## (<PID>) - Desalojado por fin de quantum`.
+- [x] Implementar algoritmo **FIFO**: despachar el proceso al tope de la cola READY a la CPU libre, sin preempción.
+- [x] Implementar algoritmo **Round Robin (RR)**: igual que FIFO pero con quantum configurable (`RR_QUANTUM`). Al expirar el quantum, interrumpir la CPU y volver el proceso al final de READY.
+- [x] Implementar envío de **interrupción de fin de quantum** a la CPU.
+- [x] Implementar log: `## (<PID>) - Desalojado por fin de quantum`.
 
 ### Semana 4 (10/05 – 16/05)
-- [ ] Implementar el manejo de syscall **SLEEP**: proceso pasa a BLOCK, despachar siguiente proceso de READY a la CPU.
-- [ ] Implementar el manejo de syscalls **STDIN** y **STDOUT**: proceso pasa a BLOCK, solicitar operación al módulo IO correspondiente.
-- [ ] Al finalizar IO, volver proceso a READY (o SUSP. READY si está suspendido).
-- [ ] Implementar log: `## (<PID>) - Solicitó syscall: <NOMBRE_SYSCALL>`.
-- [ ] Implementar log: `## (<PID>) finalizó IO y pasa a READY / SUSP. READY`.
+- [x] Implementar el manejo de syscall **SLEEP**: proceso pasa a BLOCK, despachar siguiente proceso de READY a la CPU.
+- [x] Implementar el manejo de syscalls **STDIN** y **STDOUT**: proceso pasa a BLOCK, solicitar operación al módulo IO correspondiente.
+- [x] Al finalizar IO, volver proceso a READY (o SUSP. READY si está suspendido).
+- [x] Implementar log: `## (<PID>) - Solicitó syscall: <NOMBRE_SYSCALL>`.
+- [x] Implementar log: `## (<PID>) finalizó IO y pasa a READY / SUSP. READY`.
 
-### Semana 5 (17/05 – 23/05)
-- [ ] Implementar **MUTEX_CREATE**: crear mutex con nombre dado, asociado a un proceso.
-- [ ] Implementar **MUTEX_LOCK**: si libre → tomarlo. Si tomado → proceso a BLOCK esperando mutex.
-- [ ] Implementar **MUTEX_UNLOCK**: liberar mutex, desbloquear proceso en espera (si hay).
-- [ ] Implementar log: `## (<PID>) Toma el Mutex <NOMBRE_MUTEX>`.
-- [ ] Implementar log: `## (<PID>) Libera el Mutex <NOMBRE_MUTEX>`.
+### Semana 5 (17/05 – 23/05) — adelantado a CK2
+- [x] Implementar **MUTEX_CREATE/LOCK/UNLOCK** (hecho por Nicolas en `feature/kernel-scheduler/mutex-cmn`).
+- [x] Implementar **SUSPENSION_TIMEOUT**: proceso en BLOCK supera timeout → SUSP. BLOCK (`thread_suspension_timer`).
+- [x] Implementar des-suspensión simple: IO finaliza → SUSP. BLOCK → SUSP. READY → READY (`thread_largo_plazo`).
+- [x] Implementar log: `## (<PID>) Toma el Mutex <NOMBRE_MUTEX>`.
+- [x] Implementar log: `## (<PID>) Libera el Mutex <NOMBRE_MUTEX>`.
 
 ---
 
@@ -77,9 +77,9 @@
 **Rama:** `feature/kernel-scheduler/mediano-plazo`
 
 ### Semana 1–2 (24/05 – 06/06)
-- [ ] Implementar **suspensión de proceso**: si un proceso en BLOCK supera el `SUSPENSION_TIMEOUT` ms → pasar a SUSP. BLOCK y notificar a Kernel Memory para mover sus segmentos a Swap.
-- [ ] Implementar **des-suspensión de proceso**: cuando hay memoria disponible (nuevo Memory Stick, compactación, proceso finalizado), des-suspender procesos en orden de mayor tiempo suspendido primero.
-- [ ] Verificar que la des-suspensión solo ocurra si los segmentos caben en memoria sin compactar.
+- [x] ~~Suspensión por SUSPENSION_TIMEOUT~~ — adelantado a CK2 (`thread_suspension_timer`).
+- [ ] Notificar a Kernel Memory para mover segmentos a Swap al suspender (pendiente CK3, requiere segmentación real).
+- [ ] **Des-suspensión real**: verificar que los segmentos caben en memoria antes de des-suspender. Actualmente KM mockea espacio libre.
 
 ### Semana 3–4 (07/06 – 20/06)
 - [ ] Implementar el manejo de **BSOD**: cuando Kernel Memory notifica desconexión de Memory Stick → finalizar todos los procesos activos → logear BSOD.

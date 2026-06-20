@@ -23,7 +23,12 @@ typedef enum {
     CPU_INST_MOV_OUT,
     CPU_INST_COPY_MEM,
     CPU_INST_EXIT,
-    CPU_INST_UNKNOWN
+    CPU_INST_UNKNOWN,
+    CPU_INST_MOV_IN,
+    CPU_INST_MOV_OUT,
+    CPU_INST_COPY_MEM,
+    CPU_INST_MEM_ALLOC,
+    CPU_INST_MEM_FREE
 } t_opcode_cpu;
 
 typedef struct {

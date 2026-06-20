@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
         log_info(logger, "Conectado a Kernel Memory");
 
         // HANDSHAKE CPU -> Kernel Memory
-        enviar_mensaje(socket_memory, MSG_CPU_A_KERNEL_MEMORY, NULL, 0);
+        enviar_mensaje(socket_memory, MSG_CPU_IDENTIFICACION, NULL, 0);
 
         t_mensaje* respuesta = recibir_mensaje(socket_memory);
         if (respuesta == NULL) {

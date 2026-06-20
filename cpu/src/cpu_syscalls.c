@@ -1,6 +1,7 @@
 #include "cpu_syscalls.h"
 
 #include <arpa/inet.h>
+#include <arpa/inet.h>
 #include <stdlib.h>
 #include <string.h>
 #include <utils/protocolo.h>
@@ -27,6 +28,8 @@ static bool enviar_syscall_mutex(int socket_kernel, uint32_t op_code, uint32_t p
     uint32_t payload_size = sizeof(uint32_t) + nombre_size;
     void* payload = malloc(payload_size);
 
+    uint32_t pid_n = htonl(pid);
+    memcpy(payload, &pid_n, sizeof(uint32_t));
     uint32_t pid_n = htonl(pid);
     memcpy(payload, &pid_n, sizeof(uint32_t));
     memcpy((char*)payload + sizeof(uint32_t), nombre, nombre_size);
@@ -60,6 +63,7 @@ bool enviar_syscall_sleep(int socket_kernel, uint32_t pid, uint32_t tiempo_ms, t
     enviar_mensaje(socket_kernel, MSG_SYSCALL_SLEEP, &payload, sizeof(payload));
 
     return true;
+    return true;
 }
 
 static bool enviar_syscall_io_memoria(
@@ -87,6 +91,7 @@ static bool enviar_syscall_io_memoria(
     );
     enviar_mensaje(socket_kernel, op_code, &payload, sizeof(payload));
 
+    return true;
     return true;
 }
 
@@ -158,6 +163,7 @@ bool enviar_syscall_init_proc(int socket_kernel, uint32_t pid, const char* archi
 
 bool enviar_syscall_exit(int socket_kernel, uint32_t pid, t_log* logger) {
     t_payload_syscall_exit payload = {
+        .pid = htonl(pid)
         .pid = htonl(pid)
     };
 
