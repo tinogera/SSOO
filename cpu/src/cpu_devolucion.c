@@ -1,5 +1,6 @@
 #include "cpu_devolucion.h"
 
+#include <arpa/inet.h>
 #include <utils/sockets.h>
 
 const char* motivo_devolucion_to_string(t_motivo_devolucion_cpu motivo) {
@@ -12,8 +13,6 @@ const char* motivo_devolucion_to_string(t_motivo_devolucion_cpu motivo) {
             return "ERROR";
         case MOTIVO_DEVOLUCION_INTERRUPCION:
             return "INTERRUPCION";
-        case MOTIVO_DEVOLUCION_SEG_FAULT:
-            return "SEG_FAULT";
         default:
             return "DESCONOCIDO";
     }
@@ -27,9 +26,9 @@ bool devolver_proceso_a_scheduler(
     t_log* logger
 ) {
     t_payload_devolver_proceso payload = {
-        .pid = pid,
-        .motivo = motivo,
-        .pc = registros->pc
+        .pid = htonl(pid),
+        .motivo = htonl(motivo),
+        .pc = htonl(registros->pc)
     };
 
     log_info(

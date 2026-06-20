@@ -193,7 +193,7 @@ char* deserializar_string(void* payload) {
 //   si, di:          4B c/u
 //   cant_segmentos:  4B
 //   segmentos:       cant_segmentos * 16B
-//                    id_segmento, id_memory_stick, base_fisica, limite
+//                    id_segmento, id_memory_stick, base, limite
 #define CTX_HEADER_WIRE_SIZE (4 + 4 + 4 + (4 * 4) + (4 * 2) + 4)  // 40 bytes
 #define SEGMENTO_WIRE_SIZE   (4 * 4)
 
@@ -221,7 +221,7 @@ void* serializar_contexto(t_contexto* ctx, uint32_t* out_size) {
     for (uint32_t i = 0; i < cant_segmentos; i++) {
         n = htonl(ctx->segmentos[i].id_segmento);     memcpy(p, &n, 4); p += 4;
         n = htonl(ctx->segmentos[i].id_memory_stick); memcpy(p, &n, 4); p += 4;
-        n = htonl(ctx->segmentos[i].base_fisica);     memcpy(p, &n, 4); p += 4;
+        n = htonl(ctx->segmentos[i].base);            memcpy(p, &n, 4); p += 4;
         n = htonl(ctx->segmentos[i].limite);          memcpy(p, &n, 4); p += 4;
     }
 
@@ -259,11 +259,11 @@ t_contexto* deserializar_contexto(void* payload, uint32_t size) {
 
     ctx->segmentos = NULL;
     if (ctx->cant_segmentos > 0) {
-        ctx->segmentos = malloc(sizeof(t_segmento) * ctx->cant_segmentos);
+        ctx->segmentos = malloc(sizeof(t_entrada_segmento) * ctx->cant_segmentos);
         for (uint32_t i = 0; i < ctx->cant_segmentos; i++) {
             memcpy(&n, p, 4); ctx->segmentos[i].id_segmento     = ntohl(n); p += 4;
             memcpy(&n, p, 4); ctx->segmentos[i].id_memory_stick = ntohl(n); p += 4;
-            memcpy(&n, p, 4); ctx->segmentos[i].base_fisica     = ntohl(n); p += 4;
+            memcpy(&n, p, 4); ctx->segmentos[i].base            = ntohl(n); p += 4;
             memcpy(&n, p, 4); ctx->segmentos[i].limite          = ntohl(n); p += 4;
         }
     }

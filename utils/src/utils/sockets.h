@@ -109,16 +109,16 @@ typedef struct {
 typedef struct {
     uint32_t id_segmento;
     uint32_t id_memory_stick;
-    uint32_t base_fisica;
+    uint32_t base;
     uint32_t limite;
-} t_segmento;
+} t_entrada_segmento;
 
 // Contexto de ejecución de un proceso — guardado/restaurado por Kernel Memory
 typedef struct {
     uint32_t        pid;
     t_registros_cpu registros;
     uint32_t        cant_segmentos;
-    t_segmento*     segmentos;
+    t_entrada_segmento* segmentos;
 } t_contexto;
 
 // Pedido de fetch de instrucción — CPU → KM

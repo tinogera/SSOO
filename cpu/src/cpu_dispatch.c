@@ -1,5 +1,6 @@
 #include "cpu_dispatch.h"
 
+#include <arpa/inet.h>
 #include <utils/protocolo.h>
 #include <utils/sockets.h>
 
@@ -23,7 +24,7 @@ bool recibir_proceso_a_ejecutar(int socket_kernel, uint32_t* pid, t_log* logger)
     }
 
     t_payload_despachar_proceso* payload = (t_payload_despachar_proceso*) mensaje->payload;
-    *pid = payload->pid;
+    *pid = ntohl(payload->pid);
 
     log_info(logger, "## PID: %u - Proceso recibido de Kernel Scheduler", *pid);
 

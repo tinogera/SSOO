@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 
-static t_segmento* buscar_segmento(t_contexto* contexto, uint32_t id_segmento) {
+static t_entrada_segmento* buscar_segmento(t_contexto* contexto, uint32_t id_segmento) {
     if (contexto == NULL || contexto->segmentos == NULL) {
         return NULL;
     }
@@ -29,7 +29,7 @@ t_resultado_mmu traducir_direccion_logica(
 
     uint32_t id_segmento = direccion_logica / tamanio_max_segmento;
     uint32_t desplazamiento = direccion_logica % tamanio_max_segmento;
-    t_segmento* segmento = buscar_segmento(contexto, id_segmento);
+    t_entrada_segmento* segmento = buscar_segmento(contexto, id_segmento);
     if (segmento == NULL) {
         return CPU_MMU_SEGMENTO_NO_ENCONTRADO;
     }
@@ -38,14 +38,14 @@ t_resultado_mmu traducir_direccion_logica(
         return CPU_MMU_SEGMENTATION_FAULT;
     }
 
-    if (segmento->base_fisica > UINT32_MAX - desplazamiento) {
+    if (segmento->base > UINT32_MAX - desplazamiento) {
         return CPU_MMU_ERROR;
     }
 
     traduccion->id_segmento = id_segmento;
     traduccion->desplazamiento = desplazamiento;
     traduccion->id_memory_stick = segmento->id_memory_stick;
-    traduccion->direccion_fisica = segmento->base_fisica + desplazamiento;
+    traduccion->direccion_fisica = segmento->base + desplazamiento;
     traduccion->limite_segmento = segmento->limite;
 
     return CPU_MMU_OK;

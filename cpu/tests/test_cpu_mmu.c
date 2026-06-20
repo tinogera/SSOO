@@ -7,11 +7,11 @@ context (cpu_mmu) {
     describe ("traducir_direccion_logica") {
 
         it ("traduce una direccion logica a direccion fisica") {
-            t_segmento segmentos[] = {
+            t_entrada_segmento segmentos[] = {
                 {
                     .id_segmento = 2,
                     .id_memory_stick = 5,
-                    .base_fisica = 1000,
+                    .base = 1000,
                     .limite = 64
                 }
             };
@@ -38,11 +38,11 @@ context (cpu_mmu) {
         } end
 
         it ("detecta segmento inexistente") {
-            t_segmento segmentos[] = {
+            t_entrada_segmento segmentos[] = {
                 {
                     .id_segmento = 1,
                     .id_memory_stick = 3,
-                    .base_fisica = 500,
+                    .base = 500,
                     .limite = 32
                 }
             };
@@ -65,11 +65,11 @@ context (cpu_mmu) {
         } end
 
         it ("detecta segmentation fault si supera el limite") {
-            t_segmento segmentos[] = {
+            t_entrada_segmento segmentos[] = {
                 {
                     .id_segmento = 2,
                     .id_memory_stick = 5,
-                    .base_fisica = 1000,
+                    .base = 1000,
                     .limite = 16
                 }
             };

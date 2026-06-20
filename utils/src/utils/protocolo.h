@@ -208,8 +208,7 @@ typedef enum {
     MOTIVO_DEVOLUCION_SYSCALL      = 0,
     MOTIVO_DEVOLUCION_EXIT         = 1,
     MOTIVO_DEVOLUCION_ERROR        = 2,
-    MOTIVO_DEVOLUCION_INTERRUPCION = 3,
-    MOTIVO_DEVOLUCION_SEG_FAULT    = 4
+    MOTIVO_DEVOLUCION_INTERRUPCION = 3
 } t_motivo_devolucion_cpu;
 
 #endif

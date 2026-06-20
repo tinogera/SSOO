@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
         } else if (resultado_ciclo == CPU_CICLO_INTERRUPCION) {
             motivo_devolucion = MOTIVO_DEVOLUCION_INTERRUPCION;
         } else if (resultado_ciclo == CPU_CICLO_SEG_FAULT) {
-            motivo_devolucion = MOTIVO_DEVOLUCION_SEG_FAULT;
+            motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
         } else {
             motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
         }

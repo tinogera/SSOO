@@ -107,7 +107,6 @@ context (cpu_devolucion) {
             should_string(motivo_devolucion_to_string(MOTIVO_DEVOLUCION_EXIT)) be equal to("EXIT");
             should_string(motivo_devolucion_to_string(MOTIVO_DEVOLUCION_ERROR)) be equal to("ERROR");
             should_string(motivo_devolucion_to_string(MOTIVO_DEVOLUCION_INTERRUPCION)) be equal to("INTERRUPCION");
-            should_string(motivo_devolucion_to_string(MOTIVO_DEVOLUCION_SEG_FAULT)) be equal to("SEG_FAULT");
         } end
 
     } end
