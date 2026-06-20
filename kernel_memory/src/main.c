@@ -747,11 +747,12 @@ static void* atender_cliente(void* arg) {
             pthread_mutex_lock(&mutex_contextos);
             t_contexto* ex = buscar_contexto(nuevo->pid);
             if (ex) {
+                // Solo actualizamos los registros: KM es la fuente de verdad
+                // para la tabla de segmentos (que puede haber sido modificada
+                // por MEM_ALLOC/FREE mientras la CPU ejecutaba). Sobreescribir
+                // los segmentos con la copia local de la CPU borraría segmentos
+                // recién creados o restauraría segmentos ya liberados.
                 ex->registros = nuevo->registros;
-                free(ex->segmentos);
-                ex->cant_segmentos = nuevo->cant_segmentos;
-                ex->segmentos      = nuevo->segmentos;
-                nuevo->segmentos   = NULL;
                 enviar_mensaje(fd, MSG_OK, NULL, 0);
             } else {
                 enviar_mensaje(fd, MSG_ERROR, NULL, 0);

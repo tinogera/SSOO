@@ -100,9 +100,9 @@ bool enviar_syscall_stdin(int socket_kernel, uint32_t pid, uint32_t direccion_lo
 
 bool enviar_syscall_mem_alloc(int socket_kernel, uint32_t pid, uint32_t id_segmento, uint32_t tamanio, t_log* logger) {
     t_payload_syscall_mem_alloc payload = {
-        .pid = pid,
-        .id_segmento = id_segmento,
-        .tamanio = tamanio
+        .pid         = htonl(pid),
+        .id_segmento = htonl(id_segmento),
+        .tamanio     = htonl(tamanio)
     };
 
     log_info(
@@ -119,8 +119,8 @@ bool enviar_syscall_mem_alloc(int socket_kernel, uint32_t pid, uint32_t id_segme
 
 bool enviar_syscall_mem_free(int socket_kernel, uint32_t pid, uint32_t id_segmento, t_log* logger) {
     t_payload_syscall_mem_free payload = {
-        .pid = pid,
-        .id_segmento = id_segmento
+        .pid         = htonl(pid),
+        .id_segmento = htonl(id_segmento)
     };
 
     log_info(logger, "## PID: %u - Syscall: MEM_FREE - Segmento: %u", pid, id_segmento);

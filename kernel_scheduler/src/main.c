@@ -77,6 +77,8 @@ static void* thread_quantum_timer(void* arg);
 static void* thread_largo_plazo(void* _);
 static void* thread_suspension_timer(void* arg);
 static void  handle_compactar(void);
+static void* manejar_mem_alloc(void* arg);
+static void* manejar_mem_free(void* arg);
 
 // Encola el proceso en la cola de su prioridad y señala al planificador.
 static void encolar_en_ready(t_proceso* proc);
@@ -780,6 +782,108 @@ static void* thread_largo_plazo(void* _) {
     return NULL;
 }
 
+// Quita el proceso de cola_exec pero NO marca la CPU como libre.
+// La CPU sigue ocupada esperando la respuesta de memoria — el planificador
+// no debe despacharle otro proceso mientras tanto.
+static t_proceso* sacar_proc_de_exec_para_mem(int pid) {
+    pthread_mutex_lock(&mutex_exec);
+    t_proceso* proc = NULL;
+    int sz = queue_size(cola_exec);
+    for (int i = 0; i < sz; i++) {
+        t_proceso* q = queue_pop(cola_exec);
+        if (q->PID == pid) proc = q;
+        else               queue_push(cola_exec, q);
+    }
+    pthread_mutex_unlock(&mutex_exec);
+    // NO tocamos cpu.ocupada ni proc->fd_cpu: la CPU permanece "ocupada"
+    return proc;
+}
+
+// Re-establece el proceso en cola_exec sin re-despachar.
+// La CPU ya tiene el proceso (esperando respuesta); solo necesitamos
+// que vuelva a aparecer en cola_exec para que MSG_DEVOLVER_PROCESO lo encuentre.
+static void re_exec_sin_despachar(t_proceso* proc) {
+    pthread_mutex_lock(&mutex_exec);
+    queue_push(cola_exec, proc);
+    pthread_mutex_unlock(&mutex_exec);
+}
+
+typedef struct {
+    t_proceso* proc;
+    int        fd_cpu;
+    uint32_t   id_segmento;
+    uint32_t   tamanio;
+} t_args_mem_alloc;
+
+typedef struct {
+    t_proceso* proc;
+    int        fd_cpu;
+    uint32_t   id_segmento;
+} t_args_mem_free;
+
+static void* manejar_mem_alloc(void* arg) {
+    t_args_mem_alloc* a = (t_args_mem_alloc*) arg;
+
+    t_payload_crear_segmento payload = {
+        .pid         = htonl((uint32_t)a->proc->PID),
+        .id_segmento = htonl(a->id_segmento),
+        .tamanio     = htonl(a->tamanio)
+    };
+
+    log_info(logger, "## (%d) - MEM_ALLOC: solicita crear segmento %u (%u bytes)",
+             a->proc->PID, a->id_segmento, a->tamanio);
+
+    t_mensaje* resp = km_request(MSG_CREAR_SEGMENTO, &payload, sizeof(payload));
+
+    // Volver al exec ANTES de responder a la CPU, para que el siguiente
+    // MSG_DEVOLVER_PROCESO lo encuentre en cola_exec via sacar_de_exec.
+    re_exec_sin_despachar(a->proc);
+
+    if (resp && resp->op_code == MSG_TABLA_SEGMENTOS) {
+        log_info(logger, "## (%d) - MEM_ALLOC: segmento %u creado exitosamente",
+                 a->proc->PID, a->id_segmento);
+        enviar_mensaje(a->fd_cpu, MSG_OK, NULL, 0);
+    } else {
+        log_error(logger, "## (%d) - MEM_ALLOC: KM no pudo crear segmento %u",
+                  a->proc->PID, a->id_segmento);
+        enviar_mensaje(a->fd_cpu, MSG_ERROR, NULL, 0);
+    }
+
+    if (resp) free_mensaje(resp);
+    free(a);
+    return NULL;
+}
+
+static void* manejar_mem_free(void* arg) {
+    t_args_mem_free* a = (t_args_mem_free*) arg;
+
+    t_payload_eliminar_segmento payload = {
+        .pid         = htonl((uint32_t)a->proc->PID),
+        .id_segmento = htonl(a->id_segmento)
+    };
+
+    log_info(logger, "## (%d) - MEM_FREE: solicita eliminar segmento %u",
+             a->proc->PID, a->id_segmento);
+
+    t_mensaje* resp = km_request(MSG_ELIMINAR_SEGMENTO, &payload, sizeof(payload));
+
+    re_exec_sin_despachar(a->proc);
+
+    if (resp && resp->op_code == MSG_OK) {
+        log_info(logger, "## (%d) - MEM_FREE: segmento %u eliminado",
+                 a->proc->PID, a->id_segmento);
+    } else {
+        log_error(logger, "## (%d) - MEM_FREE: KM reportó error eliminando segmento %u",
+                  a->proc->PID, a->id_segmento);
+    }
+    // Siempre respondemos OK al CPU; el proceso continúa independientemente del resultado de KM
+    enviar_mensaje(a->fd_cpu, MSG_OK, NULL, 0);
+
+    if (resp) free_mensaje(resp);
+    free(a);
+    return NULL;
+}
+
 static void atender_cpu(int fd, t_cpu_entry* entry) {
     while (1) {
         t_mensaje* msg = recibir_mensaje(fd);
@@ -948,36 +1052,62 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             if (msg->payload_size < sizeof(t_payload_syscall_mem_alloc)) {
                 log_error(logger, "CPU envio MEM_ALLOC con payload invalido");
                 enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-                return;
+                free_mensaje(msg);
+                break;
+            }
+            t_payload_syscall_mem_alloc* p = (t_payload_syscall_mem_alloc*) msg->payload;
+            int pid_ma = (int)ntohl(p->pid);
+
+            t_proceso* proc_ma = sacar_proc_de_exec_para_mem(pid_ma);
+            if (!proc_ma) {
+                log_error(logger, "## MEM_ALLOC: proceso %d no encontrado en EXEC", pid_ma);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(msg);
+                break;
             }
 
-            t_payload_syscall_mem_alloc* payload = (t_payload_syscall_mem_alloc*) msg->payload;
-            log_info(
-                logger,
-                "## PID: %u - Syscall recibida: MEM_ALLOC - Segmento: %u - Tamanio: %u",
-                payload->pid,
-                payload->id_segmento,
-                payload->tamanio
-            );
-            enviar_mensaje(fd, MSG_OK, NULL, 0);
-            return;
+            t_args_mem_alloc* args_ma = malloc(sizeof(t_args_mem_alloc));
+            args_ma->proc        = proc_ma;
+            args_ma->fd_cpu      = fd;
+            args_ma->id_segmento = ntohl(p->id_segmento);
+            args_ma->tamanio     = ntohl(p->tamanio);
+
+            pthread_t t_ma;
+            pthread_create(&t_ma, NULL, manejar_mem_alloc, args_ma);
+            pthread_detach(t_ma);
+
+            free_mensaje(msg);
+            break;
         }
         case MSG_MEM_FREE: {
             if (msg->payload_size < sizeof(t_payload_syscall_mem_free)) {
                 log_error(logger, "CPU envio MEM_FREE con payload invalido");
                 enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-                return;
+                free_mensaje(msg);
+                break;
+            }
+            t_payload_syscall_mem_free* p = (t_payload_syscall_mem_free*) msg->payload;
+            int pid_mf = (int)ntohl(p->pid);
+
+            t_proceso* proc_mf = sacar_proc_de_exec_para_mem(pid_mf);
+            if (!proc_mf) {
+                log_error(logger, "## MEM_FREE: proceso %d no encontrado en EXEC", pid_mf);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(msg);
+                break;
             }
 
-            t_payload_syscall_mem_free* payload = (t_payload_syscall_mem_free*) msg->payload;
-            log_info(
-                logger,
-                "## PID: %u - Syscall recibida: MEM_FREE - Segmento: %u",
-                payload->pid,
-                payload->id_segmento
-            );
-            enviar_mensaje(fd, MSG_OK, NULL, 0);
-            return;
+            t_args_mem_free* args_mf = malloc(sizeof(t_args_mem_free));
+            args_mf->proc        = proc_mf;
+            args_mf->fd_cpu      = fd;
+            args_mf->id_segmento = ntohl(p->id_segmento);
+
+            pthread_t t_mf;
+            pthread_create(&t_mf, NULL, manejar_mem_free, args_mf);
+            pthread_detach(t_mf);
+
+            free_mensaje(msg);
+            break;
         }
         case MSG_MUTEX_UNLOCK: {
             t_payload_mutex* p = msg->payload;
