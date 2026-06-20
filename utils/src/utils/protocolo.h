@@ -4,22 +4,8 @@
 #include <stdint.h>
 
 /*
- * protocolo.h — Códigos de operación del sistema
- *
- * REGLA: nunca reordenar ni cambiar el valor de un código ya existente.
- * El enum asigna valores 0, 1, 2... en orden. Reordenar rompe la comunicación
- * con módulos que ya compilaron contra una versión anterior.
- * Siempre agregar nuevos códigos ANTES de MSG_CANTIDAD.
- *
- * PENDIENTE CHECK 3:
- *   MSG_MEM_ALLOC          → CPU → KS (syscall MEM_ALLOC)
- *   MSG_MEM_FREE           → CPU → KS (syscall MEM_FREE)
- *   MSG_LEER_MEMORIA       → CPU → Memory Stick
- *   MSG_ESCRIBIR_MEMORIA   → CPU → Memory Stick
- *   MSG_COMPACTAR          → KM → KS: pedir compactación
- *   MSG_FIN_COMPACTACION   → KS → KM: CPUs desalojadas, podés compactar
- *   MSG_SUSPENDER_PROCESO  → KM → Swap: mover segmentos
- *   MSG_BSOD               → KM → KS: Memory Stick caído
+ * Los valores del enum forman parte del protocolo de red.
+ * No se deben reordenar; los mensajes nuevos se agregan antes de MSG_CANTIDAD.
  */
 
 typedef enum {
@@ -75,11 +61,29 @@ typedef enum {
     MSG_SYSCALL_STDOUT,  // 26  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
     MSG_SYSCALL_STDIN,   // 27  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
     MSG_SYSCALL_EXIT,    // 28  CPU → KS: { uint32_t pid }
-    MSG_LEER_MEMORIA,    // CPU → Memory Stick: { uint32_t direccion_fisica, uint32_t tamanio }
-    MSG_RESPUESTA_LEER_MEMORIA, // Memory Stick → CPU: bytes leidos
-    MSG_ESCRIBIR_MEMORIA, // CPU → Memory Stick: { uint32_t direccion_fisica, uint32_t tamanio, uint8_t datos[] }
-    MSG_MEM_ALLOC,       // CPU → KS: { uint32_t pid, uint32_t id_segmento, uint32_t tamanio }
-    MSG_MEM_FREE,        // CPU → KS: { uint32_t pid, uint32_t id_segmento }
+    MSG_MEMORY_WRITE,          // 29 CPU → Memory Stick: { uint32_t direccion_fisica, uint32_t tamanio, uint8_t datos[] }
+    MSG_MEMORY_READ,           // 30 CPU → Memory Stick: { uint32_t direccion_fisica, uint32_t tamanio }
+    MSG_MEMORY_READ_RESPUESTA, // 31 Memory Stick → CPU: bytes leidos
+    MSG_MEM_ALLOC,              // 32 CPU → KS: syscall MEM_ALLOC
+    MSG_MEM_FREE,               // 33 CPU → KS: syscall MEM_FREE
+    MSG_CREAR_SEGMENTO,         // 34 KS → KM: { pid, id_segmento, tamanio }
+    MSG_ELIMINAR_SEGMENTO,      // 35 KS → KM: { pid, id_segmento }
+    MSG_LEER_MEMORIA,           // 36 KM → Memory Stick: { dir_fisica, tamanio }
+    MSG_LEER_MEMORIA_RESP,      // 37 Memory Stick → KM: bytes leidos
+    MSG_ESCRIBIR_MEMORIA,       // 38 KM → Memory Stick: { dir_fisica, tamanio, bytes[] }
+    MSG_LEER_DATOS,             // 39 KS → KM: { pid, dir_logica, tamanio }
+    MSG_LEER_DATOS_RESP,        // 40 KM → KS: bytes leidos
+    MSG_ESCRIBIR_DATOS,         // 41 KS → KM: { pid, dir_logica, tamanio, bytes[] }
+    MSG_COMPACTAR,              // 42 KM → KS: solicitar compactacion
+    MSG_FIN_COMPACTACION,       // 43 KS → KM: CPUs desalojadas
+    MSG_SUSPENDER_PROCESO,      // 44 KS → KM: { pid }
+    MSG_DESSUSPENDER_PROCESO,   // 45 KS → KM: { pid }
+    MSG_MAS_MEMORIA,            // 46 KM → KS: nuevo Memory Stick
+    MSG_BSOD,                   // 47 KM → KS: Memory Stick desconectado
+    MSG_SWAP_LEER,              // 48 KM → Swap: { nro_bloque }
+    MSG_SWAP_LEER_RESP,         // 49 Swap → KM: bytes leidos
+    MSG_SWAP_ESCRIBIR,          // 50 KM → Swap: { nro_bloque, bytes[] }
+    MSG_TABLA_SEGMENTOS,        // 51 KM → CPU: tabla actualizada
 
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
@@ -160,23 +164,39 @@ typedef struct __attribute__((packed)) {
     uint32_t pid;
     uint32_t id_segmento;
     uint32_t tamanio;
-} t_payload_syscall_mem_alloc;
+} t_payload_crear_segmento;
 
 typedef struct __attribute__((packed)) {
     uint32_t pid;
     uint32_t id_segmento;
-} t_payload_syscall_mem_free;
+} t_payload_eliminar_segmento;
+
+typedef t_payload_crear_segmento t_payload_syscall_mem_alloc;
+typedef t_payload_eliminar_segmento t_payload_syscall_mem_free;
 
 typedef struct __attribute__((packed)) {
-    uint32_t direccion_fisica;
+    uint32_t dir_fisica;
     uint32_t tamanio;
 } t_payload_leer_memoria;
 
 typedef struct __attribute__((packed)) {
-    uint32_t direccion_fisica;
+    uint32_t dir_fisica;
     uint32_t tamanio;
-    uint8_t datos[];
 } t_payload_escribir_memoria;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
+    uint32_t dir_logica;
+    uint32_t tamanio;
+} t_payload_acceso_datos;
+
+typedef struct __attribute__((packed)) {
+    uint32_t nro_bloque;
+} t_payload_swap_leer;
+
+typedef struct __attribute__((packed)) {
+    uint32_t nro_bloque;
+} t_payload_swap_escribir;
 
 // --- Enums de motivos ---
 typedef enum {

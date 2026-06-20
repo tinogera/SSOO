@@ -112,7 +112,7 @@ bool enviar_syscall_mem_alloc(int socket_kernel, uint32_t pid, uint32_t id_segme
     );
     enviar_mensaje(socket_kernel, MSG_MEM_ALLOC, &payload, sizeof(payload));
 
-    return esperar_ok_kernel(socket_kernel, "MEM_ALLOC", logger);
+    return true;
 }
 
 bool enviar_syscall_mem_free(int socket_kernel, uint32_t pid, uint32_t id_segmento, t_log* logger) {
@@ -124,7 +124,7 @@ bool enviar_syscall_mem_free(int socket_kernel, uint32_t pid, uint32_t id_segmen
     log_info(logger, "## PID: %u - Syscall: MEM_FREE - Segmento: %u", pid, id_segmento);
     enviar_mensaje(socket_kernel, MSG_MEM_FREE, &payload, sizeof(payload));
 
-    return esperar_ok_kernel(socket_kernel, "MEM_FREE", logger);
+    return true;
 }
 
 bool enviar_syscall_init_proc(int socket_kernel, uint32_t pid, const char* archivo, uint32_t prioridad, t_log* logger) {

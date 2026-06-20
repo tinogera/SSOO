@@ -30,24 +30,24 @@ static uint32_t bytes_a_valor(uint8_t* origen, uint32_t tamanio) {
     return ntohl(valor_n);
 }
 
-static bool leer_bytes_memoria(int socket_memoria, uint32_t direccion_fisica, uint32_t tamanio, uint8_t* destino) {
-    if (socket_memoria < 0 || destino == NULL) {
+bool memoria_read(int socket_ms, uint32_t direccion, uint32_t tamanio, void* destino) {
+    if (socket_ms < 0 || destino == NULL) {
         return false;
     }
 
     t_payload_leer_memoria pedido = {
-        .direccion_fisica = htonl(direccion_fisica),
+        .dir_fisica = htonl(direccion),
         .tamanio = htonl(tamanio)
     };
 
-    enviar_mensaje(socket_memoria, MSG_LEER_MEMORIA, &pedido, sizeof(pedido));
+    enviar_mensaje(socket_ms, MSG_MEMORY_READ, &pedido, sizeof(pedido));
 
-    t_mensaje* respuesta = recibir_mensaje(socket_memoria);
+    t_mensaje* respuesta = recibir_mensaje(socket_ms);
     if (respuesta == NULL) {
         return false;
     }
 
-    bool ok = respuesta->op_code == MSG_RESPUESTA_LEER_MEMORIA &&
+    bool ok = respuesta->op_code == MSG_MEMORY_READ_RESPUESTA &&
               respuesta->payload_size >= tamanio;
     if (ok) {
         memcpy(destino, respuesta->payload, tamanio);
@@ -57,8 +57,8 @@ static bool leer_bytes_memoria(int socket_memoria, uint32_t direccion_fisica, ui
     return ok;
 }
 
-static bool escribir_bytes_memoria(int socket_memoria, uint32_t direccion_fisica, uint32_t tamanio, uint8_t* datos) {
-    if (socket_memoria < 0 || datos == NULL) {
+bool memoria_write(int socket_ms, uint32_t direccion, uint32_t tamanio, const void* datos) {
+    if (socket_ms < 0 || datos == NULL) {
         return false;
     }
 
@@ -68,16 +68,16 @@ static bool escribir_bytes_memoria(int socket_memoria, uint32_t direccion_fisica
         return false;
     }
 
-    uint32_t direccion_n = htonl(direccion_fisica);
+    uint32_t direccion_n = htonl(direccion);
     uint32_t tamanio_n = htonl(tamanio);
     memcpy(payload, &direccion_n, sizeof(uint32_t));
     memcpy((uint8_t*) payload + sizeof(uint32_t), &tamanio_n, sizeof(uint32_t));
     memcpy((uint8_t*) payload + sizeof(t_payload_escribir_memoria), datos, tamanio);
 
-    enviar_mensaje(socket_memoria, MSG_ESCRIBIR_MEMORIA, payload, payload_size);
+    enviar_mensaje(socket_ms, MSG_MEMORY_WRITE, payload, payload_size);
     free(payload);
 
-    t_mensaje* respuesta = recibir_mensaje(socket_memoria);
+    t_mensaje* respuesta = recibir_mensaje(socket_ms);
     if (respuesta == NULL) {
         return false;
     }
@@ -147,7 +147,7 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
     }
 
     uint8_t buffer[sizeof(uint32_t)] = {0};
-    if (!leer_bytes_memoria(socket_memoria, traduccion.direccion_fisica, tamanio_registro, buffer)) {
+    if (!memoria_read(socket_memoria, traduccion.direccion_fisica, tamanio_registro, buffer)) {
         return CPU_MEMORIA_ERROR;
     }
 
@@ -198,7 +198,7 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
 
     uint8_t buffer[sizeof(uint32_t)] = {0};
     valor_a_bytes(valor, tamanio_registro, buffer);
-    if (!escribir_bytes_memoria(socket_memoria, traduccion.direccion_fisica, tamanio_registro, buffer)) {
+    if (!memoria_write(socket_memoria, traduccion.direccion_fisica, tamanio_registro, buffer)) {
         return CPU_MEMORIA_ERROR;
     }
 
@@ -256,12 +256,12 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
         return CPU_MEMORIA_ERROR;
     }
 
-    if (!leer_bytes_memoria(socket_memoria, origen.direccion_fisica, tamanio, buffer)) {
+    if (!memoria_read(socket_memoria, origen.direccion_fisica, tamanio, buffer)) {
         free(buffer);
         return CPU_MEMORIA_ERROR;
     }
 
-    if (!escribir_bytes_memoria(socket_memoria, destino.direccion_fisica, tamanio, buffer)) {
+    if (!memoria_write(socket_memoria, destino.direccion_fisica, tamanio, buffer)) {
         free(buffer);
         return CPU_MEMORIA_ERROR;
     }
