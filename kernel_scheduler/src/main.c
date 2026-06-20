@@ -64,6 +64,15 @@ static int             fd_io_stdout = -1;
 static int             fd_io_stdin  = -1;
 static pthread_mutex_t mutex_io     = PTHREAD_MUTEX_INITIALIZER;
 
+typedef struct {
+    int      pid;
+    uint32_t dir_logica;
+    uint32_t tamanio;
+} t_stdin_pendiente;
+
+static t_list*         lista_stdin_pendientes = NULL;
+static pthread_mutex_t mutex_stdin_pendientes = PTHREAD_MUTEX_INITIALIZER;
+
 static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size);
 static void       manejar_bsod(void);
 static void*      manejar_mas_memoria(void* _);
@@ -383,7 +392,8 @@ int main(int argc, char* argv[]) {
         pthread_mutex_init(&mutex_colas_ready[i], NULL);
     }
 
-    lista_cpus = list_create();
+    lista_cpus             = list_create();
+    lista_stdin_pendientes = list_create();
     sem_init(&sem_cpu_disponible,  0, 0);
     sem_init(&sem_largo_plazo,     0, 0);
     sem_init(&sem_cpus_devueltas,  0, 0);
@@ -1009,12 +1019,21 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
 
         case MSG_SYSCALL_STDIN: {
             t_payload_syscall_io_memoria* p = msg->payload;
-            int      pid     = (int)ntohl(p->pid);
-            uint32_t n_bytes = ntohl(p->tamanio);
+            int      pid        = (int)ntohl(p->pid);
+            uint32_t dir_logica = ntohl(p->direccion_logica);
+            uint32_t n_bytes    = ntohl(p->tamanio);
             log_info(logger, "## (%d) - Solicitó syscall: STDIN", pid);
 
             t_proceso* proc = sacar_de_exec(pid);
             if (proc) mover_a_block(proc);
+
+            t_stdin_pendiente* sp = malloc(sizeof(t_stdin_pendiente));
+            sp->pid        = pid;
+            sp->dir_logica = dir_logica;
+            sp->tamanio    = n_bytes;
+            pthread_mutex_lock(&mutex_stdin_pendientes);
+            list_add(lista_stdin_pendientes, sp);
+            pthread_mutex_unlock(&mutex_stdin_pendientes);
 
             pthread_mutex_lock(&mutex_io);
             int fd_io = fd_io_stdin;
@@ -1246,18 +1265,53 @@ static void atender_io(int fd, char* tipo) {
             }
 
         } else if (msg->op_code == MSG_IO_STDIN_DATOS) {
-            uint32_t pid_n;
-            memcpy(&pid_n, msg->payload, sizeof(uint32_t));
-            int pid = (int)ntohl(pid_n);
+            if (msg->payload_size < 8) { free_mensaje(msg); continue; }
+
+            // IO devuelve pid y n_bytes en byte order del host (aplica ntohl antes de enviarlos)
+            uint32_t pid_raw, n_bytes_raw;
+            memcpy(&pid_raw,     msg->payload,               4);
+            memcpy(&n_bytes_raw, (uint8_t*)msg->payload + 4, 4);
+            int      pid     = (int)pid_raw;
+            uint32_t n_bytes = n_bytes_raw;
+            uint8_t* datos   = (uint8_t*)msg->payload + 8;
+
+            // Recuperar dirección lógica guardada al recibir MSG_SYSCALL_STDIN
+            uint32_t dir_logica = 0, tamanio = 0;
+            pthread_mutex_lock(&mutex_stdin_pendientes);
+            for (int i = 0; i < list_size(lista_stdin_pendientes); i++) {
+                t_stdin_pendiente* sp = list_get(lista_stdin_pendientes, i);
+                if (sp->pid == pid) {
+                    dir_logica = sp->dir_logica;
+                    tamanio    = sp->tamanio;
+                    list_remove_and_destroy_element(lista_stdin_pendientes, i, free);
+                    break;
+                }
+            }
+            pthread_mutex_unlock(&mutex_stdin_pendientes);
+
+            if (tamanio > 0 && n_bytes > 0) {
+                uint32_t km_size  = 12 + n_bytes;
+                uint8_t* km_buf   = malloc(km_size);
+                uint32_t pid_n    = htonl((uint32_t)pid);
+                uint32_t dl_n     = htonl(dir_logica);
+                uint32_t tam_n    = htonl(tamanio);
+                memcpy(km_buf,      &pid_n, 4);
+                memcpy(km_buf + 4,  &dl_n,  4);
+                memcpy(km_buf + 8,  &tam_n, 4);
+                memcpy(km_buf + 12, datos,  n_bytes);
+                t_mensaje* resp = km_request(MSG_ESCRIBIR_DATOS, km_buf, km_size);
+                if (!resp || resp->op_code != MSG_OK)
+                    log_warning(logger, "## (%d) - STDIN: error al escribir datos en KM", pid);
+                if (resp) free_mensaje(resp);
+                free(km_buf);
+            }
 
             t_proceso* proc = sacar_de_block(pid);
             if (proc) {
-                // IO terminó antes del timeout: BLOCK → READY (CK2: KM mockea escritura)
                 cambiar_estado(proc, READY);
                 log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
                 encolar_en_ready(proc);
             } else {
-                // IO terminó después del timeout: SUSP. BLOCK → SUSP. READY
                 proc = sacar_de_susp_block(pid);
                 if (proc) {
                     cambiar_estado(proc, SUSP_READY);
