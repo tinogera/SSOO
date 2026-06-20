@@ -737,6 +737,13 @@ static void* atender_cliente(void* arg) {
         // GUARDAR CONTEXTO
         else if (pedido->op_code == MSG_GUARDAR_CONTEXTO) {
             t_contexto* nuevo = deserializar_contexto(pedido->payload, pedido->payload_size);
+            if (nuevo == NULL) {
+                log_warning(logger, "MSG_GUARDAR_CONTEXTO con payload invalido");
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
+
             pthread_mutex_lock(&mutex_contextos);
             t_contexto* ex = buscar_contexto(nuevo->pid);
             if (ex) {

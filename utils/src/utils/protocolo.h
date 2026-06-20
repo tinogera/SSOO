@@ -35,10 +35,10 @@ typedef enum {
     // -----------------------------------------------------------------
     // CPU ↔ KS — Check 2
     // -----------------------------------------------------------------
-    MSG_INIT_PROC,          // 16
-    MSG_DESPACHAR_PROCESO,  // 17
-    MSG_DEVOLVER_PROCESO,   // 18
-    MSG_INTERRUPCION_CPU,   // 19
+    MSG_INIT_PROC,          // 16  CPU → KS: syscall INIT_PROC { uint32_t pid, uint32_t prioridad, char archivo[] }
+    MSG_DESPACHAR_PROCESO,  // 17  KS → CPU: { uint32_t pid }
+    MSG_DEVOLVER_PROCESO,   // 18  CPU → KS: { uint32_t pid, uint32_t motivo, uint32_t pc }
+    MSG_INTERRUPCION_CPU,   // 19  KS → CPU: { uint32_t pid, uint32_t motivo }
 
     // -----------------------------------------------------------------
     // CPU ↔ KM — Check 2
@@ -52,10 +52,10 @@ typedef enum {
     // -----------------------------------------------------------------
     // Syscalls CPU → KS — Check 2
     // -----------------------------------------------------------------
-    MSG_SYSCALL_SLEEP,   // 25
-    MSG_SYSCALL_STDOUT,  // 26
-    MSG_SYSCALL_STDIN,   // 27
-    MSG_SYSCALL_EXIT,    // 28
+    MSG_SYSCALL_SLEEP,   // 25  CPU → KS: { uint32_t pid, uint32_t tiempo_ms }
+    MSG_SYSCALL_STDOUT,  // 26  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
+    MSG_SYSCALL_STDIN,   // 27  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
+    MSG_SYSCALL_EXIT,    // 28  CPU → KS: { uint32_t pid }
 
     // -----------------------------------------------------------------
     // MS ↔ CPU — Check 2
@@ -136,6 +136,12 @@ typedef struct __attribute__((packed)) {
 
 typedef struct __attribute__((packed)) {
     uint32_t pid;
+    uint32_t prioridad;
+    char archivo[];
+} t_payload_syscall_init_proc;
+
+typedef struct __attribute__((packed)) {
+    uint32_t pid;
     uint32_t tiempo_ms;
 } t_payload_syscall_sleep;
 
@@ -154,11 +160,13 @@ typedef struct __attribute__((packed)) {
     uint32_t id_segmento;
     uint32_t tamanio;
 } t_payload_crear_segmento;
+typedef t_payload_crear_segmento t_payload_syscall_mem_alloc;
 
 typedef struct __attribute__((packed)) {
     uint32_t pid;
     uint32_t id_segmento;
 } t_payload_eliminar_segmento;
+typedef t_payload_eliminar_segmento t_payload_syscall_mem_free;
 
 typedef struct __attribute__((packed)) {
     uint32_t dir_fisica;
@@ -186,6 +194,7 @@ typedef struct __attribute__((packed)) {
     // bytes del bloque siguen inmediatamente
 } t_payload_swap_escribir;
 
+
 typedef enum {
     MOTIVO_INTERRUPCION_QUANTUM  = 0,
     MOTIVO_INTERRUPCION_DESALOJO = 1
@@ -195,7 +204,8 @@ typedef enum {
     MOTIVO_DEVOLUCION_SYSCALL      = 0,
     MOTIVO_DEVOLUCION_EXIT         = 1,
     MOTIVO_DEVOLUCION_ERROR        = 2,
-    MOTIVO_DEVOLUCION_INTERRUPCION = 3
+    MOTIVO_DEVOLUCION_INTERRUPCION = 3,
+    MOTIVO_DEVOLUCION_SEG_FAULT    = 4
 } t_motivo_devolucion_cpu;
 
 #endif

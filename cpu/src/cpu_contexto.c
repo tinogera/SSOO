@@ -4,7 +4,7 @@
 #include <utils/protocolo.h>
 #include <utils/sockets.h>
 
-bool restaurar_contexto_desde_memory(int socket_memory, uint32_t pid, t_registros_cpu* registros, t_log* logger) {
+bool restaurar_contexto_desde_memory(int socket_memory, uint32_t pid, t_contexto** contexto, t_registros_cpu* registros, t_log* logger) {
     uint32_t pid_n = htonl(pid);
     enviar_mensaje(socket_memory, MSG_RESTAURAR_CONTEXTO, &pid_n, sizeof(pid_n));
 
@@ -22,40 +22,60 @@ bool restaurar_contexto_desde_memory(int socket_memory, uint32_t pid, t_registro
 
     t_contexto* ctx = deserializar_contexto(respuesta->payload, respuesta->payload_size);
     free_mensaje(respuesta);
+    if (ctx == NULL) {
+        log_error(logger, "Kernel Memory envio contexto corrupto para PID %u", pid);
+        return false;
+    }
 
     *registros = ctx->registros;
-    log_info(logger, "## PID: %u - Contexto restaurado - PC: %u", pid, registros->pc);
+    *contexto = ctx;
+    log_info(
+        logger,
+        "## PID: %u - Contexto restaurado - PC: %u - Segmentos: %u",
+        pid,
+        registros->pc,
+        ctx->cant_segmentos
+    );
 
-    free_contexto(ctx);
     return true;
 }
 
-bool guardar_contexto_en_memory(int socket_memory, uint32_t pid, t_registros_cpu* registros, t_log* logger) {
-    t_contexto ctx = {
-        .pid            = pid,
-        .registros      = *registros,
-        .cant_segmentos = 0,
-        .segmentos      = NULL,
-    };
+bool guardar_contexto_en_memory(int socket_memory, t_contexto* contexto, t_registros_cpu* registros, t_log* logger) {
+    if (contexto == NULL) {
+        log_error(logger, "No hay contexto para guardar en Kernel Memory");
+        return false;
+    }
+
+    contexto->registros = *registros;
 
     uint32_t size;
-    void* buf = serializar_contexto(&ctx, &size);
+    void* buf = serializar_contexto(contexto, &size);
     enviar_mensaje(socket_memory, MSG_GUARDAR_CONTEXTO, buf, size);
     free(buf);
 
     t_mensaje* respuesta = recibir_mensaje(socket_memory);
     if (respuesta == NULL) {
-        log_error(logger, "Kernel Memory cerro la conexion al guardar contexto del PID %u", pid);
+        log_error(logger, "Kernel Memory cerro la conexion al guardar contexto del PID %u", contexto->pid);
         return false;
     }
 
     bool ok = respuesta->op_code == MSG_OK;
     if (!ok) {
-        log_error(logger, "Kernel Memory rechazo guardar contexto del PID %u", pid);
+        log_error(logger, "Kernel Memory rechazo guardar contexto del PID %u", contexto->pid);
     } else {
-        log_info(logger, "## PID: %u - Contexto guardado - PC: %u", pid, registros->pc);
+        log_info(
+            logger,
+            "## PID: %u - Contexto guardado - PC: %u - Segmentos: %u",
+            contexto->pid,
+            registros->pc,
+            contexto->cant_segmentos
+        );
     }
 
     free_mensaje(respuesta);
     return ok;
+}
+
+void liberar_contexto_cpu(t_contexto* contexto) {
+    free_contexto(contexto);
 }
