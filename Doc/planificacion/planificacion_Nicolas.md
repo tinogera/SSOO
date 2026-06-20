@@ -85,7 +85,7 @@
 ---
 
 ## Fase 3 — Check 3: CMN, Herencia de Prioridades y Compactación
-**Fecha límite:** 20/06/2026 — **COMPLETADA** (merge a develop 18/06/2026)
+**Fecha límite:** 20/06/2026 — **COMPLETADA** (merge a develop 18/06/2026, issues #65/#66/#67 finalizados 20/06/2026)
 **Rama:** `feature/kernel-scheduler/mutex-cmn` (todo el trabajo de CK3 en esta rama)
 
 ### Ajustes v1.1 (completados primero, base para CK3)
@@ -125,17 +125,17 @@
   - Si el mutex está tomado: el proceso va a `BLOCK` en el KS (no se bloquea la CPU).
   - En `MUTEX_UNLOCK`: se saca el proceso de BLOCK y se pone en READY.
 
-- [ ] **Flujo real STDOUT** (`kernel_scheduler/src/main.c` + coordinación con Luciano):
-  - Al recibir `MSG_SYSCALL_STDOUT` con dirección física: pedir bytes al KM (`MSG_KM_LEER_MEMORIA`), recibir respuesta, enviar bytes a IO STDOUT.
-  - Agregar `MSG_KM_LEER_MEMORIA` y `MSG_KM_LEER_MEMORIA_RESP` al protocolo.
+- [x] **Flujo real STDOUT** (`kernel_scheduler/src/main.c`) — _issue #65, commit `238fb10`_:
+  - Al recibir `MSG_SYSCALL_STDOUT`: pedir bytes a KM con `MSG_LEER_DATOS {pid, dir_logica, tamanio}`.
+  - Recibir `MSG_LEER_DATOS_RESP` con los bytes y reenviarlos a IO STDOUT como `[pid:4][bytes...]`.
 
-- [ ] **Flujo real STDIN** (`kernel_scheduler/src/main.c` + coordinación con Luciano):
-  - Al recibir datos de IO STDIN (`MSG_IO_STDIN_DATOS`): pedir al KM que escriba en dirección física (`MSG_KM_ESCRIBIR_MEMORIA`).
-  - Agregar `MSG_KM_ESCRIBIR_MEMORIA` al protocolo.
+- [x] **Flujo real STDIN** (`kernel_scheduler/src/main.c`) — _issue #66, commit `948b9c2`_:
+  - Al recibir `MSG_SYSCALL_STDIN`: guardar `{pid, dir_logica, tamanio}` en `lista_stdin_pendientes`.
+  - Al recibir `MSG_IO_STDIN_DATOS` de IO: recuperar `dir_logica`, enviar `MSG_ESCRIBIR_DATOS` a KM con los bytes leídos, mover proceso a READY.
 
-- [ ] **Syscalls MEM_ALLOC/MEM_FREE: reenviar a misma CPU**:
-  - Guardar el `fd_cpu` del proceso cuando entra una syscall de memoria.
-  - Una vez que KM resuelva, redespachar el proceso a esa CPU específica.
+- [x] **Syscalls MEM_ALLOC/MEM_FREE: reenviar a misma CPU** — _issue #67, commit `8d80525`_:
+  - `sacar_proc_de_exec_para_mem()`: extrae el proceso de EXEC sin liberar la CPU.
+  - Thread separado llama `km_request(MSG_CREAR_SEGMENTO / MSG_ELIMINAR_SEGMENTO)` y responde `MSG_OK/ERROR` al `fd_cpu` original.
 
 ---
 
