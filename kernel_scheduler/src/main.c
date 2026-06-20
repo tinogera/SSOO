@@ -972,22 +972,37 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
 
         case MSG_SYSCALL_STDOUT: {
             t_payload_syscall_io_memoria* p = msg->payload;
-            int pid = (int)ntohl(p->pid);
+            int      pid        = (int)ntohl(p->pid);
+            uint32_t dir_logica = ntohl(p->direccion_logica);
+            uint32_t tamanio    = ntohl(p->tamanio);
             log_info(logger, "## (%d) - Solicitó syscall: STDOUT", pid);
 
             t_proceso* proc = sacar_de_exec(pid);
             if (proc) mover_a_block(proc);
 
-            // Check 2: KM mockea → enviamos vacío a IO STDOUT
             pthread_mutex_lock(&mutex_io);
             int fd_io = fd_io_stdout;
             pthread_mutex_unlock(&mutex_io);
+
             if (fd_io != -1) {
-                uint32_t pid_n = htonl(pid);
-                uint8_t buf[sizeof(uint32_t) + 1];
-                memcpy(buf, &pid_n, sizeof(uint32_t));
-                buf[sizeof(uint32_t)] = '\0';
-                enviar_mensaje(fd_io, MSG_IO_STDOUT, buf, sizeof(buf));
+                t_payload_acceso_datos km_payload = {
+                    .pid        = htonl((uint32_t)pid),
+                    .dir_logica = htonl(dir_logica),
+                    .tamanio    = htonl(tamanio)
+                };
+                t_mensaje* resp = km_request(MSG_LEER_DATOS, &km_payload, sizeof(km_payload));
+                if (resp && resp->op_code == MSG_LEER_DATOS_RESP) {
+                    uint32_t total = sizeof(uint32_t) + resp->payload_size;
+                    uint8_t* buf = malloc(total);
+                    uint32_t pid_n = htonl((uint32_t)pid);
+                    memcpy(buf, &pid_n, sizeof(uint32_t));
+                    memcpy(buf + sizeof(uint32_t), resp->payload, resp->payload_size);
+                    enviar_mensaje(fd_io, MSG_IO_STDOUT, buf, total);
+                    free(buf);
+                } else {
+                    log_warning(logger, "## (%d) - STDOUT: error al leer datos de KM", pid);
+                }
+                if (resp) free_mensaje(resp);
             }
             break;
         }
