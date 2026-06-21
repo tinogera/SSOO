@@ -54,13 +54,13 @@ typedef enum {
     MSG_GUARDAR_CONTEXTO,       // 23
     MSG_RESTAURAR_CONTEXTO,     // 24
 
-    // -----------------------------------------------------------------
-    // Syscalls CPU → KS — Check 2
-    // -----------------------------------------------------------------
-    MSG_SYSCALL_SLEEP,   // 25  CPU → KS: { uint32_t pid, uint32_t tiempo_ms }
-    MSG_SYSCALL_STDOUT,  // 26  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
-    MSG_SYSCALL_STDIN,   // 27  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
-    MSG_SYSCALL_EXIT,    // 28  CPU → KS: { uint32_t pid }
+    // // -----------------------------------------------------------------
+    // // Syscalls CPU → KS — Check 2
+    // // -----------------------------------------------------------------
+    // MSG_SYSCALL_SLEEP,   // 25  CPU → KS: { uint32_t pid, uint32_t tiempo_ms }
+    // MSG_SYSCALL_STDOUT,  // 26  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
+    // MSG_SYSCALL_STDIN,   // 27  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
+    // MSG_SYSCALL_EXIT,    // 28  CPU → KS: { uint32_t pid }
 
     // -----------------------------------------------------------------
     // MS ↔ CPU — Check 2
