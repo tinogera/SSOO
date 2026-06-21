@@ -249,7 +249,7 @@ t_contexto* deserializar_contexto(void* payload, uint32_t size) {
     memcpy(&n, p, 4); ctx->registros.edx    = ntohl(n); p += 4;
     memcpy(&n, p, 4); ctx->registros.si     = ntohl(n); p += 4;
     memcpy(&n, p, 4); ctx->registros.di     = ntohl(n); p += 4;
-    memcpy(&n, p, 4); ctx->segment_max_size = ntohl(n); p += 4;
+    //memcpy(&n, p, 4); ctx->segment_max_size = ntohl(n); p += 4;
     memcpy(&n, p, 4); ctx->cant_segmentos   = ntohl(n); p += 4;
 
     uint32_t expected_size = CTX_HEADER_WIRE_SIZE + (ctx->cant_segmentos * SEGMENTO_WIRE_SIZE);

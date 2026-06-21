@@ -14,14 +14,10 @@ static t_opcode_cpu obtener_opcode(const char* nombre) {
     if (strcmp(nombre, "SLEEP") == 0) return CPU_INST_SLEEP;
     if (strcmp(nombre, "STDOUT") == 0) return CPU_INST_STDOUT;
     if (strcmp(nombre, "STDIN") == 0) return CPU_INST_STDIN;
-    if (strcmp(nombre, "MEM_ALLOC") == 0) return CPU_INST_MEM_ALLOC;
-    if (strcmp(nombre, "MEM_FREE") == 0) return CPU_INST_MEM_FREE;
     if (strcmp(nombre, "INIT_PROC") == 0) return CPU_INST_INIT_PROC;
     if (strcmp(nombre, "MOV_IN") == 0) return CPU_INST_MOV_IN;
-    if (strcmp(nombre, "MOV_OUT") == 0) return CPU_INST_MOV_OUT;
     if (strcmp(nombre, "COPY_MEM") == 0) return CPU_INST_COPY_MEM;
     if (strcmp(nombre, "EXIT") == 0) return CPU_INST_EXIT;
-    if (strcmp(nombre, "MOV_IN") == 0) return CPU_INST_MOV_IN;
     if (strcmp(nombre, "MOV_OUT") == 0) return CPU_INST_MOV_OUT;
     if (strcmp(nombre, "MEM_ALLOC") == 0) return CPU_INST_MEM_ALLOC;
     if (strcmp(nombre, "MEM_FREE") == 0) return CPU_INST_MEM_FREE;

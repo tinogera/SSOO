@@ -103,17 +103,6 @@ static bool ejecutar_syscall(
         case CPU_INST_EXIT:
             return instruccion->cantidad_parametros == 0 &&
                    enviar_syscall_exit(socket_kernel, pid, logger);
-        case CPU_INST_MEM_ALLOC:
-
-            if(instruccion->cantidad_parametros != 2) {
-                return false;
-            }
-
-            return enviar_syscall_mem_alloc(socket_kernel, pid, parsear_uint32(instruccion->parametros[0]),
-                parsear_uint32(instruccion->parametros[1]), logger);
-        case CPU_INST_MEM_FREE:
-            return instruccion->cantidad_parametros == 1 &&
-                   enviar_syscall_mem_free(socket_kernel, pid, parsear_uint32(instruccion->parametros[0]), logger);
         default:
             return false;
     }
@@ -145,7 +134,6 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     uint32_t pid,
     t_contexto* contexto,
     t_registros_cpu* registros,
-    uint32_t tamanio_max_segmento,
     t_log* logger
 ) {
     while (true) {
@@ -179,7 +167,6 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
                 contexto,
                 registros,
                 pid,
-                tamanio_max_segmento,
                 logger
             );
 

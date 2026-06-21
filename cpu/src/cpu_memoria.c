@@ -1,6 +1,5 @@
 #include "cpu_memoria.h"
 
-<<<<<<< HEAD
 #include <arpa/inet.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -31,8 +30,8 @@ static uint32_t bytes_a_valor(uint8_t* origen, uint32_t tamanio) {
     return ntohl(valor_n);
 }
 
-bool memoria_read(int socket_ms, uint32_t direccion, uint32_t tamanio, void* destino) {
-    if (socket_ms < 0 || destino == NULL) {
+bool memoria_read(int socket_memory, uint32_t direccion, uint32_t tamanio, void* valor) {
+    if (socket_memory < 0 || valor == NULL) {
         return false;
     }
 
@@ -41,9 +40,9 @@ bool memoria_read(int socket_ms, uint32_t direccion, uint32_t tamanio, void* des
         .tamanio = htonl(tamanio)
     };
 
-    enviar_mensaje(socket_ms, MSG_MEMORY_READ, &pedido, sizeof(pedido));
+    enviar_mensaje(socket_memory, MSG_MEMORY_READ, &pedido, sizeof(pedido));
 
-    t_mensaje* respuesta = recibir_mensaje(socket_ms);
+    t_mensaje* respuesta = recibir_mensaje(socket_memory);
     if (respuesta == NULL) {
         return false;
     }
@@ -51,15 +50,15 @@ bool memoria_read(int socket_ms, uint32_t direccion, uint32_t tamanio, void* des
     bool ok = respuesta->op_code == MSG_MEMORY_READ_RESPUESTA &&
               respuesta->payload_size >= tamanio;
     if (ok) {
-        memcpy(destino, respuesta->payload, tamanio);
+        memcpy(valor, respuesta->payload, tamanio);
     }
 
     free_mensaje(respuesta);
     return ok;
 }
 
-bool memoria_write(int socket_ms, uint32_t direccion, uint32_t tamanio, const void* datos) {
-    if (socket_ms < 0 || datos == NULL) {
+bool memoria_write(int socket_memory, uint32_t direccion, uint32_t tamanio, const void* datos) {
+    if (socket_memory < 0 || datos == NULL) {
         return false;
     }
 
@@ -75,40 +74,15 @@ bool memoria_write(int socket_ms, uint32_t direccion, uint32_t tamanio, const vo
     memcpy((uint8_t*) payload + sizeof(uint32_t), &tamanio_n, sizeof(uint32_t));
     memcpy((uint8_t*) payload + sizeof(t_payload_escribir_memoria), datos, tamanio);
 
-    enviar_mensaje(socket_ms, MSG_MEMORY_WRITE, payload, payload_size);
+    enviar_mensaje(socket_memory, MSG_MEMORY_WRITE, payload, payload_size);
     free(payload);
 
-    t_mensaje* respuesta = recibir_mensaje(socket_ms);
+    t_mensaje* respuesta = recibir_mensaje(socket_memory);
     if (respuesta == NULL) {
-=======
-#include <stdlib.h>
-#include <string.h>
-
-#include <utils/protocolo.h>
-#include <utils/sockets.h>
-
-bool memoria_write(int socket_ms, uint32_t direccion, uint32_t tamanio, void* datos) {
-
-    uint32_t payload_size = 8 + tamanio;
-    void* payload = malloc(payload_size);
-
-    memcpy(payload, &direccion, 4);
-    memcpy(payload + 4, &tamanio, 4);
-    memcpy(payload + 8, datos, tamanio);
-
-    enviar_mensaje(socket_ms, MSG_MEMORY_WRITE, payload, payload_size);
-
-    free(payload);
-
-    t_mensaje* respuesta = recibir_mensaje(socket_ms);
-
-    if(respuesta == NULL) {
->>>>>>> feature/cpu/mmu
         return false;
     }
 
     bool ok = respuesta->op_code == MSG_OK;
-<<<<<<< HEAD
     free_mensaje(respuesta);
     return ok;
 }
@@ -117,7 +91,6 @@ static t_resultado_memoria_cpu traducir_o_fallar(
     t_contexto* contexto,
     uint32_t direccion_logica,
     uint32_t tamanio,
-    uint32_t tamanio_max_segmento,
     t_traduccion_mmu* traduccion,
     t_log* logger
 ) {
@@ -125,7 +98,6 @@ static t_resultado_memoria_cpu traducir_o_fallar(
         contexto,
         direccion_logica,
         tamanio,
-        tamanio_max_segmento,
         traduccion
     );
 
@@ -147,7 +119,6 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
     t_contexto* contexto,
     t_registros_cpu* registros,
     uint32_t pid,
-    uint32_t tamanio_max_segmento,
     t_log* logger
 ) {
     if (instruccion->cantidad_parametros != 1) {
@@ -164,7 +135,6 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
         contexto,
         registros->si,
         tamanio_registro,
-        tamanio_max_segmento,
         &traduccion,
         logger
     );
@@ -193,7 +163,6 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
     t_contexto* contexto,
     t_registros_cpu* registros,
     uint32_t pid,
-    uint32_t tamanio_max_segmento,
     t_log* logger
 ) {
     if (instruccion->cantidad_parametros != 1) {
@@ -214,7 +183,6 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
         contexto,
         registros->di,
         tamanio_registro,
-        tamanio_max_segmento,
         &traduccion,
         logger
     );
@@ -239,7 +207,6 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
     t_contexto* contexto,
     t_registros_cpu* registros,
     uint32_t pid,
-    uint32_t tamanio_max_segmento,
     t_log* logger
 ) {
     if (instruccion->cantidad_parametros != 1) {
@@ -256,7 +223,6 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
         contexto,
         registros->si,
         tamanio,
-        tamanio_max_segmento,
         &origen,
         logger
     );
@@ -269,7 +235,6 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
         contexto,
         registros->di,
         tamanio,
-        tamanio_max_segmento,
         &destino,
         logger
     );
@@ -305,7 +270,6 @@ t_resultado_memoria_cpu ejecutar_instruccion_memoria(
     t_contexto* contexto,
     t_registros_cpu* registros,
     uint32_t pid,
-    uint32_t tamanio_max_segmento,
     t_log* logger
 ) {
     if (instruccion == NULL || contexto == NULL || registros == NULL) {
@@ -323,46 +287,12 @@ t_resultado_memoria_cpu ejecutar_instruccion_memoria(
 
     switch (instruccion->opcode) {
         case CPU_INST_MOV_IN:
-            return ejecutar_mov_in(socket_memoria, instruccion, contexto, registros, pid, tamanio_max_segmento, logger);
+            return ejecutar_mov_in(socket_memoria, instruccion, contexto, registros, pid, logger);
         case CPU_INST_MOV_OUT:
-            return ejecutar_mov_out(socket_memoria, instruccion, contexto, registros, pid, tamanio_max_segmento, logger);
+            return ejecutar_mov_out(socket_memoria, instruccion, contexto, registros, pid, logger);
         case CPU_INST_COPY_MEM:
-            return ejecutar_copy_mem(socket_memoria, instruccion, contexto, registros, pid, tamanio_max_segmento, logger);
+            return ejecutar_copy_mem(socket_memoria, instruccion, contexto, registros, pid, logger);
         default:
             return CPU_MEMORIA_ERROR;
     }
 }
-=======
-
-    free_mensaje(respuesta);
-
-    return ok;
-}
-
-bool memoria_read(int socket_ms, uint32_t direccion, uint32_t tamanio, void* destino) {
-
-    uint8_t payload[8];
-
-    memcpy(payload, &direccion, 4);
-    memcpy(payload + 4, &tamanio, 4);
-
-    enviar_mensaje(socket_ms, MSG_MEMORY_READ, payload, sizeof(payload));
-
-    t_mensaje* respuesta = recibir_mensaje(socket_ms);
-
-    if(respuesta == NULL) {
-        return false;
-    }
-
-    if(respuesta->op_code != MSG_MEMORY_READ_RESPUESTA) {
-        free_mensaje(respuesta);
-        return false;
-    }
-
-    memcpy(destino, respuesta->payload, tamanio);
-
-    free_mensaje(respuesta);
-
-    return true;
-}
->>>>>>> feature/cpu/mmu

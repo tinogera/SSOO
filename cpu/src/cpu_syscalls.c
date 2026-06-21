@@ -30,8 +30,6 @@ static bool enviar_syscall_mutex(int socket_kernel, uint32_t op_code, uint32_t p
 
     uint32_t pid_n = htonl(pid);
     memcpy(payload, &pid_n, sizeof(uint32_t));
-    uint32_t pid_n = htonl(pid);
-    memcpy(payload, &pid_n, sizeof(uint32_t));
     memcpy((char*)payload + sizeof(uint32_t), nombre, nombre_size);
 
     log_info(logger, "## PID: %u - Syscall: %s - %s", pid, nombre_syscall, nombre);
@@ -62,7 +60,6 @@ bool enviar_syscall_sleep(int socket_kernel, uint32_t pid, uint32_t tiempo_ms, t
     log_info(logger, "## PID: %u - Syscall: SLEEP - %u", pid, tiempo_ms);
     enviar_mensaje(socket_kernel, MSG_SYSCALL_SLEEP, &payload, sizeof(payload));
 
-    return true;
     return true;
 }
 
@@ -163,7 +160,6 @@ bool enviar_syscall_init_proc(int socket_kernel, uint32_t pid, const char* archi
 
 bool enviar_syscall_exit(int socket_kernel, uint32_t pid, t_log* logger) {
     t_payload_syscall_exit payload = {
-        .pid = htonl(pid)
         .pid = htonl(pid)
     };
 
