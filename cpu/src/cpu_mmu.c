@@ -2,8 +2,13 @@
 
 #include <stddef.h>
 
+static uint32_t g_segment_max_size = 256;
+
+void set_segment_max_size(uint32_t tamanio) {
+    g_segment_max_size = tamanio;
+}
+
 uint32_t calcular_segmento(uint32_t limite, uint32_t base);
-uint32_t get_tamanio_max_segmento(t_contexto* contexto);
 
 static t_entrada_segmento* buscar_segmento(t_contexto* contexto, uint32_t id_segmento) {
     if (contexto == NULL || contexto->segmentos == NULL) {
@@ -25,7 +30,7 @@ t_resultado_mmu traducir_direccion_logica(
     uint32_t tamanio,
     t_traduccion_mmu* traduccion
 ) {
-    uint32_t tamanio_max_segmento = get_tamanio_max_segmento(contexto);
+    uint32_t tamanio_max_segmento = g_segment_max_size;
     
     if (contexto == NULL || traduccion == NULL || tamanio == 0 || tamanio_max_segmento == 0) {
         return CPU_MMU_ERROR;
@@ -68,14 +73,6 @@ const char* resultado_mmu_to_string(t_resultado_mmu resultado) {
         default:
             return "DESCONOCIDO";
     }
-}
-
-uint32_t get_tamanio_max_segmento(t_contexto* contexto) {
-    uint32_t tamanio_max_segmento = 0;
-    for (uint32_t i = 0; i < contexto->cant_segmentos; i++) {
-        tamanio_max_segmento += calcular_segmento(contexto->segmentos[i].limite, contexto->segmentos[i].base);
-    }
-    return tamanio_max_segmento;
 }
 
 uint32_t calcular_segmento(uint32_t limite, uint32_t base) {

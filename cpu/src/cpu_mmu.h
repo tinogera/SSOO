@@ -19,6 +19,8 @@ typedef struct {
     uint32_t limite_segmento;
 } t_traduccion_mmu;
 
+void set_segment_max_size(uint32_t tamanio);
+
 t_resultado_mmu traducir_direccion_logica(
     t_contexto* contexto,
     uint32_t direccion_logica,

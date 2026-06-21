@@ -8,6 +8,7 @@
 #include <utils/protocolo.h>
 
 #include "cpu_ciclo.h"
+#include "cpu_mmu.h"
 #include "cpu_contexto.h"
 #include "cpu_devolucion.h"
 #include "cpu_dispatch.h"
@@ -40,6 +41,7 @@ int main(int argc, char* argv[]) {
     if (config_has_property(config, "SEGMENT_MAX_SIZE")) {
         tamanio_max_segmento = (uint32_t) config_get_int_value(config, "SEGMENT_MAX_SIZE");
     }
+    set_segment_max_size(tamanio_max_segmento);
 
      // CONEXION A KERNEL SCHEDULER
     int socket_kernel = conectar_a_servidor(ip_kernel, puerto_kernel);
