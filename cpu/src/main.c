@@ -135,7 +135,6 @@ int main(int argc, char* argv[]) {
             pid,
             contexto,
             &registros,
-            tamanio_max_segmento,
             logger
         );
         t_motivo_devolucion_cpu motivo_devolucion;

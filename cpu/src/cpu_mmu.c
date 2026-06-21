@@ -2,6 +2,9 @@
 
 #include <stddef.h>
 
+uint32_t calcular_segmento(uint32_t limite, uint32_t base);
+uint32_t get_tamanio_max_segmento(t_contexto* contexto);
+
 static t_entrada_segmento* buscar_segmento(t_contexto* contexto, uint32_t id_segmento) {
     if (contexto == NULL || contexto->segmentos == NULL) {
         return NULL;
