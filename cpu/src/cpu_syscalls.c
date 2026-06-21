@@ -88,7 +88,6 @@ static bool enviar_syscall_io_memoria(
     enviar_mensaje(socket_kernel, op_code, &payload, sizeof(payload));
 
     return true;
-    return true;
 }
 
 bool enviar_syscall_stdout(int socket_kernel, uint32_t pid, uint32_t direccion_logica, uint32_t tamanio, t_log* logger) {
