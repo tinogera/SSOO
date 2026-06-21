@@ -1,6 +1,7 @@
 #include "cpu_syscalls.h"
 
 #include <arpa/inet.h>
+#include <arpa/inet.h>
 #include <stdlib.h>
 #include <string.h>
 #include <utils/protocolo.h>
@@ -52,7 +53,7 @@ bool enviar_syscall_mutex_unlock(int socket_kernel, uint32_t pid, const char* no
 
 bool enviar_syscall_sleep(int socket_kernel, uint32_t pid, uint32_t tiempo_ms, t_log* logger) {
     t_payload_syscall_sleep payload = {
-        .pid       = htonl(pid),
+        .pid = htonl(pid),
         .tiempo_ms = htonl(tiempo_ms)
     };
 
@@ -72,9 +73,9 @@ static bool enviar_syscall_io_memoria(
     t_log* logger
 ) {
     t_payload_syscall_io_memoria payload = {
-        .pid              = htonl(pid),
+        .pid = htonl(pid),
         .direccion_logica = htonl(direccion_logica),
-        .tamanio          = htonl(tamanio)
+        .tamanio = htonl(tamanio)
     };
 
     log_info(
@@ -87,6 +88,7 @@ static bool enviar_syscall_io_memoria(
     );
     enviar_mensaje(socket_kernel, op_code, &payload, sizeof(payload));
 
+    return true;
     return true;
 }
 
@@ -114,7 +116,7 @@ bool enviar_syscall_mem_alloc(int socket_kernel, uint32_t pid, uint32_t id_segme
     );
     enviar_mensaje(socket_kernel, MSG_MEM_ALLOC, &payload, sizeof(payload));
 
-    return esperar_ok_kernel(socket_kernel, "MEM_ALLOC", logger);
+    return true;
 }
 
 bool enviar_syscall_mem_free(int socket_kernel, uint32_t pid, uint32_t id_segmento, t_log* logger) {
@@ -126,21 +128,22 @@ bool enviar_syscall_mem_free(int socket_kernel, uint32_t pid, uint32_t id_segmen
     log_info(logger, "## PID: %u - Syscall: MEM_FREE - Segmento: %u", pid, id_segmento);
     enviar_mensaje(socket_kernel, MSG_MEM_FREE, &payload, sizeof(payload));
 
-    return esperar_ok_kernel(socket_kernel, "MEM_FREE", logger);
+    return true;
 }
 
 bool enviar_syscall_init_proc(int socket_kernel, uint32_t pid, const char* archivo, uint32_t prioridad, t_log* logger) {
     uint32_t archivo_size = strlen(archivo) + 1;
-    uint32_t payload_size = sizeof(t_payload_syscall_init_proc) + archivo_size;
-    void* payload = malloc(payload_size);
+    uint32_t payload_size = sizeof(uint32_t) + archivo_size + sizeof(uint32_t);
+    uint8_t* payload = malloc(payload_size);
     if (payload == NULL) {
         return false;
     }
 
-    t_payload_syscall_init_proc* pedido = (t_payload_syscall_init_proc*) payload;
-    pedido->pid = pid;
-    pedido->prioridad = prioridad;
-    memcpy(pedido->archivo, archivo, archivo_size);
+    uint32_t pid_n = htonl(pid);
+    uint32_t prioridad_n = htonl(prioridad);
+    memcpy(payload, &pid_n, sizeof(uint32_t));
+    memcpy(payload + sizeof(uint32_t), archivo, archivo_size);
+    memcpy(payload + sizeof(uint32_t) + archivo_size, &prioridad_n, sizeof(uint32_t));
 
     log_info(
         logger,
@@ -163,5 +166,5 @@ bool enviar_syscall_exit(int socket_kernel, uint32_t pid, t_log* logger) {
     log_info(logger, "## PID: %u - Syscall: EXIT", pid);
     enviar_mensaje(socket_kernel, MSG_SYSCALL_EXIT, &payload, sizeof(payload));
 
-    return esperar_ok_kernel(socket_kernel, "EXIT", logger);
+    return true;
 }

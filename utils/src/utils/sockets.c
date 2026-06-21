@@ -193,7 +193,7 @@ char* deserializar_string(void* payload) {
 //   si, di:          4B c/u
 //   cant_segmentos:  4B
 //   segmentos:       cant_segmentos * 16B
-//                    id_segmento, id_memory_stick, base_fisica, limite
+//                    id_segmento, id_memory_stick, base, limite
 #define CTX_HEADER_WIRE_SIZE (4 + 4 + 4 + (4 * 4) + (4 * 2) + 4)  // 40 bytes
 #define SEGMENTO_WIRE_SIZE   (4 * 4)
 
@@ -249,6 +249,7 @@ t_contexto* deserializar_contexto(void* payload, uint32_t size) {
     memcpy(&n, p, 4); ctx->registros.edx    = ntohl(n); p += 4;
     memcpy(&n, p, 4); ctx->registros.si     = ntohl(n); p += 4;
     memcpy(&n, p, 4); ctx->registros.di     = ntohl(n); p += 4;
+    //memcpy(&n, p, 4); ctx->segment_max_size = ntohl(n); p += 4;
     memcpy(&n, p, 4); ctx->cant_segmentos   = ntohl(n); p += 4;
 
     uint32_t expected_size = CTX_HEADER_WIRE_SIZE + (ctx->cant_segmentos * SEGMENTO_WIRE_SIZE);

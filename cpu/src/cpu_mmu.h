@@ -23,7 +23,6 @@ t_resultado_mmu traducir_direccion_logica(
     t_contexto* contexto,
     uint32_t direccion_logica,
     uint32_t tamanio,
-    uint32_t tamanio_max_segmento,
     t_traduccion_mmu* traduccion
 );
 

@@ -24,7 +24,6 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     uint32_t pid,
     t_contexto* contexto,
     t_registros_cpu* registros,
-    uint32_t tamanio_max_segmento,
     t_log* logger
 );
 

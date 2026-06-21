@@ -3,6 +3,11 @@
 
 #include <stdint.h>
 
+/*
+ * Los valores del enum forman parte del protocolo de red.
+ * No se deben reordenar; los mensajes nuevos se agregan antes de MSG_CANTIDAD.
+ */
+
 typedef enum {
     // -----------------------------------------------------------------
     // IDENTIFICACIÓN — Check 1
@@ -60,34 +65,42 @@ typedef enum {
     // -----------------------------------------------------------------
     // MS ↔ CPU — Check 2
     // -----------------------------------------------------------------
-    MSG_MEMORY_WRITE,           // 29
-    MSG_MEMORY_READ,            // 30
-    MSG_MEMORY_READ_RESPUESTA,  // 31
+    // MSG_MEMORY_WRITE,           // 29
+    // MSG_MEMORY_READ,            // 30
+    // MSG_MEMORY_READ_RESPUESTA,  // 31
 
     // -----------------------------------------------------------------
     // Check 3 — Memoria, segmentos, compactación, suspensión
     // -----------------------------------------------------------------
-    MSG_MEM_ALLOC,              // 32  CPU → KS: syscall MEM_ALLOC { pid, id_seg, tamanio }
-    MSG_MEM_FREE,               // 33  CPU → KS: syscall MEM_FREE  { pid, id_seg }
-    MSG_CREAR_SEGMENTO,         // 34  KS → KM:  { pid, id_seg, tamanio }
-    MSG_ELIMINAR_SEGMENTO,      // 35  KS → KM:  { pid, id_seg }
-    MSG_LEER_MEMORIA,           // 36  KM → MS:  { dir_fisica, tamanio }
-    MSG_LEER_MEMORIA_RESP,      // 37  MS → KM:  { bytes[] }
-    MSG_ESCRIBIR_MEMORIA,       // 38  KM → MS:  { dir_fisica, tamanio, bytes[] }
-    MSG_LEER_DATOS,             // 39  KS → KM:  { pid, dir_logica, tamanio }
-    MSG_LEER_DATOS_RESP,        // 40  KM → KS:  { bytes[] }
-    MSG_ESCRIBIR_DATOS,         // 41  KS → KM:  { pid, dir_logica, tamanio, bytes[] }
-    MSG_COMPACTAR,              // 42  KM → KS:  sin payload — pedir desalojo CPUs
-    MSG_FIN_COMPACTACION,       // 43  KS → KM:  sin payload — CPUs desalojadas
-    MSG_SUSPENDER_PROCESO,      // 44  KS → KM:  { uint32_t pid }
-    MSG_DESSUSPENDER_PROCESO,   // 45  KS → KM:  { uint32_t pid }
-    MSG_MAS_MEMORIA,            // 46  KM → KS:  sin payload — nuevo MS conectado
-    MSG_BSOD,                   // 47  KM → KS:  sin payload — MS caído
-    MSG_SWAP_LEER,              // 48  KM → Swap: { uint32_t nro_bloque }
-    MSG_SWAP_LEER_RESP,         // 49  Swap → KM: { bytes[] }
-    MSG_SWAP_ESCRIBIR,          // 50  KM → Swap: { uint32_t nro_bloque, bytes[] }
-    MSG_TABLA_SEGMENTOS,        // 51  KM → CPU (en contexto restaurado): segmentos actualizados
+    MSG_SYSCALL_SLEEP,   // 25  CPU → KS: { uint32_t pid, uint32_t tiempo_ms }
+    MSG_SYSCALL_STDOUT,  // 26  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
+    MSG_SYSCALL_STDIN,   // 27  CPU → KS: { uint32_t pid, uint32_t direccion_logica, uint32_t tamanio }
+    MSG_SYSCALL_EXIT,    // 28  CPU → KS: { uint32_t pid }
+    MSG_MEMORY_WRITE,          // 29 CPU → Memory Stick: { uint32_t direccion_fisica, uint32_t tamanio, uint8_t datos[] }
+    MSG_MEMORY_READ,           // 30 CPU → Memory Stick: { uint32_t direccion_fisica, uint32_t tamanio }
+    MSG_MEMORY_READ_RESPUESTA, // 31 Memory Stick → CPU: bytes leidos
+    MSG_MEM_ALLOC,              // 32 CPU → KS: syscall MEM_ALLOC
+    MSG_MEM_FREE,               // 33 CPU → KS: syscall MEM_FREE
+    MSG_CREAR_SEGMENTO,         // 34 KS → KM: { pid, id_segmento, tamanio }
+    MSG_ELIMINAR_SEGMENTO,      // 35 KS → KM: { pid, id_segmento }
+    MSG_LEER_MEMORIA,           // 36 KM → Memory Stick: { dir_fisica, tamanio }
+    MSG_LEER_MEMORIA_RESP,      // 37 Memory Stick → KM: bytes leidos
+    MSG_ESCRIBIR_MEMORIA,       // 38 KM → Memory Stick: { dir_fisica, tamanio, bytes[] }
+    MSG_LEER_DATOS,             // 39 KS → KM: { pid, dir_logica, tamanio }
+    MSG_LEER_DATOS_RESP,        // 40 KM → KS: bytes leidos
+    MSG_ESCRIBIR_DATOS,         // 41 KS → KM: { pid, dir_logica, tamanio, bytes[] }
+    MSG_COMPACTAR,              // 42 KM → KS: solicitar compactacion
+    MSG_FIN_COMPACTACION,       // 43 KS → KM: CPUs desalojadas
+    MSG_SUSPENDER_PROCESO,      // 44 KS → KM: { pid }
+    MSG_DESSUSPENDER_PROCESO,   // 45 KS → KM: { pid }
+    MSG_MAS_MEMORIA,            // 46 KM → KS: nuevo Memory Stick
+    MSG_BSOD,                   // 47 KM → KS: Memory Stick desconectado
+    MSG_SWAP_LEER,              // 48 KM → Swap: { nro_bloque }
+    MSG_SWAP_LEER_RESP,         // 49 Swap → KM: bytes leidos
+    MSG_SWAP_ESCRIBIR,          // 50 KM → Swap: { nro_bloque, bytes[] }
+    MSG_TABLA_SEGMENTOS,        // 51 KM → CPU: tabla actualizada
 
+    // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
 } op_code;
 
@@ -134,6 +147,7 @@ typedef struct __attribute__((packed)) {
     uint32_t motivo;
 } t_payload_interrupcion_cpu;
 
+// --- Syscalls CPU → KS ---
 typedef struct __attribute__((packed)) {
     uint32_t pid;
     uint32_t prioridad;
@@ -168,6 +182,9 @@ typedef struct __attribute__((packed)) {
 } t_payload_eliminar_segmento;
 typedef t_payload_eliminar_segmento t_payload_syscall_mem_free;
 
+typedef t_payload_crear_segmento t_payload_syscall_mem_alloc;
+typedef t_payload_eliminar_segmento t_payload_syscall_mem_free;
+
 typedef struct __attribute__((packed)) {
     uint32_t dir_fisica;
     uint32_t tamanio;
@@ -176,7 +193,6 @@ typedef struct __attribute__((packed)) {
 typedef struct __attribute__((packed)) {
     uint32_t dir_fisica;
     uint32_t tamanio;
-    // bytes siguen inmediatamente
 } t_payload_escribir_memoria;
 
 typedef struct __attribute__((packed)) {
@@ -191,10 +207,9 @@ typedef struct __attribute__((packed)) {
 
 typedef struct __attribute__((packed)) {
     uint32_t nro_bloque;
-    // bytes del bloque siguen inmediatamente
 } t_payload_swap_escribir;
 
-
+// --- Enums de motivos ---
 typedef enum {
     MOTIVO_INTERRUPCION_QUANTUM  = 0,
     MOTIVO_INTERRUPCION_DESALOJO = 1

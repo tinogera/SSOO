@@ -11,6 +11,8 @@
 #include "cpu_logs.h"
 #include "cpu_memoria.h"
 #include "cpu_syscalls.h"
+#include "cpu_contexto.h"
+#include "cpu_mmu.h"
 
 static void armar_parametros(t_instruccion_decodificada* instruccion, char* parametros, size_t parametros_size) {
     parametros[0] = '\0';
@@ -132,7 +134,6 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     uint32_t pid,
     t_contexto* contexto,
     t_registros_cpu* registros,
-    uint32_t tamanio_max_segmento,
     t_log* logger
 ) {
     while (true) {
@@ -166,7 +167,6 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
                 contexto,
                 registros,
                 pid,
-                tamanio_max_segmento,
                 logger
             );
 

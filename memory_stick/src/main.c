@@ -15,6 +15,7 @@
 void* atender_cpu(void* arg);
 void manejar_write(int fd_cpu, t_mensaje* msg);
 void manejar_read(int fd_cpu, t_mensaje* msg);
+void manejar_read_cpu(int fd_cpu, t_mensaje* msg);
 
 int delay;
 
@@ -86,14 +87,13 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // int   ip          = config_get_int_value(config,    "MEMORY_STICK_IP");
+
+    // char * ip         = config_get_string_value(config,    "MEMORY_STICK_IP");
     int   puerto      = config_get_int_value(config,    "MEMORY_STICK_PORT");
           delay       = config_get_int_value(config,    "MEMORY_DELAY");
     int   kernel_port = config_get_int_value(config,    "KERNEL_MEMORY_PORT");
     char* kernel_ip   = config_get_string_value(config, "KERNEL_MEMORY_IP");
     char* logLevel    = config_get_string_value(config, "LOG_LEVEL");
-
-
     // -------------------------------------------------------------------
     // 3. Inicializar logger
     // -------------------------------------------------------------------
@@ -107,8 +107,6 @@ int main(int argc, char* argv[]) {
         config_destroy(config);
         return EXIT_FAILURE;
     }
-
-    log_info(logger, "id: %d", id);
     // -------------------------------------------------------------------
     // 4. Conectarse al Kernel Memory
     // -------------------------------------------------------------------
@@ -149,6 +147,14 @@ int main(int argc, char* argv[]) {
     }
 
     // Identificarse con tamaño en el payload
+    //  4 + 4 + 32
+    // u_int64_t  payload[40];
+    // uint32_t ip_n = htonl(ms.ip);
+    // memcpy(payload, &ip_n, 32);
+    // uint32_t puerto_n = htonl(ms.puerto);
+    // memcpy(payload, &puerto_n, 4);
+    // uint32_t tamanio_n = htonl(tamanio);
+    // memcpy(payload, &tamanio_n, 4);
     uint8_t  payload[4];
     uint32_t tamanio_n = htonl(tamanio);
     memcpy(payload, &tamanio_n, 4);
@@ -208,45 +214,64 @@ int main(int argc, char* argv[]) {
 }
 
 void* atender_cpu(void* arg) {
-
     t_cpu_args* args = (t_cpu_args*) arg;
-
     int fd_cpu = args->fd_cpu;
-
     free(args);
 
-    t_mensaje* msg_cpu = recibir_mensaje(fd_cpu);
-
-    if (msg_cpu == NULL) {
+    // Bug A — identificación de la CPU
+    t_mensaje* id_msg = recibir_mensaje(fd_cpu);
+    if (id_msg == NULL) {
         log_info(logger, "CPU desconectada antes de identificarse");
         close(fd_cpu);
         return NULL;
     }
-
-
-    switch (msg_cpu->op_code) {
-
-        case MSG_MEMORY_WRITE:
-            manejar_write(fd_cpu, msg_cpu);
-
-            break;
-
-        case MSG_MEMORY_READ:
-            manejar_read(fd_cpu, msg_cpu);
-
-            break;
-
-        default:
-            log_info(logger, "Opcode desconocido");
-            enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
-
-            break;
+    if (id_msg->op_code != MSG_CPU_IDENTIFICACION) {
+        log_info(logger, "Primer mensaje no es identificacion: %u", id_msg->op_code);
+        enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+        free_mensaje(id_msg);
+        close(fd_cpu);
+        return NULL;
     }
 
-    free_mensaje(msg_cpu);
+    uint32_t cpu_id_n;
+    memcpy(&cpu_id_n, id_msg->payload, 4);
+    uint32_t cpu_id = ntohl(cpu_id_n);
+    free_mensaje(id_msg);
+
+    log_info(logger, "## CPU %u Conectada", cpu_id);
+    enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
+
+    // Bug B + Bug C — loop por múltiples mensajes con op_codes correctos
+    while (1) {
+        t_mensaje* msg = recibir_mensaje(fd_cpu);
+        if (msg == NULL) {
+            log_info(logger, "CPU %u desconectada", cpu_id);
+            break;
+        }
+
+        switch (msg->op_code) {
+            case MSG_LEER_MEMORIA:      // CPU usa este op_code (36)
+                manejar_read_cpu(fd_cpu, msg);
+                break;
+            case MSG_ESCRIBIR_MEMORIA:  // CPU usa este op_code (38)
+                manejar_write(fd_cpu, msg);  // responde MSG_OK — está bien
+                break;
+            case MSG_MEMORY_READ:       // KM usa este op_code (30) — mantener compatibilidad
+                manejar_read(fd_cpu, msg);
+                break;
+            case MSG_MEMORY_WRITE:      // KM usa este op_code (29) — mantener compatibilidad
+                manejar_write(fd_cpu, msg);
+                break;
+            default:
+                log_info(logger, "CPU %u: opcode desconocido %u", cpu_id, msg->op_code);
+                enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+                break;
+        }
+
+        free_mensaje(msg);
+    }
 
     close(fd_cpu);
-
     return NULL;
 }
 
@@ -333,7 +358,34 @@ void manejar_read(int fd_cpu, t_mensaje* msg) {
     free(buffer);
 }
 
-// int obtenerId(){
-//     id += 1;
-//     return id;
-// }
+void manejar_read_cpu(int fd_cpu, t_mensaje* msg) {
+    uint32_t direccion_n;
+    uint32_t size_n;
+
+    memcpy(&direccion_n, msg->payload, 4);
+    memcpy(&size_n, (uint8_t*)msg->payload + 4, 4);
+
+    uint32_t direccion = ntohl(direccion_n);
+    uint32_t size      = ntohl(size_n);
+
+    usleep(delay);
+
+    if (direccion + size > memoria_global.tamanio) {
+        enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+        log_info(logger, "La cantidad de bytes a leer es mayor al tamaño");
+        return;
+    }
+
+    void* buffer = malloc(size);
+
+    pthread_mutex_lock(&memoria_global.mutex);
+    memcpy(buffer, (char*)memoria_global.buffer + direccion, size);
+    pthread_mutex_unlock(&memoria_global.mutex);
+
+    log_info(logger, "## Lectura de %u bytes", size);
+
+    enviar_mensaje(fd_cpu, MSG_LEER_MEMORIA_RESP, buffer, size);  // ← op_code correcto para CPU
+
+    free(buffer);
+}
+

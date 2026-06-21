@@ -56,5 +56,4 @@ void*              serializar_contexto(t_contexto* ctx, uint32_t* out_size);
 t_contexto*        deserializar_contexto(void* payload, uint32_t size);
 t_fetch_request*   deserializar_fetch_request(void* payload);
 void               free_contexto(t_contexto* ctx);
-
 #endif
