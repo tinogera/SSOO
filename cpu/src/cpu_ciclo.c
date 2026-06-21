@@ -9,7 +9,10 @@
 #include "cpu_fetch.h"
 #include "cpu_interrupciones.h"
 #include "cpu_logs.h"
+#include "cpu_memoria.h"
 #include "cpu_syscalls.h"
+#include "cpu_contexto.h"
+#include "cpu_mmu.h"
 
 static void armar_parametros(t_instruccion_decodificada* instruccion, char* parametros, size_t parametros_size) {
     parametros[0] = '\0';
@@ -50,6 +53,32 @@ static bool ejecutar_syscall(
         case CPU_INST_SLEEP:
             return instruccion->cantidad_parametros == 1 &&
                    enviar_syscall_sleep(socket_kernel, pid, parsear_uint32(instruccion->parametros[0]), logger);
+        case CPU_INST_MEM_ALLOC:
+            return instruccion->cantidad_parametros == 2 &&
+                   enviar_syscall_mem_alloc(
+                       socket_kernel,
+                       pid,
+                       parsear_uint32(instruccion->parametros[0]),
+                       parsear_uint32(instruccion->parametros[1]),
+                       logger
+                   );
+        case CPU_INST_MEM_FREE:
+            return instruccion->cantidad_parametros == 1 &&
+                   enviar_syscall_mem_free(
+                       socket_kernel,
+                       pid,
+                       parsear_uint32(instruccion->parametros[0]),
+                       logger
+                   );
+        case CPU_INST_INIT_PROC:
+            return instruccion->cantidad_parametros == 2 &&
+                   enviar_syscall_init_proc(
+                       socket_kernel,
+                       pid,
+                       instruccion->parametros[0],
+                       parsear_uint32(instruccion->parametros[1]),
+                       logger
+                   );
         case CPU_INST_STDOUT:
         case CPU_INST_STDIN: {
             if (instruccion->cantidad_parametros != 2) {
@@ -84,15 +113,26 @@ static bool es_syscall_o_exit(t_opcode_cpu opcode) {
            opcode == CPU_INST_MUTEX_LOCK ||
            opcode == CPU_INST_MUTEX_UNLOCK ||
            opcode == CPU_INST_SLEEP ||
+           opcode == CPU_INST_MEM_ALLOC ||
+           opcode == CPU_INST_MEM_FREE ||
+           opcode == CPU_INST_INIT_PROC ||
            opcode == CPU_INST_STDOUT ||
            opcode == CPU_INST_STDIN ||
            opcode == CPU_INST_EXIT;
 }
 
+static bool es_instruccion_memoria(t_opcode_cpu opcode) {
+    return opcode == CPU_INST_MOV_IN ||
+           opcode == CPU_INST_MOV_OUT ||
+           opcode == CPU_INST_COPY_MEM;
+}
+
 t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     int socket_kernel,
     int socket_memory,
+    int socket_memoria_usuario,
     uint32_t pid,
+    t_contexto* contexto,
     t_registros_cpu* registros,
     t_log* logger
 ) {
@@ -118,6 +158,33 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
             }
 
             return instruccion.opcode == CPU_INST_EXIT ? CPU_CICLO_EXIT : CPU_CICLO_SYSCALL;
+        }
+
+        if (es_instruccion_memoria(instruccion.opcode)) {
+            t_resultado_memoria_cpu resultado_memoria = ejecutar_instruccion_memoria(
+                socket_memoria_usuario,
+                &instruccion,
+                contexto,
+                registros,
+                pid,
+                logger
+            );
+
+            if (resultado_memoria == CPU_MEMORIA_SEG_FAULT) {
+                return CPU_CICLO_SEG_FAULT;
+            }
+
+            if (resultado_memoria != CPU_MEMORIA_OK) {
+                log_error(logger, "No se pudo ejecutar la instruccion de memoria del PID %u", pid);
+                return CPU_CICLO_ERROR_EXECUTE;
+            }
+
+            t_interrupcion_cpu interrupcion;
+            if (recibir_interrupcion_cpu_si_hay(socket_kernel, &interrupcion, logger)) {
+                return CPU_CICLO_INTERRUPCION;
+            }
+
+            continue;
         }
 
         t_resultado_ejecucion resultado = ejecutar_instruccion(&instruccion, registros, pid, logger);

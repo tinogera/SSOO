@@ -13,13 +13,16 @@ typedef enum {
     CPU_CICLO_ERROR_EXECUTE,
     CPU_CICLO_SYSCALL,
     CPU_CICLO_EXIT,
-    CPU_CICLO_INTERRUPCION
+    CPU_CICLO_INTERRUPCION,
+    CPU_CICLO_SEG_FAULT
 } t_resultado_ciclo_cpu;
 
 t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     int socket_kernel,
     int socket_memory,
+    int socket_memoria_usuario,
     uint32_t pid,
+    t_contexto* contexto,
     t_registros_cpu* registros,
     t_log* logger
 );

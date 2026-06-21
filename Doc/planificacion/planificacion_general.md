@@ -17,8 +17,8 @@
 | Hito | Fecha | Estado | Observaciones |
 |---|---|---|---|
 | Check 1 | 18/04/2026 | Entregado (parcial) | Faltó Kernel Memory + Swap (Luciano). Completados el 26/04. |
-| Check 2 | 23/05/2026 | Implementado | FIFO/RR, BLOCK, IO (SLEEP/STDOUT/STDIN), Mutex, SUSPENSION_TIMEOUT, Memory Stick READ/WRITE. |
-| Check 3 | 20/06/2026 | Pendiente | — |
+| Check 2 | 23/05/2026 | Entregado | FIFO/RR, estados SUSP_BLOCK/SUSP_READY, IO (SLEEP/STDOUT/STDIN), Mutex (sin herencia), SUSPENSION_TIMEOUT, Memory Stick READ/WRITE. |
+| Check 3 | 20/06/2026 | Entregado | Issues #65/#66/#67 completados. Develop listo para merge a main. |
 | Entrega Final | 11/07/2026 | Pendiente | — |
 
 ---
@@ -121,34 +121,29 @@ main
 ---
 
 ### Fase 2 — Check 2: Planificación y Ciclo de CPU
-**Período:** 19/04 – 23/05/2026 — **EN CURSO**
+**Período:** 19/04 – 23/05/2026 — **COMPLETADA**
 **Objetivo:** Planificación básica funcionando de punta a punta con CPU ejecutando instrucciones simples.
 
 | Módulo | Tareas | Rama | Estado |
 |---|---|---|---|
-| Kernel Scheduler | Estados NEW/READY/EXEC/BLOCK/EXIT, FIFO, RR, IO | `feature/kernel-scheduler/planificacion-basica` | 🔄 En curso (Santiago) |
-| Kernel Scheduler | Mutex sin herencia | `feature/kernel-scheduler/mutex-cmn` | 🔄 En curso (Nicolas) |
-| CPU | Registros, fetch, decode, instrucciones básicas, syscalls, interrupciones | `feature/cpu/ciclo-basico` | 🔄 En curso (Kevin) |
-| Kernel Memory | Instrucciones desde pseudocódigo, gestión de contextos | `feature/kernel-memory/conexiones-instrucciones` | 🔄 En curso (Luciano/Kevin) |
-| IO | SLEEP, STDOUT y STDIN completos | `feature/io` | 🔄 En curso (Nicolas) |
+| Kernel Scheduler | Estados NEW/READY/EXEC/BLOCK/SUSP_BLOCK/SUSP_READY/EXIT, FIFO, RR, IO, SUSPENSION_TIMEOUT | `feature/kernel-scheduler/planificacion-basica` + `feature/ks-largo-plazo` | ✅ Completo (Santiago) |
+| Kernel Scheduler | Mutex sin herencia (MUTEX_CREATE/LOCK/UNLOCK) | `feature/kernel-scheduler/mutex-cmn` | ✅ Completo (Nicolas) |
+| CPU | Registros, fetch, decode, instrucciones básicas (NOOP/SET/SUM/SUB/JNZ), syscalls, interrupciones por quantum, despacho/devolución, contexto con KM | `feature/cpu/ciclo-basico` + `impactante` | ✅ Completo (Kevin) |
+| Kernel Memory | Instrucciones desde pseudocódigo, gestión de contextos (guardar/restaurar) | — | ✅ Completo (Luciano/Kevin) |
+| IO | SLEEP, STDOUT y STDIN completos con tests | `feature/io` | ✅ Completo (Nicolas) |
+| Memory Stick | READ/WRITE con MEMORY_DELAY y mutex concurrente | — | ✅ Completo (Juan Manuel) |
 
-**Progreso al 29/04/2026:**
-- ✅ `fix/protocolo-msg-cpu-km` mergeado a develop — bug fix de `MSG_CPU_A_KERNEL_MEMORY`
-- ✅ `feature/protocolo-msg-io-mutex` mergeado a develop — op_codes y structs de CK2 definidos
-- ✅ IO tipo SLEEP implementado y testeado (issue #23, cerrado)
-- ⬜ IO tipo STDOUT (issue #24)
-- ⬜ IO tipo STDIN (issue #25)
-- ⬜ Mutex: MUTEX_CREATE / LOCK / UNLOCK (issue #15)
-
-> Al llegar al Check 2: mergear a `develop` y luego `develop` → `main`.
+> Merge a `develop` y luego `develop` → `main` realizado el 22/05/2026 (commit `29f8611`).
 
 **Criterio de éxito:** Un proceso corre de inicio a fin con instrucciones simples, planificación FIFO/RR correcta, IO funcional, Mutex sin herencia.
 
 ---
 
 ### Fase 3 — Check 3: CPU Completa y Segmentación
-**Período:** 24/05 – 20/06/2026  
+**Período:** 24/05 – 20/06/2026 — **COMPLETADA**  
 **Objetivo:** CPU con MMU completa, memoria segmentada real, planificación avanzada.
+
+#### Tareas originales
 
 | Módulo | Tareas | Rama |
 |---|---|---|
@@ -156,15 +151,28 @@ main
 | CPU | INIT_PROC, EXIT | `feature/cpu/ciclo-basico` |
 | Kernel Memory | Tabla de segmentos, BEST/WORST FIT, creación/eliminación de segmentos, hot-plug | `feature/kernel-memory/segmentacion` |
 | Kernel Memory | Compactación, suspensión/des-suspensión a Swap | `feature/kernel-memory/suspension-compactacion` |
-| Kernel Scheduler | Suspensión/des-suspensión (mediano plazo), BSOD | `feature/kernel-scheduler/mediano-plazo` |
-| Kernel Scheduler | CMN, QUEUE_PREEMPTION, Mutex | `feature/kernel-scheduler/mutex-cmn` |
+| Kernel Scheduler | BSOD (desconexión de Memory Stick) | `feature/kernel-scheduler/mediano-plazo` |
+| Kernel Scheduler | CMN, QUEUE_PREEMPTION | `feature/kernel-scheduler/mutex-cmn` |
 | Kernel Scheduler | Herencia de prioridades, compactación | `feature/kernel-scheduler/herencia-compactacion` |
-| Memory Stick | Implementación completa con MEMORY_DELAY | `feature/memory-stick` |
+| Memory Stick | ~~Implementación completa con MEMORY_DELAY~~ ✅ Completado en CK2 | — |
 | Swap | Implementación completa con bloques | `feature/swap` |
+
+#### Tareas adicionales por cambios en v1.1 (08/06/2026)
+
+| Módulo | Tarea | Responsable | Estado |
+|---|---|---|---|
+| CPU + KS | Syscalls no esperan MSG_OK: eliminar `esperar_ok_kernel` en MUTEX_CREATE, MUTEX_UNLOCK y EXIT | Kevin + Nicolas | ✅ `2e2fa9e` |
+| CPU + KS | MUTEX_LOCK bloqueante: CPU no queda bloqueada; el KS mueve el proceso a BLOCK | Nicolas | ✅ `892d745` |
+| protocolo + CPU + KS | STDOUT/STDIN usan dirección lógica (no física — KM hace la traducción) | Nicolas + Luciano | ✅ ya en protocolo |
+| KS + KM | Flujo real STDOUT: KS pide bytes a KM (`MSG_LEER_DATOS`) y los reenvía a IO | Nicolas + Luciano | ✅ `238fb10` (#65) |
+| KS + KM | Flujo real STDIN: IO envía datos al KS; KS pide a KM escribir (`MSG_ESCRIBIR_DATOS`) | Nicolas + Luciano | ✅ `948b9c2` (#66) |
+| KS + KM | Syscalls MEM_ALLOC/MEM_FREE: reenviar proceso a la misma CPU que hizo la llamada | Nicolas + Luciano | ✅ `8d80525` (#67) |
+| KM | Des-suspensión usa algoritmo de búsqueda de huecos (BEST/WORST FIT) | Luciano | ✅ en develop |
+| KM + MS | Direcciones físicas son globales: KM divide peticiones entre sticks por rango | Luciano + Juan Manuel | ✅ en develop |
 
 > Al llegar al Check 3: mergear a `develop` y luego `develop` → `main`.
 
-**Criterio de éxito:** Procesos con allocación de memoria real, MMU funcional, planificación CMN con desalojo, herencia de prioridades en mutex, suspensión por timeout.
+**Criterio de éxito:** Procesos con allocación de memoria real, MMU funcional, planificación CMN con desalojo, herencia de prioridades en mutex, suspensión por timeout, flujos STDOUT/STDIN completos con KM, syscalls liberando la CPU correctamente.
 
 ---
 

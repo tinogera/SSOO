@@ -26,9 +26,9 @@ bool devolver_proceso_a_scheduler(
     t_log* logger
 ) {
     t_payload_devolver_proceso payload = {
-        .pid    = htonl(pid),
+        .pid = htonl(pid),
         .motivo = htonl(motivo),
-        .pc     = htonl(registros->pc)
+        .pc = htonl(registros->pc)
     };
 
     log_info(

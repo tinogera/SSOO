@@ -16,67 +16,72 @@
 ---
 
 ## Fase 0 — Configuración del Entorno
-**Fecha límite:** 13/04/2026
+**Fecha límite:** 13/04/2026 — **COMPLETADA**
 
-- [ ] Instalar `so-commons-library` y verificar compilación del módulo `cpu`.
-- [ ] Leer y entender la sección de CPU en la consigna: registros, ciclo de instrucción, instrucciones a implementar.
-- [ ] Coordinar con Nicolas el diseño del protocolo de comunicación para los mensajes que CPU intercambia con Kernel Scheduler y Kernel Memory.
+- [x] Instalar `so-commons-library` y verificar compilación del módulo `cpu`.
+- [x] Leer y entender la sección de CPU en la consigna: registros, ciclo de instrucción, instrucciones a implementar.
+- [x] Coordinar con Nicolas el diseño del protocolo de comunicación para los mensajes que CPU intercambia con Kernel Scheduler y Kernel Memory.
 
 ---
 
 ## Fase 1 — Check 1: Conexiones
-**Fecha límite:** 18/04/2026
+**Fecha límite:** 18/04/2026 — **ENTREGADO (parcial)**
 **Rama:** `feature/cpu/ciclo-basico`
 
-- [ ] Implementar conexión de CPU a **Kernel Scheduler** (recibir PID a ejecutar).
-- [ ] Implementar conexión de CPU a **Kernel Memory** (pedir instrucciones, enviar/recibir contexto).
-- [ ] Lograr que CPU se conecte, loguee la conexión y espere trabajos sin crashear.
+- [x] Implementar conexión de CPU a **Kernel Scheduler** (recibir PID a ejecutar).
+- [x] Implementar conexión de CPU a **Kernel Memory** (pedir instrucciones, enviar/recibir contexto).
+- [x] Lograr que CPU se conecte, loguee la conexión y espere trabajos sin crashear.
 
 **Dependencias:** Necesita que Utils (Nicolas) tenga el wrapper de sockets listo. Coordinarse para tener un mock de Kernel Scheduler y Kernel Memory para testear la conexión.
 
 ---
 
 ## Fase 2 — Check 2: Ciclo de Instrucción Básico
-**Fecha límite:** 23/05/2026
-**Rama:** `feature/cpu/ciclo-basico`
+**Fecha límite:** 23/05/2026 — **COMPLETADA** (merge a main el 22/05/2026, commit `29f8611`)
+**Ramas:** `feature/cpu/ciclo-basico` · `impactante`
 
 ### Semana 1–2 (19/04 – 02/05)
-- [ ] Definir e implementar la estructura de **registros de CPU**: PC (uint32_t), AX/BX/CX/DX (uint8_t), EAX/EBX/ECX/EDX (uint32_t), SI y DI (uint32_t).
-- [ ] Implementar el ciclo **Fetch**: solicitar instrucción a Kernel Memory usando el PC actual, recibir string de instrucción.
-- [ ] Implementar el ciclo **Decode**: parsear la instrucción recibida e identificar opcode y parámetros.
+- [x] Definir e implementar la estructura de **registros de CPU**: PC (uint32_t), AX/BX/CX/DX (uint8_t), EAX/EBX/ECX/EDX (uint32_t), SI y DI (uint32_t).
+- [x] Implementar el ciclo **Fetch**: solicitar instrucción a Kernel Memory usando el PC actual con `htonl`, recibir string de instrucción.
+- [x] Implementar el ciclo **Decode**: parsear la instrucción recibida e identificar opcode y parámetros.
 
 ### Semana 3–4 (03/05 – 16/05)
-- [ ] Implementar instrucción **NOOP**.
-- [ ] Implementar instrucción **SET \<Registro\> \<Valor\>**.
-- [ ] Implementar instrucción **SUM \<Reg Destino\> \<Reg Origen\>**.
-- [ ] Implementar instrucción **SUB \<Reg Destino\> \<Reg Origen\>**.
-- [ ] Implementar instrucción **JNZ \<Registro\> \<Instrucción\>** (modificar PC si registro != 0).
+- [x] Implementar instrucción **NOOP**.
+- [x] Implementar instrucción **SET \<Registro\> \<Valor\>**.
+- [x] Implementar instrucción **SUM \<Reg Destino\> \<Reg Origen\>**.
+- [x] Implementar instrucción **SUB \<Reg Destino\> \<Reg Origen\>**.
+- [x] Implementar instrucción **JNZ \<Registro\> \<Instrucción\>** (modificar PC si registro != 0).
 
 ### Semana 5 (17/05 – 23/05)
-- [ ] Implementar el envío de **syscalls** al Kernel Scheduler (MUTEX_CREATE, MUTEX_LOCK, MUTEX_UNLOCK, SLEEP, STDOUT, STDIN, EXIT) y la espera de respuesta.
-- [ ] Implementar recepción de **interrupciones** desde Kernel Scheduler (fin de quantum RR, desalojo por CMN).
-- [ ] Al recibir interrupción: guardar contexto en Kernel Memory y notificar al Scheduler.
-- [ ] Implementar el **log obligatorio** de fetch: `## PID: <PID> - FETCH - Program Counter: <PC>`.
-- [ ] Implementar el **log obligatorio** de ejecución: `## PID: <PID> - Ejecutando: <INSTRUCCION> - <PARAMETROS>`.
+- [x] Implementar el envío de **syscalls** al Kernel Scheduler (MUTEX_CREATE, MUTEX_LOCK, MUTEX_UNLOCK, SLEEP, STDOUT, STDIN, EXIT) y la espera de respuesta.
+- [x] Implementar recepción de **interrupciones** desde Kernel Scheduler (fin de quantum RR) con `select()` no bloqueante.
+- [x] Al recibir interrupción: devolver proceso al Scheduler con motivo INTERRUPCION.
+- [x] Implementar el **log obligatorio** de fetch: `## PID: <PID> - FETCH - Program Counter: <PC>`.
+- [x] Implementar el **log obligatorio** de ejecución: `## PID: <PID> - Ejecutando: <INSTRUCCION> - <PARAMETROS>`.
 
 ---
 
-## Fase 3 — Check 3: Kernel Memory (Contextos e Instrucciones)
+## Fase 3 — Check 3: Kernel Memory (Contextos e Instrucciones) + INIT_PROC
 **Fecha límite:** 20/06/2026
-**Ramas:** `feature/kernel-memory/conexiones-instrucciones` (lectura y contextos) · `feature/cpu/ciclo-basico` (INIT_PROC, EXIT)
+**Ramas:** `feature/kernel-memory/conexiones-instrucciones` · `feature/cpu/ciclo-basico`
 
-> En esta fase Kevin contribuye al módulo Kernel Memory para la gestión de contextos y la lectura de instrucciones.
+> Lectura de pseudocódigo y gestión de contextos fueron adelantados a CK2.
 
-### Semana 1–2 (24/05 – 06/06)
-- [ ] Implementar en Kernel Memory la **lectura de archivos de pseudocódigo**: dado un path y un número de línea (PC), retornar la instrucción correspondiente.
-- [ ] Aplicar el **INSTRUCTION_DELAY** (delay configurable antes de responder la instrucción).
-- [ ] Implementar el **log obligatorio**: `## PID: <PID> - Obtener instrucción: <PC> - Instrucción: <INSTRUCCIÓN> <...ARGS>`.
+### Semana 1–2 (24/05 – 06/06) — adelantado a CK2
+- [x] Implementar en Kernel Memory la **lectura de archivos de pseudocódigo** (adelantado a CK2).
+- [x] Aplicar el **INSTRUCTION_DELAY**.
+- [x] Implementar **guardar/restaurar contexto** (CPU ↔ Kernel Memory) (adelantado a CK2).
 
 ### Semana 3–4 (07/06 – 20/06)
-- [ ] Implementar en Kernel Memory la **creación de contexto de proceso**: al recibir INIT_PROC del Scheduler, inicializar todos los registros a 0 y asociarlos al PID.
-- [ ] Implementar **guardar contexto** (CPU → Kernel Memory): recibir todos los registros + tabla de segmentos y almacenarlos por PID.
-- [ ] Implementar **restaurar contexto** (Kernel Memory → CPU): enviar todos los registros + tabla de segmentos para el PID solicitado.
-- [ ] Implementar en CPU las syscalls **INIT_PROC** y **EXIT** (crear proceso hijo y finalizar).
+- [ ] Implementar en CPU la syscall **INIT_PROC** (crear proceso hijo): falta en `cpu_decode.c` y `cpu_ciclo.c`.
+- [ ] Implementar en Kernel Memory log obligatorio: `## PID: <PID> - Obtener instrucción: <PC> - Instrucción: <INSTRUCCIÓN> <...ARGS>`.
+
+### Ajustes por v1.1 del enunciado (08/06/2026)
+
+- [ ] **EXIT no espera MSG_OK** (`cpu_syscalls.c`):
+  - Eliminar la llamada a `esperar_ok_kernel` en `enviar_syscall_exit`.
+  - El flujo correcto es: CPU incrementa PC → guarda contexto en KM → envía `MSG_DEVOLVER_PROCESO` con `MOTIVO_DEVOLUCION_EXIT`. El KS lo maneja al recibir el devolver.
+  - Coordinar con Nicolas para asegurar que el KS interprete correctamente el EXIT al recibir `MSG_DEVOLVER_PROCESO`.
 
 ---
 

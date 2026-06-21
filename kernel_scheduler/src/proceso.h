@@ -2,6 +2,7 @@
 #define KS_PROCESO_H_
 
 #include <stdint.h>
+#include <time.h>
 
 typedef enum {
     NEW, READY, EXEC, BLOCK, SUSP_BLOCK, SUSP_READY, EXIT
@@ -12,7 +13,9 @@ typedef struct {
     t_estado estado;
     uint32_t controladorDeProgramas;
     int      prioridad;
-    int      fd_cpu;   // fd de la CPU que lo ejecuta (-1 si ninguna)
+    int      fd_cpu;            // fd de la CPU que lo ejecuta (-1 si ninguna)
+    int      preemptado;        // 1 si fue desalojado por QUEUE_PREEMPTION (va al frente de READY)
+    time_t   tiempo_suspension; // epoch al momento de pasar a SUSP_BLOCK
 } t_proceso;
 
 #endif

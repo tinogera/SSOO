@@ -34,6 +34,34 @@ context (cpu_decode) {
 
     } end
 
+    describe ("instrucciones de memoria") {
+
+        it ("decodifica MOV_IN con registro destino") {
+            t_instruccion_decodificada instruccion = decode_instruccion("MOV_IN AX");
+
+            should_int(instruccion.opcode) be equal to(CPU_INST_MOV_IN);
+            should_int(instruccion.cantidad_parametros) be equal to(1);
+            should_string(instruccion.parametros[0]) be equal to("AX");
+        } end
+
+        it ("decodifica MOV_OUT con registro origen") {
+            t_instruccion_decodificada instruccion = decode_instruccion("MOV_OUT EAX");
+
+            should_int(instruccion.opcode) be equal to(CPU_INST_MOV_OUT);
+            should_int(instruccion.cantidad_parametros) be equal to(1);
+            should_string(instruccion.parametros[0]) be equal to("EAX");
+        } end
+
+        it ("decodifica COPY_MEM con registro tamanio") {
+            t_instruccion_decodificada instruccion = decode_instruccion("COPY_MEM CX");
+
+            should_int(instruccion.opcode) be equal to(CPU_INST_COPY_MEM);
+            should_int(instruccion.cantidad_parametros) be equal to(1);
+            should_string(instruccion.parametros[0]) be equal to("CX");
+        } end
+
+    } end
+
     describe ("syscalls") {
 
         it ("decodifica MUTEX_LOCK") {
@@ -51,6 +79,32 @@ context (cpu_decode) {
             should_int(instruccion.cantidad_parametros) be equal to(2);
             should_string(instruccion.parametros[0]) be equal to("SI");
             should_string(instruccion.parametros[1]) be equal to("AX");
+        } end
+
+        it ("decodifica MEM_ALLOC con segmento y tamanio") {
+            t_instruccion_decodificada instruccion = decode_instruccion("MEM_ALLOC 2 64");
+
+            should_int(instruccion.opcode) be equal to(CPU_INST_MEM_ALLOC);
+            should_int(instruccion.cantidad_parametros) be equal to(2);
+            should_string(instruccion.parametros[0]) be equal to("2");
+            should_string(instruccion.parametros[1]) be equal to("64");
+        } end
+
+        it ("decodifica MEM_FREE con segmento") {
+            t_instruccion_decodificada instruccion = decode_instruccion("MEM_FREE 2");
+
+            should_int(instruccion.opcode) be equal to(CPU_INST_MEM_FREE);
+            should_int(instruccion.cantidad_parametros) be equal to(1);
+            should_string(instruccion.parametros[0]) be equal to("2");
+        } end
+
+        it ("decodifica INIT_PROC con archivo y prioridad") {
+            t_instruccion_decodificada instruccion = decode_instruccion("INIT_PROC proceso1 3");
+
+            should_int(instruccion.opcode) be equal to(CPU_INST_INIT_PROC);
+            should_int(instruccion.cantidad_parametros) be equal to(2);
+            should_string(instruccion.parametros[0]) be equal to("proceso1");
+            should_string(instruccion.parametros[1]) be equal to("3");
         } end
 
         it ("decodifica EXIT sin parametros") {

@@ -11,9 +11,9 @@
 | `feature/utils` | Wrapper de sockets, serialización/deserialización de mensajes |
 | `feature/io` | Conexión a KScheduler, SLEEP, STDOUT, STDIN |
 | `feature/kernel-scheduler/mutex-cmn` | Mutex sin herencia, CMN, QUEUE_PREEMPTION |
-| `feature/kernel-scheduler/herencia-compactacion` | Herencia de prioridades, manejo de compactación |
+| `feature/kernel-scheduler/herencia-compactacion` | Planificada para herencia + compactación — finalmente incluida en la rama anterior |
 
-> Crear `feature/utils` y `feature/io` desde `develop` al iniciar Fase 1 (Nicolas es el primero en crear ramas porque Utils es dependencia de todos). Crear las ramas de Scheduler desde `develop` en Fase 2 y 3 respectivamente.
+> Crear `feature/utils` y `feature/io` desde `develop` al iniciar Fase 1. Las ramas de Scheduler se crean desde `develop` en Fase 2 y 3. En la práctica, herencia y compactación se implementaron directamente en `feature/kernel-scheduler/mutex-cmn` sin crear la segunda rama.
 
 ---
 
@@ -47,68 +47,95 @@
 ---
 
 ## Fase 2 — Check 2: IO Completo + Mutex en Scheduler
-**Fecha límite:** 23/05/2026 — **EN CURSO** (arrancó 29/04/2026)
+**Fecha límite:** 23/05/2026 — **COMPLETADA** (merge a main el 22/05/2026, commit `29f8611`)
 **Ramas:** `feature/io` (IO completo) · `feature/kernel-scheduler/mutex-cmn` (Mutex)
 
 > Previo al desarrollo: se crearon y mergearon a develop las ramas `fix/protocolo-msg-cpu-km` (bug fix) y `feature/protocolo-msg-io-mutex` (op_codes y structs de payload para todos los mensajes de CK2).
 
 ### IO — Semanas 1–3 (19/04 – 09/05)
-- [x] Implementar **IO tipo SLEEP** — _issue #23, cerrado 29/04_ (commit `321d7c4`):
+- [x] Implementar **IO tipo SLEEP** — _issue #14, cerrado 22/05_:
   - Recibir tiempo en ms desde Kernel Scheduler.
   - Ejecutar `usleep(tiempo * 1000)`.
   - Notificar a Kernel Scheduler que finalizó.
   - Implementar log: `## PID: <PID> - Haciendo sleep por <TIEMPO> milisegundos`.
   - Implementar log: `## PID: <PID> - Inicio de IO` y `## PID: <PID> - Fin de IO`.
 
-- [ ] Implementar **IO tipo STDOUT** — _issue #24_:
+- [x] Implementar **IO tipo STDOUT** — _issue #14, cerrado 22/05_:
   - Recibir cadena de bytes desde Kernel Scheduler.
   - Imprimir por pantalla (stdout).
   - Notificar a Kernel Scheduler que finalizó.
   - Implementar log: `## PID: <PID> - <CONTENIDO A IMPRIMIR>`.
 
-- [ ] Implementar **IO tipo STDIN** — _issue #25_:
+- [x] Implementar **IO tipo STDIN** — _issue #14, cerrado 22/05_:
   - Recibir cantidad de bytes a leer.
-  - Leer del teclado (con `readline` o `fgets`).
+  - Leer del teclado con `read()`.
   - Si entrada > bytes solicitados → cortar. Si entrada < bytes → rellenar con `\0`.
-  - Enviar datos al Kernel Scheduler para que los escriba en memoria.
+  - Enviar datos al Kernel Scheduler.
   - Implementar log: `## PID: <PID> - Ingrese <N> caracteres:`.
 
 ### Kernel Scheduler — Mutex sin herencia (10/05 – 23/05)
 > Trabaja en conjunto con Santiago, quien maneja la estructura de colas.
 
-- [ ] Implementar **MUTEX_CREATE** — _issue #15_: crear estructura de mutex con nombre dado, estado libre/tomado, cola de espera.
-- [ ] Implementar **MUTEX_LOCK**: si el mutex está libre → tomarlo, loguear. Si está tomado → poner proceso en BLOCK esperando ese mutex.
-- [ ] Implementar **MUTEX_UNLOCK**: liberar el mutex, si hay procesos esperando → desbloquear el primero (política FIFO dentro de la cola de espera del mutex), loguear.
-- [ ] Implementar log: `## (<PID>) Toma el Mutex <NOMBRE>`.
-- [ ] Implementar log: `## (<PID>) Libera el Mutex <NOMBRE>`.
+- [x] Implementar **MUTEX_CREATE** — _issue cerrado 22/05_: estructura `t_ks_mutex` con nombre, `owner_pid` y cola de espera FIFO.
+- [x] Implementar **MUTEX_LOCK**: si libre → tomar y responder MSG_OK. Si tomado → encolar waiter, CPU queda bloqueada esperando respuesta.
+- [x] Implementar **MUTEX_UNLOCK**: liberar, si hay waiters → transferir al primero (FIFO) y responderle MSG_OK.
+- [x] Implementar log: `## (<PID>) Toma el Mutex <NOMBRE>`.
+- [x] Implementar log: `## (<PID>) Libera el Mutex <NOMBRE>`.
 
 ---
 
 ## Fase 3 — Check 3: CMN, Herencia de Prioridades y Compactación
-**Fecha límite:** 20/06/2026
-**Ramas:** `feature/kernel-scheduler/mutex-cmn` (CMN, QUEUE_PREEMPTION) · `feature/kernel-scheduler/herencia-compactacion` (herencia, compactación)
+**Fecha límite:** 20/06/2026 — **COMPLETADA** (merge a develop 18/06/2026, issues #65/#66/#67 finalizados 20/06/2026)
+**Rama:** `feature/kernel-scheduler/mutex-cmn` (todo el trabajo de CK3 en esta rama)
+
+### Ajustes v1.1 (completados primero, base para CK3)
+- [x] `fix(cpu)`: quitar `esperar_ok_kernel` de MUTEX_CREATE, MUTEX_LOCK y MUTEX_UNLOCK en `cpu/src/cpu_syscalls.c` — commit `2e2fa9e`
+- [x] `fix(ks)`: MUTEX_LOCK bloqueante mueve proceso a BLOCK en KS — commit `892d745`
 
 ### Semana 1–2 (24/05 – 06/06)
-- [ ] Implementar algoritmo **CMN (Colas Multinivel)**:
+- [x] Implementar algoritmo **CMN (Colas Multinivel)** — commit `caa9672`:
   - N colas (configuradas en `QUEUES_ALGORITHMS`), cada una con su propio algoritmo (FIFO o RR).
   - Cada proceso tiene una prioridad que determina en qué cola se ubica (0 = mayor prioridad).
   - Siempre se despacha de la cola no vacía de mayor prioridad.
-- [ ] Implementar log: `## (<PID>) Prioridad: <PRIORIDAD_DESALOJADO> - Desalojado por cola más prioritaria por el proceso <PID> con prioridad <PRIORIDAD_NUEVA>`.
+- [x] Implementar log: `## (<PID>) Prioridad: <PRIORIDAD_DESALOJADO> - Desalojado por cola más prioritaria por el proceso <PID> con prioridad <PRIORIDAD_NUEVA>`.
 
 ### Semana 3 (07/06 – 13/06)
-- [ ] Implementar **QUEUE_PREEMPTION**: si un proceso de mayor prioridad llega a READY y hay un proceso de menor prioridad ejecutándose → enviar interrupción a CPU para desalojarlo → el desalojado vuelve al inicio de su cola READY.
-- [ ] Implementar **herencia de prioridades en Mutex**:
+- [x] Implementar **QUEUE_PREEMPTION** — commit `822b32d`: si un proceso de mayor prioridad llega a READY y hay un proceso de menor prioridad ejecutándose → enviar interrupción a CPU para desalojarlo → el desalojado vuelve al inicio de su cola READY.
+- [x] Implementar **herencia de prioridades en Mutex** — commit `ea342fa`:
   - Si proceso de baja prioridad tiene un mutex tomado y un proceso de alta prioridad necesita ese mutex → proceso de baja prioridad hereda la prioridad del proceso bloqueado.
   - Al liberar el mutex → restaurar la prioridad original.
   - Implementar log: `## <PID> Cambio de prioridad: <ANTERIOR> - <NUEVA>`.
 
 ### Semana 4 (14/06 – 20/06)
-- [ ] Implementar el manejo de **compactación** en Kernel Scheduler:
+- [x] Implementar el manejo de **compactación** en Kernel Scheduler — commit `89f4ba1`:
   - Cuando Kernel Memory indica que no hay espacio contiguo y es necesario compactar → desalojar todos los procesos de las CPUs.
-  - Esperar a que todas las CPUs estuelvan el contexto.
+  - Esperar a que todas las CPUs devuelvan el contexto.
   - Notificar a Kernel Memory para que compacte.
   - Una vez finalizada la compactación → reinsertar los procesos desalojados al **inicio** de su cola READY (caso excepcional).
   - Implementar log: `## Inicio de compactación` y `## Fin de compactación`.
+
+### Ajustes por v1.1 del enunciado (08/06/2026)
+
+- [x] **Syscalls liberan CPU sin esperar MSG_OK** (`cpu_syscalls.c`) — commit `2e2fa9e`:
+  - Eliminar llamada a `esperar_ok_kernel` en `enviar_syscall_mutex_create` y `enviar_syscall_mutex_unlock`.
+  - El KS ya no envía MSG_OK a la CPU para estas syscalls; redespacha al proceso por el planificador normal.
+
+- [x] **MUTEX_LOCK bloqueante pasa al KS** (`ks_mutex.c`) — commit `892d745`:
+  - Eliminado el `fd_cpu` del `t_mutex_waiter`; solo se guarda el PID.
+  - Si el mutex está tomado: el proceso va a `BLOCK` en el KS (no se bloquea la CPU).
+  - En `MUTEX_UNLOCK`: se saca el proceso de BLOCK y se pone en READY.
+
+- [x] **Flujo real STDOUT** (`kernel_scheduler/src/main.c`) — _issue #65, commit `238fb10`_:
+  - Al recibir `MSG_SYSCALL_STDOUT`: pedir bytes a KM con `MSG_LEER_DATOS {pid, dir_logica, tamanio}`.
+  - Recibir `MSG_LEER_DATOS_RESP` con los bytes y reenviarlos a IO STDOUT como `[pid:4][bytes...]`.
+
+- [x] **Flujo real STDIN** (`kernel_scheduler/src/main.c`) — _issue #66, commit `948b9c2`_:
+  - Al recibir `MSG_SYSCALL_STDIN`: guardar `{pid, dir_logica, tamanio}` en `lista_stdin_pendientes`.
+  - Al recibir `MSG_IO_STDIN_DATOS` de IO: recuperar `dir_logica`, enviar `MSG_ESCRIBIR_DATOS` a KM con los bytes leídos, mover proceso a READY.
+
+- [x] **Syscalls MEM_ALLOC/MEM_FREE: reenviar a misma CPU** — _issue #67, commit `8d80525`_:
+  - `sacar_proc_de_exec_para_mem()`: extrae el proceso de EXEC sin liberar la CPU.
+  - Thread separado llama `km_request(MSG_CREAR_SEGMENTO / MSG_ELIMINAR_SEGMENTO)` y responde `MSG_OK/ERROR` al `fd_cpu` original.
 
 ---
 

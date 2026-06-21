@@ -18,25 +18,25 @@
 ---
 
 ## Fase 0 — Configuración del Entorno
-**Fecha límite:** 13/04/2026
+**Fecha límite:** 13/04/2026 — **COMPLETADA**
 
-- [ ] Instalar `so-commons-library` y verificar compilación de `kernel_memory` y `swap`.
-- [ ] Leer y entender completamente la sección de Kernel Memory y Swap en la consigna: segmentación pura, gestión de huecos, hot-plug, compactación.
-- [ ] Coordinar con Nicolas el diseño del protocolo de mensajes KMemory↔Scheduler, KMemory↔CPU, KMemory↔Memory Sticks y KMemory↔Swap.
+- [x] Instalar `so-commons-library` y verificar compilación de `kernel_memory` y `swap`.
+- [x] Leer y entender completamente la sección de Kernel Memory y Swap en la consigna: segmentación pura, gestión de huecos, hot-plug, compactación.
+- [x] Coordinar con Nicolas el diseño del protocolo de mensajes KMemory↔Scheduler, KMemory↔CPU, KMemory↔Memory Sticks y KMemory↔Swap.
 
 ---
 
 ## Fase 1 — Check 1: Conexiones
-**Fecha límite:** 18/04/2026
+**Fecha límite:** 18/04/2026 — **ENTREGADO (parcial, completado 26/04)**
 **Ramas:** `feature/kernel-memory/conexiones-instrucciones` · `feature/swap`
 
-- [ ] Implementar el **servidor de sockets** en Kernel Memory:
+- [x] Implementar el **servidor de sockets** en Kernel Memory:
   - Conexión desde **Kernel Scheduler**.
   - Conexiones dinámicas de **CPUs** (multihilo).
   - Conexiones dinámicas de **Memory Sticks** (hot-plug).
   - Conexión de **Swap**.
-- [ ] Implementar la **conexión de Swap** a Kernel Memory: enviar capacidad total al conectarse.
-- [ ] Logear las conexiones establecidas:
+- [x] Implementar la **conexión de Swap** a Kernel Memory: enviar capacidad total al conectarse.
+- [x] Logear las conexiones establecidas:
   - `## Kernel Scheduler Conectado - FD del socket: <FD>`.
   - `## CPU <ID CPU> Conectada`.
   - `## Memory Stick de <TAMAÑO> bytes Conectada`.
@@ -47,20 +47,18 @@
 ---
 
 ## Fase 2 — Check 2: Instrucciones y Contextos Mock
-**Fecha límite:** 23/05/2026
+**Fecha límite:** 23/05/2026 — **COMPLETADA** (merge a main el 22/05/2026, commit `29f8611`)
 **Rama:** `feature/kernel-memory/conexiones-instrucciones`
 
 ### Semana 1–2 (19/04 – 02/05)
-- [ ] Implementar la **lectura de archivos de pseudocódigo**: dado el `SCRIPTS_BASEPATH` y el path del proceso, leer el archivo y retornar la línea correspondiente al PC recibido.
-- [ ] Aplicar el **INSTRUCTION_DELAY** antes de responder.
-- [ ] Implementar log: `## PID: <PID> - Obtener instrucción: <PC> - Instrucción: <INSTRUCCIÓN> <...ARGS>`.
-
-> Nota: Kevin también trabaja en esta parte desde el lado de Kernel Memory. Coordinarse para no duplicar trabajo.
+- [x] Implementar la **lectura de archivos de pseudocódigo**: dado el `SCRIPTS_BASEPATH` y el path del proceso, leer el archivo y retornar la línea correspondiente al PC recibido.
+- [x] Aplicar el **INSTRUCTION_DELAY** antes de responder.
+- [x] Implementar log: `## PID: <PID> - Obtener instrucción: <PC> - Instrucción: <INSTRUCCIÓN> <...ARGS>`.
 
 ### Semana 3–5 (03/05 – 23/05)
-- [ ] Implementar la **creación de proceso** en Kernel Memory: recibir PID + path de instrucciones desde Scheduler, inicializar estructura de contexto con todos los registros en 0.
-- [ ] Implementar **guardar y restaurar contexto** (registros + tabla de segmentos) por PID (versión mock sin segmentación real por ahora).
-- [ ] Implementar log: `## PID: <PID> - Proceso Creado`.
+- [x] Implementar la **creación de proceso** en Kernel Memory: recibir PID + path de instrucciones desde Scheduler, inicializar estructura de contexto con todos los registros en 0.
+- [x] Implementar **guardar y restaurar contexto** (registros + tabla de segmentos) por PID (versión mock sin segmentación real).
+- [x] Implementar log: `## PID: <PID> - Proceso Creado`.
 
 ---
 
@@ -90,6 +88,20 @@
 - [ ] Implementar **compactación**: desplazar segmentos para eliminar fragmentación, actualizar tabla de segmentos de todos los PIDs afectados, aplicar `COMPACTION_DELAY`.
 - [ ] Implementar **suspensión de proceso**: para cada segmento del PID, solicitar bloques libres a Swap, copiar datos al Swap, liberar espacio en Memory Sticks.
 - [ ] Implementar **des-suspensión de proceso**: recuperar segmentos desde Swap, reasignar espacio en Memory Sticks, restaurar tabla de segmentos del PID.
+
+### Ajustes por v1.1 del enunciado (08/06/2026)
+
+- [ ] **Des-suspensión usa algoritmo de búsqueda de huecos**: al restaurar segmentos de SWAP, aplicar BEST FIT o WORST FIT (según `FITTING_ALGORITHM` config) para ubicar cada segmento. No asignar en posición arbitraria.
+
+- [ ] **Direcciones físicas son globales, no relativas a cada Memory Stick**:
+  - El KM asigna direcciones físicas únicas y globales a cada segmento (no reinicia en 0 por cada stick).
+  - Llevar un mapa global de rangos: qué rango de dirección física corresponde a cada MS (p. ej., MS1: 0–255, MS2: 256–511).
+  - Al atender una lectura o escritura con dirección física, calcular a qué MS(s) pertenece y, si cruza fronteras, dividir la operación.
+  - Coordinar con Juan Manuel el nuevo formato del protocolo KM↔MS (ya no se asume offset 0).
+
+- [ ] **Implementar lectura/escritura desde KS** (flujo STDOUT/STDIN completo):
+  - Agregar handlers en KM para `MSG_KM_LEER_MEMORIA` (devolver bytes) y `MSG_KM_ESCRIBIR_MEMORIA` (escribir bytes en dir física).
+  - Estos mensajes llegan del KS, no de la CPU.
 
 ### Swap — Semana 3–4 (07/06 – 20/06)
 - [ ] Implementar el **servidor de Swap**: crear/abrir archivo binario del tamaño configurado (`SWAP_FILE_SIZE`).

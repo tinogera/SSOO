@@ -16,42 +16,41 @@
 ---
 
 ## Fase 0 — Configuración del Entorno
-**Fecha límite:** 13/04/2026
+**Fecha límite:** 13/04/2026 — **COMPLETADA**
 
-- [ ] Instalar `so-commons-library` y verificar compilación de `cpu` y `memory_stick`.
-- [ ] Leer y entender la sección de CPU (MMU, instrucciones de memoria) y Memory Stick en la consigna.
-- [ ] Coordinar con Nicolas el protocolo de mensajes CPU↔Memory Stick y KMemory↔Memory Stick.
-- [ ] Coordinar con Kevin la división de tareas dentro del módulo CPU.
+- [x] Instalar `so-commons-library` y verificar compilación de `cpu` y `memory_stick`.
+- [x] Leer y entender la sección de CPU (MMU, instrucciones de memoria) y Memory Stick en la consigna.
+- [x] Coordinar con Nicolas el protocolo de mensajes CPU↔Memory Stick y KMemory↔Memory Stick.
+- [x] Coordinar con Kevin la división de tareas dentro del módulo CPU.
 
 ---
 
 ## Fase 1 — Check 1: Conexiones
-**Fecha límite:** 18/04/2026
+**Fecha límite:** 18/04/2026 — **ENTREGADO (parcial)**
 **Rama:** `feature/memory-stick`
 
-- [ ] Implementar en **Memory Stick**:
+- [x] Implementar en **Memory Stick**:
   - Conexión cliente a **Kernel Memory** (registrarse con su tamaño).
   - Servidor de sockets para **CPUs** (múltiples CPUs pueden conectarse).
-- [ ] Logear conexiones: `## Conectado a Kernel Memory`, `## CPU <ID CPU> Conectada`.
+- [x] Logear conexiones: `## Conectado a Kernel Memory`, `## CPU <ID CPU> Conectada`.
 
 **Dependencias:** Coordinarse con Nicolas para usar el wrapper de sockets de Utils. Coordinarse con Luciano para el handshake Memory Stick↔Kernel Memory.
 
 ---
 
 ## Fase 2 — Check 2: Memory Stick Básico
-**Fecha límite:** 23/05/2026
+**Fecha límite:** 23/05/2026 — **COMPLETADA** (merge a main el 22/05/2026, commit `29f8611`)
 **Rama:** `feature/memory-stick`
 
 ### Semana 1–3 (19/04 – 09/05)
-- [ ] Implementar en **Memory Stick** la inicialización del espacio de almacenamiento: asignar buffer en memoria RAM del tamaño recibido como argumento.
-- [ ] Implementar la operación de **escritura**: recibir dirección física + datos → escribir en buffer → confirmar.
-- [ ] Implementar la operación de **lectura**: recibir dirección física + tamaño → leer del buffer → retornar bytes.
-- [ ] Aplicar el **MEMORY_DELAY** (espera configurable antes de responder cada operación).
-- [ ] Implementar logs: `## Escritura de <N> bytes`, `## Lectura de <N> bytes`.
+- [x] Implementar en **Memory Stick** la inicialización del espacio de almacenamiento: buffer en RAM del tamaño recibido como argumento.
+- [x] Implementar la operación de **escritura**: recibir dirección física + datos → escribir en buffer → confirmar con MSG_OK.
+- [x] Implementar la operación de **lectura**: recibir dirección física + tamaño → leer del buffer → retornar con MSG_MEMORY_READ_RESPUESTA.
+- [x] Aplicar el **MEMORY_DELAY** con `usleep(delay)` antes de responder cada operación.
+- [x] Implementar logs: `## Escritura de <N> bytes`, `## Lectura de <N> bytes`.
 
 ### Semana 4–5 (10/05 – 23/05)
-- [ ] Manejar el acceso **concurrente** desde múltiples CPUs: proteger el buffer con mutex de pthread.
-- [ ] Testear Memory Stick con un cliente de prueba (script o programa simple).
+- [x] Manejar el acceso **concurrente** desde múltiples CPUs: buffer protegido con `pthread_mutex_t`.
 
 ---
 
@@ -80,6 +79,21 @@
 - [ ] Implementar syscall **MEM_ALLOC \<ID Segmento\> \<Tamaño\>**: enviar pedido a Kernel Scheduler, esperar confirmación, actualizar tabla de segmentos local.
 - [ ] Implementar syscall **MEM_FREE \<ID Segmento\>**: enviar pedido a Kernel Scheduler, esperar confirmación, eliminar entrada de tabla de segmentos local.
 - [ ] Testear el ciclo completo: MEM_ALLOC → MOV_OUT → MOV_IN → MEM_FREE.
+
+### Ajustes por v1.1 del enunciado (08/06/2026)
+
+- [ ] **STDOUT y STDIN envían dirección física al KS** (`cpu_ciclo.c`):
+  - Antes de enviar `MSG_SYSCALL_STDOUT` o `MSG_SYSCALL_STDIN`, la MMU debe traducir el contenido de SI/DI a dirección física.
+  - Renombrar `direccion_logica` → `direccion_fisica` en `t_payload_syscall_io_memoria` (`protocolo.h`), en conjunto con Nicolas.
+
+- [ ] **MEM_ALLOC/MEM_FREE: la CPU no espera respuesta bloqueante**:
+  - Siguiendo el cambio de v1.1, la CPU no espera `MSG_OK` del KS para MEM_ALLOC/MEM_FREE.
+  - Flujo: CPU envía la syscall → guarda contexto → devuelve PID al KS → CPU libre.
+  - El KS resuelve con KM y redespacha el proceso a la **misma CPU** que hizo la llamada.
+
+- [ ] **Memory Stick recibe offsets dentro de su propio buffer** (coordinar con Luciano):
+  - El KM ahora calcula el offset local del MS a partir de la dirección física global.
+  - El MS sigue recibiendo una dirección como offset dentro de su propio buffer; el cambio está en cómo el KM calcula ese offset. Confirmar el protocolo actualizado.
 
 ---
 
