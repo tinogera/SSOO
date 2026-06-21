@@ -1,7 +1,6 @@
 #include "cpu_devolucion.h"
 
 #include <arpa/inet.h>
-#include <arpa/inet.h>
 #include <utils/sockets.h>
 
 const char* motivo_devolucion_to_string(t_motivo_devolucion_cpu motivo) {

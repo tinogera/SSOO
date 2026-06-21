@@ -1,7 +1,6 @@
 #include "cpu_syscalls.h"
 
 #include <arpa/inet.h>
-#include <arpa/inet.h>
 #include <stdlib.h>
 #include <string.h>
 #include <utils/protocolo.h>

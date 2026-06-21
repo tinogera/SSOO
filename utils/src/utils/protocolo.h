@@ -182,9 +182,6 @@ typedef struct __attribute__((packed)) {
 } t_payload_eliminar_segmento;
 typedef t_payload_eliminar_segmento t_payload_syscall_mem_free;
 
-typedef t_payload_crear_segmento t_payload_syscall_mem_alloc;
-typedef t_payload_eliminar_segmento t_payload_syscall_mem_free;
-
 typedef struct __attribute__((packed)) {
     uint32_t dir_fisica;
     uint32_t tamanio;
