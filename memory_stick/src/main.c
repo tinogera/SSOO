@@ -87,9 +87,8 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    t_ms_identificacion ms;
 
-    char * ip         = config_get_string_value(config,    "MEMORY_STICK_IP");
+    // char * ip         = config_get_string_value(config,    "MEMORY_STICK_IP");
     int   puerto      = config_get_int_value(config,    "MEMORY_STICK_PORT");
           delay       = config_get_int_value(config,    "MEMORY_DELAY");
     int   kernel_port = config_get_int_value(config,    "KERNEL_MEMORY_PORT");

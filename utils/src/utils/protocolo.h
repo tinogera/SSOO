@@ -54,20 +54,20 @@ typedef enum {
     MSG_GUARDAR_CONTEXTO,       // 23
     MSG_RESTAURAR_CONTEXTO,     // 24
 
-    // -----------------------------------------------------------------
-    // Syscalls CPU → KS — Check 2
-    // -----------------------------------------------------------------
-    MSG_INIT_PROC,          // 16  CPU → KS: syscall INIT_PROC { uint32_t pid, uint32_t prioridad, char archivo[] }
-    MSG_DESPACHAR_PROCESO,  // 17  KS → CPU: { uint32_t pid }
-    MSG_DEVOLVER_PROCESO,   // 18  CPU → KS: { uint32_t pid, uint32_t motivo, uint32_t pc }
-    MSG_INTERRUPCION_CPU,   // 19  KS → CPU: { uint32_t pid, uint32_t motivo }
+    // // -----------------------------------------------------------------
+    // // Syscalls CPU → KS — Check 2
+    // // -----------------------------------------------------------------
+    // MSG_INIT_PROC,          // 16  CPU → KS: syscall INIT_PROC { uint32_t pid, uint32_t prioridad, char archivo[] }
+    // MSG_DESPACHAR_PROCESO,  // 17  KS → CPU: { uint32_t pid }
+    // MSG_DEVOLVER_PROCESO,   // 18  CPU → KS: { uint32_t pid, uint32_t motivo, uint32_t pc }
+    // MSG_INTERRUPCION_CPU,   // 19  KS → CPU: { uint32_t pid, uint32_t motivo }
 
     // -----------------------------------------------------------------
     // MS ↔ CPU — Check 2
     // -----------------------------------------------------------------
-    MSG_MEMORY_WRITE,           // 29
-    MSG_MEMORY_READ,            // 30
-    MSG_MEMORY_READ_RESPUESTA,  // 31
+    // MSG_MEMORY_WRITE,           // 29
+    // MSG_MEMORY_READ,            // 30
+    // MSG_MEMORY_READ_RESPUESTA,  // 31
 
     // -----------------------------------------------------------------
     // Check 3 — Memoria, segmentos, compactación, suspensión
