@@ -54,18 +54,12 @@ La CPU lee un único `IP_MEMORY_STICK` + `PUERTO_MEMORY_STICK` del config. Si la
 
 ---
 
-### Pendiente 2 — Log faltante: KS no loguea "Solicitó syscall: INIT_PROC" (BAJO)
+### ~~Pendiente 2~~ — Log "Solicitó syscall: INIT_PROC" ✅ RESUELTO (06/07/2026)
 
-**Responsable:** Kevin Castillo  
-**Archivo:** `kernel_scheduler/src/main.c` — handler `MSG_INIT_PROC` (línea ~1207)
+**Commit:** `1ed8a79`  
+**Informe:** `kernel_scheduler/informes_temporales/fix_log_init_proc_06-07-2026.md`
 
-El handler de `MSG_INIT_PROC` crea el proceso hijo y responde `MSG_OK` sin loguear la syscall. Falta agregar antes de `crear_proceso`:
-
-```c
-log_info(logger, "## (%d) - Solicitó syscall: INIT_PROC", pid_padre);
-```
-
-El `pid_padre` está disponible en `msg->payload` (primer `uint32_t` del payload).
+Se extrajo `pid_padre` del payload y se agregó `log_info(logger, "## (%d) - Solicitó syscall: INIT_PROC", pid_padre)` antes de `crear_proceso` en el handler `MSG_INIT_PROC`.
 
 ---
 
@@ -147,7 +141,7 @@ Código verificado en `develop` post-merge:
 
 | # | Título | Razón |
 |---|---|---|
-| #52 | Logs KS | Falta `"Solicitó syscall: INIT_PROC"` (Pendiente 2) |
+| #52 | Logs KS | ✅ Resuelto — commit `1ed8a79` |
 | #54 | Logs CPU/IO/MS/Swap | CPU: tildes faltantes en 3 strings (Pendiente 3) |
 | #50 | Prueba multi-CPU | No ejecutada aún |
 | #51 | Prueba hot-plug dinámico | No ejecutada aún |
