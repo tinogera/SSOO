@@ -20,7 +20,8 @@ typedef enum {
 t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     int socket_kernel,
     int socket_memory,
-    int socket_memoria_usuario,
+    int* sockets_ms,
+    int n_sockets_ms,
     uint32_t pid,
     t_contexto* contexto,
     t_registros_cpu* registros,

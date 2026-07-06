@@ -130,7 +130,8 @@ static bool es_instruccion_memoria(t_opcode_cpu opcode) {
 t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     int socket_kernel,
     int socket_memory,
-    int socket_memoria_usuario,
+    int* sockets_ms,
+    int n_sockets_ms,
     uint32_t pid,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -162,7 +163,8 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
 
         if (es_instruccion_memoria(instruccion.opcode)) {
             t_resultado_memoria_cpu resultado_memoria = ejecutar_instruccion_memoria(
-                socket_memoria_usuario,
+                sockets_ms,
+                n_sockets_ms,
                 &instruccion,
                 contexto,
                 registros,

@@ -92,29 +92,54 @@ int main(int argc, char* argv[]) {
         free_mensaje(respuesta);
     }
 
-    int socket_memoria_usuario = -1;
-    if (config_has_property(config, "IP_MEMORY_STICK") && config_has_property(config, "PUERTO_MEMORY_STICK")) {
-        char* ip_memory_stick = config_get_string_value(config, "IP_MEMORY_STICK");
-        int puerto_memory_stick = config_get_int_value(config, "PUERTO_MEMORY_STICK");
+    // Conectar a todos los Memory Sticks configurados.
+    // El índice en el array corresponde al id_memory_stick que asigna KM.
+    // Config: IP_MEMORY_STICK_0 / PUERTO_MEMORY_STICK_0, luego _1, _2, ...
+    // Si no existe _0, se intenta con las claves sin índice (compatibilidad
+    // con configs de un solo MS: IP_MEMORY_STICK / PUERTO_MEMORY_STICK).
+#define CPU_MAX_MS 8
+    int sockets_ms[CPU_MAX_MS];
+    int n_sockets_ms = 0;
+    for (int i = 0; i < CPU_MAX_MS; i++) sockets_ms[i] = -1;
 
-        socket_memoria_usuario = conectar_a_servidor(ip_memory_stick, puerto_memory_stick);
-        if (socket_memoria_usuario == -1) {
-            log_error(logger, "No se pudo conectar a Memory Stick");
-        } else {
-            uint32_t cpu_id_n = htonl((uint32_t) atoi(cpu_id));
-            enviar_mensaje(socket_memoria_usuario, MSG_CPU_IDENTIFICACION, &cpu_id_n, sizeof(cpu_id_n));
+    for (int idx = 0; idx < CPU_MAX_MS; idx++) {
+        char key_ip[32], key_puerto[32];
+        snprintf(key_ip,    sizeof(key_ip),    "IP_MEMORY_STICK_%d", idx);
+        snprintf(key_puerto, sizeof(key_puerto), "PUERTO_MEMORY_STICK_%d", idx);
 
-            t_mensaje* respuesta_ms = recibir_mensaje(socket_memoria_usuario);
-            if (respuesta_ms == NULL || respuesta_ms->op_code != MSG_OK) {
-                log_error(logger, "Memory Stick rechazo la conexion de CPU");
-                close(socket_memoria_usuario);
-                socket_memoria_usuario = -1;
+        if (!config_has_property(config, key_ip)) {
+            if (idx == 0 && config_has_property(config, "IP_MEMORY_STICK")) {
+                snprintf(key_ip,    sizeof(key_ip),    "%s", "IP_MEMORY_STICK");
+                snprintf(key_puerto, sizeof(key_puerto), "%s", "PUERTO_MEMORY_STICK");
             } else {
-                log_info(logger, "## Conectado a Memory Stick");
+                break;
             }
-
-            free_mensaje(respuesta_ms);
         }
+
+        char* ip_ms    = config_get_string_value(config, key_ip);
+        int   puerto_ms = config_get_int_value(config, key_puerto);
+
+        int fd = conectar_a_servidor(ip_ms, puerto_ms);
+        if (fd == -1) {
+            log_error(logger, "No se pudo conectar a Memory Stick %d (%s:%d)", idx, ip_ms, puerto_ms);
+            continue;
+        }
+
+        uint32_t cpu_id_n = htonl((uint32_t) atoi(cpu_id));
+        enviar_mensaje(fd, MSG_CPU_IDENTIFICACION, &cpu_id_n, sizeof(cpu_id_n));
+
+        t_mensaje* resp_ms = recibir_mensaje(fd);
+        if (resp_ms == NULL || resp_ms->op_code != MSG_OK) {
+            log_error(logger, "Memory Stick %d rechazó la conexión", idx);
+            if (resp_ms) free_mensaje(resp_ms);
+            close(fd);
+            continue;
+        }
+        free_mensaje(resp_ms);
+
+        log_info(logger, "## Conectado a Memory Stick %d", idx);
+        sockets_ms[idx] = fd;
+        n_sockets_ms = idx + 1;
     }
 
     // Esperar procesos despachados por Kernel Scheduler
@@ -133,7 +158,8 @@ int main(int argc, char* argv[]) {
         t_resultado_ciclo_cpu resultado_ciclo = ejecutar_ciclo_proceso(
             socket_kernel,
             socket_memory,
-            socket_memoria_usuario,
+            sockets_ms,
+            n_sockets_ms,
             pid,
             contexto,
             &registros,
@@ -167,8 +193,8 @@ int main(int argc, char* argv[]) {
 
     close(socket_kernel);
     close(socket_memory);
-    if (socket_memoria_usuario != -1) {
-        close(socket_memoria_usuario);
+    for (int i = 0; i < CPU_MAX_MS; i++) {
+        if (sockets_ms[i] != -1) close(sockets_ms[i]);
     }
 
     log_destroy(logger);

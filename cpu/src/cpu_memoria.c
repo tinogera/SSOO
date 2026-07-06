@@ -113,8 +113,14 @@ static t_resultado_memoria_cpu traducir_o_fallar(
     return CPU_MEMORIA_ERROR;
 }
 
+static int fd_para_ms(int* sockets_ms, int n_sockets_ms, uint32_t id_ms) {
+    if ((int)id_ms < n_sockets_ms) return sockets_ms[id_ms];
+    return -1;
+}
+
 static t_resultado_memoria_cpu ejecutar_mov_in(
-    int socket_memoria,
+    int* sockets_ms,
+    int n_sockets_ms,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -142,8 +148,9 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
         return resultado;
     }
 
+    int fd = fd_para_ms(sockets_ms, n_sockets_ms, traduccion.id_memory_stick);
     uint8_t buffer[sizeof(uint32_t)] = {0};
-    if (!memoria_read(socket_memoria, traduccion.direccion_fisica, tamanio_registro, buffer)) {
+    if (!memoria_read(fd, traduccion.direccion_fisica, tamanio_registro, buffer)) {
         return CPU_MEMORIA_ERROR;
     }
 
@@ -158,7 +165,8 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
 }
 
 static t_resultado_memoria_cpu ejecutar_mov_out(
-    int socket_memoria,
+    int* sockets_ms,
+    int n_sockets_ms,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -190,9 +198,10 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
         return resultado;
     }
 
+    int fd = fd_para_ms(sockets_ms, n_sockets_ms, traduccion.id_memory_stick);
     uint8_t buffer[sizeof(uint32_t)] = {0};
     valor_a_bytes(valor, tamanio_registro, buffer);
-    if (!memoria_write(socket_memoria, traduccion.direccion_fisica, tamanio_registro, buffer)) {
+    if (!memoria_write(fd, traduccion.direccion_fisica, tamanio_registro, buffer)) {
         return CPU_MEMORIA_ERROR;
     }
 
@@ -202,7 +211,8 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
 }
 
 static t_resultado_memoria_cpu ejecutar_copy_mem(
-    int socket_memoria,
+    int* sockets_ms,
+    int n_sockets_ms,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -247,12 +257,15 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
         return CPU_MEMORIA_ERROR;
     }
 
-    if (!memoria_read(socket_memoria, origen.direccion_fisica, tamanio, buffer)) {
+    int fd_origen  = fd_para_ms(sockets_ms, n_sockets_ms, origen.id_memory_stick);
+    int fd_destino = fd_para_ms(sockets_ms, n_sockets_ms, destino.id_memory_stick);
+
+    if (!memoria_read(fd_origen, origen.direccion_fisica, tamanio, buffer)) {
         free(buffer);
         return CPU_MEMORIA_ERROR;
     }
 
-    if (!memoria_write(socket_memoria, destino.direccion_fisica, tamanio, buffer)) {
+    if (!memoria_write(fd_destino, destino.direccion_fisica, tamanio, buffer)) {
         free(buffer);
         return CPU_MEMORIA_ERROR;
     }
@@ -265,7 +278,8 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
 }
 
 t_resultado_memoria_cpu ejecutar_instruccion_memoria(
-    int socket_memoria,
+    int* sockets_ms,
+    int n_sockets_ms,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -287,11 +301,11 @@ t_resultado_memoria_cpu ejecutar_instruccion_memoria(
 
     switch (instruccion->opcode) {
         case CPU_INST_MOV_IN:
-            return ejecutar_mov_in(socket_memoria, instruccion, contexto, registros, pid, logger);
+            return ejecutar_mov_in(sockets_ms, n_sockets_ms, instruccion, contexto, registros, pid, logger);
         case CPU_INST_MOV_OUT:
-            return ejecutar_mov_out(socket_memoria, instruccion, contexto, registros, pid, logger);
+            return ejecutar_mov_out(sockets_ms, n_sockets_ms, instruccion, contexto, registros, pid, logger);
         case CPU_INST_COPY_MEM:
-            return ejecutar_copy_mem(socket_memoria, instruccion, contexto, registros, pid, logger);
+            return ejecutar_copy_mem(sockets_ms, n_sockets_ms, instruccion, contexto, registros, pid, logger);
         default:
             return CPU_MEMORIA_ERROR;
     }
