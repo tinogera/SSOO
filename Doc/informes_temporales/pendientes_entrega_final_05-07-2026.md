@@ -63,16 +63,12 @@ Se extrajo `pid_padre` del payload y se agregó `log_info(logger, "## (%d) - Sol
 
 ---
 
-### Pendiente 3 — Logs CPU con acentos incorrectos (BAJO)
+### ~~Pendiente 3~~ — Logs CPU con acentos incorrectos ✅ RESUELTO (06/07/2026)
 
-**Responsable:** Kevin Castillo  
-**Archivo:** `cpu/src/cpu_logs.c`
+**Commit:** `2308fc4`  
+**Informe:** `cpu/informes_temporales/fix_logs_acentos_06-07-2026.md`
 
-| Línea | Actual | Requerido |
-|---|---|---|
-| 8 | `"## Interrupcion recibida"` | `"## Interrupción recibida"` |
-| 18 | `"Accion: %s"` | `"Acción: %s"` |
-| 18 | `"Direccion Fisica: %u"` | `"Dirección Física: %u"` |
+Corregidos los tres strings en `cpu_logs.c`: `"Interrupcion"` → `"Interrupción"`, `"Accion"` → `"Acción"`, `"Direccion Fisica"` → `"Dirección Física"`.
 
 ---
 
@@ -142,7 +138,7 @@ Código verificado en `develop` post-merge:
 | # | Título | Razón |
 |---|---|---|
 | #52 | Logs KS | ✅ Resuelto — commit `1ed8a79` |
-| #54 | Logs CPU/IO/MS/Swap | CPU: tildes faltantes en 3 strings (Pendiente 3) |
+| #54 | Logs CPU/IO/MS/Swap | ✅ Resuelto — commit `2308fc4` |
 | #50 | Prueba multi-CPU | No ejecutada aún |
 | #51 | Prueba hot-plug dinámico | No ejecutada aún |
 | #55 | Script de deployment | No implementado |
