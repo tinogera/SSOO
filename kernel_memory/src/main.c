@@ -1017,8 +1017,9 @@ static char* leer_instruccion(uint32_t pid, uint32_t pc) {
         t_pid_path* pp = list_get(script_paths, i);
         if (pp->pid == pid) { script_name = pp->path; break; }
     }
-    if (script_name) snprintf(path, sizeof(path), "%s/%s", base, script_name);
-    else             snprintf(path, sizeof(path), "%s/%u.txt", base, pid);
+    if (script_name && script_name[0] == '/') snprintf(path, sizeof(path), "%s", script_name);
+    else if (script_name)                     snprintf(path, sizeof(path), "%s/%s", base, script_name);
+    else                                      snprintf(path, sizeof(path), "%s/%u.txt", base, pid);
     pthread_mutex_unlock(&mutex_contextos);
     FILE* f = fopen(path, "r");
     if (!f) { log_error(logger, "No se pudo abrir: %s", path); return NULL; }
