@@ -1,4 +1,4 @@
-# Pendientes para la entrega final — 05/07/2026 (actualizado 06/07/2026)
+# Pendientes para la entrega final — 05/07/2026 (actualizado 06/07/2026 — fix KM script path)
 
 **Fecha límite:** 11/07/2026  
 **Elaborado por:** Nicolas Alessandro Barreiro  
@@ -12,6 +12,7 @@
 |---|---|
 | 05/07/2026 | Versión inicial: identificados Bug 1, Bug 2, Bug 3 + análisis de issues |
 | 06/07/2026 | Merge de `fix/ks-bugs-runtime` a `develop`. Bug 1 y Bug 2 resueltos. Nuevos bugs identificados y corregidos en el mismo merge. |
+| 06/07/2026 | Fix KM: `leer_instruccion` ahora usa el path recibido en MSG_CREAR_PROCESO (commit `40d2afa`). Fix KS: log INIT_PROC (commit `1ed8a79`). Fix CPU: acentos en logs (commit `2308fc4`). Feat CPU: multi-MS (commit `8565a44`). |
 
 ---
 
@@ -40,6 +41,15 @@ El merge de `fix/ks-bugs-runtime` resolvió **todos los bugs críticos de runtim
 ---
 
 ## Pendientes reales (post-merge)
+
+### ~~Pendiente 0~~ — KM abría `<pid>.txt` en lugar del script real ✅ RESUELTO (06/07/2026)
+
+**Commit:** `40d2afa`  
+**Informe:** `kernel_memory/informes_temporales/fix_script_path_06-07-2026.md`
+
+El payload de `MSG_CREAR_PROCESO` incluye `{uint32_t pid, char path[]}` pero `leer_instruccion` ignoraba el campo `path` y abría `SCRIPTS_BASEPATH/<pid>.txt`. Se agrega una lista local `pid → script_name` (protegida por `mutex_contextos`) que se llena en el handler y se consulta al abrir el archivo. Detectado ejecutando la prueba `PLANI_PRE_0`.
+
+---
 
 ### ~~Pendiente 1~~ — CPU multi-Memory Stick ✅ RESUELTO (06/07/2026)
 
@@ -73,7 +83,7 @@ Corregidos los tres strings en `cpu_logs.c`: `"Interrupcion"` → `"Interrupció
 | Módulo | Compila | Flujo básico | Memoria física | Observaciones |
 |---|---|---|---|---|
 | utils | ✅ | ✅ | — | — |
-| kernel_memory | ✅ | ✅ | ✅ | Deadlock de compactación resuelto |
+| kernel_memory | ✅ | ✅ | ✅ | Deadlock de compactación resuelto. Bug script path resuelto |
 | kernel_scheduler | ✅ | ✅ | ✅ | Todos los bugs críticos resueltos |
 | cpu | ✅ | ✅ | ✅ | Multi-MS implementado. Logs corregidos |
 | memory_stick | ✅ | ✅ | ✅ | Hilo `atender_kernel_memory` agregado |
