@@ -13,6 +13,7 @@
 // int obtenerId();
 
 void* atender_cpu(void* arg);
+void* atender_kernel_memory(void* arg);
 void manejar_write(int fd_cpu, t_mensaje* msg);
 void manejar_read(int fd_cpu, t_mensaje* msg);
 void manejar_read_cpu(int fd_cpu, t_mensaje* msg);
@@ -173,6 +174,18 @@ int main(int argc, char* argv[]) {
 
     log_info(logger, "## Conectado a Kernel Memory");
 
+    // NOTA [fix]: KM usa esta conexión para leer/escribir memoria física
+    // (compactación, STDOUT/STDIN, suspensión). Antes nadie leía fd_km después
+    // del handshake, así que todos esos pedidos quedaban sin respuesta y KM se
+    // colgaba esperando. Este hilo atiende los pedidos de KM.
+    {
+        int* fd_km_heap = malloc(sizeof(int));
+        *fd_km_heap = fd_km;
+        pthread_t t_km;
+        pthread_create(&t_km, NULL, atender_kernel_memory, fd_km_heap);
+        pthread_detach(t_km);
+    }
+
     // -------------------------------------------------------------------
     // 7. Creo servidor y se queda la espera de una CPU
     // -------------------------------------------------------------------
@@ -211,6 +224,37 @@ int main(int argc, char* argv[]) {
     config_destroy(config);
     log_destroy(logger);
     return EXIT_SUCCESS;
+}
+
+// Atiende los pedidos de lectura/escritura que el Kernel Memory hace por la
+// conexión persistente establecida al identificarse (modo pedido/respuesta).
+void* atender_kernel_memory(void* arg) {
+    int fd_km = *((int*)arg);
+    free(arg);
+
+    while (1) {
+        t_mensaje* msg = recibir_mensaje(fd_km);
+        if (msg == NULL) {
+            log_warning(logger, "Kernel Memory cerró la conexión");
+            break;
+        }
+
+        switch (msg->op_code) {
+            case MSG_MEMORY_READ:
+                manejar_read(fd_km, msg);
+                break;
+            case MSG_MEMORY_WRITE:
+                manejar_write(fd_km, msg);
+                break;
+            default:
+                log_warning(logger, "KM: opcode inesperado %u", msg->op_code);
+                enviar_mensaje(fd_km, MSG_ERROR, NULL, 0);
+                break;
+        }
+
+        free_mensaje(msg);
+    }
+    return NULL;
 }
 
 void* atender_cpu(void* arg) {

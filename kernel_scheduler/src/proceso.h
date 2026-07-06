@@ -15,6 +15,7 @@ typedef struct {
     int      prioridad;
     int      fd_cpu;            // fd de la CPU que lo ejecuta (-1 si ninguna)
     int      preemptado;        // 1 si fue desalojado por QUEUE_PREEMPTION (va al frente de READY)
+    int      gen_despacho;      // se incrementa en cada despacho; invalida timers de quantum viejos
     time_t   tiempo_suspension; // epoch al momento de pasar a SUSP_BLOCK
 } t_proceso;
 
