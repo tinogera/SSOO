@@ -1352,7 +1352,10 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 break;
             }
             // Layout del payload: { uint32_t pid_padre, char path[], uint32_t prioridad }
-            // pid_padre se reserva para CK3.
+            uint32_t pid_padre_n;
+            memcpy(&pid_padre_n, msg->payload, sizeof(uint32_t));
+            int pid_padre = (int)ntohl(pid_padre_n);
+
             char* path_hijo = (char*)msg->payload + sizeof(uint32_t);
             size_t path_len = strlen(path_hijo) + 1;
             uint32_t prioridad_n;
@@ -1361,6 +1364,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                    sizeof(uint32_t));
             int prioridad = (int)ntohl(prioridad_n);
 
+            log_info(logger, "## (%d) - Solicitó syscall: INIT_PROC", pid_padre);
             t_proceso* hijo = crear_proceso(path_hijo, prioridad);
             enviar_mensaje(fd, hijo ? MSG_OK : MSG_ERROR, NULL, 0);
             break;
