@@ -41,16 +41,12 @@ El merge de `fix/ks-bugs-runtime` resolvió **todos los bugs críticos de runtim
 
 ## Pendientes reales (post-merge)
 
-### Pendiente 1 — CPU solo conecta a un Memory Stick (MEDIO)
+### ~~Pendiente 1~~ — CPU multi-Memory Stick ✅ RESUELTO (06/07/2026)
 
-**Responsable:** Kevin Castillo / Juan Manuel Fernandez  
-**Archivo:** `cpu/src/main.c`
+**Commit:** `8565a44`  
+**Informe:** `cpu/informes_temporales/feat_multi_ms_06-07-2026.md`
 
-La CPU lee un único `IP_MEMORY_STICK` + `PUERTO_MEMORY_STICK` del config. Si la corrección levanta dos MS, los datos del segundo son inaccesibles desde la CPU.
-
-**Decisión:** si la corrección usa un solo MS en sus scripts, no impacta. Si usa dos o más, es necesario el fix.
-
-**Fix posible:** parsear lista de MS en config, guardar array de fds indexado por `id_memory_stick`, seleccionar el fd correcto en `cpu_memoria.c` según la traducción MMU.
+Array `sockets_ms[CPU_MAX_MS]` indexado por `id_memory_stick`. Config usa claves `IP_MEMORY_STICK_0`, `IP_MEMORY_STICK_1`, etc. con fallback a `IP_MEMORY_STICK` (sin índice) para compatibilidad. `COPY_MEM` selecciona fd correcto para origen y destino por separado.
 
 ---
 
@@ -79,7 +75,7 @@ Corregidos los tres strings en `cpu_logs.c`: `"Interrupcion"` → `"Interrupció
 | utils | ✅ | ✅ | — | — |
 | kernel_memory | ✅ | ✅ | ✅ | Deadlock de compactación resuelto |
 | kernel_scheduler | ✅ | ✅ | ✅ | Todos los bugs críticos resueltos |
-| cpu | ✅ | ✅ | ✅ | 1 solo MS (Bug 3). Logs con tildes faltantes |
+| cpu | ✅ | ✅ | ✅ | Multi-MS implementado. Logs corregidos |
 | memory_stick | ✅ | ✅ | ✅ | Hilo `atender_kernel_memory` agregado |
 | io | ✅ | ✅ | — | — |
 | swap | ✅ | ✅ | — | — |
