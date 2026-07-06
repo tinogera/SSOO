@@ -53,6 +53,9 @@ t_list* memory_sticks;  // t_memory_stick*
 t_list* huecos;         // t_hueco*
 t_list* swap_metadata;  // t_swap_metadata*
 
+typedef struct { uint32_t pid; char* path; } t_pid_path;
+static t_list* script_paths = NULL; // t_pid_path* — protegido por mutex_contextos
+
 int     fd_ks   = -1;   // socket del Kernel Scheduler
 int     fd_swap = -1;   // socket del Swap
 uint32_t swap_block_size   = 0;
@@ -720,6 +723,7 @@ static void* atender_cliente(void* arg) {
             }
             uint32_t pid_n; memcpy(&pid_n, pedido->payload, 4);
             uint32_t pid = ntohl(pid_n);
+            char* script_name = (char*)pedido->payload + 4; // null-terminated por protocolo
 
             pthread_mutex_lock(&mutex_contextos);
             if (buscar_contexto(pid)) {
@@ -730,6 +734,10 @@ static void* atender_cliente(void* arg) {
             t_contexto* ctx = calloc(1, sizeof(t_contexto));
             ctx->pid = pid;
             list_add(contextos, ctx);
+            t_pid_path* pp = malloc(sizeof(t_pid_path));
+            pp->pid  = pid;
+            pp->path = strdup(script_name);
+            list_add(script_paths, pp);
             pthread_mutex_unlock(&mutex_contextos);
 
             log_info(logger, "## PID: %u - Proceso Creado", pid);
@@ -1003,7 +1011,15 @@ static void* atender_cliente(void* arg) {
 static char* leer_instruccion(uint32_t pid, uint32_t pc) {
     char* base = config_get_string_value(config, "SCRIPTS_BASEPATH");
     char path[512];
-    snprintf(path, sizeof(path), "%s/%u.txt", base, pid);
+    pthread_mutex_lock(&mutex_contextos);
+    char* script_name = NULL;
+    for (int i = 0; i < list_size(script_paths); i++) {
+        t_pid_path* pp = list_get(script_paths, i);
+        if (pp->pid == pid) { script_name = pp->path; break; }
+    }
+    if (script_name) snprintf(path, sizeof(path), "%s/%s", base, script_name);
+    else             snprintf(path, sizeof(path), "%s/%u.txt", base, pid);
+    pthread_mutex_unlock(&mutex_contextos);
     FILE* f = fopen(path, "r");
     if (!f) { log_error(logger, "No se pudo abrir: %s", path); return NULL; }
     char line[256];
@@ -1033,6 +1049,7 @@ int main(int argc, char* argv[]) {
     memory_sticks = list_create();
     huecos        = list_create();
     swap_metadata = list_create();
+    script_paths  = list_create();
 
     int puerto = config_get_int_value(config, "KERNEL_MEMORY_PORT");
     int srv    = crear_servidor(puerto);
