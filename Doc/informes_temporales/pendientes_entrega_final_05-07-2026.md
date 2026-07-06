@@ -1,391 +1,165 @@
-# Pendientes para la entrega final — 05/07/2026
+# Pendientes para la entrega final — 05/07/2026 (actualizado 06/07/2026)
 
-**Fecha límite:** 11/07/2026 (6 días)  
+**Fecha límite:** 11/07/2026  
 **Elaborado por:** Nicolas Alessandro Barreiro  
 **Base:** revisión directa del código en `develop` — no de la documentación
 
 ---
 
-## Contexto
+## Historial de cambios del documento
 
-El CK3 se cerró con todos los módulos compilando y el flujo básico (MUTEX → SLEEP → EXIT) funcionando. Sin embargo, la prueba de integración usada en CK3 **no tocó memoria física en absoluto** (sin MEM_ALLOC, MOV_IN/OUT, STDOUT/STDIN real). Al revisar el código para la entrega final aparecieron dos bugs críticos que harían fallar cualquier script que use instrucciones de memoria.
-
----
-
-## Bug 1 — Memory Stick no escucha a Kernel Memory (CRÍTICO)
-
-**Responsable:** Juan Manuel Fernandez  
-**Archivo:** `memory_stick/src/main.c`
-
-### El problema
-
-Cuando el MS arranca, conecta a KM, envía `MSG_MEMORY_STICK_IDENTIFICACION` y recibe `MSG_OK`. Después de eso, `fd_km` **nunca se vuelve a leer**. El MS solo crea un servidor y atiende conexiones de CPUs.
-
-Mientras tanto, KM usa `ms->fd` (el fd de la conexión aceptada cuando MS se conectó) para enviar `MSG_MEMORY_READ` y `MSG_MEMORY_WRITE` cada vez que necesita leer o escribir datos físicos. Como el MS no está leyendo de su `fd_km`, **KM se bloquea para siempre** en el `recibir_mensaje` que sigue al envío.
-
-### Qué falla en la práctica
-
-- Cualquier script con `MEM_ALLOC` → KM intenta asignar el segmento, y cuando necesita verificar espacio o inicializar, puede necesitar acceso físico → deadlock.
-- `STDOUT` real: KS pide a KM los bytes con `MSG_LEER_DATOS`, KM llama `leer_fisico()` → `ms_leer()` → envía a `ms->fd` y espera respuesta que nunca llega.
-- `STDIN` real: igual, vía `escribir_fisico()` → `ms_escribir()`.
-- `Compactación`: `compactar()` hace `leer_fisico()` y `escribir_fisico()` para mover segmentos.
-- `Suspensión/des-suspensión`: `suspender_proceso()` llama `leer_fisico()` para copiar datos a Swap.
-
-### Fix necesario
-
-Agregar un hilo en `main()` de Memory Stick que lea de `fd_km` en un loop y responda los pedidos de KM. Lanzarlo justo después del handshake, antes del loop de aceptar CPUs:
-
-```c
-// En memory_stick/src/main.c
-
-typedef struct {
-    int fd_km;
-} t_km_args;
-
-void* atender_km(void* arg) {
-    t_km_args* a = (t_km_args*) arg;
-    int fd = a->fd_km;
-    free(a);
-
-    while (1) {
-        t_mensaje* msg = recibir_mensaje(fd);
-        if (!msg) {
-            log_warning(logger, "KM cerró la conexión");
-            break;
-        }
-        switch (msg->op_code) {
-            case MSG_MEMORY_READ:
-                manejar_read(fd, msg);   // ya existe — responde MSG_MEMORY_READ_RESPUESTA
-                break;
-            case MSG_MEMORY_WRITE:
-                manejar_write(fd, msg);  // ya existe — responde MSG_OK
-                break;
-            default:
-                log_warning(logger, "KM: opcode inesperado %u", msg->op_code);
-                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-                break;
-        }
-        free_mensaje(msg);
-    }
-    return NULL;
-}
-```
-
-Y en `main()`, después de recibir `MSG_OK` del handshake con KM y **antes** del loop de aceptar CPUs:
-
-```c
-t_km_args* km_args = malloc(sizeof(t_km_args));
-km_args->fd_km = fd_km;
-pthread_t t_km;
-pthread_create(&t_km, NULL, atender_km, km_args);
-pthread_detach(t_km);
-```
-
-**Nota:** `manejar_read` y `manejar_write` ya existen y tienen la lógica correcta (leen/escriben de `memoria_global.buffer`, aplican delay, usan mutex). No hay que cambiarlos.
+| Fecha | Cambio |
+|---|---|
+| 05/07/2026 | Versión inicial: identificados Bug 1, Bug 2, Bug 3 + análisis de issues |
+| 06/07/2026 | Merge de `fix/ks-bugs-runtime` a `develop`. Bug 1 y Bug 2 resueltos. Nuevos bugs identificados y corregidos en el mismo merge. |
 
 ---
 
-## Bug 2 — MEM_ALLOC / MEM_FREE: flujo roto entre CPU y KS (CRÍTICO)
+## Estado actual (06/07/2026)
 
-**Responsables:** Kevin Castillo (CPU) + Nicolas Alessandro Barreiro (KS)  
-**Archivos:**
-- `cpu/src/cpu_ciclo.c`
-- `cpu/src/cpu_syscalls.c`
-- `kernel_scheduler/src/main.c`
+El merge de `fix/ks-bugs-runtime` resolvió **todos los bugs críticos de runtime** identificados ayer y varios bugs adicionales que no habíamos detectado. El sistema ahora puede ejecutar scripts con memoria física (MEM_ALLOC, MOV_IN/OUT, STDOUT/STDIN real).
 
-### El problema
+### Resuelto en el merge (06/07/2026)
 
-En `cpu_ciclo.c`, `CPU_INST_MEM_ALLOC` y `CPU_INST_MEM_FREE` están en `es_syscall_o_exit`, así que el ciclo retorna `CPU_CICLO_SYSCALL`. Eso hace que `main.c` ejecute:
-
-```c
-guardar_contexto_en_memory(...)
-devolver_proceso_a_scheduler(...)  // → envía MSG_DEVOLVER_PROCESO al KS
-```
-
-Pero el KS en `manejar_mem_alloc` (hilo separado) hace `km_request`, luego `re_exec_sin_despachar`, y finalmente:
-
-```c
-enviar_mensaje(a->fd_cpu, MSG_OK, NULL, 0);
-```
-
-El CPU ya salió del ciclo y está en `recibir_proceso_a_ejecutar` esperando `MSG_DESPACHAR_PROCESO` (op_code 17). Recibe `MSG_OK` (op_code 3) y falla con:
-
-```
-Mensaje inesperado esperando proceso a ejecutar: op_code=3
-```
-
-La CPU corta el loop y se cierra.
-
-### Fix en la CPU (Kevin)
-
-**`cpu/src/cpu_syscalls.c`** — agregar `esperar_ok_kernel` al final de `enviar_syscall_mem_alloc` y `enviar_syscall_mem_free`:
-
-```c
-bool enviar_syscall_mem_alloc(...) {
-    // ... armar payload y enviar_mensaje ... (sin cambios)
-    return esperar_ok_kernel(socket_kernel, "MEM_ALLOC", logger);
-    // antes retornaba true directamente
-}
-
-bool enviar_syscall_mem_free(...) {
-    // ... armar payload y enviar_mensaje ... (sin cambios)
-    return esperar_ok_kernel(socket_kernel, "MEM_FREE", logger);
-    // antes retornaba true directamente
-}
-```
-
-**`cpu/src/cpu_ciclo.c`** — sacar `CPU_INST_MEM_ALLOC` y `CPU_INST_MEM_FREE` de `es_syscall_o_exit` y no retornar del ciclo:
-
-```c
-static bool es_syscall_o_exit(t_opcode_cpu opcode) {
-    return opcode == CPU_INST_MUTEX_CREATE ||
-           opcode == CPU_INST_MUTEX_LOCK   ||
-           opcode == CPU_INST_MUTEX_UNLOCK ||
-           opcode == CPU_INST_SLEEP        ||
-           // CPU_INST_MEM_ALLOC  ← SACAR
-           // CPU_INST_MEM_FREE   ← SACAR
-           opcode == CPU_INST_INIT_PROC    ||
-           opcode == CPU_INST_STDOUT       ||
-           opcode == CPU_INST_STDIN        ||
-           opcode == CPU_INST_EXIT;
-}
-
-static bool es_mem_syscall(t_opcode_cpu opcode) {
-    return opcode == CPU_INST_MEM_ALLOC || opcode == CPU_INST_MEM_FREE;
-}
-```
-
-Y en el loop principal de `ejecutar_ciclo_proceso`, agregar el branch para MEM_ALLOC/MEM_FREE antes del bloque de `es_syscall_o_exit`:
-
-```c
-// Instrucciones de memoria que NO devuelven el proceso al KS
-if (es_mem_syscall(instruccion.opcode)) {
-    registros->pc++;
-    char parametros[CPU_MAX_PARAMETROS * CPU_MAX_PARAMETRO_LENGTH];
-    armar_parametros(&instruccion, parametros, sizeof(parametros));
-    log_cpu_ejecucion(logger, pid, opcode_cpu_to_string(instruccion.opcode), parametros);
-    if (!ejecutar_syscall(socket_kernel, pid, &instruccion, registros, logger)) {
-        return CPU_CICLO_ERROR_EXECUTE;
-    }
-    // NO retornar — seguir ejecutando el ciclo
-    t_interrupcion_cpu interrupcion;
-    if (recibir_interrupcion_cpu_si_hay(socket_kernel, &interrupcion, logger)) {
-        return CPU_CICLO_INTERRUPCION;
-    }
-    continue;
-}
-```
-
-### Fix en el KS (Nicolas)
-
-Con el fix de CPU, el proceso ya no sale de exec durante MEM_ALLOC. El KS puede simplificar `manejar_mem_alloc` y `manejar_mem_free`: sacar las llamadas a `sacar_proc_de_exec_para_mem` y `re_exec_sin_despachar` (que ya no tienen sentido). El proceso se queda en exec durante todo el tiempo que dura la operación de KM.
-
-**`kernel_scheduler/src/main.c`** — en el handler `MSG_MEM_ALLOC`:
-
-```c
-case MSG_MEM_ALLOC: {
-    // ... validación del payload ... (sin cambios)
-    t_payload_syscall_mem_alloc* p = (t_payload_syscall_mem_alloc*) msg->payload;
-    int pid_ma = (int)ntohl(p->pid);
-
-    // Buscar el proceso en exec (pero NO sacarlo — la CPU sigue ejecutándolo, bloqueada
-    // en esperar_ok_kernel esperando nuestra respuesta)
-    t_proceso* proc_ma = NULL;
-    pthread_mutex_lock(&mutex_exec);
-    for (int i = 0; i < (int)queue_size(cola_exec); i++) {
-        t_proceso* q = list_get(cola_exec->elements, i);
-        if (q->PID == pid_ma) { proc_ma = q; break; }
-    }
-    pthread_mutex_unlock(&mutex_exec);
-
-    if (!proc_ma) {
-        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-        free_mensaje(msg);
-        break;
-    }
-
-    t_args_mem_alloc* args_ma = malloc(sizeof(t_args_mem_alloc));
-    args_ma->proc        = proc_ma;
-    args_ma->fd_cpu      = fd;
-    args_ma->id_segmento = ntohl(p->id_segmento);
-    args_ma->tamanio     = ntohl(p->tamanio);
-
-    pthread_t t_ma;
-    pthread_create(&t_ma, NULL, manejar_mem_alloc, args_ma);
-    pthread_detach(t_ma);
-
-    free_mensaje(msg);
-    break;
-}
-```
-
-Y en `manejar_mem_alloc`, sacar las llamadas a `sacar_proc_de_exec_para_mem` y `re_exec_sin_despachar`:
-
-```c
-static void* manejar_mem_alloc(void* arg) {
-    t_args_mem_alloc* a = (t_args_mem_alloc*) arg;
-
-    t_payload_crear_segmento payload = {
-        .pid         = htonl((uint32_t)a->proc->PID),
-        .id_segmento = htonl(a->id_segmento),
-        .tamanio     = htonl(a->tamanio)
-    };
-
-    t_mensaje* resp = km_request(MSG_CREAR_SEGMENTO, &payload, sizeof(payload));
-
-    // El proceso sigue en cola_exec — solo respondemos OK/ERROR a la CPU
-    if (resp && resp->op_code == MSG_TABLA_SEGMENTOS) {
-        enviar_mensaje(a->fd_cpu, MSG_OK, NULL, 0);
-    } else {
-        enviar_mensaje(a->fd_cpu, MSG_ERROR, NULL, 0);
-    }
-
-    if (resp) free_mensaje(resp);
-    free(a);
-    return NULL;
-}
-```
-
-Ídem para `manejar_mem_free`.
-
-**Nota:** el hilo separado sigue siendo necesario porque si KM necesita compactar antes de crear el segmento, enviará `MSG_COMPACTAR` al KS (recibido por `thread_km_listener`), que a su vez llama a `handle_compactar` (también en hilo separado). `handle_compactar` llama `km_request(MSG_FIN_COMPACTACION, ...)`. Si `manejar_mem_alloc` fuera inline en `atender_cpu`, tendría `mutex_km_req` tomado y `handle_compactar` no podría tomarlo → deadlock. El diseño con hilo separado evita exactamente eso.
+| Bug | Módulo | Descripción | Responsable |
+|---|---|---|---|
+| Bug 1 | MS | MS no tenía hilo que leyera `fd_km` → KM se bloqueaba en `ms_leer`/`ms_escribir` | Juan Manuel |
+| Bug 2 (KS) | KS | `manejar_mem_alloc`/`manejar_mem_free`: flujo incompatible con la CPU. Fix: `consumir_devolver()` + `redespachar_a_misma_cpu()` | Santiago |
+| Bug 2 (CPU) | CPU | `recibir_proceso_a_ejecutar` abortaba ante mensajes inesperados (interrupciones tardías). Fix: `continue` en lugar de `return false` | Santiago |
+| KM deadlock compactación | KM | El hilo que atendía `MSG_CREAR_SEGMENTO` hacía `sem_wait` esperando `MSG_FIN_COMPACTACION`, pero ambos llegan por la misma conexión → deadlock determinístico. Fix: pedido pendiente + responder desde el handler de `MSG_FIN_COMPACTACION` | Santiago |
+| KS deadlock cruzado compactación | KS | `handle_compactar` no podía usar `km_request` (el mutex lo tenía `manejar_mem_alloc`). Fix: `mutex_km_send` para envío directo + `sem_fin_compactacion` | Santiago |
+| Comparación de prioridades invertida | KS | `cmp_suspension` usaba `>` en lugar de `<` → orden de des-suspensión por prioridad al revés | Santiago |
+| Quantum timer fantasma | KS | Timer de RR podía desalojar un proceso ya re-despachado. Fix: campo `gen_despacho` en `t_proceso` | Santiago |
+| CPU desconectada durante EXEC | KS | El proceso en ejecución quedaba huérfano. Fix: rescate del proceso + vuelta a READY | Santiago |
+| IO desconectada | KS | `fd_io_*` no se invalidaba → próximas syscalls enviaban a socket muerto | Santiago |
+| Lector competitivo MS/Swap en KM | KM | Tras identificarse, el hilo de aceptación seguía leyendo en competencia con `ms_leer`/`ms_escribir`. Fix: `conexion_pasiva = 1` → hilo termina tras identificación | Santiago |
+| KS logs MEM_ALLOC/MEM_FREE | KS | Faltaban `"## (%d) - Solicitó syscall: MEM_ALLOC/MEM_FREE"` | Santiago |
+| MUTEX_LOCK sobre mutex inexistente | KS | Proceso quedaba fuera de todas las colas. Fix: finalizar con motivo ERROR | Santiago |
+| Des-suspensión enviaba MSG_COMPACTAR | KM | Cuando no había espacio, KM enviaba `MSG_COMPACTAR` al intentar des-suspender. Fix: `MSG_ERROR` (el enunciado prohíbe compactar en des-suspensión) | Santiago |
 
 ---
 
-## Bug 3 — CPU conecta a un solo Memory Stick (MEDIO)
+## Pendientes reales (post-merge)
+
+### Pendiente 1 — CPU solo conecta a un Memory Stick (MEDIO)
 
 **Responsable:** Kevin Castillo / Juan Manuel Fernandez  
 **Archivo:** `cpu/src/main.c`
 
-### El problema
+La CPU lee un único `IP_MEMORY_STICK` + `PUERTO_MEMORY_STICK` del config. Si la corrección levanta dos MS, los datos del segundo son inaccesibles desde la CPU.
 
-La CPU lee `IP_MEMORY_STICK` y `PUERTO_MEMORY_STICK` del config y conecta a **un único MS**. Si el sistema tiene múltiples MS (cada uno con su propio puerto), la CPU solo accede al primero. Las instrucciones `MOV_IN`/`MOV_OUT` sobre datos que físicamente están en el segundo MS fallarán o accederán a direcciones incorrectas.
+**Decisión:** si la corrección usa un solo MS en sus scripts, no impacta. Si usa dos o más, es necesario el fix.
 
-### Evaluación de impacto
-
-Para la entrega final, si los correctors levantan un único Memory Stick (configuración mínima), esto no se nota. Si usan dos, los datos del segundo MS serán inaccesibles desde la CPU. La prioridad depende de cuántos MS use la corrección.
-
-### Fix posible
-
-Cambiar el config para que acepte una lista de Memory Sticks y la CPU conecte a todos al inicio. Requiere:
-- Parsear `MEMORY_STICKS=[127.0.0.1:8003, 127.0.0.1:8004]` en `main.c`
-- Guardar un array de `socket_memoria_usuario[]` indexado por `id_memory_stick`
-- Pasar ese array a `ejecutar_ciclo_proceso` y usarlo en `cpu_memoria.c` para elegir el fd correcto según `traduccion.id_memory_stick`
-
-**Decisión del equipo:** si en la entrega solo se usan tests con 1 MS, este bug puede diferirse. Si se usan 2 o más, es necesario.
+**Fix posible:** parsear lista de MS en config, guardar array de fds indexado por `id_memory_stick`, seleccionar el fd correcto en `cpu_memoria.c` según la traducción MMU.
 
 ---
 
-## Estado global de los módulos (05/07/2026)
+### Pendiente 2 — Log faltante: KS no loguea "Solicitó syscall: INIT_PROC" (BAJO)
 
-| Módulo | Compila | Flujo básico | Memoria física |
-|---|---|---|---|
-| utils | ✅ | ✅ | — |
-| kernel_memory | ✅ | ✅ | ✅ (leer/escribir físico implementado) |
-| kernel_scheduler | ✅ | ✅ | ⚠️ MEM_ALLOC/FREE roto (Bug 2) |
-| cpu | ✅ | ✅ | ⚠️ MEM_ALLOC/FREE roto (Bug 2), 1 solo MS (Bug 3) |
-| memory_stick | ✅ | ✅ (CPU↔MS) | ❌ KM↔MS no funciona (Bug 1) |
-| io | ✅ | ✅ | — |
-| swap | ✅ | ✅ | — |
+**Responsable:** Kevin Castillo  
+**Archivo:** `kernel_scheduler/src/main.c` — handler `MSG_INIT_PROC` (línea ~1207)
+
+El handler de `MSG_INIT_PROC` crea el proceso hijo y responde `MSG_OK` sin loguear la syscall. Falta agregar antes de `crear_proceso`:
+
+```c
+log_info(logger, "## (%d) - Solicitó syscall: INIT_PROC", pid_padre);
+```
+
+El `pid_padre` está disponible en `msg->payload` (primer `uint32_t` del payload).
 
 ---
 
-## Plan de trabajo sugerido
+### Pendiente 3 — Logs CPU con acentos incorrectos (BAJO)
+
+**Responsable:** Kevin Castillo  
+**Archivo:** `cpu/src/cpu_logs.c`
+
+| Línea | Actual | Requerido |
+|---|---|---|
+| 8 | `"## Interrupcion recibida"` | `"## Interrupción recibida"` |
+| 18 | `"Accion: %s"` | `"Acción: %s"` |
+| 18 | `"Direccion Fisica: %u"` | `"Dirección Física: %u"` |
+
+---
+
+## Estado global de los módulos (06/07/2026)
+
+| Módulo | Compila | Flujo básico | Memoria física | Observaciones |
+|---|---|---|---|---|
+| utils | ✅ | ✅ | — | — |
+| kernel_memory | ✅ | ✅ | ✅ | Deadlock de compactación resuelto |
+| kernel_scheduler | ✅ | ✅ | ✅ | Todos los bugs críticos resueltos |
+| cpu | ✅ | ✅ | ✅ | 1 solo MS (Bug 3). Logs con tildes faltantes |
+| memory_stick | ✅ | ✅ | ✅ | Hilo `atender_kernel_memory` agregado |
+| io | ✅ | ✅ | — | — |
+| swap | ✅ | ✅ | — | — |
+
+---
+
+## Plan de trabajo restante
 
 | Orden | Quién | Qué | Estimación |
 |---|---|---|---|
-| 1 | Juan Manuel | Bug 1: agregar `atender_km` thread en Memory Stick | ~1h |
-| 2 | Kevin | Bug 2 (CPU): `esperar_ok_kernel` en mem_alloc/free + sacar de `es_syscall_o_exit` | ~1h |
-| 3 | Nicolas | Bug 2 (KS): simplificar `manejar_mem_alloc`/`manejar_mem_free` para no usar `sacar_proc_de_exec_para_mem` | ~30 min |
-| 4 | Todos | Prueba de integración con script que incluya MEM_ALLOC + MOV_IN + STDOUT | ~2h |
-| 5 | Kevin/JuanMa | Bug 3: multi-MS en CPU (según necesidad de la corrección) | ~2h |
-
-El orden importa: el Bug 1 y el Bug 2 son independientes entre sí (módulos distintos) — se pueden resolver en paralelo.
+| 1 | Kevin | Agregar `## (%d) - Solicitó syscall: INIT_PROC` en handler MSG_INIT_PROC | 5 min |
+| 2 | Kevin | Corregir acentos en `cpu_logs.c` (3 strings) | 5 min |
+| 3 | Todos | Prueba de integración con script que use MEM_ALLOC + MOV_IN/OUT + STDOUT | ~2h |
+| 4 | Kevin/JuanMa | Bug 3: multi-MS en CPU (según necesidad de la corrección) | ~2h |
+| 5 | Nicolas | Merge `develop → main` para entrega final | 15 min |
 
 ---
 
 ## Estado de Issues en GitHub (revisión 06/07/2026)
 
-Hay 31 issues abiertos. Se revisó el código en `develop` para verificar cuáles están efectivamente implementados.
-
 ### Issues listos para CERRAR (23)
 
-Código verificado — funcionan correctamente:
+Código verificado en `develop` post-merge:
 
 | # | Título | Evidencia |
 |---|---|---|
-| #26 | MMU: traducción lógica→física | `cpu_mmu.c`: `id_seg = dir / SEGMENT_MAX_SIZE`, `desp = dir % SEGMENT_MAX_SIZE` ✅ |
-| #27 | MOV_IN / MOV_OUT | `cpu_ciclo.c` + `cpu_memoria.c`: `memoria_read`/`memoria_write` implementados ✅ |
-| #28 | COPY_MEM | `cpu_ciclo.c`: copia memoria→registro→memoria vía MMU ✅ |
-| #30 | INIT_PROC / EXIT | `cpu_syscalls.c`: `enviar_syscall_init_proc` y `enviar_syscall_exit` implementados ✅ |
-| #31 | CPU↔MS comunicación directa | `cpu/main.c`: conecta a MS, envía `MSG_CPU_IDENTIFICACION`, recibe `MSG_OK` ✅ |
-| #32 | Tabla de segmentos por PID | `kernel_memory/main.c`: `t_tabla_segmentos` por PID con `t_list* segmentos` ✅ |
-| #33 | Best Fit | `kernel_memory/main.c`: `buscar_hueco_best_fit()` implementado ✅ |
-| #34 | Worst Fit | `kernel_memory/main.c`: `buscar_hueco_worst_fit()` implementado ✅ |
-| #35 | Creación/eliminación de segmentos | `MSG_CREAR_SEGMENTO` y `MSG_ELIMINAR_SEGMENTO` en KM ✅ |
-| #37 | Hot-plug de Memory Sticks | `MSG_MAS_MEMORIA` en KM: agrega MS a lista con `offset_global` acumulado ✅ |
-| #38 | Compactación | `handle_compactar` en KS + `compactar()` en KM con `MSG_FIN_COMPACTACION` ✅ |
-| #39 | Suspensión (KM) | `suspender_proceso()`: copia segmentos a Swap con `MSG_SWAP_ESCRIBIR` ✅ |
-| #40 | Des-suspensión (KM) | `dessuspender_proceso()`: restaura desde Swap con `MSG_SWAP_LEER` ✅ |
-| #42 | Des-suspensión por memoria disponible (KS) | `manejar_mas_memoria()`: intenta des-suspender procesos en SUSPENDED ✅ |
-| #47 | BSOD por desconexión de MS | `manejar_bsod()`: finaliza todos los procesos activos ✅ |
-| #49 | Swap lectura/escritura | `swap/main.c`: `MSG_SWAP_LEER` y `MSG_SWAP_ESCRIBIR` implementados ✅ |
-| #53 | Logs obligatorios KM | Todos los logs requeridos presentes con formato correcto ✅ |
-| #62 | Syscalls MUTEX_CREATE/UNLOCK/EXIT no esperan MSG_OK | `cpu_syscalls.c`: `return true` directo en esas tres, sin `esperar_ok_kernel` ✅ |
-| #64 | STDOUT/STDIN con dirección física | KM recibe dirección lógica de KS y hace `traducir_direccion()` internamente ✅ |
-| #65 | Flujo completo STDOUT | KS→KM con `MSG_LEER_DATOS`, KM→MS, KM→KS con `MSG_LEER_DATOS_RESP`, KS→IO ✅ |
-| #66 | Flujo completo STDIN | KS→IO, IO→KS con datos, KS→KM con `MSG_ESCRIBIR_DATOS` ✅ |
-| #68 | Des-suspensión usa BEST/WORST FIT | `dessuspender_proceso()` llama `buscar_hueco_best_fit`/`worst_fit` según config ✅ |
-| #69 | Direcciones físicas globales | `ms_para_direccion()` divide por rango con `offset_global` por MS ✅ |
+| #26 | MMU: traducción lógica→física | `cpu_mmu.c` ✅ |
+| #27 | MOV_IN / MOV_OUT | `cpu_ciclo.c` + `cpu_memoria.c` ✅ |
+| #28 | COPY_MEM | `cpu_ciclo.c` ✅ |
+| #30 | INIT_PROC / EXIT | `cpu_syscalls.c` ✅ |
+| #31 | CPU↔MS comunicación directa | `cpu/main.c` + `memory_stick/main.c` ✅ |
+| #32 | Tabla de segmentos por PID | `kernel_memory/main.c` ✅ |
+| #33 | Best Fit | `buscar_hueco_best_fit()` ✅ |
+| #34 | Worst Fit | `buscar_hueco_worst_fit()` ✅ |
+| #35 | Creación/eliminación de segmentos | `MSG_CREAR_SEGMENTO` / `MSG_ELIMINAR_SEGMENTO` ✅ |
+| #36 | KM lectura/escritura desde/hacia MS | `ms_leer()`/`ms_escribir()` + hilo `atender_kernel_memory` en MS ✅ |
+| #37 | Hot-plug de Memory Sticks | `MSG_MAS_MEMORIA` + `offset_global` ✅ |
+| #38 | Compactación | `handle_compactar` KS + `compactar()` KM — deadlock resuelto ✅ |
+| #39 | Suspensión | `suspender_proceso()` → Swap ✅ |
+| #40 | Des-suspensión | `dessuspender_proceso()` desde Swap ✅ |
+| #42 | Des-suspensión por memoria disponible | `manejar_mas_memoria()` ✅ |
+| #47 | BSOD | `manejar_bsod()` ✅ |
+| #49 | Swap lectura/escritura | `MSG_SWAP_LEER` / `MSG_SWAP_ESCRIBIR` ✅ |
+| #53 | Logs KM | Todos los logs requeridos presentes ✅ |
+| #62 | Syscalls MUTEX_CREATE/UNLOCK/EXIT no esperan MSG_OK | `cpu_syscalls.c` ✅ |
+| #64 | STDOUT/STDIN con dirección física | KM traduce internamente ✅ |
+| #65 | Flujo completo STDOUT | KS→KM→MS→IO ✅ |
+| #66 | Flujo completo STDIN | IO→KS→KM→MS ✅ |
+| #67 | MEM_ALLOC/MEM_FREE re-despacho a misma CPU | `redespachar_a_misma_cpu()` ✅ |
+| #68 | Des-suspensión usa BEST/WORST FIT | `dessuspender_proceso()` ✅ |
+| #69 | Direcciones físicas globales | `ms_para_direccion()` + `offset_global` ✅ |
+| #29 | MEM_ALLOC/MEM_FREE en CPU | `consumir_devolver()` + `recibir_proceso_a_ejecutar()` resiliente ✅ |
 
-### Issues que deben PERMANECER ABIERTOS (8)
+### Issues que deben PERMANECER ABIERTOS (5)
 
-#### Bugs de código real
-
-| # | Título | Problema |
+| # | Título | Razón |
 |---|---|---|
-| #36 | KM lectura/escritura desde/hacia MS | MS no lee de `fd_km` después del handshake → KM se bloquea en `ms_leer`/`ms_escribir` (Bug 1) |
-| #29 | MEM_ALLOC/MEM_FREE en CPU | CPU retorna `CPU_CICLO_SYSCALL` → envía `MSG_DEVOLVER_PROCESO` en lugar de esperar `MSG_OK` (Bug 2, lado CPU) |
-| #67 | MEM_ALLOC/MEM_FREE re-despacho KS | KS hace `sacar_proc_de_exec` + `km_request` + `re_exec` + `MSG_OK` → incompatible con el flujo corregido (Bug 2, lado KS) |
-
-#### Logs con discrepancias reales (#52 y #54)
-
-**#52 — KS logs faltantes:**
-
-El handler `MSG_MEM_ALLOC` en `atender_cpu` (línea ~1086 de `kernel_scheduler/src/main.c`) loguea `## (%d) - MEM_ALLOC: solicita crear segmento...` en vez del formato estándar. Faltan los logs:
-
-```
-## (<PID>) - Solicitó syscall: MEM_ALLOC    ← ausente en handler de MSG_MEM_ALLOC
-## (<PID>) - Solicitó syscall: MEM_FREE     ← ausente en handler de MSG_MEM_FREE
-## (<PID>) - Solicitó syscall: INIT_PROC    ← ausente en handler de MSG_INIT_PROC
-```
-
-Responsable del fix: **Nicolas** (MEM_ALLOC, MEM_FREE — mismo archivo que Bug 2) + **Kevin** (INIT_PROC — `atender_cpu` lo maneja en el hilo de CPU).
-
-**#54 — CPU logs con acentos incorrectos:**
-
-En `cpu/src/cpu_logs.c`:
-- Línea 8: `"## Interrupcion recibida"` → debería ser `"## Interrupción recibida"`
-- Línea 18: `"PID: %u - Accion: %s - Direccion Fisica: %u - Valor: %u"` → debería ser `"Acción"` y `"Dirección Física"`
-
-Responsable del fix: **Kevin** (archivos de CPU).
-
-#### Testing / deployment sin ejecutar
-
-| # | Título | Estado |
-|---|---|---|
-| #50 | Prueba de integración multi-CPU | No ejecutada — requiere tener bugs 1 y 2 resueltos |
-| #51 | Prueba de hot-plug dinámico | No ejecutada — requiere levantar sistema completo |
+| #52 | Logs KS | Falta `"Solicitó syscall: INIT_PROC"` (Pendiente 2) |
+| #54 | Logs CPU/IO/MS/Swap | CPU: tildes faltantes en 3 strings (Pendiente 3) |
+| #50 | Prueba multi-CPU | No ejecutada aún |
+| #51 | Prueba hot-plug dinámico | No ejecutada aún |
 | #55 | Script de deployment | No implementado |
 
 ### Resumen ejecutivo
 
 ```
-CERRAR ahora (23):  #26 #27 #28 #30 #31 #32 #33 #34 #35 #37
-                    #38 #39 #40 #42 #47 #49 #53 #62 #64 #65
-                    #66 #68 #69
+CERRAR ahora (26):  #26 #27 #28 #29 #30 #31 #32 #33 #34 #35
+                    #36 #37 #38 #39 #40 #42 #47 #49 #53 #62
+                    #64 #65 #66 #67 #68 #69
 
-MANTENER abiertos (8): #29 #36 #67 (bugs)
-                       #52 #54 (logs)
+MANTENER abiertos (5): #52 #54 (logs menores)
                        #50 #51 #55 (testing/deploy)
 ```
