@@ -22,11 +22,11 @@ context (cpu_mmu) {
             };
             t_traduccion_mmu traduccion;
 
+            set_segment_max_size(256);
             t_resultado_mmu resultado = traducir_direccion_logica(
                 &contexto,
                 524,
                 4,
-                256,
                 &traduccion
             );
 
@@ -53,11 +53,11 @@ context (cpu_mmu) {
             };
             t_traduccion_mmu traduccion;
 
+            set_segment_max_size(256);
             t_resultado_mmu resultado = traducir_direccion_logica(
                 &contexto,
                 524,
                 4,
-                256,
                 &traduccion
             );
 
@@ -80,11 +80,11 @@ context (cpu_mmu) {
             };
             t_traduccion_mmu traduccion;
 
+            set_segment_max_size(256);
             t_resultado_mmu resultado = traducir_direccion_logica(
                 &contexto,
                 524,
                 8,
-                256,
                 &traduccion
             );
 

@@ -29,6 +29,13 @@ static int             compactando       = 0;
 static pthread_mutex_t mutex_compactando = PTHREAD_MUTEX_INITIALIZER;
 static sem_t           sem_cpus_devueltas;  // señalado por cada CPU que devuelve durante compactación
 static sem_t           sem_planificador_ok; // 1=normal, 0=compactando (bloquea thread_planificador)
+// El MSG_FIN_COMPACTACION no puede ir por km_request: mutex_km_req está retenido
+// por el manejar_mem_alloc que disparó la compactación. Se envía crudo (con
+// mutex_km_send) y handle_compactar espera sem_fin_compactacion, que señala el
+// hilo de MEM_ALLOC al recibir su respuesta (KM la envía recién tras compactar).
+static sem_t           sem_fin_compactacion;
+static int             esperando_fin_compactacion = 0; // protegido por mutex_compactando
+static pthread_mutex_t mutex_km_send = PTHREAD_MUTEX_INITIALIZER; // serializa envíos crudos a fd_km
 
 t_queue *cola_new, *cola_exec;
 t_queue *cola_block, *cola_susp_block, *cola_susp_ready, *cola_exit;
@@ -53,6 +60,14 @@ typedef struct {
     int fd;
     int ocupada;
 } t_cpu_entry;
+
+// Args del timer de quantum: pid + generación de despacho. Un timer solo
+// interrumpe si el proceso sigue en EXEC *del mismo despacho*; si el proceso
+// se bloqueó y fue re-despachado rápido, el timer viejo no debe desalojarlo.
+typedef struct {
+    int pid;
+    int gen;
+} t_quantum_args;
 
 static t_list*         lista_cpus = NULL;
 static pthread_mutex_t mutex_cpus = PTHREAD_MUTEX_INITIALIZER;
@@ -217,7 +232,7 @@ static bool cmp_suspension(void* a, void* b) {
     t_proceso* pa = (t_proceso*)a;
     t_proceso* pb = (t_proceso*)b;
     if (pa->prioridad != pb->prioridad)
-        return pa->prioridad > pb->prioridad;          // mayor prioridad primero
+        return pa->prioridad < pb->prioridad;          // mayor prioridad (número menor) primero
     return pa->tiempo_suspension < pb->tiempo_suspension; // más viejo primero
 }
 
@@ -264,7 +279,9 @@ static void* manejar_mas_memoria(void* _) {
 
 static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size) {
     pthread_mutex_lock(&mutex_km_req);
+    pthread_mutex_lock(&mutex_km_send);
     enviar_mensaje(fd_km, op, payload, size);
+    pthread_mutex_unlock(&mutex_km_send);
 
     pthread_mutex_lock(&mutex_km_resp);
     while (ultimo_resp_km == NULL)
@@ -399,6 +416,7 @@ int main(int argc, char* argv[]) {
     sem_init(&sem_largo_plazo,     0, 0);
     sem_init(&sem_cpus_devueltas,  0, 0);
     sem_init(&sem_planificador_ok, 0, 1);
+    sem_init(&sem_fin_compactacion, 0, 0);
     mutexes_init();
 
     // Servidor
@@ -472,9 +490,20 @@ static void handle_compactar(void) {
         sem_wait(&sem_cpus_devueltas);
     }
 
-    // Notificar a KM que las CPUs están ociosas y esperar su confirmación.
-    t_mensaje* resp_compactar = km_request(MSG_FIN_COMPACTACION, NULL, 0);
-    if (resp_compactar) free_mensaje(resp_compactar);
+    // Notificar a KM que las CPUs están ociosas. No se puede usar km_request:
+    // mutex_km_req lo retiene el manejar_mem_alloc que disparó la compactación
+    // (bloqueado esperando su MSG_TABLA_SEGMENTOS) — pedirlo acá deadlockearía.
+    // KM responde el CREAR_SEGMENTO pendiente recién después de compactar, así
+    // que el hilo de MEM_ALLOC nos señala sem_fin_compactacion al recibirla.
+    pthread_mutex_lock(&mutex_compactando);
+    esperando_fin_compactacion = 1;
+    pthread_mutex_unlock(&mutex_compactando);
+
+    pthread_mutex_lock(&mutex_km_send);
+    enviar_mensaje(fd_km, MSG_FIN_COMPACTACION, NULL, 0);
+    pthread_mutex_unlock(&mutex_km_send);
+
+    sem_wait(&sem_fin_compactacion);
 
     pthread_mutex_lock(&mutex_compactando);
     compactando = 0;
@@ -499,6 +528,7 @@ t_proceso* crear_proceso(char* path, int prioridad) {
     proc->prioridad              = prioridad;
     proc->fd_cpu                 = -1;
     proc->preemptado             = 0;
+    proc->gen_despacho           = 0;
     proc->tiempo_suspension      = 0;
 
     log_info(logger, "## (%u) Se crea el proceso - Estado: NEW", pid);
@@ -576,6 +606,7 @@ void* atender_cliente(void* arg) {
 static void despachar(t_proceso* proc, t_cpu_entry* cpu) {
     cambiar_estado(proc, EXEC);
     proc->fd_cpu = cpu->fd;
+    proc->gen_despacho++;
     cpu->ocupada  = 1;
 
     pthread_mutex_lock(&mutex_exec);
@@ -587,7 +618,7 @@ static void despachar(t_proceso* proc, t_cpu_entry* cpu) {
 }
 
 static void* thread_quantum_timer(void* arg) {
-    int pid = *((int*)arg);
+    t_quantum_args qa = *((t_quantum_args*)arg);
     free(arg);
 
     struct timespec ts = {
@@ -596,21 +627,31 @@ static void* thread_quantum_timer(void* arg) {
     };
     nanosleep(&ts, NULL);
 
-    // Si el proceso sigue en EXEC, interrumpir su CPU
+    // Si el proceso sigue en EXEC del MISMO despacho, interrumpir su CPU
     pthread_mutex_lock(&mutex_exec);
     int fd_cpu_target = -1;
     for (int i = 0; i < (int)queue_size(cola_exec); i++) {
         t_proceso* p = list_get(cola_exec->elements, i);
-        if (p->PID == pid) { fd_cpu_target = p->fd_cpu; break; }
+        if (p->PID == qa.pid && p->gen_despacho == qa.gen) { fd_cpu_target = p->fd_cpu; break; }
     }
     pthread_mutex_unlock(&mutex_exec);
 
     if (fd_cpu_target != -1) {
-        t_payload_interrupcion_cpu pay = { .pid = htonl(pid), .motivo = htonl(MOTIVO_INTERRUPCION_QUANTUM) };
+        t_payload_interrupcion_cpu pay = { .pid = htonl(qa.pid), .motivo = htonl(MOTIVO_INTERRUPCION_QUANTUM) };
         enviar_mensaje(fd_cpu_target, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
     }
 
     return NULL;
+}
+
+// Lanza el timer de quantum capturando la generación de despacho actual.
+static void lanzar_quantum_timer(t_proceso* proc) {
+    t_quantum_args* qa = malloc(sizeof(t_quantum_args));
+    qa->pid = proc->PID;
+    qa->gen = proc->gen_despacho;
+    pthread_t t;
+    pthread_create(&t, NULL, thread_quantum_timer, qa);
+    pthread_detach(t);
 }
 
 static void* thread_planificador(void* _) {
@@ -645,23 +686,19 @@ static void* thread_planificador(void* _) {
         pthread_mutex_unlock(&mutex_cpus);
 
         if (!cpu) {
-            // No hay CPU libre: devolver al fondo de su cola sin señal adicional
-            int nivel = proc->prioridad < n_colas ? proc->prioridad : n_colas - 1;
-            pthread_mutex_lock(&mutex_colas_ready[nivel]);
-            queue_push(colas_ready[nivel], proc);
-            pthread_mutex_unlock(&mutex_colas_ready[nivel]);
+            // No hay CPU libre: reinsertar al FRENTE de la cola de la que salió,
+            // para no alterar el orden (en particular, los desalojados por
+            // compactación deben conservar su lugar al principio de READY).
+            pthread_mutex_lock(&mutex_colas_ready[nivel_elegido]);
+            list_add_in_index(colas_ready[nivel_elegido]->elements, 0, proc);
+            pthread_mutex_unlock(&mutex_colas_ready[nivel_elegido]);
             continue;
         }
 
         despachar(proc, cpu);
 
-        if (strcmp(algoritmos_cola[nivel_elegido], "RR") == 0) {
-            int* pid_heap = malloc(sizeof(int));
-            *pid_heap = proc->PID;
-            pthread_t t;
-            pthread_create(&t, NULL, thread_quantum_timer, pid_heap);
-            pthread_detach(t);
-        }
+        if (strcmp(algoritmos_cola[nivel_elegido], "RR") == 0)
+            lanzar_quantum_timer(proc);
     }
     return NULL;
 }
@@ -686,12 +723,22 @@ static t_proceso* sacar_de_exec(int pid) {
         }
         pthread_mutex_unlock(&mutex_cpus);
         proc->fd_cpu = -1;
+
+        // Contabilidad de compactación: si el proceso fue marcado para desalojo,
+        // avisar que su CPU ya lo devolvió — sea cual sea la vía por la que salió
+        // de EXEC (interrupción, syscall bloqueante, EXIT o error). Si solo se
+        // contara la vía de interrupción, un proceso que justo hizo una syscall
+        // dejaría a handle_compactar esperando para siempre.
+        pthread_mutex_lock(&mutex_compactando);
+        if (compactando && proc->preemptado) sem_post(&sem_cpus_devueltas);
+        pthread_mutex_unlock(&mutex_compactando);
     }
     return proc;
 }
 
 // Mueve el proceso a BLOCK y señala al planificador que la CPU quedó libre.
 static void mover_a_block(t_proceso* proc) {
+    proc->preemptado = 0; // si estaba marcado para desalojo, sacar_de_exec ya lo contabilizó
     cambiar_estado(proc, BLOCK);
     pthread_mutex_lock(&mutex_block);
     queue_push(cola_block, proc);
@@ -807,28 +854,74 @@ static t_proceso* sacar_proc_de_exec_para_mem(int pid) {
     }
     pthread_mutex_unlock(&mutex_exec);
     // NO tocamos cpu.ocupada ni proc->fd_cpu: la CPU permanece "ocupada"
+
+    if (proc) {
+        // Contabilidad de compactación: si estaba marcado para desalojo pero su
+        // CPU alcanzó a enviar la syscall de memoria antes de la interrupción,
+        // contarlo como devuelto (la CPU queda ociosa esperando el redespacho).
+        pthread_mutex_lock(&mutex_compactando);
+        if (compactando && proc->preemptado) sem_post(&sem_cpus_devueltas);
+        pthread_mutex_unlock(&mutex_compactando);
+        proc->preemptado = 0;
+    }
     return proc;
 }
 
 // Re-establece el proceso en cola_exec sin re-despachar.
-// La CPU ya tiene el proceso (esperando respuesta); solo necesitamos
-// que vuelva a aparecer en cola_exec para que MSG_DEVOLVER_PROCESO lo encuentre.
 static void re_exec_sin_despachar(t_proceso* proc) {
     pthread_mutex_lock(&mutex_exec);
     queue_push(cola_exec, proc);
     pthread_mutex_unlock(&mutex_exec);
 }
 
+// Tras una syscall de memoria la CPU devolvió el proceso (motivo SYSCALL) y
+// quedó ociosa esperando un MSG_DESPACHAR_PROCESO, con su entrada aún marcada
+// como ocupada para que el planificador no le asigne otro proceso. Cumplido el
+// pedido, se le reenvía el MISMO proceso (requisito del enunciado): la CPU
+// restaura el contexto desde KM — con la tabla de segmentos ya actualizada —
+// y continúa desde el PC guardado.
+static void redespachar_a_misma_cpu(t_proceso* proc) {
+    int fd_cpu = proc->fd_cpu;
+    proc->gen_despacho++;
+    re_exec_sin_despachar(proc);
+
+    t_payload_despachar_proceso payload = { .pid = htonl(proc->PID) };
+    enviar_mensaje(fd_cpu, MSG_DESPACHAR_PROCESO, &payload, sizeof(payload));
+
+    int nivel = (proc->prioridad >= 0 && proc->prioridad < n_colas) ? proc->prioridad : n_colas - 1;
+    if (strcmp(algoritmos_cola[nivel], "RR") == 0)
+        lanzar_quantum_timer(proc);
+}
+
+// MEM_ALLOC falló (sin espacio incluso tras compactar): el proceso no puede
+// continuar. Se lo finaliza y se libera la CPU que había quedado reservada.
+static void finalizar_por_error_mem(t_proceso* proc) {
+    int fd_cpu = proc->fd_cpu;
+    proc->fd_cpu = -1;
+
+    pthread_mutex_lock(&mutex_cpus);
+    for (int i = 0; i < list_size(lista_cpus); i++) {
+        t_cpu_entry* e = list_get(lista_cpus, i);
+        if (e->fd == fd_cpu) { e->ocupada = 0; break; }
+    }
+    pthread_mutex_unlock(&mutex_cpus);
+
+    cambiar_estado(proc, EXIT);
+    log_info(logger, "## (%d) finalizó su ejecución con motivo de ERROR", proc->PID);
+    pthread_mutex_lock(&mutex_exit);
+    queue_push(cola_exit, proc);
+    pthread_mutex_unlock(&mutex_exit);
+    sem_post(&sem_cpu_disponible);
+}
+
 typedef struct {
     t_proceso* proc;
-    int        fd_cpu;
     uint32_t   id_segmento;
     uint32_t   tamanio;
 } t_args_mem_alloc;
 
 typedef struct {
     t_proceso* proc;
-    int        fd_cpu;
     uint32_t   id_segmento;
 } t_args_mem_free;
 
@@ -846,18 +939,23 @@ static void* manejar_mem_alloc(void* arg) {
 
     t_mensaje* resp = km_request(MSG_CREAR_SEGMENTO, &payload, sizeof(payload));
 
-    // Volver al exec ANTES de responder a la CPU, para que el siguiente
-    // MSG_DEVOLVER_PROCESO lo encuentre en cola_exec via sacar_de_exec.
-    re_exec_sin_despachar(a->proc);
+    // Si este pedido disparó una compactación, KM responde recién al terminarla:
+    // despertar a handle_compactar para que reanude el planificador.
+    pthread_mutex_lock(&mutex_compactando);
+    if (esperando_fin_compactacion) {
+        esperando_fin_compactacion = 0;
+        sem_post(&sem_fin_compactacion);
+    }
+    pthread_mutex_unlock(&mutex_compactando);
 
     if (resp && resp->op_code == MSG_TABLA_SEGMENTOS) {
         log_info(logger, "## (%d) - MEM_ALLOC: segmento %u creado exitosamente",
                  a->proc->PID, a->id_segmento);
-        enviar_mensaje(a->fd_cpu, MSG_OK, NULL, 0);
+        redespachar_a_misma_cpu(a->proc);
     } else {
         log_error(logger, "## (%d) - MEM_ALLOC: KM no pudo crear segmento %u",
                   a->proc->PID, a->id_segmento);
-        enviar_mensaje(a->fd_cpu, MSG_ERROR, NULL, 0);
+        finalizar_por_error_mem(a->proc);
     }
 
     if (resp) free_mensaje(resp);
@@ -878,8 +976,6 @@ static void* manejar_mem_free(void* arg) {
 
     t_mensaje* resp = km_request(MSG_ELIMINAR_SEGMENTO, &payload, sizeof(payload));
 
-    re_exec_sin_despachar(a->proc);
-
     if (resp && resp->op_code == MSG_OK) {
         log_info(logger, "## (%d) - MEM_FREE: segmento %u eliminado",
                  a->proc->PID, a->id_segmento);
@@ -887,21 +983,64 @@ static void* manejar_mem_free(void* arg) {
         log_error(logger, "## (%d) - MEM_FREE: KM reportó error eliminando segmento %u",
                   a->proc->PID, a->id_segmento);
     }
-    // Siempre respondemos OK al CPU; el proceso continúa independientemente del resultado de KM
-    enviar_mensaje(a->fd_cpu, MSG_OK, NULL, 0);
+    // El proceso continúa en la misma CPU independientemente del resultado de KM.
+    redespachar_a_misma_cpu(a->proc);
 
     if (resp) free_mensaje(resp);
     free(a);
     return NULL;
 }
 
+// La CPU envía [SYSCALL][DEVOLVER_PROCESO(SYSCALL)] en ese orden y nada en el
+// medio. Los handlers que gestionan ellos mismos el destino del proceso
+// (SLEEP/STDOUT/STDIN/MUTEX_LOCK/MEM_*) consumen acá el DEVOLVER: si lo
+// procesara el switch genérico después de que el proceso fue re-planificado,
+// lo sacaría de EXEC por error y se despacharía dos veces.
+static void consumir_devolver(int fd, const char* syscall_nombre) {
+    t_mensaje* dev = recibir_mensaje(fd);
+    if (dev) {
+        if (dev->op_code != MSG_DEVOLVER_PROCESO)
+            log_warning(logger, "## %s: se esperaba DEVOLVER_PROCESO, llegó op %u",
+                        syscall_nombre, dev->op_code);
+        free_mensaje(dev);
+    }
+}
+
 static void atender_cpu(int fd, t_cpu_entry* entry) {
     while (1) {
         t_mensaje* msg = recibir_mensaje(fd);
         if (!msg) {
+            // Sacar la CPU de la lista para que el planificador no le despache
+            // procesos a un socket muerto. No se libera 'entry': el planificador
+            // podría estar reteniendo el puntero en este mismo instante (fuga
+            // mínima y deliberada, una entrada por desconexión).
             pthread_mutex_lock(&mutex_cpus);
-            entry->ocupada = 0;
+            list_remove_element(lista_cpus, entry);
             pthread_mutex_unlock(&mutex_cpus);
+
+            // Rescatar el proceso que estuviera ejecutando en esta CPU: vuelve
+            // a READY y re-ejecutará desde su último contexto guardado en KM.
+            pthread_mutex_lock(&mutex_exec);
+            t_proceso* huerfano = NULL;
+            int sz_exec = queue_size(cola_exec);
+            for (int i = 0; i < sz_exec; i++) {
+                t_proceso* q = queue_pop(cola_exec);
+                if (!huerfano && q->fd_cpu == fd) huerfano = q;
+                else queue_push(cola_exec, q);
+            }
+            pthread_mutex_unlock(&mutex_exec);
+
+            if (huerfano) {
+                huerfano->fd_cpu = -1;
+                pthread_mutex_lock(&mutex_compactando);
+                if (compactando && huerfano->preemptado) sem_post(&sem_cpus_devueltas);
+                pthread_mutex_unlock(&mutex_compactando);
+                huerfano->preemptado = 0;
+                log_warning(logger, "## (%d) CPU desconectada durante EXEC — vuelve a READY", huerfano->PID);
+                cambiar_estado(huerfano, READY);
+                encolar_en_ready(huerfano);
+            }
+
             log_warning(logger, "## CPU fd=%d desconectada", fd);
             return;
         }
@@ -935,27 +1074,18 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             } else if (motivo == MOTIVO_DEVOLUCION_INTERRUPCION) {
                 cambiar_estado(proc, READY);
                 if (proc->preemptado) {
+                    // La contabilidad de compactación (sem_cpus_devueltas) ya la
+                    // hizo sacar_de_exec; acá solo se conserva el lugar al frente.
                     proc->preemptado = 0;
                     encolar_al_frente_en_ready(proc);
-                    // Si estamos en compactación, avisar que esta CPU ya devolvió su proceso.
-                    pthread_mutex_lock(&mutex_compactando);
-                    if (compactando) sem_post(&sem_cpus_devueltas);
-                    pthread_mutex_unlock(&mutex_compactando);
                 } else {
                     log_info(logger, "## (%d) - Desalojado por fin de quantum", pid);
                     encolar_en_ready(proc);
                 }
 
-            } else if (motivo == MOTIVO_DEVOLUCION_ERROR) {
-                cambiar_estado(proc, EXIT);
-                log_info(logger, "## (%d) finalizó su ejecución con motivo de SEG_FAULT", pid);
-                pthread_mutex_lock(&mutex_exit);
-                queue_push(cola_exit, proc);
-                pthread_mutex_unlock(&mutex_exit);
-                sem_post(&sem_cpu_disponible);
-
             } else {
                 // MOTIVO_DEVOLUCION_SYSCALL: syscall no bloqueante (MUTEX_CREATE, MUTEX_UNLOCK, MUTEX_LOCK libre)
+                proc->preemptado = 0;
                 cambiar_estado(proc, READY);
                 encolar_en_ready(proc);
             }
@@ -968,6 +1098,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             uint32_t tiempo_ms = ntohl(p->tiempo_ms);
 
             log_info(logger, "## (%d) - Solicitó syscall: SLEEP", pid);
+            consumir_devolver(fd, "SLEEP");
             t_proceso* proc = sacar_de_exec(pid);
             if (proc) mover_a_block(proc);
 
@@ -987,6 +1118,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             uint32_t dir_logica = ntohl(p->direccion_logica);
             uint32_t tamanio    = ntohl(p->tamanio);
             log_info(logger, "## (%d) - Solicitó syscall: STDOUT", pid);
+            consumir_devolver(fd, "STDOUT");
 
             t_proceso* proc = sacar_de_exec(pid);
             if (proc) mover_a_block(proc);
@@ -1024,6 +1156,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             uint32_t dir_logica = ntohl(p->direccion_logica);
             uint32_t n_bytes    = ntohl(p->tamanio);
             log_info(logger, "## (%d) - Solicitó syscall: STDIN", pid);
+            consumir_devolver(fd, "STDIN");
 
             t_proceso* proc = sacar_de_exec(pid);
             if (proc) mover_a_block(proc);
@@ -1059,6 +1192,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             t_payload_mutex* p = msg->payload;
             int pid = (int)ntohl(p->pid);
             log_info(logger, "## (%d) - Solicitó syscall: MUTEX_LOCK", pid);
+            consumir_devolver(fd, "MUTEX_LOCK");
 
             t_proceso* proc = sacar_de_exec(pid);
             if (!proc) break;
@@ -1066,6 +1200,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             int owner_a_elevar, nueva_prioridad_owner;
             int resultado = mutex_ks_lock(pid, proc->prioridad, p->nombre, logger,
                                           &owner_a_elevar, &nueva_prioridad_owner);
+            proc->preemptado = 0; // sacar_de_exec ya contabilizó la compactación
             if (resultado == 0) {
                 cambiar_estado(proc, READY);
                 encolar_en_ready(proc);
@@ -1080,68 +1215,74 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                     }
                 }
                 mover_a_block(proc);
+            } else {
+                // Mutex inexistente (LOCK sin CREATE): el proceso ya salió de
+                // EXEC — finalizarlo en lugar de dejarlo fuera de todas las colas.
+                log_error(logger, "## (%d) MUTEX_LOCK sobre mutex inexistente '%s'", pid, p->nombre);
+                cambiar_estado(proc, EXIT);
+                log_info(logger, "## (%d) finalizó su ejecución con motivo de ERROR", pid);
+                pthread_mutex_lock(&mutex_exit);
+                queue_push(cola_exit, proc);
+                pthread_mutex_unlock(&mutex_exit);
+                sem_post(&sem_cpu_disponible);
             }
             break;
         }
         case MSG_MEM_ALLOC: {
+            // Nota: no se hace free_mensaje acá — el free único está al final
+            // del loop (hacerlo en ambos lados era un doble free que abortaba
+            // el módulo). Tampoco se envía nada a la CPU: quedó esperando un
+            // MSG_DESPACHAR_PROCESO y cualquier otro mensaje la confundiría.
             if (msg->payload_size < sizeof(t_payload_syscall_mem_alloc)) {
                 log_error(logger, "CPU envio MEM_ALLOC con payload invalido");
-                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-                free_mensaje(msg);
                 break;
             }
             t_payload_syscall_mem_alloc* p = (t_payload_syscall_mem_alloc*) msg->payload;
             int pid_ma = (int)ntohl(p->pid);
+            log_info(logger, "## (%d) - Solicitó syscall: MEM_ALLOC", pid_ma);
 
             t_proceso* proc_ma = sacar_proc_de_exec_para_mem(pid_ma);
             if (!proc_ma) {
                 log_error(logger, "## MEM_ALLOC: proceso %d no encontrado en EXEC", pid_ma);
-                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-                free_mensaje(msg);
                 break;
             }
 
+            consumir_devolver(fd, "MEM_ALLOC");
+
             t_args_mem_alloc* args_ma = malloc(sizeof(t_args_mem_alloc));
             args_ma->proc        = proc_ma;
-            args_ma->fd_cpu      = fd;
             args_ma->id_segmento = ntohl(p->id_segmento);
             args_ma->tamanio     = ntohl(p->tamanio);
 
             pthread_t t_ma;
             pthread_create(&t_ma, NULL, manejar_mem_alloc, args_ma);
             pthread_detach(t_ma);
-
-            free_mensaje(msg);
             break;
         }
         case MSG_MEM_FREE: {
             if (msg->payload_size < sizeof(t_payload_syscall_mem_free)) {
                 log_error(logger, "CPU envio MEM_FREE con payload invalido");
-                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-                free_mensaje(msg);
                 break;
             }
             t_payload_syscall_mem_free* p = (t_payload_syscall_mem_free*) msg->payload;
             int pid_mf = (int)ntohl(p->pid);
+            log_info(logger, "## (%d) - Solicitó syscall: MEM_FREE", pid_mf);
 
             t_proceso* proc_mf = sacar_proc_de_exec_para_mem(pid_mf);
             if (!proc_mf) {
                 log_error(logger, "## MEM_FREE: proceso %d no encontrado en EXEC", pid_mf);
-                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-                free_mensaje(msg);
                 break;
             }
 
+            consumir_devolver(fd, "MEM_FREE");
+
             t_args_mem_free* args_mf = malloc(sizeof(t_args_mem_free));
             args_mf->proc        = proc_mf;
-            args_mf->fd_cpu      = fd;
             args_mf->id_segmento = ntohl(p->id_segmento);
 
             pthread_t t_mf;
             pthread_create(&t_mf, NULL, manejar_mem_free, args_mf);
             pthread_detach(t_mf);
-
-            free_mensaje(msg);
             break;
         }
         case MSG_MUTEX_UNLOCK: {
@@ -1199,8 +1340,9 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 pthread_mutex_unlock(&mutex_exit);
                 sem_post(&sem_cpu_disponible);
             }
-
-            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            // No se responde MSG_OK: la CPU no lo espera (tras el EXIT devuelve
+            // el proceso y queda esperando un MSG_DESPACHAR_PROCESO; un OK acá
+            // la hacía fallar en recibir_proceso_a_ejecutar).
             break;
         }
 
@@ -1219,8 +1361,8 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                    sizeof(uint32_t));
             int prioridad = (int)ntohl(prioridad_n);
 
-            crear_proceso(path_hijo, prioridad);
-            enviar_mensaje(fd, MSG_OK, NULL, 0);
+            t_proceso* hijo = crear_proceso(path_hijo, prioridad);
+            enviar_mensaje(fd, hijo ? MSG_OK : MSG_ERROR, NULL, 0);
             break;
         }
 
@@ -1238,6 +1380,13 @@ static void atender_io(int fd, char* tipo) {
     while (1) {
         t_mensaje* msg = recibir_mensaje(fd);
         if (!msg) {
+            // Invalidar el fd para que las próximas syscalls no se envíen a un
+            // socket muerto (y una eventual reconexión de la IO lo reemplace).
+            pthread_mutex_lock(&mutex_io);
+            if      (fd_io_sleep  == fd) fd_io_sleep  = -1;
+            else if (fd_io_stdout == fd) fd_io_stdout = -1;
+            else if (fd_io_stdin  == fd) fd_io_stdin  = -1;
+            pthread_mutex_unlock(&mutex_io);
             log_warning(logger, "## IO %s desconectada", tipo);
             return;
         }
