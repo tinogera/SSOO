@@ -409,6 +409,8 @@ typedef struct {
     int      fd_cpu;                  // socket de la CPU que lo ejecuta (-1 si ninguna)
     int      preemptado;              // 1 = desalojado por preemption/compactación
                                       //     → vuelve al FRENTE de READY
+    int      gen_despacho;            // generación de despacho: invalida timers de
+                                      //     quantum de despachos anteriores
     time_t   tiempo_suspension;       // epoch al pasar a SUSP_BLOCK (para el orden
                                       //     de des-suspensión)
 } t_proceso;
@@ -478,8 +480,10 @@ Primitivas de sincronización principales:
 | `sem_cpu_disponible` | contador de eventos "hay trabajo para el planificador" (proceso nuevo en READY **o** CPU que se liberó) |
 | `sem_largo_plazo` | despierta a `thread_largo_plazo` para reintentar des-suspensiones |
 | `sem_planificador_ok` | semáforo binario: 0 = compactación en curso → el planificador no despacha |
-| `sem_cpus_devueltas` | cada CPU desalojada durante la compactación lo señala; `handle_compactar` espera N |
+| `sem_cpus_devueltas` | señalado desde `sacar_de_exec` por cada proceso marcado que sale de EXEC durante la compactación (por cualquier vía); `handle_compactar` espera N |
+| `sem_fin_compactacion` + flag `esperando_fin_compactacion` | `handle_compactar` lo espera tras enviar el FIN; lo señala el hilo de MEM_ALLOC al recibir la respuesta post-compactación de KM |
 | `mutex_km_req` + `mutex_km_resp` + `cond_km_resp` | el patrón request/response con KM (5.13) |
+| `mutex_km_send` | serializa los envíos crudos a `fd_km` (necesario porque el FIN de compactación no puede pasar por `km_request`, ver 5.11) |
 
 Regla de diseño que atraviesa todo el módulo: **ningún hilo que atiende un socket puede quedarse esperando una respuesta que llega por *otro* socket que él mismo no lee**. Cada vez que violamos esa regla tuvimos un deadlock (sección 6).
 
@@ -505,9 +509,9 @@ Todos los mensajes usan el framing común de `utils` (`t_mensaje = {op_code, pay
 
 | Mensaje | Payload | Significado |
 |---|---|---|
-| `MSG_DESPACHAR_PROCESO` | `{pid}` | ejecutá este proceso |
+| `MSG_DESPACHAR_PROCESO` | `{pid}` | ejecutá este proceso (también se usa para el redespacho post-MEM_ALLOC/FREE a la misma CPU) |
 | `MSG_INTERRUPCION_CPU` | `{pid, motivo}` | desalojá (motivo: QUANTUM o DESALOJO) |
-| `MSG_OK` / `MSG_ERROR` | — | resultado de MEM_ALLOC/MEM_FREE/EXIT/INIT_PROC |
+| `MSG_OK` / `MSG_ERROR` | — | resultado de INIT_PROC (la única syscall en la que la CPU espera respuesta) |
 
 **KS ↔ KM:**
 
@@ -519,7 +523,7 @@ Todos los mensajes usan el framing común de `utils` (`t_mensaje = {op_code, pay
 | `MSG_LEER_DATOS` → `MSG_LEER_DATOS_RESP` | KS → KM → KS | bytes para STDOUT |
 | `MSG_ESCRIBIR_DATOS` | KS → KM | bytes leídos por STDIN |
 | `MSG_COMPACTAR` | KM → KS | "desalojá todas las CPUs, necesito compactar" |
-| `MSG_FIN_COMPACTACION` | KS → KM | "CPUs quietas, compactá" (KM responde `MSG_OK` al terminar) |
+| `MSG_FIN_COMPACTACION` | KS → KM | "CPUs quietas, compactá" (sin respuesta propia: KM responde el `MSG_CREAR_SEGMENTO` que quedó pendiente, y eso señala el fin) |
 | `MSG_MAS_MEMORIA` | KM → KS | hay memoria nueva/liberada → intentá des-suspender |
 | `MSG_BSOD` | KM → KS | memoria corrupta (MS desconectado) → matar todo |
 
@@ -558,7 +562,7 @@ Secuencia de `main()`:
 
 No hay restricción de admisión porque los procesos **nacen sin memoria de datos**: los segmentos aparecen recién cuando el programa ejecuta `MEM_ALLOC`. Es la letra exacta del enunciado.
 
-Los procesos posteriores al PID 0 nacen por la syscall `INIT_PROC {path, prioridad}`, que llega desde una CPU y llama al mismo `crear_proceso`. El proceso padre **no se bloquea**: se responde `MSG_OK` y sigue ejecutando.
+Los procesos posteriores al PID 0 nacen por la syscall `INIT_PROC {path, prioridad}`, que llega desde una CPU y llama al mismo `crear_proceso`. El proceso padre **no se bloquea**: se responde `MSG_OK` (o `MSG_ERROR` si KM rechazó la creación — la CPU sí espera esta respuesta) y sigue ejecutando.
 
 **El hilo de largo plazo.** `thread_largo_plazo` duerme en `sem_largo_plazo` y cada vez que lo señalan corre `manejar_mas_memoria()` (ver 5.8). ¿Quién lo señala? Los caminos donde un proceso entra a SUSP. READY (fin de IO tardío, mutex liberado a un waiter suspendido): en esos casos hay que *intentar* traerlo a RAM aunque KM no haya anunciado memoria nueva.
 
@@ -579,7 +583,9 @@ while (1) {
 
     // 2) elegir CPU libre
     cpu = primera cpu con ocupada == 0;            // (con mutex_cpus)
-    if (!cpu) { devolver proc al final de su cola; continue; }
+    if (!cpu) { reinsertar proc al FRENTE de su cola; continue; }
+    //          ^ al frente, no al fondo: restaura su posición original
+    //            (clave para los desalojados por compactación)
 
     // 3) despachar
     despachar(proc, cpu);                          // EXEC + push a cola_exec
@@ -594,12 +600,12 @@ while (1) {
 
 La selección por prioridad es la definición de CMN: **siempre** la cola no vacía de índice más bajo. Con `n_colas == 1` esto degenera exactamente en FIFO o RR globales.
 
-**Round Robin.** No hay un reloj central: cada despacho a una cola RR lanza un `thread_quantum_timer` con el PID. El hilo duerme `RR_QUANTUM` ms con `nanosleep` y al despertar verifica **si ese PID sigue en `cola_exec`**:
+**Round Robin.** No hay un reloj central: cada despacho a una cola RR lanza un `thread_quantum_timer` con el PID **y la generación de despacho** (`gen_despacho`, que `despachar()` incrementa en cada asignación de CPU). El hilo duerme `RR_QUANTUM` ms con `nanosleep` y al despertar verifica **si ese PID sigue en `cola_exec` con la misma generación**:
 
 - Si sigue → le envía a su CPU `MSG_INTERRUPCION_CPU {pid, MOTIVO_INTERRUPCION_QUANTUM}`. La CPU termina la instrucción en curso, guarda el contexto en KM y devuelve el proceso con motivo INTERRUPCION. El KS lo pasa a READY **al final** de su cola (log obligatorio de fin de quantum).
-- Si ya no está (se bloqueó, terminó o fue desalojado antes) → el timer muere sin hacer nada.
+- Si ya no está, o está pero de un **despacho posterior** (se bloqueó y fue re-despachado antes de que el timer venciera) → el timer muere sin hacer nada.
 
-Esta verificación post-sueño es la que evita el clásico bug de "interrupción tardía": sin ella, el timer de un proceso que ya se bloqueó podría desalojar al proceso *siguiente* en esa CPU. Verificar por PID en `cola_exec` (y no solo por CPU) cierra esa ventana.
+Esta verificación post-sueño es la que evita el clásico bug de "interrupción tardía": sin la generación, el timer viejo de un proceso que se bloqueó y volvió rápido a EXEC lo desalojaría antes de tiempo, acortándole el quantum del nuevo despacho.
 
 **Desalojo entre colas (CMN + `QUEUE_PREEMPTION=TRUE`).** Cada vez que un proceso entra a READY, `verificar_preemption(entrante)` recorre `cola_exec` buscando un proceso ejecutando con prioridad **numéricamente mayor** (= menos prioritario). Si lo encuentra:
 
@@ -615,9 +621,11 @@ Cuando esa CPU devuelva el proceso (motivo INTERRUPCION), el flag `preemptado` h
 |---|---|
 | `EXIT` | → EXIT, log de fin, liberar CPU |
 | `ERROR` (segfault detectado por la MMU) | → EXIT con motivo `SEG_FAULT` en el log |
-| `INTERRUPCION` con `preemptado=1` | → READY **al frente** (preemption/compactación); si hay compactación en curso, señala `sem_cpus_devueltas` |
+| `INTERRUPCION` con `preemptado=1` | → READY **al frente** (preemption/compactación) |
 | `INTERRUPCION` con `preemptado=0` | → READY al final (fin de quantum) |
-| `SYSCALL` | → READY al final (syscall no bloqueante ya atendida: MUTEX_CREATE, MUTEX_UNLOCK, MUTEX_LOCK con mutex libre) |
+| `SYSCALL` | → READY al final. Solo llega acá para MUTEX_CREATE y MUTEX_UNLOCK: las demás syscalls consumen su DEVOLVER inline (`consumir_devolver`, ver 5.9) |
+
+La contabilidad de compactación (`sem_cpus_devueltas`) no vive en este handler sino en `sacar_de_exec`: así se cuenta a un proceso marcado **por cualquier vía** en que salga de EXEC (interrupción, syscall, EXIT o error), no solo por la devolución de interrupción.
 
 ### 5.8 Planificación de mediano plazo
 
@@ -661,9 +669,13 @@ El corte temprano es correcto porque la lista está ordenada: si no entró el m�
 
 Todas las syscalls llegan por el socket de la CPU y se atienden en su hilo `atender_cpu`. Se dividen en tres familias con semánticas distintas:
 
+#### El contrato con la CPU: `[SYSCALL][DEVOLVER]` y `consumir_devolver`
+
+Un detalle de protocolo que atraviesa todos los handlers: la CPU trata **todas** las syscalls igual — envía el mensaje de syscall, **no espera respuesta**, guarda el contexto en KM y envía `MSG_DEVOLVER_PROCESO {motivo=SYSCALL}` por el mismo socket, quedando ociosa a la espera de un nuevo `MSG_DESPACHAR_PROCESO`. Ese DEVOLVER es redundante para los handlers que ya deciden el destino del proceso (bloquearlo, re-encolarlo, redespacharlo): si lo procesara el switch genérico *después* de que el proceso fue re-planificado, lo sacaría de EXEC por error y se generaría un **doble despacho**. Como el orden `[SYSCALL][DEVOLVER]` en el socket está garantizado (la CPU no envía nada en el medio), esos handlers consumen el DEVOLVER inline con `consumir_devolver(fd, ...)` apenas reciben la syscall. Solo MUTEX_CREATE y MUTEX_UNLOCK (que no tocan al proceso) dejan que el DEVOLVER llegue al switch genérico, que es quien los re-encola en READY.
+
 #### Syscalls bloqueantes de IO (SLEEP, STDOUT, STDIN)
 
-Patrón común: log obligatorio de syscall → `sacar_de_exec(pid)` (libera la CPU) → `mover_a_block(proc)` (encola en BLOCK, postea `sem_cpu_disponible` para que otro proceso tome la CPU, arma el timer de suspensión) → interactuar con la IO. La CPU, por su parte, ya guardó el contexto en KM y quedó esperando otro proceso: **no** espera respuesta del KS.
+Patrón común: log obligatorio de syscall → `consumir_devolver` → `sacar_de_exec(pid)` (libera la CPU) → `mover_a_block(proc)` (encola en BLOCK, postea `sem_cpu_disponible` para que otro proceso tome la CPU, arma el timer de suspensión) → interactuar con la IO.
 
 - **SLEEP `{pid, tiempo_ms}`**: se reenvía tal cual a la IO SLEEP (`MSG_IO_SLEEP`). La IO duerme y devuelve `MSG_IO_FIN {pid}`.
 
@@ -686,21 +698,20 @@ Patrón común: log obligatorio de syscall → `sacar_de_exec(pid)` (libera la C
 
 #### Syscalls de memoria (MEM_ALLOC, MEM_FREE) — redespacho a la misma CPU
 
-Estas syscalls tienen la particularidad (letra del enunciado) de que al terminar **el proceso vuelve a la misma CPU** que hizo la llamada — no pasa por READY ni se replanifica. La CPU envía la syscall y se queda esperando `MSG_OK`/`MSG_ERROR` en su socket.
+Estas syscalls tienen la particularidad (letra del enunciado) de que al terminar **el proceso vuelve a la misma CPU** que hizo la llamada — no pasa por READY ni se replanifica. Como toda syscall, la CPU la envía, devuelve el proceso y queda ociosa esperando un despacho; la diferencia la pone el KS, que le reserva la CPU y se la reasigna al mismo proceso.
 
-La implementación tiene dos piezas específicas:
+La implementación tiene tres piezas:
 
-- `sacar_proc_de_exec_para_mem(pid)`: saca el proceso de `cola_exec` **sin marcar la CPU como libre** (`ocupada` queda en 1, `fd_cpu` se conserva). El planificador no puede despacharle otro proceso a esa CPU mientras la syscall está en vuelo.
-- El trabajo pesado va en un **hilo efímero** (`manejar_mem_alloc` / `manejar_mem_free`): hace `km_request(MSG_CREAR_SEGMENTO | MSG_ELIMINAR_SEGMENTO)`, reinserta el proceso en `cola_exec` con `re_exec_sin_despachar()` (sin `MSG_DESPACHAR_PROCESO` — la CPU nunca soltó el proceso) y responde `MSG_OK`/`MSG_ERROR` directamente al `fd_cpu`. La CPU retoma el ciclo de instrucción donde estaba.
+- `sacar_proc_de_exec_para_mem(pid)`: saca el proceso de `cola_exec` **sin marcar la CPU como libre** (`ocupada` queda en 1, `fd_cpu` se conserva). El planificador no puede despacharle otro proceso a esa CPU mientras la syscall está en vuelo. También hace la contabilidad de compactación si el proceso estaba marcado.
+- El trabajo pesado va en un **hilo efímero** (`manejar_mem_alloc` / `manejar_mem_free`): hace `km_request(MSG_CREAR_SEGMENTO | MSG_ELIMINAR_SEGMENTO)` y, con la respuesta, decide.
+- `redespachar_a_misma_cpu(proc)`: reinserta el proceso en `cola_exec` y le envía a **su** CPU un `MSG_DESPACHAR_PROCESO {pid}` normal. La CPU restaura el contexto desde KM — **con la tabla de segmentos ya actualizada**, lo que resuelve de paso la invalidación de bases tras una compactación — y continúa desde el PC guardado. Incrementa `gen_despacho` y relanza el timer de quantum si su cola es RR. Si el `MEM_ALLOC` falla incluso después de compactar (no hay espacio total), el proceso se finaliza con motivo ERROR y la CPU se libera (`finalizar_por_error_mem`).
 
 ¿Por qué el hilo aparte y no atenderlo inline en `atender_cpu`? Porque `km_request` **bloquea** hasta que KM responda, y la creación de un segmento puede tardar arbitrariamente: si necesita compactación, KM primero le pide al KS que desaloje todas las CPUs. Ese desalojo requiere que los hilos `atender_cpu` estén **libres para recibir** las devoluciones de las CPUs. Si `atender_cpu` estuviera clavado dentro de `km_request`, la CPU desalojada no podría devolver su proceso → la compactación nunca juntaría las N confirmaciones → KM nunca respondería el `MSG_CREAR_SEGMENTO` → **deadlock circular entre tres módulos**. Con el hilo efímero, `atender_cpu` vuelve inmediatamente a su `recibir_mensaje` y el ciclo se cierra. (Este fue el issue #67; más en la sección 6.)
 
-El orden `re_exec_sin_despachar` **antes** de responder a la CPU tampoco es casual: si la CPU recibiera el `MSG_OK`, ejecutara rapidísimo la siguiente instrucción y devolviera el proceso antes de que el KS lo reinsertara en `cola_exec`, `sacar_de_exec` no lo encontraría y el proceso se perdería.
-
 #### Syscalls de control (INIT_PROC, EXIT) y de mutex
 
-- **INIT_PROC `{path, prioridad}`**: crea el proceso hijo con `crear_proceso` (mismo camino que el PID 0) y responde `MSG_OK`. El padre sigue en EXEC.
-- **EXIT `{pid}`**: proceso a EXIT, log de fin, CPU liberada, `MSG_OK` a la CPU (que queda ociosa esperando otro despacho).
+- **INIT_PROC `{path, prioridad}`**: crea el proceso hijo con `crear_proceso` (mismo camino que el PID 0) y responde `MSG_OK` / `MSG_ERROR` — es la **única** syscall en la que la CPU espera respuesta (`esperar_ok_kernel`). El padre sigue en EXEC.
+- **EXIT `{pid}`**: proceso a EXIT, log de fin, CPU liberada. **No se responde nada**: la CPU no espera un OK — tras el EXIT devuelve el proceso y queda esperando un despacho, y un `MSG_OK` ahí la haría fallar (fue un bug real, ver sección 11).
 - **MUTEX_***: sección siguiente.
 
 ### 5.10 Mutex y herencia de prioridades
@@ -715,7 +726,7 @@ La gestión vive en `ks_mutex.c` (lógica pura, testeable) y los handlers de `at
 |---|---|---|
 | `0` | mutex libre | el proceso lo toma (log `Toma el Mutex`), guarda `owner_prioridad_original`, y vuelve a **READY** — sigue ejecutando cuando lo replanifiquen |
 | `1` | mutex tomado | el proceso se encola como waiter (FIFO, con su prioridad) y el KS lo mueve a **BLOCK**; si además el waiter es más prioritario que el owner → **herencia** |
-| `-1` | mutex inexistente | no debería pasar en scripts bien formados |
+| `-1` | mutex inexistente (LOCK sin CREATE) | el proceso se finaliza con motivo ERROR — antes quedaba fuera de todas las colas para siempre |
 
 **La herencia en detalle.** `mutex_ks_lock` compara la prioridad del waiter con la **prioridad original** del owner (no la actual — así el owner nunca "hereda de un heredero" hacia abajo, y varias herencias sucesivas siempre comparan contra la misma base). Si el waiter es más prioritario, devuelve por parámetros de salida `owner_a_elevar` y `nueva_prioridad_owner`, y el handler:
 
@@ -755,12 +766,18 @@ KS ◄──────────────── MSG_COMPACTAR ───�
 │        marcar preemptado = 1
 │        MSG_INTERRUPCION_CPU {pid, DESALOJO} a su CPU
 ├─ 4. esperar N posts de sem_cpus_devueltas
-│        (cada CPU guarda contexto en KM y devuelve su proceso;
-│         el handler lo pone al FRENTE de READY y postea el semáforo)
-├─ 5. km_request(MSG_FIN_COMPACTACION)   ← "todas quietas, compactá"
+│        (los postea sacar_de_exec cuando un proceso marcado sale de
+│         EXEC por CUALQUIER vía: interrupción, syscall, EXIT, error
+│         o desconexión de su CPU; los devueltos por interrupción van
+│         al FRENTE de READY)
+├─ 5. enviar MSG_FIN_COMPACTACION crudo   ← "todas quietas, compactá"
+│        (con mutex_km_send — NO por km_request: mutex_km_req lo tiene
+│         retenido el manejar_mem_alloc que disparó la compactación)
+│    y esperar sem_fin_compactacion
 │        KM mueve los segmentos, actualiza TODAS las bases en las
 │        tablas de segmentos (con COMPACTION_DELAY), reintenta el
-│        MEM_ALLOC original, y responde MSG_OK
+│        MEM_ALLOC pendiente y responde MSG_TABLA_SEGMENTOS; el hilo
+│        de manejar_mem_alloc, al recibirla, postea sem_fin_compactacion
 ├─ 6. log "## Fin de compactación"
 └─ 7. sem_post(sem_planificador_ok) + sem_post(sem_cpu_disponible)
          → se replanifica todo según el algoritmo vigente
@@ -770,8 +787,9 @@ Decisiones clave:
 
 - **Frenar el planificador primero** (paso 2): si se desalojaran las CPUs pero el planificador siguiera vivo, despacharía inmediatamente los procesos recién devueltos a las CPUs recién liberadas, y la memoria nunca quedaría quieta. `sem_planificador_ok` como semáforo binario implementa una "compuerta" limpia: el patrón `wait+post` en el loop del planificador lo deja pasar cuando vale 1 y lo frena cuando vale 0.
 - **Los desalojados van al frente de READY** (requisito explícito del enunciado): ellos no hicieron nada para perder la CPU; al terminar la compactación deben ser los primeros en volver. Se reutiliza el flag `preemptado` y `encolar_al_frente_en_ready`.
-- **Contar devoluciones, no interrupciones** (paso 4): el desalojo no es instantáneo — la CPU termina su instrucción en curso y guarda contexto. `sem_cpus_devueltas` se postea desde el handler de devolución solo si `compactando == 1`, y `handle_compactar` espera exactamente N posts, con N capturado al momento de interrumpir.
-- Mientras tanto, la **CPU que pidió el MEM_ALLOC** sigue esperando su `MSG_OK`: su hilo `manejar_mem_alloc` está bloqueado dentro de `km_request(MSG_CREAR_SEGMENTO)`, y KM le va a responder recién después de compactar y reintentar. Todo cierra porque ese hilo es efímero y no bloquea a nadie más.
+- **Contar salidas de EXEC, no interrupciones** (paso 4): el desalojo no es instantáneo — la CPU termina su instrucción en curso y puede incluso haber enviado una syscall antes de ver la interrupción. Por eso `sem_cpus_devueltas` se postea desde `sacar_de_exec` (y `sacar_proc_de_exec_para_mem`) para todo proceso marcado que salga de EXEC, sea cual sea la vía; `handle_compactar` espera exactamente N posts, con N capturado al momento de interrumpir. Contar solo la vía de interrupción dejaba la compactación colgada si un proceso hacía syscall o EXIT en esa ventana.
+- **El FIN no puede viajar por `km_request`**: `mutex_km_req` lo retiene el `manejar_mem_alloc` cuyo `MSG_CREAR_SEGMENTO` disparó la compactación (está bloqueado esperando su respuesta). El FIN se envía crudo bajo `mutex_km_send`, y la señal de "compactación terminada" la da el propio hilo de MEM_ALLOC al recibir su `MSG_TABLA_SEGMENTOS` — que KM, siendo secuencial en esa conexión, solo puede enviar después de haber compactado. Del lado KM ocurre lo simétrico: el hilo de la conexión KS no puede bloquearse esperando el FIN (es el único lector de esa conexión), así que guarda el pedido como pendiente y lo responde desde el handler del FIN.
+- Mientras tanto, la **CPU que pidió el MEM_ALLOC** está ociosa esperando su redespacho; al terminar todo recibe `MSG_DESPACHAR_PROCESO`, restaura el contexto con las bases ya compactadas y continúa.
 
 ### 5.12 BSOD
 
@@ -823,6 +841,7 @@ switch (msg->op_code) {
 Propiedades:
 
 - `mutex_km_req` garantiza **a lo sumo un request pendiente**: la respuesta que llegue es inequívocamente para el que la espera. Simple y suficiente (no hicieron falta IDs de correlación).
+- **Única excepción**: el `MSG_FIN_COMPACTACION` no pasa por `km_request` — quien retiene `mutex_km_req` en ese momento es justamente el request que disparó la compactación. Se envía crudo bajo `mutex_km_send` (que serializa todos los envíos a `fd_km` para que dos hilos no intercalen frames) y no espera respuesta propia: la señal de fin llega con la respuesta del `CREAR_SEGMENTO` pendiente (ver 5.11).
 - El listener **clasifica por op_code**: los cuatro op_codes de respuesta van a la condvar; los eventos van a hilos nuevos. Que vayan a *hilos nuevos* y no se atiendan inline es crítico: `handle_compactar` y `manejar_mas_memoria` llaman a `km_request`, cuya respuesta la lee... el propio listener. Si el listener los ejecutara inline se esperaría a sí mismo (deadlock #1 de la sección 6).
 - El costo aceptado: los requests a KM se **serializan**. Con la carga de este TP no fue un cuello de botella, y a cambio el protocolo es imposible de desincronizar.
 
@@ -862,7 +881,7 @@ atender_cpu (hilo de CPU_x) ── bloqueado en km_request(MSG_CREAR_SEGMENTO)
 
 El hilo `atender_cpu` que recibió el `MEM_ALLOC` quedaba bloqueado dentro de `km_request`; cuando KM pedía compactar y el KS interrumpía a esa misma CPU, la devolución del proceso llegaba a un hilo que no estaba escuchando. Nadie avanzaba.
 
-**Fix (commit `8d80525`):** las syscalls de memoria se atienden en hilos efímeros (`manejar_mem_alloc/free`) y `atender_cpu` vuelve al `recibir_mensaje` de inmediato. Además hubo que inventar `sacar_proc_de_exec_para_mem` / `re_exec_sin_despachar` para que la CPU quedara reservada (ocupada, sin ser re-despachada) mientras la syscall estaba en vuelo — el enunciado exige que el proceso vuelva a **la misma CPU**.
+**Fix (commit `8d80525`):** las syscalls de memoria se atienden en hilos efímeros (`manejar_mem_alloc/free`) y `atender_cpu` vuelve al `recibir_mensaje` de inmediato. Además hubo que inventar `sacar_proc_de_exec_para_mem` / `re_exec_sin_despachar` para que la CPU quedara reservada (ocupada, sin ser re-despachada) mientras la syscall estaba en vuelo — el enunciado exige que el proceso vuelva a **la misma CPU**. *(Nota: este diseño respondía `MSG_OK` al fd de la CPU, cosa que la CPU en realidad no espera; el mecanismo se rediseñó después con el redespacho por `MSG_DESPACHAR_PROCESO` — ver sección 11, puntos 4 y 5.)*
 
 ### 6.3 Deadlock: STDOUT esperaba una respuesta que se descartaba
 
@@ -1027,9 +1046,15 @@ Nota: `kernel_scheduler.config.example` del repo trae el caso simple (FIFO); par
 - `test_ks_cmn.c` — parseo de `QUEUES_ALGORITHMS`: listas válidas, espacios, corchetes, casos borde.
 - `test_ks_compact.c` — ruteo del listener de KM con la versión inyectable (`km_listener_run`): que `MSG_COMPACTAR` dispare el callback y el resto vaya a la condvar.
 
-**CI:** GitHub Actions compila todos los módulos y corre los tests del KS en cada push (job agregado en `8c355f0`). La CI cazó el hang de byte order (6.10).
+**Estado actual (rama `fix/ks-bugs-runtime`, 06/07/2026)**: los 98 tests unitarios del repo pasan en verde — `utils` 10, `kernel_scheduler` 39, `cpu` 34, `io` 15. (`test_cpu_mmu.c` estaba roto en `main` desde el fix `7440ba6`, que cambió la firma de `traducir_direccion_logica` sin actualizar el test; corregido en esta rama.) Para correrlos localmente hacen falta `readline-devel` y la `libcspecs.so` que la CI compila y copia a `vendor/cspecs/lib/` de cada módulo; en `utils` además hay que crear `bin/` antes del `make test`.
 
-**Prueba de integración mínima** (documentada en el informe del 20/06): KM + KS + 1 CPU + script `scripts/0.txt` (`MUTEX_CREATE → MUTEX_LOCK → SLEEP → MUTEX_UNLOCK → EXIT`), verificando la secuencia completa de logs y transiciones de estado. Para validar tiempos reales de SLEEP hay que levantar además la IO SLEEP (sin ella el proceso sale de BLOCK de inmediato).
+**CI:** GitHub Actions compila todos los módulos y corre los tests en cada push (job agregado en `8c355f0`). La CI cazó el hang de byte order (6.10).
+
+**Pruebas de integración** (sistema completo: KM + Memory Stick + Swap + KS + CPU + IO):
+
+1. *Histórica CK3* (informe del 20/06): KM + KS + 1 CPU con `scripts/0.txt` (`MUTEX_CREATE → MUTEX_LOCK → SLEEP → MUTEX_UNLOCK → EXIT`). No ejercitaba memoria ni compactación — por eso los deadlocks de la sección 11 pasaron inadvertidos.
+2. *Memoria y compactación* (06/07): script `MEM_ALLOC 0 300 / MEM_ALLOC 1 300 / MEM_ALLOC 2 300 / MEM_FREE 1 / MEM_ALLOC 3 400 / INIT_PROC 1.txt 0 / EXIT` sobre un Memory Stick de 1024 bytes — el último alloc tiene espacio total (424) pero no contiguo y **fuerza la compactación real**. Verifica: sin doble free, coreografía completa `Inicio → segmento creado → Fin de compactación`, redespacho a la misma CPU, INIT_PROC, y que la CPU sobrevive al EXIT y ejecuta al hijo (mutex incluido).
+3. *Suspensión* (06/07): `SUSPENSION_TIMEOUT=1000` + script `MEM_ALLOC 0 200 / SLEEP 3000 / MEM_FREE 0 / EXIT` con IO SLEEP real. Verifica el ciclo completo de mediano plazo: `BLOCK → SUSP. BLOCK (segmentos a Swap) → fin de IO → SUSP. READY → des-suspensión → READY → EXEC → EXIT`, con el `MEM_FREE` posterior probando que la tabla se restauró desde Swap.
 
 ---
 
