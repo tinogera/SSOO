@@ -9,16 +9,14 @@
 1. [Sistema operativo](#1-sistema-operativo)
 2. [Instalar dependencias](#2-instalar-dependencias)
 3. [Obtener el repositorio](#3-obtener-el-repositorio)
-4. [Compilar los módulos](#4-compilar-los-módulos)
-5. [Verificar la instalación](#5-verificar-la-instalación)
-6. [Configurar cada módulo](#6-configurar-cada-módulo)
-7. [Descubrir las IPs de las VMs del laboratorio](#7-descubrir-las-ips-de-las-vms-del-laboratorio)
+4. [Configurar cada módulo](#4-configurar-cada-módulo)
+5. [Script de despliegue — deploy.sh](#5-script-de-despliegue--deploysh)
+6. [Despliegue en una sola máquina (desarrollo)](#6-despliegue-en-una-sola-máquina-desarrollo)
+7. [Despliegue distribuido en múltiples VMs](#7-despliegue-distribuido-en-múltiples-vms)
 8. [Orden de inicio](#8-orden-de-inicio)
-9. [Despliegue distribuido en VMs](#9-despliegue-distribuido-en-vms)
-10. [Scripts de proceso](#10-scripts-de-proceso)
-11. [Prueba de integración CK2](#11-prueba-de-integración-ck2)
-12. [Pruebas preliminares](#12-pruebas-preliminares)
-13. [Cambios introducidos en v1.1 del enunciado](#13-cambios-introducidos-en-v11-del-enunciado)
+9. [Scripts de proceso (.prc)](#9-scripts-de-proceso-prc)
+10. [Pruebas preliminares](#10-pruebas-preliminares)
+11. [Cambios introducidos en v1.1 del enunciado](#11-cambios-introducidos-en-v11-del-enunciado)
 
 ---
 
@@ -26,10 +24,10 @@
 
 | Entorno | SO | Uso |
 |---|---|---|
-| Desarrollo | Xubuntu 22.04 LTS (64-bit) | Máquinas de los integrantes del equipo |
-| Evaluación | Ubuntu Server 22.04 LTS (64-bit) | VMs de la cátedra durante el coloquio |
+| Desarrollo | Xubuntu / Lubuntu 22.04 LTS (64-bit) | Máquinas de los integrantes del equipo |
+| Evaluación | Lubuntu 22.04 LTS (64-bit) | VMs de la cátedra durante el coloquio |
 
-Los pasos de instalación son idénticos en ambos entornos. La única diferencia es que Ubuntu Server **no tiene entorno gráfico**, por lo que todo se opera por terminal.
+Los pasos de instalación son idénticos en ambos entornos.
 
 ---
 
@@ -57,7 +55,7 @@ git clone https://github.com/sisoputnfrba/so-commons-library.git
 cd so-commons-library
 make install
 cd ..
-rm -rf so-commons-library   # opcional: limpiar el directorio de instalación
+rm -rf so-commons-library
 ```
 
 Esto instala:
@@ -98,110 +96,394 @@ cd tp-2026-1c-Impactante
 
 ---
 
-## 4. Compilar los módulos
+## 4. Configurar cada módulo
 
-`utils` debe compilarse primero porque todos los demás módulos dependen de ella:
+Cada módulo tiene un archivo `*.config` en su directorio. Antes de levantar cualquier módulo, editar ese archivo con las IPs y puertos correctos para el entorno actual.
 
-```bash
-make -C utils
-make -C kernel_memory
-make -C kernel_scheduler
-make -C cpu
-make -C io
-make -C memory_stick
-make -C swap
-```
-
-En una VM que solo va a correr algunos módulos, compilar únicamente los necesarios (siempre incluir `utils`).
-
-Los binarios quedan en `{modulo}/bin/`. `utils` genera `utils/lib/libutils.a`, que se enlaza estáticamente.
-
----
-
-## 5. Verificar la instalación
-
-```bash
-# libcommons instalada
-ls /usr/lib/libcommons.so
-
-# libreadline instalada
-ls /usr/lib/x86_64-linux-gnu/libreadline.so
-
-# gcc y make disponibles
-gcc --version
-make --version
-```
-
----
-
-## 6. Configurar cada módulo
-
-Cada módulo trae un archivo `*.config.example` con todas las claves y sus valores por defecto. Copiar y editar antes de ejecutar:
-
-```bash
-cp kernel_memory/kernel_memory.config.example  kernel_memory/kernel_memory.config
-cp kernel_scheduler/kernel_scheduler.config.example kernel_scheduler/kernel_scheduler.config
-cp cpu/cpu.config.example        cpu/cpu.config
-cp io/io.config.example          io/io.config
-cp memory_stick/memory_stick.config.example memory_stick/memory_stick.config
-cp swap/swap.config.example      swap/swap.config
-```
-
-Los archivos `.config` **no se commitean** (están en `.gitignore`). Cada integrante mantiene el suyo local con las IPs y puertos de su entorno.
+Los archivos `.config` **no se commitean** (están en `.gitignore`).
 
 ### Claves por módulo
 
 | Módulo | Claves principales |
 |---|---|
-| `kernel_memory` | `KERNEL_MEMORY_PORT`, `SCRIPTS_BASEPATH`, `INSTRUCTION_DELAY` |
-| `kernel_scheduler` | `KERNEL_MEMORY_IP/PORT`, `KERNEL_SCHEDULER_PORT`, `PLANIFICATION_ALGORITHM`, `RR_QUANTUM`, `SUSPENSION_TIMEOUT` |
-| `cpu` | `IP_KERNEL`, `PUERTO_KERNEL`, `IP_MEMORY`, `PUERTO_MEMORY` |
+| `kernel_memory` | `KERNEL_MEMORY_PORT`, `SCRIPTS_BASEPATH`, `SEGMENT_MAX_SIZE`, `INSTRUCTION_DELAY` |
+| `kernel_scheduler` | `KERNEL_MEMORY_IP`, `KERNEL_MEMORY_PORT`, `KERNEL_SCHEDULER_PORT`, `PLANIFICATION_ALGORITHM`, `RR_QUANTUM`, `SUSPENSION_TIMEOUT` |
+| `cpu` | `IP_KERNEL`, `PUERTO_KERNEL`, `IP_MEMORY`, `PUERTO_MEMORY`, `SEGMENT_MAX_SIZE`, `IP_MEMORY_STICK_0`, `PUERTO_MEMORY_STICK_0` |
 | `io` | `KERNEL_SCHEDULER_IP`, `KERNEL_SCHEDULER_PORT` |
-| `memory_stick` | `MEMORY_STICK_PORT`, `KERNEL_MEMORY_IP/PORT`, `MEMORY_DELAY` |
-| `swap` | `KERNEL_MEMORY_IP/PORT`, `SWAP_FILE_PATH`, `SWAP_FILE_SIZE`, `BLOCK_SIZE` |
+| `memory_stick` | `KERNEL_MEMORY_IP`, `KERNEL_MEMORY_PORT`, `MEMORY_STICK_PORT`, `MEMORY_DELAY` |
+| `swap` | `KERNEL_MEMORY_IP`, `KERNEL_MEMORY_PORT`, `SWAP_FILE_PATH`, `SWAP_FILE_SIZE`, `BLOCK_SIZE` |
 
-### Puertos por defecto
+### Puertos del proyecto
 
 | Módulo | Puerto | Quién se conecta |
 |---|---|---|
-| Kernel Memory | `37215` | KS, CPU, MS, Swap |
-| Kernel Scheduler | `37214` | CPU, IO |
-| Memory Stick | `37216` | CPU |
+| Kernel Memory | `23841` | KS, CPU, MS, Swap |
+| Kernel Scheduler | `19337` | CPU, IO |
+| Memory Stick | `27643` | CPU |
+
+Estos puertos son altos y no redondos para minimizar conflictos en laboratorios ajenos.
 
 ---
 
-## 7. Descubrir las IPs de las VMs del laboratorio
+## 5. Script de despliegue — deploy.sh
 
-Las VMs del laboratorio no tienen IP fija asignada de antemano. Al iniciar sesión en cada una, ejecutar:
+El archivo `deploy.sh` en la raíz del proyecto compila y levanta un único módulo. Es el método recomendado para arrancar el sistema, tanto en desarrollo local como en VMs distribuidas.
 
+### Uso
+
+```bash
+./deploy.sh <módulo> [argumento_extra]
+```
+
+| Comando | Descripción |
+|---|---|
+| `./deploy.sh km` | Kernel Memory |
+| `./deploy.sh swap` | Swap |
+| `./deploy.sh ms 1024` | Memory Stick con buffer de 1024 bytes |
+| `./deploy.sh ks /ruta/al/script.prc` | Kernel Scheduler (requiere ruta al script inicial) |
+| `./deploy.sh cpu 0` | CPU con id=0 (entero único por instancia) |
+| `./deploy.sh io STDOUT` | IO de tipo STDOUT (también: STDIN, SLEEP) |
+
+El script:
+1. Compila `utils` + el módulo elegido (a menos que `NO_BUILD=1` esté definido).
+2. Verifica que el archivo de config exista.
+3. Reemplaza el proceso del shell con el binario del módulo (`exec`).
+
+### Saltar compilación (cuando ya se compiló)
+
+```bash
+NO_BUILD=1 ./deploy.sh km
+```
+
+---
+
+## 6. Despliegue en una sola máquina (desarrollo)
+
+Útil para pruebas locales. Todos los módulos corren en la misma máquina; todas las IPs son `127.0.0.1`.
+
+### Configs para local (todos los módulos)
+
+`kernel_memory/kernel_memory.config`:
+```
+LOG_LEVEL=INFO
+KERNEL_MEMORY_PORT=23841
+ALLOCATION_STRATEGY=BEST_FIT
+SEGMENT_MAX_SIZE=128
+INSTRUCTION_DELAY=0
+COMPACTION_DELAY=0
+SCRIPTS_BASEPATH=/home/utnso/pruebas
+```
+
+`kernel_scheduler/kernel_scheduler.config`:
+```
+LOG_LEVEL=INFO
+KERNEL_MEMORY_IP=127.0.0.1
+KERNEL_MEMORY_PORT=23841
+KERNEL_SCHEDULER_PORT=19337
+PLANIFICATION_ALGORITHM=FIFO
+RR_QUANTUM=1500
+SUSPENSION_TIMEOUT=35000
+```
+
+`cpu/cpu.config`:
+```
+LOG_LEVEL=INFO
+IP_KERNEL=127.0.0.1
+PUERTO_KERNEL=19337
+IP_MEMORY=127.0.0.1
+PUERTO_MEMORY=23841
+SEGMENT_MAX_SIZE=128
+IP_MEMORY_STICK_0=127.0.0.1
+PUERTO_MEMORY_STICK_0=27643
+```
+
+`io/io.config`:
+```
+LOG_LEVEL=INFO
+KERNEL_SCHEDULER_IP=127.0.0.1
+KERNEL_SCHEDULER_PORT=19337
+```
+
+`memory_stick/memory_stick.config`:
+```
+LOG_LEVEL=INFO
+KERNEL_MEMORY_IP=127.0.0.1
+KERNEL_MEMORY_PORT=23841
+MEMORY_STICK_PORT=27643
+MEMORY_DELAY=0
+```
+
+`swap/swap.config`:
+```
+LOG_LEVEL=INFO
+KERNEL_MEMORY_IP=127.0.0.1
+KERNEL_MEMORY_PORT=23841
+SWAP_FILE_PATH=/tmp/tp_swap.bin
+SWAP_FILE_SIZE=65536
+BLOCK_SIZE=256
+```
+
+### Levantar (cada comando en una terminal distinta)
+
+```bash
+./deploy.sh km
+./deploy.sh swap
+./deploy.sh ms 1024
+./deploy.sh ks /ruta/al/script.prc
+./deploy.sh cpu 0
+./deploy.sh io STDOUT
+./deploy.sh io STDIN
+./deploy.sh io SLEEP
+```
+
+---
+
+## 7. Despliegue distribuido en múltiples VMs
+
+Esta sección explica paso a paso cómo desplegar el proyecto cuando cada módulo corre en una máquina virtual distinta. El procedimiento fue diseñado para alguien que no tiene experiencia previa con redes.
+
+### 7.1 Conceptos básicos de red (leer antes de continuar)
+
+**¿Qué es una dirección IP?**
+Una dirección IP (ej. `10.100.3.47`) es como el número de teléfono de una computadora en la red. Para que dos módulos se comuniquen, el módulo cliente necesita saber la IP de la máquina donde corre el módulo servidor.
+
+**¿Por qué no usar `127.0.0.1`?**
+`127.0.0.1` (también llamada `localhost`) significa "esta misma máquina". Si un módulo en la VM1 intenta conectarse a `127.0.0.1`, se conecta a sí mismo — no a la VM2. En un despliegue distribuido, hay que reemplazar `127.0.0.1` por la IP real de cada máquina.
+
+**¿Cómo sé cuál es la IP de mi VM?**
+Al iniciar sesión en cada VM, ejecutar:
 ```bash
 ip addr show
 ```
-
-Buscar la interfaz activa (generalmente `ens33` o `eth0`). El campo `inet` muestra la IP:
-
+Buscar la interfaz activa (generalmente `ens33`, `ens3`, o `eth0`). El campo `inet` muestra la IP:
 ```
 2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP>
     inet 10.100.3.47/24 brd 10.100.3.255 scope global ens33
 ```
+La IP es `10.100.3.47` (ignorar la parte `/24`).
 
 Alternativa más corta:
-
 ```bash
 hostname -I
 ```
-
 Devuelve todas las IPs separadas por espacio. Tomar la primera.
 
-Una vez que cada integrante tenga la IP de su VM, completar esta tabla y compartirla en el grupo antes de arrancar:
+**¿Cómo sé si dos VMs se pueden ver entre sí?**
+Desde una VM, ejecutar:
+```bash
+ping <IP_de_la_otra_VM>
+```
+Si aparecen líneas como `64 bytes from 10.100.3.10: icmp_seq=1 ttl=64 time=0.4 ms`, la red funciona. Presionar `Ctrl+C` para detener.
 
-| Módulo | VM | IP |
+Si `ping` falla con "Destination Host Unreachable" o no responde, el problema es de configuración de red en el hipervisor (ver nota al final de esta sección).
+
+### 7.2 Asignación de módulos a VMs
+
+Una distribución típica para el coloquio:
+
+| VM | Módulo(s) |
+|---|---|
+| VM1 | Kernel Memory + Swap |
+| VM2 | Kernel Scheduler |
+| VM3 | CPU |
+| VM4 | IO (STDOUT + STDIN + SLEEP) |
+| VM5 | Memory Stick |
+
+### 7.3 Paso a paso
+
+#### Paso 1 — Obtener las IPs de todas las VMs
+
+En **cada** VM, ejecutar `hostname -I` y anotar la IP. Completar esta tabla y compartirla con todos antes de continuar:
+
+| VM | Módulo | IP |
 |---|---|---|
-| Kernel Memory + Swap | VM1 | `__________` |
-| Kernel Scheduler | VM2 | `__________` |
-| CPU | VM3 | `__________` |
-| IO | VM4 | `__________` |
-| Memory Stick | VM5 | `__________` |
+| VM1 | Kernel Memory + Swap | `__________` |
+| VM2 | Kernel Scheduler | `__________` |
+| VM3 | CPU | `__________` |
+| VM4 | IO | `__________` |
+| VM5 | Memory Stick | `__________` |
+
+#### Paso 2 — Verificar conectividad entre VMs
+
+Desde VM2, verificar que puede llegar a VM1:
+```bash
+ping <IP_de_VM1>
+```
+Repetir para cada par de VMs que se van a comunicar. Si algún `ping` falla, ver la nota al final de esta sección.
+
+#### Paso 3 — Instalar dependencias en cada VM
+
+En **cada** VM ejecutar los comandos de la [Sección 2](#2-instalar-dependencias).
+
+#### Paso 4 — Clonar el repositorio en cada VM
+
+En **cada** VM:
+```bash
+git clone https://github.com/sisoputnfrba/tp-2026-1c-Impactante.git
+cd tp-2026-1c-Impactante
+```
+
+#### Paso 5 — Editar los configs con las IPs reales
+
+En cada VM, editar el config del módulo que va a correr en esa máquina. Reemplazar `127.0.0.1` por la IP de la VM donde corre el módulo destino.
+
+Los ejemplos a continuación usan estas IPs de ejemplo (reemplazar con las reales):
+
+| VM | IP de ejemplo |
+|---|---|
+| VM1 — Kernel Memory | `10.100.3.10` |
+| VM2 — Kernel Scheduler | `10.100.3.11` |
+| VM3 — CPU | `10.100.3.12` |
+| VM4 — IO | `10.100.3.13` |
+| VM5 — Memory Stick | `10.100.3.14` |
+
+---
+
+**VM1 — `kernel_memory/kernel_memory.config`:**
+```
+LOG_LEVEL=INFO
+KERNEL_MEMORY_PORT=23841
+ALLOCATION_STRATEGY=BEST_FIT
+SEGMENT_MAX_SIZE=128
+INSTRUCTION_DELAY=0
+COMPACTION_DELAY=0
+SCRIPTS_BASEPATH=/home/utnso/pruebas
+```
+> KM no necesita la IP de nadie — él escucha y los demás se conectan a él.
+
+**VM1 — `swap/swap.config`:**
+```
+LOG_LEVEL=INFO
+KERNEL_MEMORY_IP=127.0.0.1
+KERNEL_MEMORY_PORT=23841
+SWAP_FILE_PATH=/tmp/tp_swap.bin
+SWAP_FILE_SIZE=65536
+BLOCK_SIZE=256
+```
+> Swap corre en la misma VM que KM, por eso usa `127.0.0.1`.
+
+---
+
+**VM2 — `kernel_scheduler/kernel_scheduler.config`:**
+```
+LOG_LEVEL=INFO
+KERNEL_MEMORY_IP=10.100.3.10
+KERNEL_MEMORY_PORT=23841
+KERNEL_SCHEDULER_PORT=19337
+PLANIFICATION_ALGORITHM=FIFO
+RR_QUANTUM=1500
+SUSPENSION_TIMEOUT=35000
+```
+> `KERNEL_MEMORY_IP` = IP de VM1.
+
+---
+
+**VM3 — `cpu/cpu.config`:**
+```
+LOG_LEVEL=INFO
+IP_KERNEL=10.100.3.11
+PUERTO_KERNEL=19337
+IP_MEMORY=10.100.3.10
+PUERTO_MEMORY=23841
+SEGMENT_MAX_SIZE=128
+IP_MEMORY_STICK_0=10.100.3.14
+PUERTO_MEMORY_STICK_0=27643
+```
+> `IP_KERNEL` = IP de VM2 (KS). `IP_MEMORY` = IP de VM1 (KM). `IP_MEMORY_STICK_0` = IP de VM5 (MS).
+
+---
+
+**VM4 — `io/io.config`:**
+```
+LOG_LEVEL=INFO
+KERNEL_SCHEDULER_IP=10.100.3.11
+KERNEL_SCHEDULER_PORT=19337
+```
+> `KERNEL_SCHEDULER_IP` = IP de VM2.
+
+---
+
+**VM5 — `memory_stick/memory_stick.config`:**
+```
+LOG_LEVEL=INFO
+KERNEL_MEMORY_IP=10.100.3.10
+KERNEL_MEMORY_PORT=23841
+MEMORY_STICK_PORT=27643
+MEMORY_DELAY=0
+```
+> `KERNEL_MEMORY_IP` = IP de VM1.
+
+---
+
+#### Paso 6 — Copiar los scripts de proceso a VM1
+
+Los scripts `.prc` deben estar en la VM donde corre el Kernel Memory (VM1), en el path configurado en `SCRIPTS_BASEPATH`.
+
+**Si los scripts ya están en VM1:**
+```bash
+mkdir -p /home/utnso/pruebas
+cp scripts/*.prc /home/utnso/pruebas/
+```
+
+**Si los scripts están en otra VM y hay que copiarlos a VM1:**
+```bash
+# Ejecutar desde la VM que tiene los scripts:
+scp scripts/*.prc utnso@10.100.3.10:/home/utnso/pruebas/
+```
+`scp` copia archivos por SSH. La sintaxis es `scp <archivo_local> <usuario>@<ip_destino>:<directorio_destino>`. Pedirá la contraseña del usuario en VM1.
+
+> Si `scp` falla porque SSH no está instalado: `sudo apt install -y openssh-server openssh-client`
+
+#### Paso 7 — Levantar los módulos en orden
+
+Abrir una terminal por módulo. Ver el [Orden de inicio](#8-orden-de-inicio).
+
+**VM1** (dos terminales):
+```bash
+./deploy.sh km        # terminal 1
+./deploy.sh swap      # terminal 2
+```
+
+**VM5:**
+```bash
+./deploy.sh ms 1024
+```
+
+**VM2:**
+```bash
+./deploy.sh ks /home/utnso/pruebas/PLANI_PRE_0.prc
+```
+
+**VM4** (tres terminales):
+```bash
+./deploy.sh io SLEEP    # terminal 1
+./deploy.sh io STDOUT   # terminal 2
+./deploy.sh io STDIN    # terminal 3
+```
+
+**VM3** (última en levantar):
+```bash
+./deploy.sh cpu 0
+```
+
+#### Paso 8 — Verificar que todo conectó
+
+Al levantar cada módulo, buscar en sus logs:
+- KM: `Kernel Memory escuchando en puerto 23841`
+- KS: `Conectado a Kernel Memory`
+- MS: `Conectado a Kernel Memory`
+- Swap: `Conectado a Kernel Memory`
+- CPU: `Conectado a Kernel Scheduler` y `Conectado a Kernel Memory`
+- IO: `Conectado a Kernel Scheduler`
+
+Si un módulo no puede conectarse:
+1. Verificar que el módulo destino esté levantado.
+2. Probar `ping <ip_destino>` desde la VM con el problema.
+3. Verificar que la IP en el `.config` sea la correcta.
+4. Si hay firewall activo: `sudo ufw status` — si dice "active", intentar `sudo ufw disable` temporalmente.
+
+> **Nota sobre configuración de red en el hipervisor:**
+> Para que las VMs se vean entre sí, deben estar en la misma red virtual. En VirtualBox: el adaptador de red de cada VM debe estar en modo **Red interna** (todas con el mismo nombre de red) o en modo **Adaptador puente** (conectadas a la red física del laboratorio). El modo **NAT** (el predeterminado) no permite que las VMs se vean entre sí.
 
 ---
 
@@ -210,7 +492,7 @@ Una vez que cada integrante tenga la IP de su VM, completar esta tabla y compart
 Los módulos deben levantarse en este orden porque cada uno espera que sus dependencias ya estén escuchando:
 
 ```
-1. Kernel Memory     — no depende de nadie, todos se conectan a él
+1. Kernel Memory     — no depende de nadie; todos los demás se conectan a él
 2. Swap              — conecta a KM
 3. Memory Stick      — conecta a KM
 4. Kernel Scheduler  — conecta a KM; luego espera conexiones de CPU e IO
@@ -220,303 +502,135 @@ Los módulos deben levantarse en este orden porque cada uno espera que sus depen
 8. CPU               — conecta a KS y KM (último en iniciar)
 ```
 
-> Si un módulo falla al conectarse, verificar que el módulo destino esté levantado y que las IPs y puertos en los `.config` sean correctos.
+> Si un módulo falla con "connection refused", el módulo destino todavía no está escuchando. Esperar unos segundos y volver a levantar el que falló.
 
 ---
 
-## 9. Despliegue distribuido en VMs
+## 9. Scripts de proceso (.prc)
 
-### Ejemplo de IPs (reemplazar con las reales el día de la entrega)
+Los scripts de proceso contienen instrucciones que ejecuta la CPU, una por línea. El Kernel Scheduler recibe la ruta del script del proceso inicial como argumento al arrancar.
 
-| Módulo | IP ejemplo |
-|---|---|
-| Kernel Memory | `10.100.3.10` |
-| Kernel Scheduler | `10.100.3.11` |
-| CPU | `10.100.3.12` |
-| IO | `10.100.3.13` |
-| Memory Stick | `10.100.3.14` |
+El Kernel Memory lee los scripts desde `SCRIPTS_BASEPATH`. Los scripts de procesos hijos (lanzados con `INIT_PROC`) también deben estar en ese directorio.
 
-### VM1 — Kernel Memory + Swap
-
-`kernel_memory.config`:
-```
-KERNEL_MEMORY_PORT=37215
-SCRIPTS_BASEPATH=/home/utnso/scripts
-INSTRUCTION_DELAY=0
-```
-
-`swap.config`:
-```
-KERNEL_MEMORY_IP=127.0.0.1
-KERNEL_MEMORY_PORT=37215
-SWAP_FILE_PATH=/tmp/tp_swap.bin
-SWAP_FILE_SIZE=4096
-BLOCK_SIZE=64
-```
+### Copiar los scripts antes de levantar el sistema
 
 ```bash
-./kernel_memory/bin/kernel_memory kernel_memory/kernel_memory.config &
-./swap/bin/swap swap/swap.config &
+mkdir -p /home/utnso/pruebas
+cp scripts/*.prc /home/utnso/pruebas/
 ```
 
-### VM2 — Kernel Scheduler
-
-`kernel_scheduler.config`:
-```
-LOG_LEVEL=INFO
-KERNEL_MEMORY_IP=10.100.3.10
-KERNEL_MEMORY_PORT=37215
-KERNEL_SCHEDULER_PORT=37214
-PLANIFICATION_ALGORITHM=FIFO
-RR_QUANTUM=1000
-SUSPENSION_TIMEOUT=5000
-```
-
-```bash
-./kernel_scheduler/bin/kernel_scheduler kernel_scheduler/kernel_scheduler.config /home/utnso/scripts/0.txt
-```
-
-> El segundo argumento es la ruta al script del proceso inicial (PID 0).
-
-### VM3 — CPU
-
-`cpu.config`:
-```
-IP_KERNEL=10.100.3.11
-PUERTO_KERNEL=37214
-IP_MEMORY=10.100.3.10
-PUERTO_MEMORY=37215
-```
-
-```bash
-./cpu/bin/cpu cpu/cpu.config 1
-# El segundo argumento es el ID de esta CPU (entero, único por instancia)
-```
-
-### VM4 — IO
-
-`io.config`:
-```
-LOG_LEVEL=INFO
-KERNEL_SCHEDULER_IP=10.100.3.11
-KERNEL_SCHEDULER_PORT=37214
-```
-
-```bash
-./io/bin/io io/io.config SLEEP  &
-./io/bin/io io/io.config STDOUT &
-./io/bin/io io/io.config STDIN  &
-```
-
-### VM5 — Memory Stick
-
-`memory_stick.config`:
-```
-LOG_LEVEL=INFO
-MEMORY_STICK_PORT=37216
-KERNEL_MEMORY_IP=10.100.3.10
-KERNEL_MEMORY_PORT=37215
-MEMORY_DELAY=500
-```
-
-```bash
-./memory_stick/bin/memory_stick memory_stick/memory_stick.config 1024
-# El segundo argumento es el tamaño del buffer en bytes
-```
-
----
-
-## 10. Scripts de proceso
-
-Los scripts están en `scripts/`. Cada archivo se llama `{PID}.txt` y tiene una instrucción por línea.
-
-El KS recibe la ruta del script del proceso inicial como argumento. El KM construye la ruta de los demás procesos automáticamente como `{SCRIPTS_BASEPATH}/{PID}.txt`.
-
-Copiar los scripts a la VM donde corre el KM:
-
-```bash
-mkdir -p /home/utnso/scripts
-cp scripts/*.txt /home/utnso/scripts/
-```
-
-Instrucciones disponibles: `SLEEP`, `STDOUT`, `STDIN`, `MUTEX_CREATE`, `MUTEX_LOCK`, `MUTEX_UNLOCK`, `EXIT`. Ver `scripts/README.md` para el formato completo.
-
----
-
-## 11. Prueba de integración CK2
-
-### Verificar conexiones
-
-Al levantar en orden, cada módulo loguea su conexión exitosa. Verificar que aparezcan:
-
-```
-[KM]  Kernel Memory escuchando en puerto 37215
-[KS]  Conectado a Kernel Memory
-[IO]  Conectado a Kernel Scheduler      (×3, uno por tipo)
-[CPU] Conectado a Kernel Scheduler
-[CPU] Conectado a Kernel Memory
-```
-
-### FIFO básico
-
-1. `PLANIFICATION_ALGORITHM=FIFO` en el KS.
-2. Lanzar con `scripts/0.txt` (tiene `SLEEP`, `MUTEX_CREATE/LOCK/UNLOCK`, `EXIT`).
-3. En los logs del KS verificar la secuencia de estados: `NEW → READY → EXEC → BLOCK → READY → EXEC → EXIT`.
-
-### Round Robin
-
-1. `PLANIFICATION_ALGORITHM=RR`, `RR_QUANTUM=1000`.
-2. Script con `SLEEP 3000` — dura más que el quantum.
-3. En los logs del KS debe aparecer `Desalojado por fin de quantum`.
-
-### SUSPENSION_TIMEOUT
-
-1. `SUSPENSION_TIMEOUT=2000` (2 segundos).
-2. Script con `SLEEP 10000` (10 segundos).
-3. A los 2 segundos el proceso debe pasar a `SUSP. BLOCK`. Cuando el SLEEP termina, debe pasar a `SUSP. READY → READY`.
-
-### Mutex con dos procesos
-
-Scripts `0.txt` y `1.txt` compitiendo por el mismo mutex:
-
-```
-# 0.txt                  # 1.txt
-MUTEX_CREATE mutex1      MUTEX_LOCK mutex1
-MUTEX_LOCK mutex1        SLEEP 1000
-SLEEP 3000               MUTEX_UNLOCK mutex1
-MUTEX_UNLOCK mutex1      EXIT
-EXIT
-```
-
-El proceso que llega segundo a `MUTEX_LOCK` debe quedar en BLOCK hasta que el primero ejecute `MUTEX_UNLOCK`.
-
----
-
-## 12. Pruebas preliminares
-
-Los scripts de prueba oficiales están en el repositorio `sisoputnfrba/plug-n-pray-pruebas`. Clonar junto al TP o copiar los `.prc` al `SCRIPTS_BASEPATH` del Kernel Memory antes de correr cada suite.
+Para las pruebas preliminares de la cátedra:
 
 ```bash
 git clone https://github.com/sisoputnfrba/plug-n-pray-pruebas.git
+cp plug-n-pray-pruebas/*.prc /home/utnso/pruebas/
 ```
 
-### 12.1 Planificación preliminar
+### Instrucciones disponibles
+
+`SET`, `MOV_IN`, `MOV_OUT`, `SUM`, `SUB`, `JNZ`, `SLEEP`, `STDOUT`, `STDIN`, `MEM_ALLOC`, `MEM_FREE`, `MUTEX_CREATE`, `MUTEX_LOCK`, `MUTEX_UNLOCK`, `INIT_PROC`, `EXIT`.
+
+Ver la consigna del TP para el formato y semántica de cada instrucción.
+
+---
+
+## 10. Pruebas preliminares
+
+Los scripts de prueba oficiales están en el repositorio `sisoputnfrba/plug-n-pray-pruebas`. Copiar los `.prc` al `SCRIPTS_BASEPATH` del Kernel Memory antes de correr cada suite.
+
+```bash
+git clone https://github.com/sisoputnfrba/plug-n-pray-pruebas.git
+cp plug-n-pray-pruebas/*.prc /home/utnso/pruebas/
+```
+
+### 10.1 Planificación preliminar (PLANI_PRE)
 
 **Objetivo:** validar la planificación de corto plazo sin involucrar memoria.
 
 **Requisitos de configuración:**
 - 1 sola CPU conectada.
-- `SUSPENSION_TIMEOUT` alto (p. ej. `60000`) para no entrar en suspensión durante la prueba. Si se quiere verificar la suspensión, bajar el valor a menos de `20000`.
-
-**Scripts:**
-
-| Archivo | Prioridad | Descripción |
-|---|---|---|
-| `PLANI_PRE_0.prc` | — | Script maestro. Lanza los subprocesos y termina con EXIT. |
-| `PLANI_PRE_1.prc` | 3 (×2) | `SET` de registros + `SLEEP 20000` (dos veces) + EXIT. Activa la suspensión si `SUSPENSION_TIMEOUT < 20000`. |
-| `PLANI_PRE_2.prc` | 2 (×2) | Countdown de AX=50 con `SUB AX BX` + `JNZ AX` — loop con salto condicional. |
-| `PLANI_PRE_3.prc` | 1 (×1) | SET de todos los registros + `SLEEP 100` (repetido 4 veces) + EXIT. |
-
-**Contenido de `PLANI_PRE_0.prc`:**
-```
-INIT_PROC PLANI_PRE_1.prc 3
-INIT_PROC PLANI_PRE_1.prc 3
-INIT_PROC PLANI_PRE_2.prc 2
-INIT_PROC PLANI_PRE_2.prc 2
-INIT_PROC PLANI_PRE_3.prc 1
-EXIT
-```
-
-**Ejecución:** pasar `PLANI_PRE_0.prc` como script inicial al Kernel Scheduler.
-
-**Resultado esperado:** los cinco procesos hijos se crean, ejecutan y terminan. En los logs del KS deben verse transiciones `NEW → READY → EXEC → EXIT` para cada uno. Si `SUSPENSION_TIMEOUT` es menor al `SLEEP` de `PLANI_PRE_1`, los procesos de prioridad 3 deben pasar a `SUSP. BLOCK` y luego regresar a `SUSP. READY → READY`.
-
----
-
-### 12.2 Memoria preliminar
-
-**Objetivo:** validar la creación, escritura, lectura y eliminación de segmentos de memoria.
-
-**Requisitos de configuración:**
-- Al menos 1 Memory Stick con buffer de **256 bytes**.
-- `SEGMENT_MAX_SIZE=128` en el Kernel Memory.
-- Para probar segmentos distribuidos entre varios Memory Sticks, levantar múltiples instancias con buffers más chicos (p. ej. 64 bytes cada una).
+- `SUSPENSION_TIMEOUT` alto (ej. `60000`) para no entrar en suspensión durante la prueba.
+  Si se quiere verificar la suspensión, bajar el valor a menos de `20000`.
 
 **Scripts:**
 
 | Archivo | Descripción |
 |---|---|
-| `MEMORIA_PRE_0.prc` | Script maestro. Lanza `MEMORIA_PRE_3` (segfault inmediato), espera 10 segundos, luego lanza `MEMORIA_PRE_1` y `MEMORIA_PRE_2`. |
-| `MEMORIA_PRE_1.prc` | Alloc de 4 segmentos de 32 B, escribe en cada uno con `MOV_OUT`, libera los segmentos 0 y 2, re-alloca 1 segmento de 128 B, lee con `MOV_IN`. Verifica compactación/reuso de espacio. |
-| `MEMORIA_PRE_2.prc` | Alloc de 1 segmento de 64 B, lee por `STDIN` y escribe por `STDOUT`. Requiere IO STDIN e IO STDOUT activos. |
-| `MEMORIA_PRE_3.prc` | `MEM_ALLOC` + `MOV_OUT` a un segmento sin espacio válido → termina con **segmentation fault**. Finalización esperada: el proceso termina de forma abrupta. |
+| `PLANI_PRE_0.prc` | Script maestro. Lanza los subprocesos con `INIT_PROC` y termina. |
+| `PLANI_PRE_1.prc` | `SET` de registros + `SLEEP 20000` (dos veces) + EXIT. Activa suspensión si `SUSPENSION_TIMEOUT < 20000`. |
+| `PLANI_PRE_2.prc` | Countdown con `SUB AX BX` + `JNZ AX` — loop con salto condicional. |
+| `PLANI_PRE_3.prc` | SET de todos los registros + `SLEEP 100` (repetido) + EXIT. |
 
-**Contenido de `MEMORIA_PRE_0.prc`:**
-```
-INIT_PROC MEMORIA_PRE_3.prc 1
-SLEEP 10000
-INIT_PROC MEMORIA_PRE_1.prc 2
-INIT_PROC MEMORIA_PRE_2.prc 2
-EXIT
+**Ejecución:**
+```bash
+./deploy.sh ks /home/utnso/pruebas/PLANI_PRE_0.prc
 ```
 
-**Ejecución:** pasar `MEMORIA_PRE_0.prc` como script inicial al Kernel Scheduler.
+**Resultado esperado:** los procesos hijos se crean, ejecutan y terminan. En los logs del KS deben verse transiciones `NEW → READY → EXEC → EXIT` para cada uno. Si `SUSPENSION_TIMEOUT` es menor al SLEEP de `PLANI_PRE_1`, esos procesos deben pasar a `SUSP. BLOCK` y luego regresar a `SUSP. READY → READY`.
+
+### 10.2 Memoria preliminar (MEMORIA_PRE)
+
+**Objetivo:** validar la creación, escritura, lectura y eliminación de segmentos de memoria.
+
+**Requisitos de configuración:**
+- Al menos 1 Memory Stick con buffer de **256 bytes** o más.
+- `SEGMENT_MAX_SIZE=128` en el Kernel Memory y en el CPU.
+- IO STDOUT e IO STDIN activos (necesarios para `MEMORIA_PRE_2`).
+
+**Scripts:**
+
+| Archivo | Descripción |
+|---|---|
+| `MEMORIA_PRE_0.prc` | Script maestro. Lanza `MEMORIA_PRE_3`, espera 10 s, luego lanza `MEMORIA_PRE_1` y `MEMORIA_PRE_2`. |
+| `MEMORIA_PRE_1.prc` | Alloc de 4 segmentos, escribe con `MOV_OUT`, libera 2, re-alloca 1 de 128 B, lee con `MOV_IN`. Verifica compactación. |
+| `MEMORIA_PRE_2.prc` | Alloc de 1 segmento, lee por STDIN, escribe por STDOUT. |
+| `MEMORIA_PRE_3.prc` | `MEM_ALLOC` + `MOV_OUT` fuera de rango → termina con **segmentation fault** (comportamiento esperado). |
+
+**Ejecución:**
+```bash
+./deploy.sh ks /home/utnso/pruebas/MEMORIA_PRE_0.prc
+```
 
 **Resultado esperado:**
-1. `MEMORIA_PRE_3` termina rápidamente con segmentation fault (comportamiento correcto).
-2. Tras los 10 segundos del `SLEEP`, se crean `MEMORIA_PRE_1` y `MEMORIA_PRE_2`.
+1. `MEMORIA_PRE_3` termina rápidamente con segfault (correcto).
+2. Tras los 10 s del SLEEP, se crean `MEMORIA_PRE_1` y `MEMORIA_PRE_2`.
 3. `MEMORIA_PRE_1` completa el ciclo alloc → write → free → realloc → read sin errores.
 4. `MEMORIA_PRE_2` bloquea en STDIN esperando input; al recibirlo, lo escribe por STDOUT y termina.
 
 ---
 
-## 13. Cambios introducidos en v1.1 del enunciado
+## 11. Cambios introducidos en v1.1 del enunciado
 
-La versión 1.1 del enunciado (publicada 08/06/2026) introduce aclaraciones y correcciones que **impactan directamente en la implementación de CK3**. A continuación se detallan los cambios y su impacto técnico.
+La versión 1.1 del enunciado (publicada 08/06/2026) introduce aclaraciones y correcciones que impactan en CK3.
 
-### 13.1 Syscalls deben liberar la CPU
+### 11.1 Syscalls deben liberar la CPU
 
-**Sección afectada:** Kernel Scheduler — nueva sección "Atención de Syscalls".
-
-Ante cualquier syscall, la CPU debe seguir este flujo sin excepción:
-
+Ante cualquier syscall, la CPU debe:
 1. Incrementar el Program Counter (PC) en 1.
-2. Guardar el contexto de ejecución en el Kernel Memory.
-3. Enviar el PID al Kernel Scheduler (via `MSG_DEVOLVER_PROCESO` con motivo `SYSCALL`).
+2. Guardar el contexto en el Kernel Memory.
+3. Enviar el PID al Kernel Scheduler (`MSG_DEVOLVER_PROCESO` con motivo `SYSCALL`).
 4. Quedar libre para ejecutar otro proceso.
 
-El KS es quien decide cuándo redespachar el proceso (inmediatamente si la syscall es no bloqueante, o cuando se resuelva el bloqueo).
+El KS decide cuándo redespachar el proceso.
 
-**Impacto en el código:**
-- `cpu/src/cpu_syscalls.c`: las funciones `enviar_syscall_mutex_create`, `enviar_syscall_mutex_unlock` y `enviar_syscall_exit` actualmente esperan un `MSG_OK` del KS antes de retornar. Deben modificarse para **no esperar respuesta**.
-- `kernel_scheduler/src/main.c`: para MUTEX_CREATE y MUTEX_UNLOCK, el KS ya no envía `MSG_OK` a la CPU. Redespacha al proceso vía el planificador normal.
+**Impacto:** `cpu/src/cpu_syscalls.c` — las funciones para MUTEX_CREATE, MUTEX_UNLOCK y EXIT no deben esperar `MSG_OK` del KS. El KS redespacha al proceso vía el planificador normal.
 
-### 13.2 MUTEX_LOCK bloqueante: el bloqueo pasa al KS
+### 11.2 MUTEX_LOCK bloqueante: el bloqueo pasa al KS
 
-Con el cambio anterior, la CPU nunca queda bloqueada esperando un mutex. El bloqueo por `MUTEX_LOCK` cuando el mutex está tomado ahora es responsabilidad **exclusiva del KS**:
+Con el cambio anterior, el bloqueo por `MUTEX_LOCK` cuando el mutex está tomado es responsabilidad exclusiva del KS:
+- Mutex libre: KS asigna el mutex y redespacha inmediatamente.
+- Mutex tomado: KS mueve el proceso a `BLOCK`. Al hacer `MUTEX_UNLOCK`, mueve de `BLOCK` a `READY`.
 
-- Si el mutex está libre: KS asigna el mutex y redespacha el proceso inmediatamente.
-- Si el mutex está tomado: KS mueve el proceso a `BLOCK` (no lo redespacha). Cuando se haga `MUTEX_UNLOCK`, el KS mueve el proceso de `BLOCK` a `READY`.
+### 11.3 STDIN y STDOUT usan dirección física, no lógica
 
-**Impacto:** la cola de waiters del mutex en `ks_mutex.c` ya no necesita guardar el `fd_cpu` — solo necesita guardar el PID del proceso en espera. El redespacho ocurre a través del planificador normal.
-
-### 13.3 STDIN y STDOUT usan dirección física, no lógica
-
-**Cambio de protocolo:** la CPU ahora envía al KS una **dirección física** (ya traducida por la MMU) en lugar de una dirección lógica.
+La CPU envía al KS una **dirección física** (ya traducida por la MMU) en lugar de lógica.
 
 | | v1.0 | v1.1 |
 |---|---|---|
 | CPU → KS (STDOUT) | `{ pid, dir_logica, tamanio }` | `{ pid, dir_fisica, tamanio }` |
 | CPU → KS (STDIN) | `{ pid, dir_logica, tamanio }` | `{ pid, dir_fisica, tamanio }` |
 
-**Impacto en el código:**
-- `utils/src/utils/protocolo.h`: renombrar `direccion_logica` → `direccion_fisica` en `t_payload_syscall_io_memoria`.
-- `cpu/src/cpu_ciclo.c`: antes de enviar STDOUT/STDIN al KS, traducir la dirección lógica (registros SI/DI) a dirección física usando la MMU.
-- `kernel_scheduler/src/main.c`: al recibir STDOUT, pedir los bytes al KM con la dirección física recibida, luego reenviarlos a IO STDOUT. Al recibir STDIN, cuando IO devuelva los datos, pedirle al KM que los escriba en la dirección física.
-
-### 13.4 Flujo real de STDOUT y STDIN con Kernel Memory
-
-Con la dirección física disponible en el KS, el flujo completo para CK3 es:
+### 11.4 Flujo completo de STDOUT y STDIN con Kernel Memory
 
 **STDOUT:**
 ```
@@ -539,29 +653,22 @@ KM  → KS: MSG_OK
 KS: proceso BLOCK → READY
 ```
 
-### 13.5 Syscalls de memoria (MEM_ALLOC/MEM_FREE): reenviar a la misma CPU
+### 11.5 MEM_ALLOC/MEM_FREE: reenviar a la misma CPU
 
-Las syscalls relacionadas a memoria (`MEM_ALLOC`, `MEM_FREE`) tienen una regla especial: una vez que el KM resuelve la operación, el proceso **debe ser reenviado a la misma CPU que hizo la llamada**, no a cualquier CPU libre.
+Las syscalls de memoria (`MEM_ALLOC`, `MEM_FREE`) deben reenviarse a la **misma CPU** que hizo la llamada, no a cualquier CPU libre. Si hay espacio no contiguo, el KM dispara compactación antes de asignar.
 
-Adicionalmente, si al crear un segmento hay espacio suficiente pero no es contiguo, el KM debe disparar una compactación antes de asignar.
+### 11.6 Orden FIFO en el desbloqueo de Mutex
 
-### 13.6 Orden FIFO en el desbloqueo de Mutex
+Al liberar un mutex con procesos en espera, los procesos se desbloquean en el orden en que solicitaron el mutex (FIFO).
 
-Al liberar un mutex que tiene procesos en espera, los procesos deben desbloquearse **en el orden en que solicitaron el mutex** (FIFO). La implementación actual con `queue_push`/`queue_pop` ya cumple esto.
+### 11.7 Des-suspensión usa algoritmo de búsqueda de huecos
 
-### 13.7 Des-suspensión usa algoritmo de búsqueda de huecos
+Al des-suspender un proceso (restaurar segmentos de SWAP a memoria), el KM debe usar el algoritmo configurado (BEST FIT o WORST FIT) para ubicar los segmentos.
 
-Al des-suspender un proceso (restaurar segmentos de SWAP a memoria principal), el KM debe usar el **algoritmo de búsqueda de huecos configurado** (BEST FIT o WORST FIT) para ubicar los segmentos, en lugar de colocarlos en cualquier lugar disponible.
+### 11.8 Direcciones físicas de Memory Sticks son globales
 
-### 13.8 Direcciones físicas de Memory Sticks son globales
+Las direcciones físicas son globales a todo el sistema. El KM lleva registro de qué rango cubre cada MS (ej. MS1: 0–255, MS2: 256–511). Si una operación cruza la frontera entre dos sticks, el KM la divide.
 
-**Cambio importante:** se elimina la restricción de que las direcciones físicas de cada Memory Stick arranquen en 0. Las direcciones físicas son **globales** a todo el espacio de memoria del sistema.
+### 11.9 IO tiene 1 solo hilo de ejecución
 
-**Impacto:**
-- El KM lleva un registro de qué rango de dirección física corresponde a cada MS (p. ej., MS1 cubre 0–255, MS2 cubre 256–511).
-- Cuando el KM recibe una lectura o escritura con una dirección física, calcula a qué MS(s) corresponde y divide la operación si cruza fronteras entre sticks.
-- El Memory Stick recibe sus pedidos con offsets que reflejan la dirección global, no relativa.
-
-### 13.9 IO tiene 1 solo hilo de ejecución
-
-Cada módulo IO opera con **un único hilo** que atiende pedidos del KS de forma secuencial. La implementación actual ya cumple esto (el `main` de IO no crea hilos adicionales).
+Cada módulo IO opera con un único hilo y atiende pedidos del KS de forma secuencial.
