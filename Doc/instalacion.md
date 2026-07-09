@@ -98,9 +98,22 @@ cd tp-2026-1c-Impactante
 
 ## 4. Configurar cada módulo
 
-Cada módulo tiene un archivo `*.config` en su directorio. Antes de levantar cualquier módulo, editar ese archivo con las IPs y puertos correctos para el entorno actual.
+Cada módulo tiene un archivo `*.config` en su directorio (ej. `kernel_memory/kernel_memory.config`). Ese archivo **ya existe en el repo** con valores de ejemplo para desarrollo local (`127.0.0.1`) — no hay que crearlo desde cero, solo editarlo con los valores correctos para el entorno donde vas a correr ese módulo (VM local, VM distribuida, etc).
 
-Los archivos `.config` **no se commitean** (están en `.gitignore`).
+> **Nota:** el `.gitignore` del proyecto tiene una regla `*.config` pensada para que cada quien mantenga su propia configuración sin pisar la de sus compañeros, pero los archivos `*.config` de cada módulo ya están commiteados en este repo (se agregaron antes de esa regla). Esto quiere decir que si editás `kernel_memory/kernel_memory.config` y hacés `git add`/`git commit`, ese cambio **sí** se sube y le pisa la configuración a todo el equipo. Para laboratorio o evaluación, evitar comitear esos cambios (`git status` antes de commitear, o `git checkout -- <archivo>.config` para descartar la edición local una vez que ya no la necesitás).
+
+### Cómo editarlo
+
+1. Abrir el archivo con cualquier editor de texto de consola, por ejemplo:
+   ```bash
+   nano kernel_memory/kernel_memory.config
+   ```
+   (`Ctrl+O` para guardar, `Ctrl+X` para salir. Si preferís `vim`: `vim kernel_memory/kernel_memory.config`, `i` para insertar, `Esc` luego `:wq` para guardar y salir.)
+2. El formato es `CLAVE=VALOR`, una por línea, **sin espacios alrededor del `=`** (ej. `KERNEL_MEMORY_PORT=23841`, no `KERNEL_MEMORY_PORT = 23841`). Las líneas que empiezan con `#` son comentarios y se ignoran.
+3. Modificar solo el valor de las claves que necesitás cambiar (típicamente las IPs, cuando pasás de local a distribuido — ver [Sección 7](#7-despliegue-distribuido-en-múltiples-vms)). No hace falta tocar las que ya están bien (ej. `LOG_LEVEL=INFO`).
+4. Guardar el archivo. No hace falta recompilar ni reiniciar nada más que el módulo — los `.config` se leen al arrancar el proceso (`./deploy.sh <módulo>`).
+
+Cada módulo también tiene un archivo `*.config.example` al lado (ej. `kernel_memory/kernel_memory.config.example`) con **cada clave comentada explicando qué significa**. Sirve como referencia rápida si no te acordás qué hace una clave; no hace falta copiarlo, ya que el `.config` real ya tiene la misma estructura.
 
 ### Claves por módulo
 
