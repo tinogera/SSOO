@@ -242,6 +242,56 @@ BLOCK_SIZE=256
 
 Esta sección explica paso a paso cómo desplegar el proyecto cuando cada módulo corre en una máquina virtual distinta. El procedimiento fue diseñado para alguien que no tiene experiencia previa con redes.
 
+### 7.0 Preparar una VM base y clonarla (recomendado)
+
+Instalar el sistema operativo y las dependencias 5 veces a mano es lento y propenso a errores. Conviene armar **una VM "base"** con todo instalado y **clonarla** 4 veces más. Esto ahorra tiempo, pero clonar una VM trae un problema que hay que resolver: **direcciones MAC duplicadas**.
+
+#### Paso A — Armar la VM base
+
+1. Crear una VM nueva (Lubuntu 22.04, igual que en evaluación) e instalar el sistema operativo.
+2. Instalar las dependencias de la [Sección 2](#2-instalar-dependencias) (`build-essential`, `make`, `git`, `libreadline-dev`, `so-commons-library`).
+3. **No es necesario** clonar el repositorio del TP en la VM base — mejor hacerlo en cada clon ya con su IP definitiva, así cada VM queda con su propia copia y no hay que preocuparse por sincronizarlas.
+4. Apagar la VM (`sudo shutdown now`), no solo suspenderla. Clonar una VM que sigue "prendida" puede dejar el disco en un estado inconsistente.
+
+#### Paso B — Clonar la VM
+
+En VirtualBox: clic derecho sobre la VM base → **Clonar...**
+
+- Elegir **"Clonación completa"** (no "vinculada"), para que cada VM sea un disco independiente y no dependa de la VM base para arrancar.
+- **Importante:** en la pantalla de clonación hay un checkbox que dice algo como **"Reinicializar la dirección MAC de todas las tarjetas de red" / "Reinitialize the MAC address of all network cards"**. Dejarlo **tildado** (es la opción por defecto). Repetir el clonado 4 veces (una VM por cada módulo restante).
+
+**¿Qué es la dirección MAC y por qué importa?**
+
+Cada placa de red (física o virtual) tiene un identificador único de fábrica llamado dirección MAC (ej. `08:00:27:1a:2b:3c`), distinto de la IP. La red local lo usa para saber a qué máquina entregarle cada paquete, antes incluso de que exista una IP asignada.
+
+Cuando VirtualBox clona una VM, por defecto **copia también la MAC** de las placas de red virtuales. Si dos VMs prendidas al mismo tiempo tienen la misma MAC, la red se confunde: puede que ninguna de las dos consiga IP por DHCP, que los `ping` fallen de forma intermitente, o que los paquetes le lleguen a la VM equivocada. Por eso hay que "regenerar" (asignarle una MAC nueva y distinta) a cada clon — el checkbox del Paso B hace esto automáticamente.
+
+**¿Cómo verifico o corrijo la MAC después de clonar?**
+
+Si ya clonaste sin tildar el checkbox, se puede regenerar después sin volver a clonar:
+
+- En VirtualBox, con la VM apagada: **Configuración → Red → Avanzadas → Generar nueva dirección MAC** (ícono de flechas en círculo, al lado del campo MAC).
+- Para confirmar que dos VMs tienen MACs distintas una vez prendidas, ejecutar en cada una:
+  ```bash
+  ip link show
+  ```
+  y comparar el campo `link/ether` de la interfaz activa (ej. `ens33`). Deben ser diferentes entre VMs.
+
+**Otras dos cosas que conviene cambiar en cada clon (recomendado, no obligatorio):**
+
+- **Hostname**, para no confundirse mirando la terminal de cuál VM es cuál:
+  ```bash
+  sudo hostnamectl set-hostname vm-kernel-memory   # ejemplo, uno distinto por VM
+  ```
+- **machine-id**, que Linux también copia al clonar y en algunos casos interfiere con el DHCP (la IP que asigna el router):
+  ```bash
+  sudo rm /etc/machine-id
+  sudo systemd-machine-id-setup
+  sudo reboot
+  ```
+
+Con la MAC regenerada, cada VM va a obtener su propia IP al reiniciar — usar esa IP en el Paso 1 de la sección 7.3 de más abajo.
+
 ### 7.1 Conceptos básicos de red (leer antes de continuar)
 
 **¿Qué es una dirección IP?**
