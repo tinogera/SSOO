@@ -104,16 +104,56 @@ Cada módulo tiene un archivo `*.config` en su directorio (ej. `kernel_memory/ke
 
 ### Cómo editarlo
 
-1. Abrir el archivo con cualquier editor de texto de consola, por ejemplo:
+Hay dos formas: con un editor de texto de consola, o con los scripts `set_config.sh` / `set_ip.sh` incluidos en la raíz del repo (recomendado si no tenés experiencia con `nano`/`vim`, típicamente en una VM sin entorno gráfico).
+
+#### Opción A — Scripts (recomendado, no requiere editor)
+
+**`set_config.sh`** escribe o actualiza cualquier clave de un módulo sin abrir el archivo:
+
+```bash
+./set_config.sh <modulo> CLAVE=VALOR [CLAVE=VALOR ...]
+```
+
+`<modulo>` usa los mismos nombres que `deploy.sh`: `km`, `ks`, `cpu`, `io`, `ms`, `swap`. Si el `.config` todavía no existe, el script lo crea a partir de su `.config.example`. Si la clave ya existe, se reemplaza su valor; si no existe, se agrega al final.
+
+Ejemplos:
+```bash
+./set_config.sh km KERNEL_MEMORY_PORT=23841 SCRIPTS_BASEPATH=/home/utnso/pruebas
+./set_config.sh ks PLANIFICATION_ALGORITHM=RR RR_QUANTUM=1500
+```
+
+**`set_ip.sh`** es un atajo para el caso más común: cambiar la IP de un rol (Kernel Memory, Kernel Scheduler o un Memory Stick) en **todos** los `.config` que la referencian, en una sola línea — evita tener que editar varios archivos a mano cuando pasás de local a distribuido (ver [Sección 7](#7-despliegue-distribuido-en-múltiples-vms)):
+
+```bash
+./set_ip.sh km <ip>              # actualiza KERNEL_MEMORY_IP / IP_MEMORY en ks, cpu, ms y swap
+./set_ip.sh ks <ip>              # actualiza IP_KERNEL / KERNEL_SCHEDULER_IP en cpu e io
+./set_ip.sh ms <ip> [indice]     # actualiza IP_MEMORY_STICK_<indice> en cpu (indice por defecto: 0)
+```
+
+Ejemplo real (usando las IPs de ejemplo de la sección 7.3): parado en cualquier VM que tenga el repo clonado,
+```bash
+./set_ip.sh km 10.100.3.10
+./set_ip.sh ks 10.100.3.11
+./set_ip.sh ms 10.100.3.14 0
+```
+deja los `.config` de `cpu`, `io`, `kernel_scheduler`, `memory_stick` y `swap` listos con las IPs correctas, sin abrir ningún archivo.
+
+Ambos scripts corren desde la raíz del repo (`./set_config.sh`, no hace falta `cd` a la carpeta del módulo) y son idempotentes: correrlos de nuevo con los mismos valores no rompe nada.
+
+> **Nota:** como cada VM clona el repo completo, en disco están las carpetas de los 6 módulos aunque en esa VM solo corra uno. `set_ip.sh` actualiza el `.config` de **todos** los módulos que referencian ese rol, no solo el que vas a correr en esa VM — es inofensivo (los `.config` de los módulos que no corrés ahí simplemente no se usan), pero evita confundirse si ves que cambiaron archivos de módulos "que no son el mío".
+
+#### Opción B — Editor de texto manual
+
+1. Abrir el archivo con cualquier editor de consola, por ejemplo:
    ```bash
    nano kernel_memory/kernel_memory.config
    ```
    (`Ctrl+O` para guardar, `Ctrl+X` para salir. Si preferís `vim`: `vim kernel_memory/kernel_memory.config`, `i` para insertar, `Esc` luego `:wq` para guardar y salir.)
 2. El formato es `CLAVE=VALOR`, una por línea, **sin espacios alrededor del `=`** (ej. `KERNEL_MEMORY_PORT=23841`, no `KERNEL_MEMORY_PORT = 23841`). Las líneas que empiezan con `#` son comentarios y se ignoran.
-3. Modificar solo el valor de las claves que necesitás cambiar (típicamente las IPs, cuando pasás de local a distribuido — ver [Sección 7](#7-despliegue-distribuido-en-múltiples-vms)). No hace falta tocar las que ya están bien (ej. `LOG_LEVEL=INFO`).
+3. Modificar solo el valor de las claves que necesitás cambiar. No hace falta tocar las que ya están bien (ej. `LOG_LEVEL=INFO`).
 4. Guardar el archivo. No hace falta recompilar ni reiniciar nada más que el módulo — los `.config` se leen al arrancar el proceso (`./deploy.sh <módulo>`).
 
-Cada módulo también tiene un archivo `*.config.example` al lado (ej. `kernel_memory/kernel_memory.config.example`) con **cada clave comentada explicando qué significa**. Sirve como referencia rápida si no te acordás qué hace una clave; no hace falta copiarlo, ya que el `.config` real ya tiene la misma estructura.
+Cada módulo también tiene un archivo `*.config.example` al lado (ej. `kernel_memory/kernel_memory.config.example`) con **cada clave comentada explicando qué significa**. Sirve como referencia rápida si no te acordás qué hace una clave, sea que edites a mano o con los scripts.
 
 ### Claves por módulo
 
@@ -388,7 +428,7 @@ cd tp-2026-1c-Impactante
 
 #### Paso 5 — Editar los configs con las IPs reales
 
-En cada VM, editar el config del módulo que va a correr en esa máquina. Reemplazar `127.0.0.1` por la IP de la VM donde corre el módulo destino.
+En cada VM, editar el config del módulo que va a correr en esa máquina. Reemplazar `127.0.0.1` por la IP de la VM donde corre el módulo destino. La forma más simple de hacerlo (sin editor de texto) es con `./set_ip.sh`, documentado en la [Sección 4](#4-configurar-cada-módulo) — cada bloque de abajo incluye el comando equivalente.
 
 Los ejemplos a continuación usan estas IPs de ejemplo (reemplazar con las reales):
 
@@ -423,7 +463,7 @@ SWAP_FILE_PATH=/tmp/tp_swap.bin
 SWAP_FILE_SIZE=65536
 BLOCK_SIZE=256
 ```
-> Swap corre en la misma VM que KM, por eso usa `127.0.0.1`.
+> Swap corre en la misma VM que KM, por eso usa `127.0.0.1` (no hace falta tocar nada acá).
 
 ---
 
@@ -438,6 +478,7 @@ RR_QUANTUM=1500
 SUSPENSION_TIMEOUT=35000
 ```
 > `KERNEL_MEMORY_IP` = IP de VM1.
+> Con el script: `./set_ip.sh km 10.100.3.10` (corrido en VM2).
 
 ---
 
@@ -453,6 +494,7 @@ IP_MEMORY_STICK_0=10.100.3.14
 PUERTO_MEMORY_STICK_0=27643
 ```
 > `IP_KERNEL` = IP de VM2 (KS). `IP_MEMORY` = IP de VM1 (KM). `IP_MEMORY_STICK_0` = IP de VM5 (MS).
+> Con los scripts (corridos en VM3): `./set_ip.sh ks 10.100.3.11` y `./set_ip.sh km 10.100.3.10` y `./set_ip.sh ms 10.100.3.14 0`.
 
 ---
 
@@ -463,6 +505,7 @@ KERNEL_SCHEDULER_IP=10.100.3.11
 KERNEL_SCHEDULER_PORT=19337
 ```
 > `KERNEL_SCHEDULER_IP` = IP de VM2.
+> Con el script: `./set_ip.sh ks 10.100.3.11` (corrido en VM4).
 
 ---
 
@@ -475,6 +518,7 @@ MEMORY_STICK_PORT=27643
 MEMORY_DELAY=0
 ```
 > `KERNEL_MEMORY_IP` = IP de VM1.
+> Con el script: `./set_ip.sh km 10.100.3.10` (corrido en VM5).
 
 ---
 
