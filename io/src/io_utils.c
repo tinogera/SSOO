@@ -23,7 +23,7 @@ void manejar_sleep(t_mensaje* msg, int fd_scheduler, t_log* logger) {
 
     log_info(logger, "## PID: %u - Fin de IO", pid);
 
-    t_payload_io_fin fin = { .pid = pid };
+    t_payload_io_fin fin = { .pid = htonl(pid) };
     enviar_mensaje(fd_scheduler, MSG_IO_FIN, &fin, sizeof(fin));
 }
 
@@ -69,6 +69,6 @@ void manejar_stdout(t_mensaje* msg, int fd_scheduler, t_log* logger) {
     free(contenido);
     log_info(logger, "## PID: %u - Fin de IO", pid);
 
-    t_payload_io_fin fin = { .pid = pid };
+    t_payload_io_fin fin = { .pid = htonl(pid) };
     enviar_mensaje(fd_scheduler, MSG_IO_FIN, &fin, sizeof(fin));
 }

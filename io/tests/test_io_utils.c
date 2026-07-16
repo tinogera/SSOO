@@ -99,7 +99,7 @@ context (io_utils) {
             should_int(fin->op_code) be equal to(MSG_IO_FIN);
 
             t_payload_io_fin* payload = (t_payload_io_fin*) fin->payload;
-            should_int(payload->pid) be equal to(99);
+            should_int(ntohl(payload->pid)) be equal to(99);
 
             free_mensaje(fin);
             log_destroy(log);
@@ -117,8 +117,8 @@ context (io_utils) {
             t_mensaje* fin1 = recibir_mensaje(fds[0]);
             t_mensaje* fin2 = recibir_mensaje(fds[0]);
 
-            should_int(((t_payload_io_fin*)fin1->payload)->pid) be equal to(1);
-            should_int(((t_payload_io_fin*)fin2->payload)->pid) be equal to(2);
+            should_int(ntohl(((t_payload_io_fin*)fin1->payload)->pid)) be equal to(1);
+            should_int(ntohl(((t_payload_io_fin*)fin2->payload)->pid)) be equal to(2);
 
             free_mensaje(fin1); free_mensaje(fin2);
             log_destroy(log);
@@ -162,7 +162,7 @@ context (io_utils) {
             t_mensaje* fin = recibir_mensaje(fds[0]);
             should_ptr(fin) not be null;
             should_int(fin->op_code) be equal to(MSG_IO_FIN);
-            should_int(((t_payload_io_fin*)fin->payload)->pid) be equal to(42);
+            should_int(ntohl(((t_payload_io_fin*)fin->payload)->pid)) be equal to(42);
 
             free_mensaje(fin);
             log_destroy(log);
@@ -179,8 +179,8 @@ context (io_utils) {
 
             t_mensaje* fin1 = recibir_mensaje(fds[0]);
             t_mensaje* fin2 = recibir_mensaje(fds[0]);
-            should_int(((t_payload_io_fin*)fin1->payload)->pid) be equal to(10);
-            should_int(((t_payload_io_fin*)fin2->payload)->pid) be equal to(20);
+            should_int(ntohl(((t_payload_io_fin*)fin1->payload)->pid)) be equal to(10);
+            should_int(ntohl(((t_payload_io_fin*)fin2->payload)->pid)) be equal to(20);
 
             free_mensaje(fin1); free_mensaje(fin2);
             log_destroy(log);
@@ -197,7 +197,7 @@ context (io_utils) {
             t_mensaje* fin = recibir_mensaje(fds[0]);
             should_ptr(fin) not be null;
             should_int(fin->op_code) be equal to(MSG_IO_FIN);
-            should_int(((t_payload_io_fin*)fin->payload)->pid) be equal to(7);
+            should_int(ntohl(((t_payload_io_fin*)fin->payload)->pid)) be equal to(7);
 
             free_mensaje(fin);
             log_destroy(log);
