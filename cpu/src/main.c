@@ -13,6 +13,7 @@
 #include "cpu_devolucion.h"
 #include "cpu_dispatch.h"
 #include "cpu_registros.h"
+#include "cpu_handshake.h"
 
 int main(int argc, char* argv[]) {
 
@@ -57,13 +58,13 @@ int main(int argc, char* argv[]) {
         free(payload);
 
         t_mensaje* respuesta_kernel = recibir_mensaje(socket_kernel);
-        if (respuesta_kernel == NULL) {
-            log_error(logger, "Kernel Scheduler cerro la conexion durante la identificacion");
-            socket_kernel = -1;
-        } else if (respuesta_kernel->op_code == MSG_OK) {
+        if (handshake_exitoso(respuesta_kernel)) {
             log_info(logger, "## Conectado a Kernel Scheduler");
         } else {
-            log_error(logger, "Kernel Scheduler rechazo la identificacion");
+            if (respuesta_kernel == NULL)
+                log_error(logger, "Kernel Scheduler cerro la conexion durante la identificacion");
+            else
+                log_error(logger, "Kernel Scheduler rechazo la identificacion");
             socket_kernel = -1;
         }
 
@@ -81,12 +82,14 @@ int main(int argc, char* argv[]) {
         enviar_mensaje(socket_memory, MSG_CPU_IDENTIFICACION, NULL, 0);
 
         t_mensaje* respuesta = recibir_mensaje(socket_memory);
-        if (respuesta == NULL) {
-            log_error(logger, "Kernel Memory cerro la conexion durante el handshake");
-        } else if (respuesta->op_code == MSG_OK) {
+        if (handshake_exitoso(respuesta)) {
             log_info(logger, "## Conectado a Kernel Memory");
         } else {
-            log_error(logger, "Kernel Memory rechazo la conexion");
+            if (respuesta == NULL)
+                log_error(logger, "Kernel Memory cerro la conexion durante el handshake");
+            else
+                log_error(logger, "Kernel Memory rechazo la conexion");
+            socket_memory = -1;
         }
 
         free_mensaje(respuesta);
@@ -129,7 +132,7 @@ int main(int argc, char* argv[]) {
         enviar_mensaje(fd, MSG_CPU_IDENTIFICACION, &cpu_id_n, sizeof(cpu_id_n));
 
         t_mensaje* resp_ms = recibir_mensaje(fd);
-        if (resp_ms == NULL || resp_ms->op_code != MSG_OK) {
+        if (!handshake_exitoso(resp_ms)) {
             log_error(logger, "Memory Stick %d rechazó la conexión", idx);
             if (resp_ms) free_mensaje(resp_ms);
             close(fd);
@@ -143,7 +146,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Esperar procesos despachados por Kernel Scheduler
-    while(socket_kernel != -1) {
+    while (socket_kernel != -1 && socket_memory != -1) {
         uint32_t pid;
         if (!recibir_proceso_a_ejecutar(socket_kernel, &pid, logger)) {
             break;
