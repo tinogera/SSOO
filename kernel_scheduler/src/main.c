@@ -1069,6 +1069,14 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
 
             } else if (motivo == MOTIVO_DEVOLUCION_ERROR) {
                 cambiar_estado(proc, EXIT);
+                log_info(logger, "## (%d) finalizó su ejecución con motivo de ERROR", pid);
+                pthread_mutex_lock(&mutex_exit);
+                queue_push(cola_exit, proc);
+                pthread_mutex_unlock(&mutex_exit);
+                sem_post(&sem_cpu_disponible);
+
+            } else if (motivo == MOTIVO_DEVOLUCION_SEG_FAULT) {
+                cambiar_estado(proc, EXIT);
                 log_info(logger, "## (%d) finalizó su ejecución con motivo de SEG_FAULT", pid);
                 pthread_mutex_lock(&mutex_exit);
                 queue_push(cola_exit, proc);

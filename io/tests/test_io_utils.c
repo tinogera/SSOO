@@ -80,6 +80,29 @@ context (io_utils) {
 
     } end
 
+    describe ("handshake_exitoso") {
+
+        it ("devuelve true con MSG_OK") {
+            t_mensaje msg = { .op_code = MSG_OK, .payload_size = 0, .payload = NULL };
+            should_bool(handshake_exitoso(&msg)) be truthy;
+        } end
+
+        it ("devuelve false con NULL (el KS cerro la conexion)") {
+            should_bool(handshake_exitoso(NULL)) not be truthy;
+        } end
+
+        it ("devuelve false con MSG_ERROR") {
+            t_mensaje msg = { .op_code = MSG_ERROR, .payload_size = 0, .payload = NULL };
+            should_bool(handshake_exitoso(&msg)) not be truthy;
+        } end
+
+        it ("devuelve false con un op_code inesperado cualquiera") {
+            t_mensaje msg = { .op_code = MSG_IO_SLEEP, .payload_size = 0, .payload = NULL };
+            should_bool(handshake_exitoso(&msg)) not be truthy;
+        } end
+
+    } end
+
     describe ("manejar_sleep") {
 
         // socketpair crea dos file descriptors conectados entre sí (como un pipe

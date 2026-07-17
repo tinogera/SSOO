@@ -85,6 +85,21 @@ int main(int argc, char* argv[]) {
     enviar_mensaje(fd_scheduler, MSG_IO_IDENTIFICACION, payload, payload_size);
     free(payload);
 
+    t_mensaje* respuesta_id = recibir_mensaje(fd_scheduler);
+    if (!handshake_exitoso(respuesta_id)) {
+        if (respuesta_id == NULL) {
+            log_error(logger, "Kernel Scheduler cerró la conexión durante la identificación");
+        } else {
+            log_error(logger, "Kernel Scheduler rechazó la identificación");
+        }
+        free_mensaje(respuesta_id);
+        close(fd_scheduler);
+        config_destroy(config);
+        log_destroy(logger);
+        return EXIT_FAILURE;
+    }
+    free_mensaje(respuesta_id);
+
     // Log obligatorio de la consigna
     log_info(logger, "## Conectado a Kernel Scheduler");
 
