@@ -1,0 +1,8 @@
+[INFO] 03:18:05:167 KernelMemory/(3815:3815): Kernel Memory escuchando en puerto 23841
+[INFO] 03:18:10:411 KernelMemory/(3815:3817): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 03:18:12:208 KernelMemory/(3815:3819): ## Memory Stick de 256 bytes Conectada
+[INFO] 03:18:14:385 KernelMemory/(3815:3822): ## Kernel Scheduler Conectado - FD del socket: 7
+[INFO] 03:18:14:388 KernelMemory/(3815:3822): ## PID: 0 - Proceso Creado
+[INFO] 03:18:24:609 KernelMemory/(3815:3834): ## CPU Conectada - FD: 8
+[ERROR] 03:18:24:862 KernelMemory/(3815:3834): No se pudo abrir: /home/utnso/scripts/0kernel_scheduler/kernel_scheduler.config
+[INFO] 03:18:24:865 KernelMemory/(3815:3834): Cliente desconectado (fd=8)

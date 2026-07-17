@@ -15,8 +15,6 @@ bin/
 # CLion files
 .idea/
 
-# Log files
-*.log
 
 # Prerequisites
 *.d

@@ -1,0 +1,14 @@
+[INFO] 03:18:24:602 1/(3832:3832): CPU 1 iniciada
+[INFO] 03:18:24:603 1/(3832:3832): Registros CPU inicializados - PC: 0
+[INFO] 03:18:24:605 1/(3832:3832): Conectado a Kernel Scheduler
+[INFO] 03:18:24:608 1/(3832:3832): ## Conectado a Kernel Scheduler
+[INFO] 03:18:24:608 1/(3832:3832): Conectado a Kernel Memory
+[INFO] 03:18:24:609 1/(3832:3832): ## Conectado a Kernel Memory
+[INFO] 03:18:24:611 1/(3832:3832): ## Conectado a Memory Stick 0
+[INFO] 03:18:24:611 1/(3832:3832): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 03:18:24:611 1/(3832:3832): ## PID: 0 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 03:18:24:611 1/(3832:3832): ## PID: 0 - FETCH - Program Counter: 0
+[ERROR] 03:18:24:862 1/(3832:3832): Respuesta inesperada de Kernel Memory durante FETCH: op_code=4
+[INFO] 03:18:24:862 1/(3832:3832): ## PID: 0 - Contexto guardado - PC: 0 - Segmentos: 0
+[INFO] 03:18:24:862 1/(3832:3832): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: ERROR - PC: 0
+[ERROR] 03:18:24:863 1/(3832:3832): Fallo el ciclo de instruccion para PID 0

@@ -1,0 +1,11 @@
+[INFO] 03:18:14:386 KernelScheduler/(3821:3821): ## Conectado a Kernel Memory
+[INFO] 03:18:14:387 KernelScheduler/(3821:3821): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 03:18:14:389 KernelScheduler/(3821:3821): ## (0) Pasa del estado NEW al estado READY
+[INFO] 03:18:18:586 KernelScheduler/(3821:3827): ## IO SLEEP Conectada
+[INFO] 03:18:19:399 KernelScheduler/(3821:3829): ## IO STDOUT Conectada
+[INFO] 03:18:20:748 KernelScheduler/(3821:3831): ## IO STDIN Conectada
+[INFO] 03:18:24:607 KernelScheduler/(3821:3833): ## CPU 1 Conectada
+[INFO] 03:18:24:608 KernelScheduler/(3821:3824): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:18:24:863 KernelScheduler/(3821:3833): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 03:18:24:863 KernelScheduler/(3821:3833): ## (0) finalizó su ejecución con motivo de SEG_FAULT
+[WARNING] 03:18:24:865 KernelScheduler/(3821:3833): ## CPU fd=9 desconectada
