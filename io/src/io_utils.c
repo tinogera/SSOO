@@ -10,6 +10,10 @@ int es_tipo_valido(const char* tipo) {
            strcmp(tipo, "SLEEP")  == 0;
 }
 
+int handshake_exitoso(t_mensaje* respuesta) {
+    return respuesta != NULL && respuesta->op_code == MSG_OK;
+}
+
 void manejar_sleep(t_mensaje* msg, int fd_scheduler, t_log* logger) {
     t_payload_io_sleep* p = (t_payload_io_sleep*) msg->payload;
     uint32_t pid       = ntohl(p->pid);
