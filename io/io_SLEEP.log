@@ -1,0 +1,4 @@
+[INFO] 22:55:58:270 IO/(5636:5636): Iniciando IO tipo SLEEP
+[INFO] 22:55:58:271 IO/(5636:5636): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 22:55:58:271 IO/(5636:5636): ## Conectado a Kernel Scheduler
+[WARNING] 22:59:46:808 IO/(5636:5636): Kernel Scheduler cerró la conexión

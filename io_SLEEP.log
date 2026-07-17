@@ -1,4 +1,0 @@
-[INFO] 03:18:18:585 IO/(3826:3826): Iniciando IO tipo SLEEP
-[INFO] 03:18:18:585 IO/(3826:3826): Configuración cargada desde io/io.config
-[INFO] 03:18:18:586 IO/(3826:3826): ## Conectado a Kernel Scheduler
-[WARNING] 03:18:18:587 IO/(3826:3826): Mensaje inesperado: op_code=3

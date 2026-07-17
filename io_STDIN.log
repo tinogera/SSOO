@@ -1,4 +1,0 @@
-[INFO] 03:18:20:747 IO/(3830:3830): Iniciando IO tipo STDIN
-[INFO] 03:18:20:747 IO/(3830:3830): Configuración cargada desde io/io.config
-[INFO] 03:18:20:748 IO/(3830:3830): ## Conectado a Kernel Scheduler
-[WARNING] 03:18:20:749 IO/(3830:3830): Mensaje inesperado: op_code=3
