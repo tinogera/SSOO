@@ -16,6 +16,7 @@
 #include "ks_mutex.h"
 #include "ks_cmn.h"
 #include "ks_compact.h"
+#include "ks_queue_search.h"
 
 t_log* logger;
 static int             fd_km          = -1;
@@ -781,25 +782,28 @@ static t_proceso* sacar_de_susp_block(int pid) {
 }
 
 
-// Busca un proceso por PID en exec y en las colas de ready sin sacarlo.
-// Retorna puntero al t_proceso o NULL. Usado para herencia de prioridades.
+// Busca un proceso por PID en exec, en las colas de ready y en block, sin
+// sacarlo de ninguna cola. Retorna puntero al t_proceso o NULL.
+// Usado para herencia de prioridades: el owner de un mutex puede estar en
+// BLOCK (p.ej. hizo MUTEX_LOCK y después SLEEP sin soltar el mutex) al
+// momento de tener que elevarle la prioridad, no solo en EXEC/READY.
 static t_proceso* buscar_proceso_activo(int pid) {
     pthread_mutex_lock(&mutex_exec);
-    for (int i = 0; i < (int)queue_size(cola_exec); i++) {
-        t_proceso* p = list_get(cola_exec->elements, i);
-        if (p->PID == pid) { pthread_mutex_unlock(&mutex_exec); return p; }
-    }
+    t_proceso* p = buscar_pid_en_queue(cola_exec, pid);
     pthread_mutex_unlock(&mutex_exec);
+    if (p) return p;
 
     for (int nivel = 0; nivel < n_colas; nivel++) {
         pthread_mutex_lock(&mutex_colas_ready[nivel]);
-        for (int i = 0; i < (int)queue_size(colas_ready[nivel]); i++) {
-            t_proceso* p = list_get(colas_ready[nivel]->elements, i);
-            if (p->PID == pid) { pthread_mutex_unlock(&mutex_colas_ready[nivel]); return p; }
-        }
+        p = buscar_pid_en_queue(colas_ready[nivel], pid);
         pthread_mutex_unlock(&mutex_colas_ready[nivel]);
+        if (p) return p;
     }
-    return NULL;
+
+    pthread_mutex_lock(&mutex_block);
+    p = buscar_pid_en_queue(cola_block, pid);
+    pthread_mutex_unlock(&mutex_block);
+    return p;
 }
 
 static void* thread_suspension_timer(void* arg) {
