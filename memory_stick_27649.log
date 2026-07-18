@@ -1,0 +1,4 @@
+[INFO] 06:04:40:807 MemoryStick/(11200:11200): Se creo log en memory_stick_27649.log
+[INFO] 06:04:40:809 MemoryStick/(11200:11200): ## Conectado a Kernel Memory
+[DEBUG] 06:04:40:809 MemoryStick/(11200:11200): Offset global de este stick dentro del espacio de direcciones: 48
+[INFO] 06:04:40:809 MemoryStick/(11200:11200): Escuchando CPUs en puerto 27649

@@ -1,6 +1,14 @@
-[INFO] 05:37:02:305 MemoryStick/(7662:7662): Se creo log en memory_stick_27643.log
-[INFO] 05:37:02:305 MemoryStick/(7662:7662): ## Conectado a Kernel Memory
-[DEBUG] 05:37:02:305 MemoryStick/(7662:7662): Offset global de este stick dentro del espacio de direcciones: 0
-[INFO] 05:37:02:305 MemoryStick/(7662:7662): Escuchando CPUs en puerto 27643
-[INFO] 05:37:42:550 MemoryStick/(7662:8502): ## CPU 0 Conectada
-[INFO] 05:48:05:961 MemoryStick/(7662:8502): CPU 0 desconectada
+[INFO] 06:03:38:938 MemoryStick/(10930:10930): Se creo log en memory_stick_27643.log
+[INFO] 06:03:38:940 MemoryStick/(10930:10930): ## Conectado a Kernel Memory
+[DEBUG] 06:03:38:940 MemoryStick/(10930:10930): Offset global de este stick dentro del espacio de direcciones: 0
+[INFO] 06:03:38:940 MemoryStick/(10930:10930): Escuchando CPUs en puerto 27643
+[INFO] 06:04:18:137 MemoryStick/(11063:11063): Se creo log en memory_stick_27643.log
+[INFO] 06:04:18:138 MemoryStick/(11063:11063): ## Conectado a Kernel Memory
+[DEBUG] 06:04:18:138 MemoryStick/(11063:11063): Offset global de este stick dentro del espacio de direcciones: 16
+[ERROR] 06:04:18:139 MemoryStick/(11063:11063): No se pudo levantar servidor en puerto 27643
+[INFO] 06:07:14:141 MemoryStick/(10930:11952): ## CPU 0 Conectada
+[INFO] 06:07:16:928 MemoryStick/(10930:11952): CPU 0 desconectada
+[INFO] 06:07:52:912 MemoryStick/(10930:12670): ## CPU 0 Conectada
+[DEBUG] 06:07:55:490 MemoryStick/(10930:12670): Escritura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 06:07:55:491 MemoryStick/(10930:12670): ## Escritura de 1 bytes
+[INFO] 06:07:57:677 MemoryStick/(10930:12670): CPU 0 desconectada
