@@ -1,0 +1,237 @@
+[INFO] 01:11:17:219 KernelScheduler/(21641:21641): ## Conectado a Kernel Memory
+[INFO] 01:11:17:219 KernelScheduler/(21641:21641): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 01:11:17:219 KernelScheduler/(21641:21641): ## (0) Pasa del estado NEW al estado READY
+[INFO] 01:11:29:396 KernelScheduler/(21641:21914): ## IO STDOUT Conectada
+[INFO] 01:11:31:033 KernelScheduler/(21641:22043): ## IO STDIN Conectada
+[INFO] 01:11:34:100 KernelScheduler/(21641:22172): ## IO SLEEP Conectada
+[INFO] 01:11:37:161 KernelScheduler/(21641:22353): ## CPU 0 Conectada
+[INFO] 01:11:37:161 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:38:169 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: MUTEX_CREATE
+[INFO] 01:11:38:170 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:38:170 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:38:681 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: MUTEX_CREATE
+[INFO] 01:11:38:739 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:38:740 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:39:244 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: MUTEX_CREATE
+[INFO] 01:11:39:244 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:39:244 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:40:876 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 01:11:40:876 KernelScheduler/(21641:22353): ## (1) Se crea el proceso - Estado: NEW
+[INFO] 01:11:40:876 KernelScheduler/(21641:22353): ## (1) Pasa del estado NEW al estado READY
+[INFO] 01:11:40:876 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:40:876 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:41:441 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 01:11:41:441 KernelScheduler/(21641:22353): ## (2) Se crea el proceso - Estado: NEW
+[INFO] 01:11:41:441 KernelScheduler/(21641:22353): ## (2) Pasa del estado NEW al estado READY
+[INFO] 01:11:41:441 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:41:442 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:41:948 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: SLEEP
+[INFO] 01:11:41:991 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:11:41:991 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:11:43:043 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: SLEEP
+[INFO] 01:11:43:043 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:11:43:043 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:11:44:049 KernelScheduler/(21641:22353): ## (1) - Solicitó syscall: MUTEX_LOCK
+[INFO] 01:11:44:091 KernelScheduler/(21641:22353): ## (1) Toma el Mutex MUTEX_1
+[INFO] 01:11:44:091 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 01:11:44:091 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:11:46:650 KernelScheduler/(21641:22353): ## (1) - Solicitó syscall: SLEEP
+[INFO] 01:11:46:693 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:11:52:051 KernelScheduler/(21641:22172): ## (0) Pasa del estado BLOCK al estado READY
+[INFO] 01:11:52:051 KernelScheduler/(21641:22172): ## (0) finalizó IO y pasa a READY
+[INFO] 01:11:52:051 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:52:596 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 01:11:52:596 KernelScheduler/(21641:22353): ## (3) Se crea el proceso - Estado: NEW
+[INFO] 01:11:52:596 KernelScheduler/(21641:22353): ## (3) Pasa del estado NEW al estado READY
+[INFO] 01:11:52:639 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:52:639 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:53:141 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 01:11:53:142 KernelScheduler/(21641:22353): ## (4) Se crea el proceso - Estado: NEW
+[INFO] 01:11:53:183 KernelScheduler/(21641:22353): ## (4) Pasa del estado NEW al estado READY
+[INFO] 01:11:53:183 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:53:183 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:53:703 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 01:11:53:703 KernelScheduler/(21641:22353): ## (5) Se crea el proceso - Estado: NEW
+[INFO] 01:11:53:704 KernelScheduler/(21641:22353): ## (5) Pasa del estado NEW al estado READY
+[INFO] 01:11:53:704 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:53:704 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:54:209 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 01:11:54:209 KernelScheduler/(21641:22353): ## (6) Se crea el proceso - Estado: NEW
+[INFO] 01:11:54:209 KernelScheduler/(21641:22353): ## (6) Pasa del estado NEW al estado READY
+[INFO] 01:11:54:295 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:54:295 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:54:845 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 01:11:54:845 KernelScheduler/(21641:22353): ## (7) Se crea el proceso - Estado: NEW
+[INFO] 01:11:54:887 KernelScheduler/(21641:22353): ## (7) Pasa del estado NEW al estado READY
+[INFO] 01:11:54:888 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:54:888 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:55:912 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 01:11:55:912 KernelScheduler/(21641:22353): ## (8) Se crea el proceso - Estado: NEW
+[INFO] 01:11:55:914 KernelScheduler/(21641:22353): ## (8) Pasa del estado NEW al estado READY
+[INFO] 01:11:55:918 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:55:918 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:57:557 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 01:11:57:557 KernelScheduler/(21641:22353): ## (9) Se crea el proceso - Estado: NEW
+[INFO] 01:11:57:558 KernelScheduler/(21641:22353): ## (9) Pasa del estado NEW al estado READY
+[INFO] 01:11:57:559 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 01:11:57:559 KernelScheduler/(21641:21783): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 01:11:58:062 KernelScheduler/(21641:22353): ## (0) - Solicitó syscall: EXIT
+[INFO] 01:11:58:062 KernelScheduler/(21641:22353): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 01:11:58:062 KernelScheduler/(21641:22353): ## (0) finalizó su ejecución con motivo de EXIT
+[INFO] 01:11:58:062 KernelScheduler/(21641:21783): ## (9) Pasa del estado READY al estado EXEC
+[INFO] 01:11:59:110 KernelScheduler/(21641:22353): ## (9) - Solicitó syscall: SLEEP
+[INFO] 01:11:59:159 KernelScheduler/(21641:22353): ## (9) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:11:59:159 KernelScheduler/(21641:21783): ## (8) Pasa del estado READY al estado EXEC
+[INFO] 01:12:00:166 KernelScheduler/(21641:22353): ## (8) - Solicitó syscall: SLEEP
+[INFO] 01:12:00:207 KernelScheduler/(21641:22353): ## (8) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:12:00:207 KernelScheduler/(21641:21783): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 01:12:01:213 KernelScheduler/(21641:22353): ## (3) - Solicitó syscall: SLEEP
+[INFO] 01:12:01:264 KernelScheduler/(21641:22353): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:12:01:265 KernelScheduler/(21641:21783): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 01:12:02:052 KernelScheduler/(21641:22172): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 01:12:02:052 KernelScheduler/(21641:22172): ## (2) finalizó IO y pasa a READY
+[INFO] 01:12:02:312 KernelScheduler/(21641:22353): ## (4) - Solicitó syscall: SLEEP
+[INFO] 01:12:02:312 KernelScheduler/(21641:22353): ## (4) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:12:02:313 KernelScheduler/(21641:21783): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 01:12:03:055 KernelScheduler/(21641:22172): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 01:12:03:055 KernelScheduler/(21641:22172): ## (1) finalizó IO y pasa a READY
+[INFO] 01:12:03:369 KernelScheduler/(21641:22353): ## (5) - Solicitó syscall: SLEEP
+[INFO] 01:12:03:414 KernelScheduler/(21641:22353): ## (5) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:12:03:415 KernelScheduler/(21641:21783): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 01:12:04:426 KernelScheduler/(21641:22353): ## (6) - Solicitó syscall: SLEEP
+[INFO] 01:12:04:467 KernelScheduler/(21641:22353): ## (6) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:12:04:467 KernelScheduler/(21641:21783): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 01:12:05:517 KernelScheduler/(21641:22353): ## (7) - Solicitó syscall: SLEEP
+[INFO] 01:12:05:517 KernelScheduler/(21641:22353): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:12:05:518 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:12:06:019 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: MUTEX_LOCK
+[INFO] 01:12:06:019 KernelScheduler/(21641:22353): ## (2) Toma el Mutex MUTEX_2
+[INFO] 01:12:06:019 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 01:12:06:020 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:12:08:625 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: SLEEP
+[INFO] 01:12:08:626 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:12:08:626 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:12:12:801 KernelScheduler/(21641:22353): ## (1) - Solicitó syscall: SLEEP
+[INFO] 01:12:12:802 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:12:33:056 KernelScheduler/(21641:22172): ## (9) Pasa del estado BLOCK al estado READY
+[INFO] 01:12:33:056 KernelScheduler/(21641:22172): ## (9) finalizó IO y pasa a READY
+[INFO] 01:12:33:057 KernelScheduler/(21641:21783): ## (9) Pasa del estado READY al estado EXEC
+[INFO] 01:12:33:601 KernelScheduler/(21641:22353): ## (9) - Solicitó syscall: MUTEX_LOCK
+[INFO] 01:12:33:602 KernelScheduler/(21641:22353): ## 2 Cambio de prioridad: 4 - 1
+[INFO] 01:12:33:602 KernelScheduler/(21641:22353): ## (9) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:12:53:058 KernelScheduler/(21641:22172): ## (8) Pasa del estado BLOCK al estado READY
+[INFO] 01:12:53:058 KernelScheduler/(21641:22172): ## (8) finalizó IO y pasa a READY
+[INFO] 01:12:53:058 KernelScheduler/(21641:21783): ## (8) Pasa del estado READY al estado EXEC
+[INFO] 01:12:53:560 KernelScheduler/(21641:22353): ## (8) - Solicitó syscall: MUTEX_LOCK
+[INFO] 01:12:53:561 KernelScheduler/(21641:22353): ## 1 Cambio de prioridad: 5 - 2
+[INFO] 01:12:53:561 KernelScheduler/(21641:22353): ## (8) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:13:08:067 KernelScheduler/(21641:22172): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 01:13:08:068 KernelScheduler/(21641:22172): ## (3) finalizó IO y pasa a READY
+[INFO] 01:13:08:068 KernelScheduler/(21641:21783): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 01:13:09:618 KernelScheduler/(21641:22353): ## (3) - Solicitó syscall: MUTEX_LOCK
+[INFO] 01:13:09:618 KernelScheduler/(21641:22353): ## (3) Toma el Mutex MUTEX_3
+[INFO] 01:13:09:618 KernelScheduler/(21641:22353): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 01:13:09:618 KernelScheduler/(21641:21783): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 01:13:10:667 KernelScheduler/(21641:22353): ## (3) - Solicitó syscall: SLEEP
+[INFO] 01:13:10:667 KernelScheduler/(21641:22353): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:13:23:071 KernelScheduler/(21641:22172): ## (4) Pasa del estado BLOCK al estado READY
+[INFO] 01:13:23:071 KernelScheduler/(21641:22172): ## (4) finalizó IO y pasa a READY
+[INFO] 01:13:23:071 KernelScheduler/(21641:21783): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 01:13:24:660 KernelScheduler/(21641:22353): ## (4) - Solicitó syscall: MUTEX_LOCK
+[INFO] 01:13:24:661 KernelScheduler/(21641:22353): ## (4) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:13:38:103 KernelScheduler/(21641:22172): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 01:13:38:103 KernelScheduler/(21641:22172): ## (5) finalizó IO y pasa a READY
+[INFO] 01:13:38:103 KernelScheduler/(21641:21783): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 01:13:39:651 KernelScheduler/(21641:22353): ## (5) - Solicitó syscall: MUTEX_LOCK
+[INFO] 01:13:39:651 KernelScheduler/(21641:22353): ## (5) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:13:53:103 KernelScheduler/(21641:22172): ## (6) Pasa del estado BLOCK al estado READY
+[INFO] 01:13:53:104 KernelScheduler/(21641:22172): ## (6) finalizó IO y pasa a READY
+[INFO] 01:13:53:104 KernelScheduler/(21641:21783): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 01:13:54:667 KernelScheduler/(21641:22353): ## (6) - Solicitó syscall: MUTEX_LOCK
+[INFO] 01:13:54:667 KernelScheduler/(21641:22353): ## (6) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:08:111 KernelScheduler/(21641:22172): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:08:111 KernelScheduler/(21641:22172): ## (7) finalizó IO y pasa a READY
+[INFO] 01:14:08:111 KernelScheduler/(21641:21783): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 01:14:09:113 KernelScheduler/(21641:22172): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:09:113 KernelScheduler/(21641:22172): ## (2) finalizó IO y pasa a READY
+[INFO] 01:14:09:113 KernelScheduler/(21641:22172): ## (7) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 01:14:09:206 KernelScheduler/(21641:22353): ## (7) Pasa del estado EXEC al estado READY
+[INFO] 01:14:09:206 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:14:10:505 KernelScheduler/(21641:22172): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:10:506 KernelScheduler/(21641:22172): ## (1) finalizó IO y pasa a READY
+[INFO] 01:14:11:507 KernelScheduler/(21641:22172): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:11:507 KernelScheduler/(21641:22172): ## (3) finalizó IO y pasa a READY
+[INFO] 01:14:13:612 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: SLEEP
+[INFO] 01:14:13:659 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:13:659 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:14:14:660 KernelScheduler/(21641:22172): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:14:660 KernelScheduler/(21641:22172): ## (2) finalizó IO y pasa a READY
+[INFO] 01:14:14:660 KernelScheduler/(21641:22172): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 01:14:14:761 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 01:14:14:761 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:14:18:924 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: SLEEP
+[INFO] 01:14:18:924 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:18:924 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:14:19:969 KernelScheduler/(21641:22172): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:19:970 KernelScheduler/(21641:22172): ## (2) finalizó IO y pasa a READY
+[INFO] 01:14:19:970 KernelScheduler/(21641:22172): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 01:14:20:011 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 01:14:20:011 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:14:24:223 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: SLEEP
+[INFO] 01:14:24:223 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:24:223 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:14:25:225 KernelScheduler/(21641:22172): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:25:225 KernelScheduler/(21641:22172): ## (2) finalizó IO y pasa a READY
+[INFO] 01:14:25:225 KernelScheduler/(21641:22172): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 01:14:25:267 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 01:14:25:267 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:14:29:364 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: SLEEP
+[INFO] 01:14:29:412 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:29:412 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:14:30:415 KernelScheduler/(21641:22172): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:30:415 KernelScheduler/(21641:22172): ## (2) finalizó IO y pasa a READY
+[INFO] 01:14:30:415 KernelScheduler/(21641:22172): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 01:14:30:458 KernelScheduler/(21641:22353): ## (1) - Solicitó syscall: SLEEP
+[INFO] 01:14:30:459 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:30:459 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:14:31:468 KernelScheduler/(21641:22172): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:31:468 KernelScheduler/(21641:22172): ## (1) finalizó IO y pasa a READY
+[INFO] 01:14:34:649 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: SLEEP
+[INFO] 01:14:34:649 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:34:649 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:14:35:658 KernelScheduler/(21641:22172): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:35:658 KernelScheduler/(21641:22172): ## (2) finalizó IO y pasa a READY
+[INFO] 01:14:35:658 KernelScheduler/(21641:22172): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 01:14:35:725 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 01:14:35:725 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:14:39:879 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: SLEEP
+[INFO] 01:14:39:880 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:39:880 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:14:40:881 KernelScheduler/(21641:22172): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:40:881 KernelScheduler/(21641:22172): ## (2) finalizó IO y pasa a READY
+[INFO] 01:14:40:881 KernelScheduler/(21641:22172): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 01:14:40:939 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 01:14:40:940 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:14:45:071 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: SLEEP
+[INFO] 01:14:45:115 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:45:116 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:14:46:121 KernelScheduler/(21641:22172): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:46:121 KernelScheduler/(21641:22172): ## (2) finalizó IO y pasa a READY
+[INFO] 01:14:46:121 KernelScheduler/(21641:22172): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 01:14:46:211 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 01:14:46:211 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:14:50:768 KernelScheduler/(21641:22353): ## (2) - Solicitó syscall: SLEEP
+[INFO] 01:14:50:768 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:50:768 KernelScheduler/(21641:21783): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 01:14:51:769 KernelScheduler/(21641:22172): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:51:769 KernelScheduler/(21641:22172): ## (2) finalizó IO y pasa a READY
+[INFO] 01:14:51:769 KernelScheduler/(21641:22172): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 01:14:51:840 KernelScheduler/(21641:22353): ## (1) - Solicitó syscall: SLEEP
+[INFO] 01:14:51:840 KernelScheduler/(21641:22353): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 01:14:51:840 KernelScheduler/(21641:21783): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 01:14:52:846 KernelScheduler/(21641:22172): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 01:14:52:847 KernelScheduler/(21641:22172): ## (1) finalizó IO y pasa a READY
+[WARNING] 01:14:55:520 KernelScheduler/(21641:22353): ## (2) CPU desconectada durante EXEC — vuelve a READY
+[INFO] 01:14:55:520 KernelScheduler/(21641:22353): ## (2) Pasa del estado EXEC al estado READY
+[WARNING] 01:14:55:520 KernelScheduler/(21641:22353): ## CPU fd=9 desconectada
+[WARNING] 01:14:57:748 KernelScheduler/(21641:22172): ## IO SLEEP desconectada

@@ -1,0 +1,4 @@
+[INFO] 01:11:29:395 IO/(21786:21786): Iniciando IO tipo STDOUT
+[INFO] 01:11:29:396 IO/(21786:21786): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 01:11:29:396 IO/(21786:21786): ## Conectado a Kernel Scheduler
+[WARNING] 01:14:59:065 IO/(21786:21786): Kernel Scheduler cerró la conexión

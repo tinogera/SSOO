@@ -1,0 +1,10 @@
+[INFO] 01:10:30:306 MemoryStick/(21623:21623): Se creo log en memory_stick_0.log
+[INFO] 01:10:30:306 MemoryStick/(21623:21623): ## Conectado a Kernel Memory
+[INFO] 01:10:30:306 MemoryStick/(21623:21623): Escuchando CPUs en puerto 27643
+[INFO] 01:10:34:844 MemoryStick/(21627:21627): Se creo log en memory_stick_0.log
+[INFO] 01:10:34:844 MemoryStick/(21627:21627): ## Conectado a Kernel Memory
+[INFO] 01:10:34:844 MemoryStick/(21627:21627): Escuchando CPUs en puerto 27649
+[INFO] 01:11:37:161 MemoryStick/(21623:22355): ## CPU 0 Conectada
+[INFO] 01:14:55:520 MemoryStick/(21623:22355): CPU 0 desconectada
+[WARNING] 01:15:00:867 MemoryStick/(21627:21629): Kernel Memory cerró la conexión
+[WARNING] 01:15:00:867 MemoryStick/(21623:21625): Kernel Memory cerró la conexión

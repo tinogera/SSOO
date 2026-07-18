@@ -1,0 +1,72 @@
+[INFO] 01:11:34:099 IO/(22044:22044): Iniciando IO tipo SLEEP
+[INFO] 01:11:34:099 IO/(22044:22044): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 01:11:34:100 IO/(22044:22044): ## Conectado a Kernel Scheduler
+[INFO] 01:11:41:991 IO/(22044:22044): ## PID: 0 - Inicio de IO
+[INFO] 01:11:41:991 IO/(22044:22044): ## PID: 0 - Haciendo sleep por 10000 milisegundos
+[INFO] 01:11:52:049 IO/(22044:22044): ## PID: 0 - Fin de IO
+[INFO] 01:11:52:050 IO/(22044:22044): ## PID: 2 - Inicio de IO
+[INFO] 01:11:52:051 IO/(22044:22044): ## PID: 2 - Haciendo sleep por 10000 milisegundos
+[INFO] 01:12:02:052 IO/(22044:22044): ## PID: 2 - Fin de IO
+[INFO] 01:12:02:052 IO/(22044:22044): ## PID: 1 - Inicio de IO
+[INFO] 01:12:02:052 IO/(22044:22044): ## PID: 1 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:12:03:054 IO/(22044:22044): ## PID: 1 - Fin de IO
+[INFO] 01:12:03:055 IO/(22044:22044): ## PID: 9 - Inicio de IO
+[INFO] 01:12:03:055 IO/(22044:22044): ## PID: 9 - Haciendo sleep por 30000 milisegundos
+[INFO] 01:12:33:056 IO/(22044:22044): ## PID: 9 - Fin de IO
+[INFO] 01:12:33:056 IO/(22044:22044): ## PID: 8 - Inicio de IO
+[INFO] 01:12:33:056 IO/(22044:22044): ## PID: 8 - Haciendo sleep por 20000 milisegundos
+[INFO] 01:12:53:057 IO/(22044:22044): ## PID: 8 - Fin de IO
+[INFO] 01:12:53:058 IO/(22044:22044): ## PID: 3 - Inicio de IO
+[INFO] 01:12:53:058 IO/(22044:22044): ## PID: 3 - Haciendo sleep por 15000 milisegundos
+[INFO] 01:13:08:067 IO/(22044:22044): ## PID: 3 - Fin de IO
+[INFO] 01:13:08:067 IO/(22044:22044): ## PID: 4 - Inicio de IO
+[INFO] 01:13:08:067 IO/(22044:22044): ## PID: 4 - Haciendo sleep por 15000 milisegundos
+[INFO] 01:13:23:071 IO/(22044:22044): ## PID: 4 - Fin de IO
+[INFO] 01:13:23:071 IO/(22044:22044): ## PID: 5 - Inicio de IO
+[INFO] 01:13:23:071 IO/(22044:22044): ## PID: 5 - Haciendo sleep por 15000 milisegundos
+[INFO] 01:13:38:102 IO/(22044:22044): ## PID: 5 - Fin de IO
+[INFO] 01:13:38:103 IO/(22044:22044): ## PID: 6 - Inicio de IO
+[INFO] 01:13:38:103 IO/(22044:22044): ## PID: 6 - Haciendo sleep por 15000 milisegundos
+[INFO] 01:13:53:103 IO/(22044:22044): ## PID: 6 - Fin de IO
+[INFO] 01:13:53:103 IO/(22044:22044): ## PID: 7 - Inicio de IO
+[INFO] 01:13:53:103 IO/(22044:22044): ## PID: 7 - Haciendo sleep por 15000 milisegundos
+[INFO] 01:14:08:110 IO/(22044:22044): ## PID: 7 - Fin de IO
+[INFO] 01:14:08:111 IO/(22044:22044): ## PID: 2 - Inicio de IO
+[INFO] 01:14:08:111 IO/(22044:22044): ## PID: 2 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:09:112 IO/(22044:22044): ## PID: 2 - Fin de IO
+[INFO] 01:14:09:112 IO/(22044:22044): ## PID: 1 - Inicio de IO
+[INFO] 01:14:09:112 IO/(22044:22044): ## PID: 1 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:10:505 IO/(22044:22044): ## PID: 1 - Fin de IO
+[INFO] 01:14:10:505 IO/(22044:22044): ## PID: 3 - Inicio de IO
+[INFO] 01:14:10:505 IO/(22044:22044): ## PID: 3 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:11:506 IO/(22044:22044): ## PID: 3 - Fin de IO
+[INFO] 01:14:13:659 IO/(22044:22044): ## PID: 2 - Inicio de IO
+[INFO] 01:14:13:659 IO/(22044:22044): ## PID: 2 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:14:660 IO/(22044:22044): ## PID: 2 - Fin de IO
+[INFO] 01:14:18:924 IO/(22044:22044): ## PID: 2 - Inicio de IO
+[INFO] 01:14:18:924 IO/(22044:22044): ## PID: 2 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:19:968 IO/(22044:22044): ## PID: 2 - Fin de IO
+[INFO] 01:14:24:224 IO/(22044:22044): ## PID: 2 - Inicio de IO
+[INFO] 01:14:24:224 IO/(22044:22044): ## PID: 2 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:25:224 IO/(22044:22044): ## PID: 2 - Fin de IO
+[INFO] 01:14:29:412 IO/(22044:22044): ## PID: 2 - Inicio de IO
+[INFO] 01:14:29:412 IO/(22044:22044): ## PID: 2 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:30:414 IO/(22044:22044): ## PID: 2 - Fin de IO
+[INFO] 01:14:30:459 IO/(22044:22044): ## PID: 1 - Inicio de IO
+[INFO] 01:14:30:459 IO/(22044:22044): ## PID: 1 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:31:467 IO/(22044:22044): ## PID: 1 - Fin de IO
+[INFO] 01:14:34:650 IO/(22044:22044): ## PID: 2 - Inicio de IO
+[INFO] 01:14:34:650 IO/(22044:22044): ## PID: 2 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:35:657 IO/(22044:22044): ## PID: 2 - Fin de IO
+[INFO] 01:14:39:880 IO/(22044:22044): ## PID: 2 - Inicio de IO
+[INFO] 01:14:39:880 IO/(22044:22044): ## PID: 2 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:40:880 IO/(22044:22044): ## PID: 2 - Fin de IO
+[INFO] 01:14:45:116 IO/(22044:22044): ## PID: 2 - Inicio de IO
+[INFO] 01:14:45:116 IO/(22044:22044): ## PID: 2 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:46:121 IO/(22044:22044): ## PID: 2 - Fin de IO
+[INFO] 01:14:50:768 IO/(22044:22044): ## PID: 2 - Inicio de IO
+[INFO] 01:14:50:768 IO/(22044:22044): ## PID: 2 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:51:769 IO/(22044:22044): ## PID: 2 - Fin de IO
+[INFO] 01:14:51:840 IO/(22044:22044): ## PID: 1 - Inicio de IO
+[INFO] 01:14:51:840 IO/(22044:22044): ## PID: 1 - Haciendo sleep por 1000 milisegundos
+[INFO] 01:14:52:845 IO/(22044:22044): ## PID: 1 - Fin de IO

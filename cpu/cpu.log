@@ -1,0 +1,591 @@
+[INFO] 01:11:37:160 0/(22173:22173): CPU 0 iniciada
+[INFO] 01:11:37:160 0/(22173:22173): Registros CPU inicializados - PC: 0
+[INFO] 01:11:37:160 0/(22173:22173): Conectado a Kernel Scheduler
+[INFO] 01:11:37:161 0/(22173:22173): ## Conectado a Kernel Scheduler
+[INFO] 01:11:37:161 0/(22173:22173): Conectado a Kernel Memory
+[INFO] 01:11:37:161 0/(22173:22173): ## Conectado a Kernel Memory
+[INFO] 01:11:37:161 0/(22173:22173): ## Conectado a Memory Stick 0
+[INFO] 01:11:37:161 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:37:162 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 01:11:37:162 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 0
+[INFO] 01:11:37:665 0/(22173:22173): ## PID: 0 - Ejecutando: NOOP - 
+[INFO] 01:11:37:665 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 1
+[INFO] 01:11:38:169 0/(22173:22173): ## PID: 0 - Ejecutando: MUTEX_CREATE - MUTEX_1
+[INFO] 01:11:38:169 0/(22173:22173): ## PID: 0 - Syscall: MUTEX_CREATE - MUTEX_1
+[INFO] 01:11:38:170 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 01:11:38:170 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 01:11:38:170 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:38:170 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 01:11:38:170 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 2
+[INFO] 01:11:38:681 0/(22173:22173): ## PID: 0 - Ejecutando: MUTEX_CREATE - MUTEX_2
+[INFO] 01:11:38:681 0/(22173:22173): ## PID: 0 - Syscall: MUTEX_CREATE - MUTEX_2
+[INFO] 01:11:38:738 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 3 - Segmentos: 0
+[INFO] 01:11:38:739 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 3
+[INFO] 01:11:38:740 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:38:741 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 3 - Segmentos: 0
+[INFO] 01:11:38:743 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 3
+[INFO] 01:11:39:244 0/(22173:22173): ## PID: 0 - Ejecutando: MUTEX_CREATE - MUTEX_3
+[INFO] 01:11:39:244 0/(22173:22173): ## PID: 0 - Syscall: MUTEX_CREATE - MUTEX_3
+[INFO] 01:11:39:244 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 4 - Segmentos: 0
+[INFO] 01:11:39:244 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 4
+[INFO] 01:11:39:244 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:39:244 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 4 - Segmentos: 0
+[INFO] 01:11:39:244 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 4
+[INFO] 01:11:39:745 0/(22173:22173): ## PID: 0 - Ejecutando: NOOP - 
+[INFO] 01:11:39:745 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 5
+[INFO] 01:11:40:287 0/(22173:22173): ## PID: 0 - Ejecutando: NOOP - 
+[INFO] 01:11:40:287 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 6
+[INFO] 01:11:40:831 0/(22173:22173): ## PID: 0 - Ejecutando: INIT_PROC - PHP_1.prc 5
+[INFO] 01:11:40:831 0/(22173:22173): ## PID: 0 - Syscall: INIT_PROC - Archivo: PHP_1.prc - Prioridad: 5
+[INFO] 01:11:40:876 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 7 - Segmentos: 0
+[INFO] 01:11:40:876 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 7
+[INFO] 01:11:40:877 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:40:877 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 7 - Segmentos: 0
+[INFO] 01:11:40:877 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 7
+[INFO] 01:11:41:440 0/(22173:22173): ## PID: 0 - Ejecutando: INIT_PROC - PHP_2.prc 4
+[INFO] 01:11:41:440 0/(22173:22173): ## PID: 0 - Syscall: INIT_PROC - Archivo: PHP_2.prc - Prioridad: 4
+[INFO] 01:11:41:441 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 8 - Segmentos: 0
+[INFO] 01:11:41:441 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 8
+[INFO] 01:11:41:442 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:41:442 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 8 - Segmentos: 0
+[INFO] 01:11:41:442 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 8
+[INFO] 01:11:41:948 0/(22173:22173): ## PID: 0 - Ejecutando: SLEEP - 10000
+[INFO] 01:11:41:948 0/(22173:22173): ## PID: 0 - Syscall: SLEEP - 10000
+[INFO] 01:11:41:991 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 9 - Segmentos: 0
+[INFO] 01:11:41:991 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 9
+[INFO] 01:11:41:991 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:41:992 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 01:11:41:992 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 0
+[INFO] 01:11:42:496 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:11:42:496 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 1
+[INFO] 01:11:42:999 0/(22173:22173): ## PID: 2 - Ejecutando: SLEEP - 10000
+[INFO] 01:11:42:999 0/(22173:22173): ## PID: 2 - Syscall: SLEEP - 10000
+[INFO] 01:11:43:043 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 01:11:43:043 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 01:11:43:043 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:43:044 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 01:11:43:044 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 0
+[INFO] 01:11:43:548 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:11:43:548 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 1
+[INFO] 01:11:44:049 0/(22173:22173): ## PID: 1 - Ejecutando: MUTEX_LOCK - MUTEX_1
+[INFO] 01:11:44:049 0/(22173:22173): ## PID: 1 - Syscall: MUTEX_LOCK - MUTEX_1
+[INFO] 01:11:44:090 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 01:11:44:091 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 01:11:44:091 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:44:091 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 01:11:44:091 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 2
+[INFO] 01:11:44:593 0/(22173:22173): ## PID: 1 - Ejecutando: SET - AX 20
+[INFO] 01:11:44:593 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 3
+[INFO] 01:11:45:096 0/(22173:22173): ## PID: 1 - Ejecutando: SET - BX 1
+[INFO] 01:11:45:096 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 4
+[INFO] 01:11:45:645 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:11:45:645 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 5
+[INFO] 01:11:46:148 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:11:46:148 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 6
+[INFO] 01:11:46:650 0/(22173:22173): ## PID: 1 - Ejecutando: SLEEP - 1000
+[INFO] 01:11:46:650 0/(22173:22173): ## PID: 1 - Syscall: SLEEP - 1000
+[INFO] 01:11:46:693 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 7 - Segmentos: 0
+[INFO] 01:11:46:693 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 7
+[INFO] 01:11:52:051 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:52:051 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 9 - Segmentos: 0
+[INFO] 01:11:52:051 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 9
+[INFO] 01:11:52:596 0/(22173:22173): ## PID: 0 - Ejecutando: INIT_PROC - PHP_3.prc 3
+[INFO] 01:11:52:596 0/(22173:22173): ## PID: 0 - Syscall: INIT_PROC - Archivo: PHP_3.prc - Prioridad: 3
+[INFO] 01:11:52:596 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 10 - Segmentos: 0
+[INFO] 01:11:52:596 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 10
+[INFO] 01:11:52:639 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:52:639 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 10 - Segmentos: 0
+[INFO] 01:11:52:639 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 10
+[INFO] 01:11:53:141 0/(22173:22173): ## PID: 0 - Ejecutando: INIT_PROC - PHP_3.prc 3
+[INFO] 01:11:53:141 0/(22173:22173): ## PID: 0 - Syscall: INIT_PROC - Archivo: PHP_3.prc - Prioridad: 3
+[INFO] 01:11:53:183 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 11 - Segmentos: 0
+[INFO] 01:11:53:183 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 11
+[INFO] 01:11:53:183 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:53:183 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 11 - Segmentos: 0
+[INFO] 01:11:53:183 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 11
+[INFO] 01:11:53:703 0/(22173:22173): ## PID: 0 - Ejecutando: INIT_PROC - PHP_3.prc 3
+[INFO] 01:11:53:703 0/(22173:22173): ## PID: 0 - Syscall: INIT_PROC - Archivo: PHP_3.prc - Prioridad: 3
+[INFO] 01:11:53:704 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 12 - Segmentos: 0
+[INFO] 01:11:53:704 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 12
+[INFO] 01:11:53:704 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:53:704 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 12 - Segmentos: 0
+[INFO] 01:11:53:704 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 12
+[INFO] 01:11:54:209 0/(22173:22173): ## PID: 0 - Ejecutando: INIT_PROC - PHP_3.prc 3
+[INFO] 01:11:54:209 0/(22173:22173): ## PID: 0 - Syscall: INIT_PROC - Archivo: PHP_3.prc - Prioridad: 3
+[INFO] 01:11:54:252 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 13 - Segmentos: 0
+[INFO] 01:11:54:253 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 13
+[INFO] 01:11:54:295 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:54:295 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 13 - Segmentos: 0
+[INFO] 01:11:54:295 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 13
+[INFO] 01:11:54:845 0/(22173:22173): ## PID: 0 - Ejecutando: INIT_PROC - PHP_3.prc 3
+[INFO] 01:11:54:845 0/(22173:22173): ## PID: 0 - Syscall: INIT_PROC - Archivo: PHP_3.prc - Prioridad: 3
+[INFO] 01:11:54:888 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 14 - Segmentos: 0
+[INFO] 01:11:54:888 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 14
+[INFO] 01:11:54:888 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:54:888 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 14 - Segmentos: 0
+[INFO] 01:11:54:888 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 14
+[INFO] 01:11:55:410 0/(22173:22173): ## PID: 0 - Ejecutando: NOOP - 
+[INFO] 01:11:55:410 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 15
+[INFO] 01:11:55:911 0/(22173:22173): ## PID: 0 - Ejecutando: INIT_PROC - PHP_4.prc 2
+[INFO] 01:11:55:911 0/(22173:22173): ## PID: 0 - Syscall: INIT_PROC - Archivo: PHP_4.prc - Prioridad: 2
+[INFO] 01:11:55:918 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 16 - Segmentos: 0
+[INFO] 01:11:55:918 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 16
+[INFO] 01:11:55:918 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:55:921 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 16 - Segmentos: 0
+[INFO] 01:11:55:922 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 16
+[INFO] 01:11:56:464 0/(22173:22173): ## PID: 0 - Ejecutando: NOOP - 
+[INFO] 01:11:56:464 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 17
+[INFO] 01:11:57:008 0/(22173:22173): ## PID: 0 - Ejecutando: NOOP - 
+[INFO] 01:11:57:008 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 18
+[INFO] 01:11:57:509 0/(22173:22173): ## PID: 0 - Ejecutando: INIT_PROC - PHP_5.prc 1
+[INFO] 01:11:57:509 0/(22173:22173): ## PID: 0 - Syscall: INIT_PROC - Archivo: PHP_5.prc - Prioridad: 1
+[INFO] 01:11:57:559 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 19 - Segmentos: 0
+[INFO] 01:11:57:559 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 19
+[INFO] 01:11:57:559 0/(22173:22173): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:57:560 0/(22173:22173): ## PID: 0 - Contexto restaurado - PC: 19 - Segmentos: 0
+[INFO] 01:11:57:560 0/(22173:22173): ## PID: 0 - FETCH - Program Counter: 19
+[INFO] 01:11:58:061 0/(22173:22173): ## PID: 0 - Ejecutando: EXIT - 
+[INFO] 01:11:58:061 0/(22173:22173): ## PID: 0 - Syscall: EXIT
+[INFO] 01:11:58:103 0/(22173:22173): ## PID: 0 - Contexto guardado - PC: 20 - Segmentos: 0
+[INFO] 01:11:58:103 0/(22173:22173): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: EXIT - PC: 20
+[INFO] 01:11:58:103 0/(22173:22173): ## PID: 9 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:58:104 0/(22173:22173): ## PID: 9 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 01:11:58:104 0/(22173:22173): ## PID: 9 - FETCH - Program Counter: 0
+[INFO] 01:11:58:607 0/(22173:22173): ## PID: 9 - Ejecutando: NOOP - 
+[INFO] 01:11:58:607 0/(22173:22173): ## PID: 9 - FETCH - Program Counter: 1
+[INFO] 01:11:59:109 0/(22173:22173): ## PID: 9 - Ejecutando: SLEEP - 30000
+[INFO] 01:11:59:109 0/(22173:22173): ## PID: 9 - Syscall: SLEEP - 30000
+[INFO] 01:11:59:158 0/(22173:22173): ## PID: 9 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 01:11:59:158 0/(22173:22173): ## PID: 9 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 01:11:59:159 0/(22173:22173): ## PID: 8 - Proceso recibido de Kernel Scheduler
+[INFO] 01:11:59:159 0/(22173:22173): ## PID: 8 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 01:11:59:159 0/(22173:22173): ## PID: 8 - FETCH - Program Counter: 0
+[INFO] 01:11:59:664 0/(22173:22173): ## PID: 8 - Ejecutando: NOOP - 
+[INFO] 01:11:59:664 0/(22173:22173): ## PID: 8 - FETCH - Program Counter: 1
+[INFO] 01:12:00:166 0/(22173:22173): ## PID: 8 - Ejecutando: SLEEP - 20000
+[INFO] 01:12:00:166 0/(22173:22173): ## PID: 8 - Syscall: SLEEP - 20000
+[INFO] 01:12:00:207 0/(22173:22173): ## PID: 8 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 01:12:00:207 0/(22173:22173): ## PID: 8 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 01:12:00:207 0/(22173:22173): ## PID: 3 - Proceso recibido de Kernel Scheduler
+[INFO] 01:12:00:207 0/(22173:22173): ## PID: 3 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 01:12:00:207 0/(22173:22173): ## PID: 3 - FETCH - Program Counter: 0
+[INFO] 01:12:00:711 0/(22173:22173): ## PID: 3 - Ejecutando: NOOP - 
+[INFO] 01:12:00:711 0/(22173:22173): ## PID: 3 - FETCH - Program Counter: 1
+[INFO] 01:12:01:213 0/(22173:22173): ## PID: 3 - Ejecutando: SLEEP - 15000
+[INFO] 01:12:01:213 0/(22173:22173): ## PID: 3 - Syscall: SLEEP - 15000
+[INFO] 01:12:01:263 0/(22173:22173): ## PID: 3 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 01:12:01:263 0/(22173:22173): ## PID: 3 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 01:12:01:265 0/(22173:22173): ## PID: 4 - Proceso recibido de Kernel Scheduler
+[INFO] 01:12:01:265 0/(22173:22173): ## PID: 4 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 01:12:01:265 0/(22173:22173): ## PID: 4 - FETCH - Program Counter: 0
+[INFO] 01:12:01:766 0/(22173:22173): ## PID: 4 - Ejecutando: NOOP - 
+[INFO] 01:12:01:766 0/(22173:22173): ## PID: 4 - FETCH - Program Counter: 1
+[INFO] 01:12:02:267 0/(22173:22173): ## PID: 4 - Ejecutando: SLEEP - 15000
+[INFO] 01:12:02:267 0/(22173:22173): ## PID: 4 - Syscall: SLEEP - 15000
+[INFO] 01:12:02:311 0/(22173:22173): ## PID: 4 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 01:12:02:311 0/(22173:22173): ## PID: 4 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 01:12:02:315 0/(22173:22173): ## PID: 5 - Proceso recibido de Kernel Scheduler
+[INFO] 01:12:02:315 0/(22173:22173): ## PID: 5 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 01:12:02:315 0/(22173:22173): ## PID: 5 - FETCH - Program Counter: 0
+[INFO] 01:12:02:862 0/(22173:22173): ## PID: 5 - Ejecutando: NOOP - 
+[INFO] 01:12:02:865 0/(22173:22173): ## PID: 5 - FETCH - Program Counter: 1
+[INFO] 01:12:03:368 0/(22173:22173): ## PID: 5 - Ejecutando: SLEEP - 15000
+[INFO] 01:12:03:368 0/(22173:22173): ## PID: 5 - Syscall: SLEEP - 15000
+[INFO] 01:12:03:414 0/(22173:22173): ## PID: 5 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 01:12:03:414 0/(22173:22173): ## PID: 5 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 01:12:03:419 0/(22173:22173): ## PID: 6 - Proceso recibido de Kernel Scheduler
+[INFO] 01:12:03:419 0/(22173:22173): ## PID: 6 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 01:12:03:419 0/(22173:22173): ## PID: 6 - FETCH - Program Counter: 0
+[INFO] 01:12:03:925 0/(22173:22173): ## PID: 6 - Ejecutando: NOOP - 
+[INFO] 01:12:03:925 0/(22173:22173): ## PID: 6 - FETCH - Program Counter: 1
+[INFO] 01:12:04:426 0/(22173:22173): ## PID: 6 - Ejecutando: SLEEP - 15000
+[INFO] 01:12:04:426 0/(22173:22173): ## PID: 6 - Syscall: SLEEP - 15000
+[INFO] 01:12:04:467 0/(22173:22173): ## PID: 6 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 01:12:04:467 0/(22173:22173): ## PID: 6 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 01:12:04:468 0/(22173:22173): ## PID: 7 - Proceso recibido de Kernel Scheduler
+[INFO] 01:12:04:468 0/(22173:22173): ## PID: 7 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 01:12:04:468 0/(22173:22173): ## PID: 7 - FETCH - Program Counter: 0
+[INFO] 01:12:04:968 0/(22173:22173): ## PID: 7 - Ejecutando: NOOP - 
+[INFO] 01:12:04:968 0/(22173:22173): ## PID: 7 - FETCH - Program Counter: 1
+[INFO] 01:12:05:471 0/(22173:22173): ## PID: 7 - Ejecutando: SLEEP - 15000
+[INFO] 01:12:05:471 0/(22173:22173): ## PID: 7 - Syscall: SLEEP - 15000
+[INFO] 01:12:05:516 0/(22173:22173): ## PID: 7 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 01:12:05:517 0/(22173:22173): ## PID: 7 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 01:12:05:518 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:12:05:518 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 01:12:05:518 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 2
+[INFO] 01:12:06:019 0/(22173:22173): ## PID: 2 - Ejecutando: MUTEX_LOCK - MUTEX_2
+[INFO] 01:12:06:019 0/(22173:22173): ## PID: 2 - Syscall: MUTEX_LOCK - MUTEX_2
+[INFO] 01:12:06:019 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 3 - Segmentos: 0
+[INFO] 01:12:06:019 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 3
+[INFO] 01:12:06:020 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:12:06:020 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 3 - Segmentos: 0
+[INFO] 01:12:06:020 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 3
+[INFO] 01:12:06:526 0/(22173:22173): ## PID: 2 - Ejecutando: SET - AX 20
+[INFO] 01:12:06:526 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 4
+[INFO] 01:12:07:075 0/(22173:22173): ## PID: 2 - Ejecutando: SET - BX 1
+[INFO] 01:12:07:075 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 5
+[INFO] 01:12:07:578 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:12:07:578 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 6
+[INFO] 01:12:08:079 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:12:08:079 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 7
+[INFO] 01:12:08:625 0/(22173:22173): ## PID: 2 - Ejecutando: SLEEP - 1000
+[INFO] 01:12:08:625 0/(22173:22173): ## PID: 2 - Syscall: SLEEP - 1000
+[INFO] 01:12:08:626 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 8 - Segmentos: 0
+[INFO] 01:12:08:626 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 8
+[INFO] 01:12:08:626 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:12:08:626 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 7 - Segmentos: 0
+[INFO] 01:12:08:626 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 7
+[INFO] 01:12:09:127 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:12:09:127 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 8
+[INFO] 01:12:09:629 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:12:09:629 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 9
+[INFO] 01:12:10:176 0/(22173:22173): ## PID: 1 - Ejecutando: SUB - AX BX
+[INFO] 01:12:10:176 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 10
+[INFO] 01:12:10:677 0/(22173:22173): ## PID: 1 - Ejecutando: JNZ - AX 3
+[INFO] 01:12:10:677 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 3
+[INFO] 01:12:11:179 0/(22173:22173): ## PID: 1 - Ejecutando: SET - BX 1
+[INFO] 01:12:11:179 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 4
+[INFO] 01:12:11:727 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:12:11:728 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 5
+[INFO] 01:12:12:236 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:12:12:236 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 6
+[INFO] 01:12:12:738 0/(22173:22173): ## PID: 1 - Ejecutando: SLEEP - 1000
+[INFO] 01:12:12:738 0/(22173:22173): ## PID: 1 - Syscall: SLEEP - 1000
+[INFO] 01:12:12:784 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 7 - Segmentos: 0
+[INFO] 01:12:12:785 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 7
+[INFO] 01:12:33:057 0/(22173:22173): ## PID: 9 - Proceso recibido de Kernel Scheduler
+[INFO] 01:12:33:057 0/(22173:22173): ## PID: 9 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 01:12:33:057 0/(22173:22173): ## PID: 9 - FETCH - Program Counter: 2
+[INFO] 01:12:33:601 0/(22173:22173): ## PID: 9 - Ejecutando: MUTEX_LOCK - MUTEX_2
+[INFO] 01:12:33:601 0/(22173:22173): ## PID: 9 - Syscall: MUTEX_LOCK - MUTEX_2
+[INFO] 01:12:33:601 0/(22173:22173): ## PID: 9 - Contexto guardado - PC: 3 - Segmentos: 0
+[INFO] 01:12:33:602 0/(22173:22173): ## PID: 9 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 3
+[INFO] 01:12:53:058 0/(22173:22173): ## PID: 8 - Proceso recibido de Kernel Scheduler
+[INFO] 01:12:53:058 0/(22173:22173): ## PID: 8 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 01:12:53:058 0/(22173:22173): ## PID: 8 - FETCH - Program Counter: 2
+[INFO] 01:12:53:560 0/(22173:22173): ## PID: 8 - Ejecutando: MUTEX_LOCK - MUTEX_1
+[INFO] 01:12:53:560 0/(22173:22173): ## PID: 8 - Syscall: MUTEX_LOCK - MUTEX_1
+[INFO] 01:12:53:560 0/(22173:22173): ## PID: 8 - Contexto guardado - PC: 3 - Segmentos: 0
+[INFO] 01:12:53:561 0/(22173:22173): ## PID: 8 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 3
+[INFO] 01:13:08:068 0/(22173:22173): ## PID: 3 - Proceso recibido de Kernel Scheduler
+[INFO] 01:13:08:068 0/(22173:22173): ## PID: 3 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 01:13:08:068 0/(22173:22173): ## PID: 3 - FETCH - Program Counter: 2
+[INFO] 01:13:08:569 0/(22173:22173): ## PID: 3 - Ejecutando: SET - AX 10
+[INFO] 01:13:08:569 0/(22173:22173): ## PID: 3 - FETCH - Program Counter: 3
+[INFO] 01:13:09:115 0/(22173:22173): ## PID: 3 - Ejecutando: SET - BX 1
+[INFO] 01:13:09:115 0/(22173:22173): ## PID: 3 - FETCH - Program Counter: 4
+[INFO] 01:13:09:617 0/(22173:22173): ## PID: 3 - Ejecutando: MUTEX_LOCK - MUTEX_3
+[INFO] 01:13:09:617 0/(22173:22173): ## PID: 3 - Syscall: MUTEX_LOCK - MUTEX_3
+[INFO] 01:13:09:618 0/(22173:22173): ## PID: 3 - Contexto guardado - PC: 5 - Segmentos: 0
+[INFO] 01:13:09:618 0/(22173:22173): ## PID: 3 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 5
+[INFO] 01:13:09:618 0/(22173:22173): ## PID: 3 - Proceso recibido de Kernel Scheduler
+[INFO] 01:13:09:618 0/(22173:22173): ## PID: 3 - Contexto restaurado - PC: 5 - Segmentos: 0
+[INFO] 01:13:09:618 0/(22173:22173): ## PID: 3 - FETCH - Program Counter: 5
+[INFO] 01:13:10:120 0/(22173:22173): ## PID: 3 - Ejecutando: NOOP - 
+[INFO] 01:13:10:120 0/(22173:22173): ## PID: 3 - FETCH - Program Counter: 6
+[INFO] 01:13:10:667 0/(22173:22173): ## PID: 3 - Ejecutando: SLEEP - 1000
+[INFO] 01:13:10:667 0/(22173:22173): ## PID: 3 - Syscall: SLEEP - 1000
+[INFO] 01:13:10:667 0/(22173:22173): ## PID: 3 - Contexto guardado - PC: 7 - Segmentos: 0
+[INFO] 01:13:10:667 0/(22173:22173): ## PID: 3 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 7
+[INFO] 01:13:23:071 0/(22173:22173): ## PID: 4 - Proceso recibido de Kernel Scheduler
+[INFO] 01:13:23:071 0/(22173:22173): ## PID: 4 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 01:13:23:071 0/(22173:22173): ## PID: 4 - FETCH - Program Counter: 2
+[INFO] 01:13:23:615 0/(22173:22173): ## PID: 4 - Ejecutando: SET - AX 10
+[INFO] 01:13:23:615 0/(22173:22173): ## PID: 4 - FETCH - Program Counter: 3
+[INFO] 01:13:24:117 0/(22173:22173): ## PID: 4 - Ejecutando: SET - BX 1
+[INFO] 01:13:24:117 0/(22173:22173): ## PID: 4 - FETCH - Program Counter: 4
+[INFO] 01:13:24:660 0/(22173:22173): ## PID: 4 - Ejecutando: MUTEX_LOCK - MUTEX_3
+[INFO] 01:13:24:660 0/(22173:22173): ## PID: 4 - Syscall: MUTEX_LOCK - MUTEX_3
+[INFO] 01:13:24:660 0/(22173:22173): ## PID: 4 - Contexto guardado - PC: 5 - Segmentos: 0
+[INFO] 01:13:24:660 0/(22173:22173): ## PID: 4 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 5
+[INFO] 01:13:38:103 0/(22173:22173): ## PID: 5 - Proceso recibido de Kernel Scheduler
+[INFO] 01:13:38:103 0/(22173:22173): ## PID: 5 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 01:13:38:103 0/(22173:22173): ## PID: 5 - FETCH - Program Counter: 2
+[INFO] 01:13:38:604 0/(22173:22173): ## PID: 5 - Ejecutando: SET - AX 10
+[INFO] 01:13:38:605 0/(22173:22173): ## PID: 5 - FETCH - Program Counter: 3
+[INFO] 01:13:39:106 0/(22173:22173): ## PID: 5 - Ejecutando: SET - BX 1
+[INFO] 01:13:39:106 0/(22173:22173): ## PID: 5 - FETCH - Program Counter: 4
+[INFO] 01:13:39:651 0/(22173:22173): ## PID: 5 - Ejecutando: MUTEX_LOCK - MUTEX_3
+[INFO] 01:13:39:651 0/(22173:22173): ## PID: 5 - Syscall: MUTEX_LOCK - MUTEX_3
+[INFO] 01:13:39:651 0/(22173:22173): ## PID: 5 - Contexto guardado - PC: 5 - Segmentos: 0
+[INFO] 01:13:39:651 0/(22173:22173): ## PID: 5 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 5
+[INFO] 01:13:53:104 0/(22173:22173): ## PID: 6 - Proceso recibido de Kernel Scheduler
+[INFO] 01:13:53:104 0/(22173:22173): ## PID: 6 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 01:13:53:104 0/(22173:22173): ## PID: 6 - FETCH - Program Counter: 2
+[INFO] 01:13:53:624 0/(22173:22173): ## PID: 6 - Ejecutando: SET - AX 10
+[INFO] 01:13:53:624 0/(22173:22173): ## PID: 6 - FETCH - Program Counter: 3
+[INFO] 01:13:54:125 0/(22173:22173): ## PID: 6 - Ejecutando: SET - BX 1
+[INFO] 01:13:54:125 0/(22173:22173): ## PID: 6 - FETCH - Program Counter: 4
+[INFO] 01:13:54:667 0/(22173:22173): ## PID: 6 - Ejecutando: MUTEX_LOCK - MUTEX_3
+[INFO] 01:13:54:667 0/(22173:22173): ## PID: 6 - Syscall: MUTEX_LOCK - MUTEX_3
+[INFO] 01:13:54:667 0/(22173:22173): ## PID: 6 - Contexto guardado - PC: 5 - Segmentos: 0
+[INFO] 01:13:54:667 0/(22173:22173): ## PID: 6 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 5
+[INFO] 01:14:08:111 0/(22173:22173): ## PID: 7 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:08:111 0/(22173:22173): ## PID: 7 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 01:14:08:111 0/(22173:22173): ## PID: 7 - FETCH - Program Counter: 2
+[INFO] 01:14:08:657 0/(22173:22173): ## PID: 7 - Ejecutando: SET - AX 10
+[INFO] 01:14:08:657 0/(22173:22173): ## PID: 7 - FETCH - Program Counter: 3
+[INFO] 01:14:09:158 0/(22173:22173): ## PID: 7 - Ejecutando: SET - BX 1
+[INFO] 01:14:09:158 0/(22173:22173): ## Interrupción recibida
+[INFO] 01:14:09:205 0/(22173:22173): ## PID: 7 - Contexto guardado - PC: 4 - Segmentos: 0
+[INFO] 01:14:09:206 0/(22173:22173): ## PID: 7 - Devolviendo proceso a Kernel Scheduler - Motivo: INTERRUPCION - PC: 4
+[INFO] 01:14:09:207 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:09:207 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 8 - Segmentos: 0
+[INFO] 01:14:09:207 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 8
+[INFO] 01:14:09:716 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:09:716 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 9
+[INFO] 01:14:10:506 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:10:506 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 10
+[INFO] 01:14:11:051 0/(22173:22173): ## PID: 2 - Ejecutando: SUB - AX BX
+[INFO] 01:14:11:051 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 11
+[INFO] 01:14:11:552 0/(22173:22173): ## PID: 2 - Ejecutando: JNZ - AX 4
+[INFO] 01:14:11:552 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 4
+[INFO] 01:14:12:054 0/(22173:22173): ## PID: 2 - Ejecutando: SET - BX 1
+[INFO] 01:14:12:054 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 5
+[INFO] 01:14:12:596 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:12:596 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 6
+[INFO] 01:14:13:098 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:13:098 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 7
+[INFO] 01:14:13:610 0/(22173:22173): ## PID: 2 - Ejecutando: SLEEP - 1000
+[INFO] 01:14:13:611 0/(22173:22173): ## PID: 2 - Syscall: SLEEP - 1000
+[INFO] 01:14:13:659 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 8 - Segmentos: 0
+[INFO] 01:14:13:659 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 8
+[INFO] 01:14:13:659 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:13:660 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 7 - Segmentos: 0
+[INFO] 01:14:13:660 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 7
+[INFO] 01:14:14:169 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:14:14:169 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 8
+[INFO] 01:14:14:671 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:14:14:671 0/(22173:22173): ## Interrupción recibida
+[INFO] 01:14:14:716 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 9 - Segmentos: 0
+[INFO] 01:14:14:716 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: INTERRUPCION - PC: 9
+[INFO] 01:14:14:761 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:14:762 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 8 - Segmentos: 0
+[INFO] 01:14:14:762 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 8
+[INFO] 01:14:15:306 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:15:306 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 9
+[INFO] 01:14:15:816 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:15:816 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 10
+[INFO] 01:14:16:320 0/(22173:22173): ## PID: 2 - Ejecutando: SUB - AX BX
+[INFO] 01:14:16:320 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 11
+[INFO] 01:14:16:868 0/(22173:22173): ## PID: 2 - Ejecutando: JNZ - AX 4
+[INFO] 01:14:16:868 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 4
+[INFO] 01:14:17:372 0/(22173:22173): ## PID: 2 - Ejecutando: SET - BX 1
+[INFO] 01:14:17:373 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 5
+[INFO] 01:14:17:875 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:17:875 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 6
+[INFO] 01:14:18:419 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:18:419 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 7
+[INFO] 01:14:18:923 0/(22173:22173): ## PID: 2 - Ejecutando: SLEEP - 1000
+[INFO] 01:14:18:923 0/(22173:22173): ## PID: 2 - Syscall: SLEEP - 1000
+[INFO] 01:14:18:923 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 8 - Segmentos: 0
+[INFO] 01:14:18:923 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 8
+[INFO] 01:14:18:924 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:18:924 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 9 - Segmentos: 0
+[INFO] 01:14:18:924 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 9
+[INFO] 01:14:19:433 0/(22173:22173): ## PID: 1 - Ejecutando: SUB - AX BX
+[INFO] 01:14:19:433 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 10
+[INFO] 01:14:20:011 0/(22173:22173): ## PID: 1 - Ejecutando: JNZ - AX 3
+[INFO] 01:14:20:011 0/(22173:22173): ## Interrupción recibida
+[INFO] 01:14:20:011 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 3 - Segmentos: 0
+[INFO] 01:14:20:011 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: INTERRUPCION - PC: 3
+[INFO] 01:14:20:011 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:20:011 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 8 - Segmentos: 0
+[INFO] 01:14:20:011 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 8
+[INFO] 01:14:20:513 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:20:513 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 9
+[INFO] 01:14:21:079 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:21:079 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 10
+[INFO] 01:14:21:627 0/(22173:22173): ## PID: 2 - Ejecutando: SUB - AX BX
+[INFO] 01:14:21:627 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 11
+[INFO] 01:14:22:129 0/(22173:22173): ## PID: 2 - Ejecutando: JNZ - AX 4
+[INFO] 01:14:22:129 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 4
+[INFO] 01:14:22:630 0/(22173:22173): ## PID: 2 - Ejecutando: SET - BX 1
+[INFO] 01:14:22:630 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 5
+[INFO] 01:14:23:179 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:23:179 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 6
+[INFO] 01:14:23:680 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:23:680 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 7
+[INFO] 01:14:24:180 0/(22173:22173): ## PID: 2 - Ejecutando: SLEEP - 1000
+[INFO] 01:14:24:181 0/(22173:22173): ## PID: 2 - Syscall: SLEEP - 1000
+[INFO] 01:14:24:223 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 8 - Segmentos: 0
+[INFO] 01:14:24:223 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 8
+[INFO] 01:14:24:223 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:24:224 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 3 - Segmentos: 0
+[INFO] 01:14:24:224 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 3
+[INFO] 01:14:24:725 0/(22173:22173): ## PID: 1 - Ejecutando: SET - BX 1
+[INFO] 01:14:24:725 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 4
+[INFO] 01:14:25:225 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:14:25:225 0/(22173:22173): ## Interrupción recibida
+[INFO] 01:14:25:267 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 5 - Segmentos: 0
+[INFO] 01:14:25:267 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: INTERRUPCION - PC: 5
+[INFO] 01:14:25:267 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:25:267 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 8 - Segmentos: 0
+[INFO] 01:14:25:267 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 8
+[INFO] 01:14:25:769 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:25:769 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 9
+[INFO] 01:14:26:270 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:26:270 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 10
+[INFO] 01:14:26:815 0/(22173:22173): ## PID: 2 - Ejecutando: SUB - AX BX
+[INFO] 01:14:26:815 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 11
+[INFO] 01:14:27:318 0/(22173:22173): ## PID: 2 - Ejecutando: JNZ - AX 4
+[INFO] 01:14:27:318 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 4
+[INFO] 01:14:27:819 0/(22173:22173): ## PID: 2 - Ejecutando: SET - BX 1
+[INFO] 01:14:27:819 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 5
+[INFO] 01:14:28:363 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:28:363 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 6
+[INFO] 01:14:28:864 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:28:864 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 7
+[INFO] 01:14:29:364 0/(22173:22173): ## PID: 2 - Ejecutando: SLEEP - 1000
+[INFO] 01:14:29:364 0/(22173:22173): ## PID: 2 - Syscall: SLEEP - 1000
+[INFO] 01:14:29:411 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 8 - Segmentos: 0
+[INFO] 01:14:29:412 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 8
+[INFO] 01:14:29:412 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:29:412 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 5 - Segmentos: 0
+[INFO] 01:14:29:412 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 5
+[INFO] 01:14:29:913 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:14:29:913 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 6
+[INFO] 01:14:30:415 0/(22173:22173): ## PID: 1 - Ejecutando: SLEEP - 1000
+[INFO] 01:14:30:415 0/(22173:22173): ## PID: 1 - Syscall: SLEEP - 1000
+[INFO] 01:14:30:459 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 7 - Segmentos: 0
+[INFO] 01:14:30:459 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 7
+[WARNING] 01:14:30:459 0/(22173:22173): Mensaje inesperado esperando proceso a ejecutar: op_code=19 — ignorado
+[INFO] 01:14:30:503 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:30:503 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 8 - Segmentos: 0
+[INFO] 01:14:30:503 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 8
+[INFO] 01:14:31:007 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:31:007 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 9
+[INFO] 01:14:31:508 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:31:508 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 10
+[INFO] 01:14:32:009 0/(22173:22173): ## PID: 2 - Ejecutando: SUB - AX BX
+[INFO] 01:14:32:009 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 11
+[INFO] 01:14:32:556 0/(22173:22173): ## PID: 2 - Ejecutando: JNZ - AX 4
+[INFO] 01:14:32:556 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 4
+[INFO] 01:14:33:059 0/(22173:22173): ## PID: 2 - Ejecutando: SET - BX 1
+[INFO] 01:14:33:059 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 5
+[INFO] 01:14:33:562 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:33:562 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 6
+[INFO] 01:14:34:145 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:34:147 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 7
+[INFO] 01:14:34:649 0/(22173:22173): ## PID: 2 - Ejecutando: SLEEP - 1000
+[INFO] 01:14:34:649 0/(22173:22173): ## PID: 2 - Syscall: SLEEP - 1000
+[INFO] 01:14:34:649 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 8 - Segmentos: 0
+[INFO] 01:14:34:649 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 8
+[INFO] 01:14:34:649 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:34:650 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 7 - Segmentos: 0
+[INFO] 01:14:34:650 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 7
+[INFO] 01:14:35:175 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:14:35:175 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 8
+[INFO] 01:14:35:724 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:14:35:724 0/(22173:22173): ## Interrupción recibida
+[INFO] 01:14:35:724 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 9 - Segmentos: 0
+[INFO] 01:14:35:724 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: INTERRUPCION - PC: 9
+[INFO] 01:14:35:725 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:35:725 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 8 - Segmentos: 0
+[INFO] 01:14:35:725 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 8
+[INFO] 01:14:36:229 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:36:229 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 9
+[INFO] 01:14:36:740 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:36:740 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 10
+[INFO] 01:14:37:283 0/(22173:22173): ## PID: 2 - Ejecutando: SUB - AX BX
+[INFO] 01:14:37:283 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 11
+[INFO] 01:14:37:784 0/(22173:22173): ## PID: 2 - Ejecutando: JNZ - AX 4
+[INFO] 01:14:37:784 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 4
+[INFO] 01:14:38:286 0/(22173:22173): ## PID: 2 - Ejecutando: SET - BX 1
+[INFO] 01:14:38:286 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 5
+[INFO] 01:14:38:832 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:38:832 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 6
+[INFO] 01:14:39:334 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:39:334 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 7
+[INFO] 01:14:39:835 0/(22173:22173): ## PID: 2 - Ejecutando: SLEEP - 1000
+[INFO] 01:14:39:835 0/(22173:22173): ## PID: 2 - Syscall: SLEEP - 1000
+[INFO] 01:14:39:879 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 8 - Segmentos: 0
+[INFO] 01:14:39:879 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 8
+[INFO] 01:14:39:880 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:39:880 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 9 - Segmentos: 0
+[INFO] 01:14:39:880 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 9
+[INFO] 01:14:40:385 0/(22173:22173): ## PID: 1 - Ejecutando: SUB - AX BX
+[INFO] 01:14:40:385 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 10
+[INFO] 01:14:40:886 0/(22173:22173): ## PID: 1 - Ejecutando: JNZ - AX 3
+[INFO] 01:14:40:886 0/(22173:22173): ## Interrupción recibida
+[INFO] 01:14:40:939 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 3 - Segmentos: 0
+[INFO] 01:14:40:939 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: INTERRUPCION - PC: 3
+[INFO] 01:14:40:940 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:40:940 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 8 - Segmentos: 0
+[INFO] 01:14:40:940 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 8
+[INFO] 01:14:41:441 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:41:441 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 9
+[INFO] 01:14:41:960 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:41:960 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 10
+[INFO] 01:14:42:506 0/(22173:22173): ## PID: 2 - Ejecutando: SUB - AX BX
+[INFO] 01:14:42:507 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 11
+[INFO] 01:14:43:013 0/(22173:22173): ## PID: 2 - Ejecutando: JNZ - AX 4
+[INFO] 01:14:43:013 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 4
+[INFO] 01:14:43:515 0/(22173:22173): ## PID: 2 - Ejecutando: SET - BX 1
+[INFO] 01:14:43:515 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 5
+[INFO] 01:14:44:066 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:44:066 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 6
+[INFO] 01:14:44:567 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:44:567 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 7
+[INFO] 01:14:45:071 0/(22173:22173): ## PID: 2 - Ejecutando: SLEEP - 1000
+[INFO] 01:14:45:071 0/(22173:22173): ## PID: 2 - Syscall: SLEEP - 1000
+[INFO] 01:14:45:115 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 8 - Segmentos: 0
+[INFO] 01:14:45:115 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 8
+[INFO] 01:14:45:116 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:45:116 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 3 - Segmentos: 0
+[INFO] 01:14:45:116 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 3
+[INFO] 01:14:45:617 0/(22173:22173): ## PID: 1 - Ejecutando: SET - BX 1
+[INFO] 01:14:45:617 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 4
+[INFO] 01:14:46:123 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:14:46:123 0/(22173:22173): ## Interrupción recibida
+[INFO] 01:14:46:167 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 5 - Segmentos: 0
+[INFO] 01:14:46:167 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: INTERRUPCION - PC: 5
+[INFO] 01:14:46:211 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:46:211 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 8 - Segmentos: 0
+[INFO] 01:14:46:211 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 8
+[INFO] 01:14:46:785 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:46:785 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 9
+[INFO] 01:14:47:287 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:47:287 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 10
+[INFO] 01:14:47:788 0/(22173:22173): ## PID: 2 - Ejecutando: SUB - AX BX
+[INFO] 01:14:47:789 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 11
+[INFO] 01:14:48:331 0/(22173:22173): ## PID: 2 - Ejecutando: JNZ - AX 4
+[INFO] 01:14:48:331 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 4
+[INFO] 01:14:49:189 0/(22173:22173): ## PID: 2 - Ejecutando: SET - BX 1
+[INFO] 01:14:49:189 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 5
+[INFO] 01:14:49:691 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:49:691 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 6
+[INFO] 01:14:50:266 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:50:266 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 7
+[INFO] 01:14:50:767 0/(22173:22173): ## PID: 2 - Ejecutando: SLEEP - 1000
+[INFO] 01:14:50:767 0/(22173:22173): ## PID: 2 - Syscall: SLEEP - 1000
+[INFO] 01:14:50:768 0/(22173:22173): ## PID: 2 - Contexto guardado - PC: 8 - Segmentos: 0
+[INFO] 01:14:50:768 0/(22173:22173): ## PID: 2 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 8
+[INFO] 01:14:50:768 0/(22173:22173): ## PID: 1 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:50:768 0/(22173:22173): ## PID: 1 - Contexto restaurado - PC: 5 - Segmentos: 0
+[INFO] 01:14:50:768 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 5
+[INFO] 01:14:51:296 0/(22173:22173): ## PID: 1 - Ejecutando: NOOP - 
+[INFO] 01:14:51:296 0/(22173:22173): ## PID: 1 - FETCH - Program Counter: 6
+[INFO] 01:14:51:840 0/(22173:22173): ## PID: 1 - Ejecutando: SLEEP - 1000
+[INFO] 01:14:51:840 0/(22173:22173): ## PID: 1 - Syscall: SLEEP - 1000
+[INFO] 01:14:51:840 0/(22173:22173): ## PID: 1 - Contexto guardado - PC: 7 - Segmentos: 0
+[INFO] 01:14:51:840 0/(22173:22173): ## PID: 1 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 7
+[WARNING] 01:14:51:840 0/(22173:22173): Mensaje inesperado esperando proceso a ejecutar: op_code=19 — ignorado
+[INFO] 01:14:51:840 0/(22173:22173): ## PID: 2 - Proceso recibido de Kernel Scheduler
+[INFO] 01:14:51:840 0/(22173:22173): ## PID: 2 - Contexto restaurado - PC: 8 - Segmentos: 0
+[INFO] 01:14:51:840 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 8
+[INFO] 01:14:52:342 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:52:342 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 9
+[INFO] 01:14:52:846 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:52:846 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 10
+[INFO] 01:14:53:390 0/(22173:22173): ## PID: 2 - Ejecutando: SUB - AX BX
+[INFO] 01:14:53:390 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 11
+[INFO] 01:14:53:891 0/(22173:22173): ## PID: 2 - Ejecutando: JNZ - AX 4
+[INFO] 01:14:53:891 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 4
+[INFO] 01:14:54:392 0/(22173:22173): ## PID: 2 - Ejecutando: SET - BX 1
+[INFO] 01:14:54:392 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 5
+[INFO] 01:14:54:936 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:54:936 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 6
+[INFO] 01:14:55:437 0/(22173:22173): ## PID: 2 - Ejecutando: NOOP - 
+[INFO] 01:14:55:437 0/(22173:22173): ## PID: 2 - FETCH - Program Counter: 7
