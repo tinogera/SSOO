@@ -1,31 +1,14 @@
-[INFO] 22:55:02:540 KernelScheduler/(5221:5221): ## Conectado a Kernel Memory
-[INFO] 22:55:02:540 KernelScheduler/(5221:5221): ## (0) Se crea el proceso - Estado: NEW
-[INFO] 22:55:02:540 KernelScheduler/(5221:5221): ## (0) Pasa del estado NEW al estado READY
-[INFO] 22:55:52:585 KernelScheduler/(5221:5499): ## IO STDOUT Conectada
-[INFO] 22:55:55:330 KernelScheduler/(5221:5635): ## IO STDIN Conectada
-[INFO] 22:55:58:271 KernelScheduler/(5221:5764): ## IO SLEEP Conectada
-[INFO] 22:56:02:201 KernelScheduler/(5221:5951): ## CPU 0 Conectada
-[INFO] 22:56:02:201 KernelScheduler/(5221:5363): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 22:56:02:711 KernelScheduler/(5221:5951): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 22:56:02:711 KernelScheduler/(5221:5951): ## (1) Se crea el proceso - Estado: NEW
-[INFO] 22:56:02:711 KernelScheduler/(5221:5951): ## (1) Pasa del estado NEW al estado READY
-[INFO] 22:56:02:711 KernelScheduler/(5221:5951): ## (0) Pasa del estado EXEC al estado READY
-[INFO] 22:56:02:711 KernelScheduler/(5221:5363): ## (1) Pasa del estado READY al estado EXEC
-[WARNING] 22:58:58:318 KernelScheduler/(5221:5951): ## (1) CPU desconectada durante EXEC — vuelve a READY
-[INFO] 22:58:58:318 KernelScheduler/(5221:5951): ## (1) Pasa del estado EXEC al estado READY
-[WARNING] 22:58:58:318 KernelScheduler/(5221:5951): ## CPU fd=9 desconectada
-[INFO] 22:59:08:580 KernelScheduler/(5221:6204): ## CPU 0 Conectada
-[INFO] 22:59:08:580 KernelScheduler/(5221:5363): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 22:59:08:835 KernelScheduler/(5221:6204): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 22:59:08:835 KernelScheduler/(5221:6204): ## (2) Se crea el proceso - Estado: NEW
-[INFO] 22:59:08:835 KernelScheduler/(5221:6204): ## (2) Pasa del estado NEW al estado READY
-[INFO] 22:59:08:835 KernelScheduler/(5221:6204): ## (0) Pasa del estado EXEC al estado READY
-[INFO] 22:59:08:835 KernelScheduler/(5221:5363): ## (1) Pasa del estado READY al estado EXEC
-[WARNING] 22:59:12:273 KernelScheduler/(5221:6204): ## (1) CPU desconectada durante EXEC — vuelve a READY
-[INFO] 22:59:12:273 KernelScheduler/(5221:6204): ## (1) Pasa del estado EXEC al estado READY
-[WARNING] 22:59:12:273 KernelScheduler/(5221:6204): ## CPU fd=10 desconectada
-[INFO] 22:59:14:767 KernelScheduler/(5221:6393): ## CPU 0 Conectada
-[INFO] 22:59:14:768 KernelScheduler/(5221:5363): ## (2) Pasa del estado READY al estado EXEC
-[WARNING] 22:59:44:455 KernelScheduler/(5221:6393): ## (2) CPU desconectada durante EXEC — vuelve a READY
-[INFO] 22:59:44:455 KernelScheduler/(5221:6393): ## (2) Pasa del estado EXEC al estado READY
-[WARNING] 22:59:44:455 KernelScheduler/(5221:6393): ## CPU fd=11 desconectada
+[INFO] 04:12:31:670 KernelScheduler/(6026:6026): ## Conectado a Kernel Memory
+[INFO] 04:12:31:670 KernelScheduler/(6026:6026): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 04:12:31:670 KernelScheduler/(6026:6026): ## (0) Pasa del estado NEW al estado READY
+[INFO] 04:12:59:984 KernelScheduler/(6026:6300): ## IO SLEEP Conectada
+[INFO] 04:13:18:730 KernelScheduler/(6026:6429): ## IO STDOUT Conectada
+[INFO] 04:13:31:343 KernelScheduler/(6026:6560): ## IO STDIN Conectada
+[INFO] 04:13:42:649 KernelScheduler/(6026:6743): ## CPU 0 Conectada
+[INFO] 04:13:42:649 KernelScheduler/(6026:6168): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 04:13:43:165 KernelScheduler/(6026:6743): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 04:13:43:166 KernelScheduler/(6026:6746): ## (0) - MEM_ALLOC: solicita crear segmento 0 (64 bytes)
+[INFO] 04:13:43:166 KernelScheduler/(6026:6746): ## (0) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 04:13:43:984 KernelScheduler/(6026:6743): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 04:13:43:984 KernelScheduler/(6026:6743): ## (0) finalizó su ejecución con motivo de ERROR
+[WARNING] 04:13:43:984 KernelScheduler/(6026:6743): ## CPU fd=9 desconectada
