@@ -1,7 +1,8 @@
-[INFO] 02:53:42:439 Swap/(2957:2957): ## Conectado a Kernel Memory
-[INFO] 03:01:20:385 Swap/(2231:2231): ## Conectado a Kernel Memory
-[INFO] 22:31:14:137 Swap/(2381:2381): ## Conectado a Kernel Memory
-[INFO] 22:43:08:845 Swap/(3594:3594): ## Conectado a Kernel Memory
-[INFO] 22:48:47:973 Swap/(4383:4383): ## Conectado a Kernel Memory
-[INFO] 22:54:28:317 Swap/(4832:4832): ## Conectado a Kernel Memory
-[INFO] 22:54:50:669 Swap/(4967:4967): ## Conectado a Kernel Memory
+[INFO] 00:33:46:376 Swap/(18102:18102): ## Conectado a Kernel Memory
+[INFO] 00:35:44:182 Swap/(18102:18102): ## Escritura del bloque: 0
+[INFO] 00:35:50:379 Swap/(18102:18102): ## Escritura del bloque: 1
+[INFO] 00:36:22:553 Swap/(18102:18102): ## Escritura del bloque: 2
+[INFO] 00:36:33:131 Swap/(18102:18102): ## Escritura del bloque: 3
+[INFO] 00:36:33:182 Swap/(18102:18102): ## Escritura del bloque: 4
+[INFO] 00:36:33:185 Swap/(18102:18102): ## Escritura del bloque: 5
+[INFO] 00:36:33:229 Swap/(18102:18102): ## Escritura del bloque: 6

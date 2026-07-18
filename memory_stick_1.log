@@ -1,0 +1,14 @@
+[INFO] 00:33:56:414 MemoryStick/(18222:18222): ## Conectado a Kernel Memory
+[INFO] 00:33:56:414 MemoryStick/(18222:18222): Escuchando CPUs en puerto 27643
+[INFO] 00:34:00:336 MemoryStick/(18225:18225): ## Conectado a Kernel Memory
+[INFO] 00:34:00:336 MemoryStick/(18225:18225): Escuchando CPUs en puerto 27649
+[INFO] 00:34:10:140 MemoryStick/(18228:18228): ## Conectado a Kernel Memory
+[INFO] 00:34:10:140 MemoryStick/(18228:18228): Escuchando CPUs en puerto 27649
+[INFO] 00:35:29:968 MemoryStick/(18222:19197): ## CPU 0 Conectada
+[INFO] 00:35:52:528 MemoryStick/(18228:18230): ## Lectura de 16 bytes
+[INFO] 00:35:52:533 MemoryStick/(18222:18224): ## Escritura de 16 bytes
+[INFO] 00:35:52:536 MemoryStick/(18222:18224): ## Lectura de 16 bytes
+[INFO] 00:36:22:552 MemoryStick/(18222:18224): ## Lectura de 16 bytes
+[INFO] 00:38:28:348 MemoryStick/(18222:19197): CPU 0 desconectada
+[WARNING] 00:38:37:708 MemoryStick/(18222:18224): Kernel Memory cerró la conexión
+[WARNING] 00:38:37:708 MemoryStick/(18228:18230): Kernel Memory cerró la conexión

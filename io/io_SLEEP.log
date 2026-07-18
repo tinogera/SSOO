@@ -1,4 +1,18 @@
-[INFO] 22:55:58:270 IO/(5636:5636): Iniciando IO tipo SLEEP
-[INFO] 22:55:58:271 IO/(5636:5636): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
-[INFO] 22:55:58:271 IO/(5636:5636): ## Conectado a Kernel Scheduler
-[WARNING] 22:59:46:808 IO/(5636:5636): Kernel Scheduler cerró la conexión
+[INFO] 00:35:21:829 IO/(18886:18886): Iniciando IO tipo SLEEP
+[INFO] 00:35:21:829 IO/(18886:18886): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 00:35:21:829 IO/(18886:18886): ## Conectado a Kernel Scheduler
+[INFO] 00:35:31:516 IO/(18886:18886): ## PID: 0 - Inicio de IO
+[INFO] 00:35:31:516 IO/(18886:18886): ## PID: 0 - Haciendo sleep por 5000 milisegundos
+[INFO] 00:35:36:516 IO/(18886:18886): ## PID: 0 - Fin de IO
+[INFO] 00:35:37:567 IO/(18886:18886): ## PID: 0 - Inicio de IO
+[INFO] 00:35:37:567 IO/(18886:18886): ## PID: 0 - Haciendo sleep por 5000 milisegundos
+[INFO] 00:35:42:569 IO/(18886:18886): ## PID: 0 - Fin de IO
+[INFO] 00:35:43:693 IO/(18886:18886): ## PID: 0 - Inicio de IO
+[INFO] 00:35:43:693 IO/(18886:18886): ## PID: 0 - Haciendo sleep por 5000 milisegundos
+[INFO] 00:35:48:695 IO/(18886:18886): ## PID: 0 - Fin de IO
+[INFO] 00:36:23:077 IO/(18886:18886): ## PID: 4 - Inicio de IO
+[INFO] 00:36:23:078 IO/(18886:18886): ## PID: 4 - Haciendo sleep por 8000 milisegundos
+[INFO] 00:36:31:080 IO/(18886:18886): ## PID: 4 - Fin de IO
+[INFO] 00:36:31:583 IO/(18886:18886): ## PID: 4 - Inicio de IO
+[INFO] 00:36:31:583 IO/(18886:18886): ## PID: 4 - Haciendo sleep por 2000 milisegundos
+[INFO] 00:36:33:587 IO/(18886:18886): ## PID: 4 - Fin de IO
