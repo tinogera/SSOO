@@ -16,7 +16,6 @@ bin/
 .idea/
 
 # Log files
-*.log
 
 # Prerequisites
 *.d

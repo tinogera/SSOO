@@ -1,0 +1,35 @@
+[INFO] 23:36:22:256 0/(9641:9641): CPU 0 iniciada
+[INFO] 23:36:22:256 0/(9641:9641): Registros CPU inicializados - PC: 0
+[INFO] 23:36:22:256 0/(9641:9641): Conectado a Kernel Scheduler
+[INFO] 23:36:22:256 0/(9641:9641): ## Conectado a Kernel Scheduler
+[INFO] 23:36:22:256 0/(9641:9641): Conectado a Kernel Memory
+[INFO] 23:36:22:257 0/(9641:9641): ## Conectado a Kernel Memory
+[INFO] 23:36:22:257 0/(9641:9641): ## Conectado a Memory Stick 0
+[INFO] 23:36:22:257 0/(9641:9641): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 23:36:22:259 0/(9641:9641): ## PID: 0 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 23:36:22:259 0/(9641:9641): ## PID: 0 - FETCH - Program Counter: 0
+[INFO] 23:36:22:262 0/(9641:9641): ## PID: 0 - Ejecutando: NOOP - 
+[INFO] 23:36:22:262 0/(9641:9641): ## PID: 0 - FETCH - Program Counter: 1
+[INFO] 23:36:22:264 0/(9641:9641): ## PID: 0 - Ejecutando: MEM_ALLOC - 0 64
+[INFO] 23:36:22:264 0/(9641:9641): ## PID: 0 - Syscall: MEM_ALLOC - Segmento: 0 - Tamanio: 64
+[INFO] 23:36:22:264 0/(9641:9641): ## PID: 0 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 23:36:22:264 0/(9641:9641): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 23:36:22:265 0/(9641:9641): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 23:36:22:265 0/(9641:9641): ## PID: 0 - Contexto restaurado - PC: 2 - Segmentos: 1
+[INFO] 23:36:22:265 0/(9641:9641): ## PID: 0 - FETCH - Program Counter: 2
+[INFO] 23:36:22:267 0/(9641:9641): ## PID: 0 - Ejecutando: SET - AX 64
+[INFO] 23:36:22:267 0/(9641:9641): ## PID: 0 - FETCH - Program Counter: 3
+[INFO] 23:36:22:268 0/(9641:9641): ## PID: 0 - Ejecutando: SET - DI 0
+[INFO] 23:36:22:268 0/(9641:9641): ## PID: 0 - FETCH - Program Counter: 4
+[INFO] 23:36:22:268 0/(9641:9641): ## PID: 0 - Ejecutando: MOV_OUT - AX
+[ERROR] 23:36:22:268 0/(9641:9641): No se pudo ejecutar la instruccion de memoria del PID 0
+[INFO] 23:36:22:268 0/(9641:9641): ## PID: 0 - Contexto guardado - PC: 4 - Segmentos: 1
+[INFO] 23:36:22:268 0/(9641:9641): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: ERROR - PC: 4
+[ERROR] 23:36:22:269 0/(9641:9641): Fallo el ciclo de instruccion para PID 0
+[INFO] 23:36:52:885 0/(9833:9833): CPU 0 iniciada
+[INFO] 23:36:52:886 0/(9833:9833): Registros CPU inicializados - PC: 0
+[INFO] 23:36:52:886 0/(9833:9833): Conectado a Kernel Scheduler
+[INFO] 23:36:52:886 0/(9833:9833): ## Conectado a Kernel Scheduler
+[INFO] 23:36:52:886 0/(9833:9833): Conectado a Kernel Memory
+[INFO] 23:36:52:887 0/(9833:9833): ## Conectado a Kernel Memory
+[INFO] 23:36:52:887 0/(9833:9833): ## Conectado a Memory Stick 0

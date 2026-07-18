@@ -1,0 +1,16 @@
+[INFO] 23:35:10:171 KernelScheduler/(9080:9080): ## Conectado a Kernel Memory
+[INFO] 23:35:10:171 KernelScheduler/(9080:9080): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 23:35:10:172 KernelScheduler/(9080:9080): ## (0) Pasa del estado NEW al estado READY
+[INFO] 23:35:38:531 KernelScheduler/(9080:9363): ## IO STDOUT Conectada
+[INFO] 23:35:52:090 KernelScheduler/(9080:9499): ## IO STDIN Conectada
+[INFO] 23:36:04:066 KernelScheduler/(9080:9634): ## IO SLEEP Conectada
+[INFO] 23:36:22:256 KernelScheduler/(9080:9821): ## CPU 0 Conectada
+[INFO] 23:36:22:256 KernelScheduler/(9080:9222): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 23:36:22:264 KernelScheduler/(9080:9821): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 23:36:22:264 KernelScheduler/(9080:9824): ## (0) - MEM_ALLOC: solicita crear segmento 0 (64 bytes)
+[INFO] 23:36:22:265 KernelScheduler/(9080:9824): ## (0) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 23:36:22:269 KernelScheduler/(9080:9821): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 23:36:22:269 KernelScheduler/(9080:9821): ## (0) finalizó su ejecución con motivo de ERROR
+[WARNING] 23:36:22:269 KernelScheduler/(9080:9821): ## CPU fd=9 desconectada
+[INFO] 23:36:52:886 KernelScheduler/(9080:10013): ## CPU 0 Conectada
+[WARNING] 23:36:57:930 KernelScheduler/(9080:10013): ## CPU fd=10 desconectada

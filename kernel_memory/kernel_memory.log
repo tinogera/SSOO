@@ -1,0 +1,24 @@
+[INFO] 23:12:16:660 KernelMemory/(7340:7340): Kernel Memory escuchando en puerto 23841
+[INFO] 23:12:22:077 KernelMemory/(7340:7578): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 23:12:34:613 KernelMemory/(7340:7698): ## Memory Stick de 16 bytes Conectada
+[INFO] 23:13:10:549 KernelMemory/(7340:7819): ## Memory Stick de 32 bytes Conectada
+[INFO] 23:15:07:933 KernelMemory/(7340:7993): ## Memory Stick de 16 bytes Conectada
+[INFO] 23:23:58:905 KernelMemory/(8691:8691): Kernel Memory escuchando en puerto 23841
+[INFO] 23:24:19:192 KernelMemory/(8691:8929): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 23:27:29:509 KernelMemory/(8691:8961): ## Memory Stick de 16 bytes Conectada
+[INFO] 23:32:56:111 KernelMemory/(8691:9025): ## Memory Stick de 32 bytes Conectada
+[INFO] 23:33:48:549 KernelMemory/(8691:9044): ## Memory Stick de 64 bytes Conectada
+[INFO] 23:34:14:118 KernelMemory/(8691:9057): ## Memory Stick de 128 bytes Conectada
+[INFO] 23:35:10:171 KernelMemory/(8691:9220): ## Kernel Scheduler Conectado - FD del socket: 10
+[INFO] 23:35:10:172 KernelMemory/(8691:9220): ## PID: 0 - Proceso Creado
+[INFO] 23:36:22:256 KernelMemory/(8691:9822): ## CPU Conectada - FD: 11
+[INFO] 23:36:22:262 KernelMemory/(8691:9822): ## PID: 0 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 23:36:22:264 KernelMemory/(8691:9822): ## PID: 0 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 64
+[INFO] 23:36:22:265 KernelMemory/(8691:9220): ## PID: 0 - Segmento Creado 0 - Tamaño: 64
+[INFO] 23:36:22:267 KernelMemory/(8691:9822): ## PID: 0 - Obtener instrucción: 2 - Instrucción: SET AX 64
+[INFO] 23:36:22:268 KernelMemory/(8691:9822): ## PID: 0 - Obtener instrucción: 3 - Instrucción: SET DI 0
+[INFO] 23:36:22:268 KernelMemory/(8691:9822): ## PID: 0 - Obtener instrucción: 4 - Instrucción: MOV_OUT AX
+[INFO] 23:36:22:269 KernelMemory/(8691:9822): Cliente desconectado (fd=11)
+[INFO] 23:36:52:886 KernelMemory/(8691:10014): ## CPU Conectada - FD: 12
+[INFO] 23:36:57:930 KernelMemory/(8691:10014): Cliente desconectado (fd=12)
+[INFO] 23:37:03:731 KernelMemory/(8691:9220): Cliente desconectado (fd=10)

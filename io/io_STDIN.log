@@ -1,0 +1,4 @@
+[INFO] 23:35:52:090 IO/(9371:9371): Iniciando IO tipo STDIN
+[INFO] 23:35:52:090 IO/(9371:9371): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 23:35:52:090 IO/(9371:9371): ## Conectado a Kernel Scheduler
+[WARNING] 23:37:03:731 IO/(9371:9371): Kernel Scheduler cerró la conexión
