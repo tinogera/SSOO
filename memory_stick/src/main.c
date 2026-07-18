@@ -9,9 +9,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
-// Ver si es necesario, para facilitar manejos desde cpus
-// int obtenerId();
-
+int obtenerId(int id);
 void* atender_cpu(void* arg);
 void* atender_kernel_memory(void* arg);
 void manejar_write(int fd_cpu, t_mensaje* msg);
@@ -37,14 +35,14 @@ typedef struct {
 t_log* logger;
 t_memory_stick memoria_global;
 
-int id = 1;
+int id = 0;
 
 int main(int argc, char* argv[]) {
     // -------------------------------------------------------------------
     // 0. generar id de memorystick
     // -------------------------------------------------------------------
 
-    // id = obtenerId();
+    id = obtenerId(id);
     // log_info(logger, "id: %d", id);
 
     // -------------------------------------------------------------------
@@ -108,6 +106,8 @@ int main(int argc, char* argv[]) {
         config_destroy(config);
         return EXIT_FAILURE;
     }
+
+    log_info(logger, "Se creo log en memory_stick_%d.log", id);
     // -------------------------------------------------------------------
     // 4. Conectarse al Kernel Memory
     // -------------------------------------------------------------------
@@ -436,3 +436,6 @@ void manejar_read_cpu(int fd_cpu, t_mensaje* msg) {
     free(buffer);
 }
 
+int obtenerId(int id) {
+    return id++;
+}
