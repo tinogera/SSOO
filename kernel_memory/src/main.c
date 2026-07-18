@@ -863,7 +863,21 @@ static void* atender_cliente(void* arg) {
                 ex->registros = nuevo->registros;
                 enviar_mensaje(fd, MSG_OK, NULL, 0);
             } else {
-                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                // NOTA [fix carrera EXIT/MUTEX_LOCK vs MSG_FINALIZAR_PROCESO]:
+                // varias syscalls (EXIT, MUTEX_LOCK, etc.) son fire-and-forget
+                // del lado de la CPU: manda el aviso a KS y sin esperar respuesta
+                // sigue con su guardar_contexto_en_memory de fin de ciclo. Si KS
+                // ya le pidió a KM que finalice el proceso (ver
+                // MSG_FINALIZAR_PROCESO) para cuando este guardado llega, el
+                // contexto ya no existe. No es un error real — el proceso ya
+                // terminó y sus registros finales no tienen destino útil — así
+                // que se responde OK en vez de ERROR. Antes de este fix, el
+                // ERROR hacía que la CPU degradara un EXIT normal a motivo
+                // ERROR y cortara su propio loop principal.
+                log_debug(logger,
+                    "PID: %u - MSG_GUARDAR_CONTEXTO llegó después de que el proceso ya fue finalizado — se ignora",
+                    nuevo->pid);
+                enviar_mensaje(fd, MSG_OK, NULL, 0);
             }
             pthread_mutex_unlock(&mutex_contextos);
             free_contexto(nuevo);
