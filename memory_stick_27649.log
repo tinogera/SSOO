@@ -1,6 +1,0 @@
-[INFO] 06:34:23:619 MemoryStick/(2963:2963): Se creo log en memory_stick_27649.log
-[INFO] 06:34:23:620 MemoryStick/(2963:2963): ## Conectado a Kernel Memory
-[DEBUG] 06:34:23:620 MemoryStick/(2963:2963): Offset global de este stick dentro del espacio de direcciones: 16
-[INFO] 06:34:23:620 MemoryStick/(2963:2963): Escuchando CPUs en puerto 27649
-[DEBUG] 06:36:56:378 MemoryStick/(2963:2965): Lectura en dirección local=0 (tamaño propio del stick=16)
-[INFO] 06:36:56:378 MemoryStick/(2963:2965): ## Lectura de 16 bytes
