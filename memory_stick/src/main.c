@@ -361,6 +361,7 @@ void manejar_write(int fd_cpu, t_mensaje* msg) {
 
     pthread_mutex_unlock(&memoria_global.mutex);
 
+    log_debug(logger, "Escritura en dirección=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
     log_info(logger,"## Escritura de %u bytes",size);
 
     enviar_mensaje(fd_cpu,MSG_OK,NULL,0);
@@ -395,6 +396,7 @@ void manejar_read(int fd_cpu, t_mensaje* msg) {
 
     pthread_mutex_unlock(&memoria_global.mutex);
 
+    log_debug(logger, "Lectura (KM) en dirección=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
     log_info(logger, "## Lectura de %u bytes", size);
 
     enviar_mensaje(fd_cpu, MSG_MEMORY_READ_RESPUESTA, buffer, size);
@@ -426,6 +428,7 @@ void manejar_read_cpu(int fd_cpu, t_mensaje* msg) {
     memcpy(buffer, (char*)memoria_global.buffer + direccion, size);
     pthread_mutex_unlock(&memoria_global.mutex);
 
+    log_debug(logger, "Lectura en dirección=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
     log_info(logger, "## Lectura de %u bytes", size);
 
     enviar_mensaje(fd_cpu, MSG_LEER_MEMORIA_RESP, buffer, size);  // ← op_code correcto para CPU

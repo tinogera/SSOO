@@ -31,29 +31,27 @@ int main(int argc, char* argv[]) {
     }
 
     // -------------------------------------------------------------------
-    // 2. Inicializar logger
+    // 2. Leer configuración
+    // -------------------------------------------------------------------
+    t_config* config = config_create(config_path);
+    if (config == NULL) {
+        fprintf(stderr, "No se pudo leer el archivo de configuración: %s\n", config_path);
+        return EXIT_FAILURE;
+    }
+
+    // -------------------------------------------------------------------
+    // 3. Inicializar logger
     // -------------------------------------------------------------------
     char log_file[64];
     snprintf(log_file, sizeof(log_file), "io_%s.log", tipo);
 
-    logger = log_create(log_file, "IO", true, LOG_LEVEL_INFO);
+    logger = log_create(log_file, "IO", true, log_level_from_string(config_get_string_value(config, "LOG_LEVEL")));
     if (logger == NULL) {
         fprintf(stderr, "Error al crear el logger\n");
         return EXIT_FAILURE;
     }
 
     log_info(logger, "Iniciando IO tipo %s", tipo);
-
-    // -------------------------------------------------------------------
-    // 3. Leer configuración
-    // -------------------------------------------------------------------
-    t_config* config = config_create(config_path);
-    if (config == NULL) {
-        log_error(logger, "No se pudo leer el archivo de configuración: %s", config_path);
-        log_destroy(logger);
-        return EXIT_FAILURE;
-    }
-
     log_info(logger, "Configuración cargada desde %s", config_path);
 
     // -------------------------------------------------------------------

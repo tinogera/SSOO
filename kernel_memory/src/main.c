@@ -270,10 +270,20 @@ static uint32_t traducir_direccion(t_contexto* ctx, uint32_t dir_logica,
     uint32_t num_seg      = dir_logica / seg_max;
     uint32_t desplazamiento = dir_logica % seg_max;
 
-    if (num_seg >= ctx->cant_segmentos) return UINT32_MAX;
+    if (num_seg >= ctx->cant_segmentos) {
+        log_debug(logger,
+            "PID: %u - traducir_direccion: segmento %u inexistente (proceso tiene %u) — dir_logica=%u",
+            ctx->pid, num_seg, ctx->cant_segmentos, dir_logica);
+        return UINT32_MAX;
+    }
 
     t_entrada_segmento* seg = &ctx->segmentos[num_seg];
-    if (desplazamiento + tamanio_acceso > seg->limite) return UINT32_MAX;
+    if (desplazamiento + tamanio_acceso > seg->limite) {
+        log_debug(logger,
+            "PID: %u - traducir_direccion: SEG_FAULT en segmento %u — desplazamiento=%u + tamanio=%u > limite=%u",
+            ctx->pid, num_seg, desplazamiento, tamanio_acceso, seg->limite);
+        return UINT32_MAX;
+    }
 
     return seg->base + desplazamiento;
 }
@@ -338,8 +348,16 @@ static int crear_segmento(t_contexto* ctx, uint32_t id_seg, uint32_t tamanio) {
             libre_total += hi->tamanio;
         }
         pthread_mutex_unlock(&mutex_memoria);
+        log_debug(logger,
+            "PID: %u - crear_segmento %u (%u bytes): sin hueco contiguo — libre_total=%u -> %s",
+            ctx->pid, id_seg, tamanio, libre_total,
+            (libre_total >= tamanio) ? "pide compactación" : "sin espacio total, error");
         return (libre_total >= tamanio) ? 1 : -1; // 1 = necesita compactación
     }
+    log_debug(logger,
+        "PID: %u - crear_segmento %u (%u bytes): hueco elegido (%s) base=%u tamanio_hueco=%u",
+        ctx->pid, id_seg, tamanio, config_get_string_value(config, "ALLOCATION_STRATEGY"),
+        h->base_global, h->tamanio);
 
     // Asignar en el hueco
     uint32_t base = h->base_global;
@@ -452,12 +470,17 @@ static int suspender_proceso(uint32_t pid) {
     t_contexto* ctx = buscar_contexto(pid);
     if (!ctx) { pthread_mutex_unlock(&mutex_contextos); return -1; }
 
+    log_debug(logger, "PID: %u - suspender_proceso: moviendo %u segmento(s) a Swap",
+              pid, ctx->cant_segmentos);
+
     for (uint32_t s = 0; s < ctx->cant_segmentos; s++) {
         t_entrada_segmento* seg = &ctx->segmentos[s];
         uint32_t tamanio = seg->limite;
 
         // Cuántos bloques necesita
         uint32_t cant = (tamanio + swap_block_size - 1) / swap_block_size;
+        log_debug(logger, "PID: %u - segmento %u (%u bytes) -> %u bloque(s) de swap",
+                  pid, seg->id_segmento, tamanio, cant);
 
         t_swap_metadata* meta = malloc(sizeof(t_swap_metadata));
         meta->pid         = pid;
@@ -520,6 +543,8 @@ static int dessuspender_proceso(uint32_t pid) {
         t_swap_metadata* m = list_get(swap_metadata, i);
         if (m->pid == pid) list_add(metas_pid, m);
     }
+    log_debug(logger, "PID: %u - dessuspender_proceso: %d segmento(s) a restaurar desde Swap",
+              pid, list_size(metas_pid));
 
     // Verificar que todos los segmentos caben sin compactar
     pthread_mutex_lock(&mutex_memoria);
@@ -741,6 +766,7 @@ static void* atender_cliente(void* arg) {
             pthread_mutex_unlock(&mutex_contextos);
 
             log_info(logger, "## PID: %u - Proceso Creado", pid);
+            log_debug(logger, "PID: %u - Path de script guardado: %s", pid, script_name);
             enviar_mensaje(fd, MSG_OK, NULL, 0);
         }
 
@@ -1043,7 +1069,7 @@ int main(int argc, char* argv[]) {
     config = config_create(argv[1]);
     if (!config) { fprintf(stderr, "Error leyendo config\n"); return EXIT_FAILURE; }
 
-    logger = log_create("kernel_memory.log", "KernelMemory", true, LOG_LEVEL_INFO);
+    logger = log_create("kernel_memory.log", "KernelMemory", true, log_level_from_string(config_get_string_value(config, "LOG_LEVEL")));
     if (!logger) { fprintf(stderr, "Error creando logger\n"); return EXIT_FAILURE; }
 
     contextos     = list_create();
@@ -1051,6 +1077,11 @@ int main(int argc, char* argv[]) {
     huecos        = list_create();
     swap_metadata = list_create();
     script_paths  = list_create();
+
+    log_debug(logger, "Config resuelta: SCRIPTS_BASEPATH=%s ALLOCATION_STRATEGY=%s SEGMENT_MAX_SIZE=%d",
+              config_get_string_value(config, "SCRIPTS_BASEPATH"),
+              config_get_string_value(config, "ALLOCATION_STRATEGY"),
+              config_get_int_value(config, "SEGMENT_MAX_SIZE"));
 
     int puerto = config_get_int_value(config, "KERNEL_MEMORY_PORT");
     int srv    = crear_servidor(puerto);

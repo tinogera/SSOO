@@ -102,6 +102,10 @@ static t_resultado_memoria_cpu traducir_o_fallar(
     );
 
     if (resultado == CPU_MMU_OK) {
+        log_debug(logger,
+            "MMU: dir_logica=%u -> segmento=%u desplazamiento=%u memory_stick=%u dir_fisica=%u limite_segmento=%u",
+            direccion_logica, traduccion->id_segmento, traduccion->desplazamiento,
+            traduccion->id_memory_stick, traduccion->direccion_fisica, traduccion->limite_segmento);
         return CPU_MEMORIA_OK;
     }
 
@@ -116,6 +120,16 @@ static t_resultado_memoria_cpu traducir_o_fallar(
 static int fd_para_ms(int* sockets_ms, int n_sockets_ms, uint32_t id_ms) {
     if ((int)id_ms < n_sockets_ms) return sockets_ms[id_ms];
     return -1;
+}
+
+static int fd_para_ms_logueado(int* sockets_ms, int n_sockets_ms, uint32_t id_ms, t_log* logger) {
+    int fd = fd_para_ms(sockets_ms, n_sockets_ms, id_ms);
+    if (fd < 0) {
+        log_debug(logger,
+            "fd_para_ms: Memory Stick %u no está conectado a esta CPU (hay %d conectados)",
+            id_ms, n_sockets_ms);
+    }
+    return fd;
 }
 
 static t_resultado_memoria_cpu ejecutar_mov_in(
@@ -148,7 +162,7 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
         return resultado;
     }
 
-    int fd = fd_para_ms(sockets_ms, n_sockets_ms, traduccion.id_memory_stick);
+    int fd = fd_para_ms_logueado(sockets_ms, n_sockets_ms, traduccion.id_memory_stick, logger);
     uint8_t buffer[sizeof(uint32_t)] = {0};
     if (!memoria_read(fd, traduccion.direccion_fisica, tamanio_registro, buffer)) {
         return CPU_MEMORIA_ERROR;
@@ -198,7 +212,7 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
         return resultado;
     }
 
-    int fd = fd_para_ms(sockets_ms, n_sockets_ms, traduccion.id_memory_stick);
+    int fd = fd_para_ms_logueado(sockets_ms, n_sockets_ms, traduccion.id_memory_stick, logger);
     uint8_t buffer[sizeof(uint32_t)] = {0};
     valor_a_bytes(valor, tamanio_registro, buffer);
     if (!memoria_write(fd, traduccion.direccion_fisica, tamanio_registro, buffer)) {
@@ -257,8 +271,8 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
         return CPU_MEMORIA_ERROR;
     }
 
-    int fd_origen  = fd_para_ms(sockets_ms, n_sockets_ms, origen.id_memory_stick);
-    int fd_destino = fd_para_ms(sockets_ms, n_sockets_ms, destino.id_memory_stick);
+    int fd_origen  = fd_para_ms_logueado(sockets_ms, n_sockets_ms, origen.id_memory_stick, logger);
+    int fd_destino = fd_para_ms_logueado(sockets_ms, n_sockets_ms, destino.id_memory_stick, logger);
 
     if (!memoria_read(fd_origen, origen.direccion_fisica, tamanio, buffer)) {
         free(buffer);

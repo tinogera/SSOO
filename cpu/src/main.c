@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
     char* cpu_id = argv[2];
 
     t_config* config = config_create(config_path);
-    t_log* logger = log_create("cpu.log", cpu_id, 1, LOG_LEVEL_INFO);
+    t_log* logger = log_create("cpu.log", cpu_id, 1, log_level_from_string(config_get_string_value(config, "LOG_LEVEL")));
     t_registros_cpu registros;
     inicializar_registros_cpu(&registros);
 
@@ -43,6 +43,9 @@ int main(int argc, char* argv[]) {
         tamanio_max_segmento = (uint32_t) config_get_int_value(config, "SEGMENT_MAX_SIZE");
     }
     set_segment_max_size(tamanio_max_segmento);
+
+    log_debug(logger, "Config resuelta: KS=%s:%d KM=%s:%d SEGMENT_MAX_SIZE=%u",
+              ip_kernel, puerto_kernel, ip_memory, puerto_memory, tamanio_max_segmento);
 
      // CONEXION A KERNEL SCHEDULER
     int socket_kernel = conectar_a_servidor(ip_kernel, puerto_kernel);

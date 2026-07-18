@@ -375,6 +375,21 @@ int main(int argc, char* argv[]) {
         strncpy(algoritmos_cola[0], algoritmo, sizeof(algoritmos_cola[0]) - 1);
     }
 
+    // Log de diagnóstico: la config de planificación ya resuelta, tal como
+    // va a operar el KS (útil para confirmar que un test corre con el
+    // algoritmo/preemption esperado sin tener que abrir el .config a mano).
+    {
+        char colas_str[MAX_COLAS * 8] = "";
+        for (int i = 0; i < n_colas; i++) {
+            strcat(colas_str, algoritmos_cola[i]);
+            if (i < n_colas - 1) strcat(colas_str, ",");
+        }
+        log_debug(logger,
+            "Planificación resuelta: algoritmo=%s n_colas=%d colas=[%s] RR_QUANTUM=%dms QUEUE_PREEMPTION=%s SUSPENSION_TIMEOUT=%dms",
+            algoritmo, n_colas, colas_str, rr_quantum_ms,
+            queue_preemption ? "TRUE" : "FALSE", suspension_timeout_ms);
+    }
+
     // Conectar a KM sincrónicamente antes de crear PID 0
     fd_km = conectar_a_servidor(ip_km, puerto_km);
     if (fd_km == -1) {
@@ -640,6 +655,10 @@ static void* thread_quantum_timer(void* arg) {
     if (fd_cpu_target != -1) {
         t_payload_interrupcion_cpu pay = { .pid = htonl(qa.pid), .motivo = htonl(MOTIVO_INTERRUPCION_QUANTUM) };
         enviar_mensaje(fd_cpu_target, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
+    } else {
+        log_debug(logger,
+            "Timer de quantum descartado para (%d) gen=%d: ya no está en EXEC con esa generación de despacho",
+            qa.pid, qa.gen);
     }
 
     return NULL;
@@ -680,11 +699,15 @@ static void* thread_planificador(void* _) {
 
         pthread_mutex_lock(&mutex_cpus);
         t_cpu_entry* cpu = NULL;
-        for (int i = 0; i < list_size(lista_cpus); i++) {
+        int cant_cpus = list_size(lista_cpus);
+        for (int i = 0; i < cant_cpus; i++) {
             t_cpu_entry* e = list_get(lista_cpus, i);
             if (!e->ocupada) { cpu = e; break; }
         }
         pthread_mutex_unlock(&mutex_cpus);
+
+        log_debug(logger, "Planificador: proceso (%d) nivel=%d -> %s (de %d CPUs conectadas)",
+                  proc->PID, nivel_elegido, cpu ? "CPU libre encontrada" : "sin CPU libre", cant_cpus);
 
         if (!cpu) {
             // No hay CPU libre: reinsertar al FRENTE de la cola de la que salió,

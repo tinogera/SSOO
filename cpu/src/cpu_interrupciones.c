@@ -1,5 +1,6 @@
 #include "cpu_interrupciones.h"
 
+#include <arpa/inet.h>
 #include <sys/select.h>
 #include <utils/sockets.h>
 
@@ -40,6 +41,8 @@ bool recibir_interrupcion_cpu(int socket_kernel, t_interrupcion_cpu* interrupcio
     interrupcion->motivo = (t_motivo_interrupcion_cpu) payload->motivo;
 
     log_cpu_interrupcion(logger);
+    log_debug(logger, "Interrupción recibida - PID: %u - Motivo: %s",
+              ntohl(payload->pid), motivo_interrupcion_to_string((t_motivo_interrupcion_cpu) ntohl(payload->motivo)));
 
     free_mensaje(mensaje);
     return true;

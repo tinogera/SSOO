@@ -42,6 +42,9 @@ void manejar_stdin(t_mensaje* msg, int fd_scheduler, t_log* logger) {
 
     char* linea = calloc(n_bytes + 1, 1);
     ssize_t leido = read(STDIN_FILENO, linea, n_bytes + 1);
+    log_debug(logger, "PID: %u - STDIN: %zd byte(s) leídos de %u pedidos (%s)",
+              pid, leido, n_bytes,
+              leido < 0 ? "error" : (leido > (ssize_t)n_bytes ? "truncado" : "rellenado con ceros si faltó"));
     if (leido > 0 && linea[leido - 1] == '\n') linea[leido - 1] = '\0';
     linea[n_bytes] = '\0';
 

@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     t_config* config = config_create(argv[1]);
     if (!config) { fprintf(stderr, "Error leyendo config\n"); return EXIT_FAILURE; }
 
-    t_log* logger = log_create("swap.log", "Swap", true, LOG_LEVEL_INFO);
+    t_log* logger = log_create("swap.log", "Swap", true, log_level_from_string(config_get_string_value(config, "LOG_LEVEL")));
     if (!logger) { fprintf(stderr, "Error creando logger\n"); return EXIT_FAILURE; }
 
     char*    ip_km      = config_get_string_value(config, "KERNEL_MEMORY_IP");

@@ -80,6 +80,8 @@ int mutex_ks_lock(uint32_t pid, int prioridad, const char* nombre, t_log* logger
     waiter->pid      = pid;
     waiter->prioridad = prioridad;
     queue_push(m->cola_espera, waiter);
+    log_debug(logger, "Mutex %s: (%u) queda esperando — %d proceso(s) en cola de espera",
+              nombre, pid, (int)queue_size(m->cola_espera));
 
     // Herencia de prioridades: si el waiter tiene mayor prioridad (número menor)
     // que la prioridad original del owner, señalamos al llamador que eleve al owner.
@@ -115,6 +117,8 @@ int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger,
 
     log_info(logger, "## (%u) Libera el Mutex %s", pid, nombre);
     *prioridad_restaurar = m->owner_prioridad_original;
+    log_debug(logger, "Mutex %s: liberado por (%u) — %d proceso(s) esperando",
+              nombre, pid, (int)queue_size(m->cola_espera));
 
     if (queue_size(m->cola_espera) > 0) {
         t_mutex_waiter* siguiente = queue_pop(m->cola_espera);
