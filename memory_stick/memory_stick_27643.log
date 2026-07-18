@@ -1,5 +1,6 @@
-[INFO] 05:17:22:958 MemoryStick/(6041:6041): Se creo log en memory_stick_27643.log
-[INFO] 05:17:22:959 MemoryStick/(6041:6041): ## Conectado a Kernel Memory
-[DEBUG] 05:17:22:959 MemoryStick/(6041:6041): Offset global de este stick dentro del espacio de direcciones: 0
-[INFO] 05:17:22:959 MemoryStick/(6041:6041): Escuchando CPUs en puerto 27643
-[INFO] 05:17:54:683 MemoryStick/(6041:6877): ## CPU 0 Conectada
+[INFO] 05:37:02:305 MemoryStick/(7662:7662): Se creo log en memory_stick_27643.log
+[INFO] 05:37:02:305 MemoryStick/(7662:7662): ## Conectado a Kernel Memory
+[DEBUG] 05:37:02:305 MemoryStick/(7662:7662): Offset global de este stick dentro del espacio de direcciones: 0
+[INFO] 05:37:02:305 MemoryStick/(7662:7662): Escuchando CPUs en puerto 27643
+[INFO] 05:37:42:550 MemoryStick/(7662:8502): ## CPU 0 Conectada
+[INFO] 05:48:05:961 MemoryStick/(7662:8502): CPU 0 desconectada

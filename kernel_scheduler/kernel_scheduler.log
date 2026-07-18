@@ -1,249 +1,1774 @@
-[DEBUG] 04:45:12:685 KernelScheduler/(4258:4258): Planificación resuelta: algoritmo=CMN n_colas=4 colas=[FIFO,RR,FIFO,RR] RR_QUANTUM=600ms QUEUE_PREEMPTION=TRUE SUSPENSION_TIMEOUT=60000ms
-[INFO] 04:45:12:686 KernelScheduler/(4258:4258): ## Conectado a Kernel Memory
-[INFO] 04:45:12:686 KernelScheduler/(4258:4258): ## (0) Se crea el proceso - Estado: NEW
-[INFO] 04:45:12:686 KernelScheduler/(4258:4258): ## (0) Pasa del estado NEW al estado READY
-[DEBUG] 04:45:12:686 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
-[INFO] 04:45:16:334 KernelScheduler/(4258:4530): ## IO SLEEP Conectada
-[INFO] 04:45:18:323 KernelScheduler/(4258:4659): ## IO STDOUT Conectada
-[INFO] 04:45:22:688 KernelScheduler/(4258:4788): ## IO STDIN Conectada
-[INFO] 04:45:27:244 KernelScheduler/(4258:4969): ## CPU 0 Conectada
-[DEBUG] 04:45:27:245 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 04:45:27:245 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 04:45:27:497 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 04:45:27:497 KernelScheduler/(4258:4969): ## (1) Se crea el proceso - Estado: NEW
-[INFO] 04:45:27:497 KernelScheduler/(4258:4969): ## (1) Pasa del estado NEW al estado READY
-[DEBUG] 04:45:27:497 KernelScheduler/(4258:4400): Planificador: proceso (1) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 04:45:27:497 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado READY
-[DEBUG] 04:45:27:497 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 04:45:27:497 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 04:45:27:749 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 04:45:27:749 KernelScheduler/(4258:4969): ## (2) Se crea el proceso - Estado: NEW
-[INFO] 04:45:27:749 KernelScheduler/(4258:4969): ## (2) Pasa del estado NEW al estado READY
-[DEBUG] 04:45:27:750 KernelScheduler/(4258:4400): Planificador: proceso (1) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 04:45:27:751 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado READY
-[DEBUG] 04:45:27:751 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 04:45:27:751 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 04:45:28:003 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 04:45:28:003 KernelScheduler/(4258:4969): ## (3) Se crea el proceso - Estado: NEW
-[INFO] 04:45:28:003 KernelScheduler/(4258:4969): ## (3) Pasa del estado NEW al estado READY
-[DEBUG] 04:45:28:003 KernelScheduler/(4258:4400): Planificador: proceso (3) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 04:45:28:092 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado READY
-[DEBUG] 04:45:28:092 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 04:45:28:092 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 04:45:28:344 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 04:45:28:344 KernelScheduler/(4258:4969): ## (4) Se crea el proceso - Estado: NEW
-[INFO] 04:45:28:390 KernelScheduler/(4258:4969): ## (4) Pasa del estado NEW al estado READY
-[DEBUG] 04:45:28:390 KernelScheduler/(4258:4400): Planificador: proceso (3) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 04:45:28:391 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado READY
-[DEBUG] 04:45:28:391 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 04:45:28:391 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 04:45:28:686 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 04:45:28:686 KernelScheduler/(4258:4969): ## (5) Se crea el proceso - Estado: NEW
-[INFO] 04:45:28:686 KernelScheduler/(4258:4969): ## (5) Pasa del estado NEW al estado READY
-[DEBUG] 04:45:28:687 KernelScheduler/(4258:4400): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 04:45:28:735 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado READY
-[DEBUG] 04:45:28:735 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 04:45:28:735 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 04:45:29:030 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: EXIT
-[INFO] 04:45:29:030 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado EXIT
-[INFO] 04:45:29:030 KernelScheduler/(4258:4969): ## (0) finalizó su ejecución con motivo de EXIT
-[DEBUG] 04:45:29:031 KernelScheduler/(4258:4400): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 04:45:29:031 KernelScheduler/(4258:4400): ## (5) Pasa del estado READY al estado EXEC
-[WARNING] 04:45:29:032 KernelScheduler/(4258:4969): ## (5) CPU desconectada durante EXEC — vuelve a READY
-[INFO] 04:45:29:032 KernelScheduler/(4258:4969): ## (5) Pasa del estado EXEC al estado READY
-[WARNING] 04:45:29:032 KernelScheduler/(4258:4969): ## CPU fd=9 desconectada
-[DEBUG] 04:45:29:032 KernelScheduler/(4258:4400): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 0 CPUs conectadas)
-[DEBUG] 04:45:29:632 KernelScheduler/(4258:4972): Timer de quantum descartado para (5) gen=1: ya no está en EXEC con esa generación de despacho
-[ERROR] 04:47:20:725 KernelScheduler/(4258:4399): KM cerró la conexión
-[DEBUG] 05:17:32:877 KernelScheduler/(6164:6164): Planificación resuelta: algoritmo=CMN n_colas=4 colas=[FIFO,RR,FIFO,RR] RR_QUANTUM=600ms QUEUE_PREEMPTION=TRUE SUSPENSION_TIMEOUT=60000ms
-[INFO] 05:17:32:877 KernelScheduler/(6164:6164): ## Conectado a Kernel Memory
-[INFO] 05:17:32:878 KernelScheduler/(6164:6164): ## (0) Se crea el proceso - Estado: NEW
-[INFO] 05:17:32:878 KernelScheduler/(6164:6164): ## (0) Pasa del estado NEW al estado READY
-[DEBUG] 05:17:32:878 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
-[INFO] 05:17:36:233 KernelScheduler/(6164:6436): ## IO SLEEP Conectada
-[INFO] 05:17:37:830 KernelScheduler/(6164:6565): ## IO STDOUT Conectada
-[INFO] 05:17:39:689 KernelScheduler/(6164:6694): ## IO STDIN Conectada
-[INFO] 05:17:54:682 KernelScheduler/(6164:6875): ## CPU 0 Conectada
-[DEBUG] 05:17:54:682 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:54:682 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 05:17:54:939 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 05:17:54:939 KernelScheduler/(6164:6875): ## (1) Se crea el proceso - Estado: NEW
-[INFO] 05:17:54:939 KernelScheduler/(6164:6875): ## (1) Pasa del estado NEW al estado READY
-[INFO] 05:17:54:939 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado READY
-[DEBUG] 05:17:54:939 KernelScheduler/(6164:6306): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:54:939 KernelScheduler/(6164:6306): ## (1) Pasa del estado READY al estado EXEC
-[DEBUG] 05:17:54:939 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 05:17:55:737 KernelScheduler/(6164:6875): ## (1) - Solicitó syscall: SLEEP
-[INFO] 05:17:55:737 KernelScheduler/(6164:6875): ## (1) Pasa del estado EXEC al estado BLOCK
-[DEBUG] 05:17:55:737 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:55:737 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 05:17:56:000 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 05:17:56:000 KernelScheduler/(6164:6875): ## (2) Se crea el proceso - Estado: NEW
-[INFO] 05:17:56:000 KernelScheduler/(6164:6875): ## (2) Pasa del estado NEW al estado READY
-[DEBUG] 05:17:56:001 KernelScheduler/(6164:6306): Planificador: proceso (2) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 05:17:56:045 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado READY
-[DEBUG] 05:17:56:045 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:56:045 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 05:17:56:300 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 05:17:56:301 KernelScheduler/(6164:6875): ## (3) Se crea el proceso - Estado: NEW
-[INFO] 05:17:56:301 KernelScheduler/(6164:6875): ## (3) Pasa del estado NEW al estado READY
-[DEBUG] 05:17:56:302 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 05:17:56:346 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado READY
-[DEBUG] 05:17:56:347 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:56:347 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 05:17:56:686 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 05:17:56:686 KernelScheduler/(6164:6875): ## (4) Se crea el proceso - Estado: NEW
-[INFO] 05:17:56:764 KernelScheduler/(6164:6875): ## (4) Pasa del estado NEW al estado READY
-[DEBUG] 05:17:56:764 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 05:17:56:764 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado READY
-[DEBUG] 05:17:56:765 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:56:765 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 05:17:57:016 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: INIT_PROC
-[INFO] 05:17:57:016 KernelScheduler/(6164:6875): ## (5) Se crea el proceso - Estado: NEW
-[INFO] 05:17:57:017 KernelScheduler/(6164:6875): ## (5) Pasa del estado NEW al estado READY
-[INFO] 05:17:57:017 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado READY
-[DEBUG] 05:17:57:017 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:57:017 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
-[DEBUG] 05:17:57:017 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 05:17:57:269 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: EXIT
-[INFO] 05:17:57:269 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado EXIT
-[INFO] 05:17:57:269 KernelScheduler/(6164:6875): ## (0) finalizó su ejecución con motivo de EXIT
-[DEBUG] 05:17:57:269 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:57:269 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:17:58:119 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:17:58:119 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:17:58:119 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:58:119 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:17:58:967 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:17:58:968 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:17:58:968 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:58:968 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:17:59:776 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:17:59:776 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:17:59:777 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:17:59:777 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:00:280 KernelScheduler/(6164:6875): ## (5) - Solicitó syscall: SLEEP
-[INFO] 05:18:00:324 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado BLOCK
-[DEBUG] 05:18:00:324 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:00:324 KernelScheduler/(6164:6306): ## (3) Pasa del estado READY al estado EXEC
-[DEBUG] 05:18:00:378 KernelScheduler/(6164:6883): Timer de quantum descartado para (5) gen=4: ya no está en EXEC con esa generación de despacho
-[INFO] 05:18:15:788 KernelScheduler/(6164:6436): ## (1) Pasa del estado BLOCK al estado READY
-[INFO] 05:18:15:788 KernelScheduler/(6164:6436): ## (1) finalizó IO y pasa a READY
-[DEBUG] 05:18:15:788 KernelScheduler/(6164:6306): Planificador: proceso (4) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 05:18:15:895 KernelScheduler/(6164:6436): ## (5) Pasa del estado BLOCK al estado READY
-[INFO] 05:18:15:895 KernelScheduler/(6164:6436): ## (5) finalizó IO y pasa a READY
-[INFO] 05:18:15:895 KernelScheduler/(6164:6436): ## (3) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 1
-[DEBUG] 05:18:15:895 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 05:18:16:127 KernelScheduler/(6164:6875): ## (3) Pasa del estado EXEC al estado READY
-[DEBUG] 05:18:16:127 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:16:127 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:16:743 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:18:16:743 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:18:16:743 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:16:743 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:17:523 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:18:17:523 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:18:17:523 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:17:523 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:18:396 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:18:18:396 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:18:18:396 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:18:396 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:19:235 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:18:19:235 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:18:19:235 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:19:235 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:19:489 KernelScheduler/(6164:6875): ## (5) - Solicitó syscall: SLEEP
-[INFO] 05:18:19:489 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado BLOCK
-[DEBUG] 05:18:19:490 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:19:490 KernelScheduler/(6164:6306): ## (3) Pasa del estado READY al estado EXEC
-[INFO] 05:18:19:591 KernelScheduler/(6164:6436): ## (5) Pasa del estado BLOCK al estado READY
-[INFO] 05:18:19:591 KernelScheduler/(6164:6436): ## (5) finalizó IO y pasa a READY
-[INFO] 05:18:19:591 KernelScheduler/(6164:6436): ## (3) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 1
-[DEBUG] 05:18:19:591 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 05:18:19:835 KernelScheduler/(6164:6875): ## (3) Pasa del estado EXEC al estado READY
-[DEBUG] 05:18:19:836 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:19:836 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[DEBUG] 05:18:19:836 KernelScheduler/(6164:6889): Timer de quantum descartado para (5) gen=9: ya no está en EXEC con esa generación de despacho
-[INFO] 05:18:20:737 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:18:20:737 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:18:20:737 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:20:737 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:21:539 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:18:21:539 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:18:21:539 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:21:539 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:22:397 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:18:22:397 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:18:22:397 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:22:398 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:22:907 KernelScheduler/(6164:6875): ## (5) - Solicitó syscall: SLEEP
-[INFO] 05:18:22:954 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado BLOCK
-[DEBUG] 05:18:22:954 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:22:955 KernelScheduler/(6164:6306): ## (3) Pasa del estado READY al estado EXEC
-[DEBUG] 05:18:22:998 KernelScheduler/(6164:6896): Timer de quantum descartado para (5) gen=13: ya no está en EXEC con esa generación de despacho
-[INFO] 05:18:23:072 KernelScheduler/(6164:6436): ## (5) Pasa del estado BLOCK al estado READY
-[INFO] 05:18:23:072 KernelScheduler/(6164:6436): ## (5) finalizó IO y pasa a READY
-[INFO] 05:18:23:072 KernelScheduler/(6164:6436): ## (3) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 1
-[DEBUG] 05:18:23:073 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
-[INFO] 05:18:23:207 KernelScheduler/(6164:6875): ## (3) Pasa del estado EXEC al estado READY
-[DEBUG] 05:18:23:207 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:23:207 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:24:055 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:18:24:055 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:18:24:055 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:24:055 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:24:689 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:18:24:689 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:18:24:690 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:24:690 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:25:575 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
-[INFO] 05:18:25:575 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
-[DEBUG] 05:18:25:575 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:25:575 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
-[INFO] 05:18:26:445 KernelScheduler/(6164:6875): ## (5) - Solicitó syscall: EXIT
-[INFO] 05:18:26:445 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado EXIT
-[INFO] 05:18:26:445 KernelScheduler/(6164:6875): ## (5) finalizó su ejecución con motivo de EXIT
-[DEBUG] 05:18:26:487 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:26:487 KernelScheduler/(6164:6306): ## (3) Pasa del estado READY al estado EXEC
-[INFO] 05:18:51:925 KernelScheduler/(6164:6875): ## (3) - Solicitó syscall: EXIT
-[INFO] 05:18:51:925 KernelScheduler/(6164:6875): ## (3) Pasa del estado EXEC al estado EXIT
-[INFO] 05:18:51:925 KernelScheduler/(6164:6875): ## (3) finalizó su ejecución con motivo de EXIT
-[DEBUG] 05:18:51:925 KernelScheduler/(6164:6306): Planificador: proceso (4) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:18:51:925 KernelScheduler/(6164:6306): ## (4) Pasa del estado READY al estado EXEC
-[INFO] 05:19:33:041 KernelScheduler/(6164:6875): ## (4) - Solicitó syscall: EXIT
-[INFO] 05:19:33:041 KernelScheduler/(6164:6875): ## (4) Pasa del estado EXEC al estado EXIT
-[INFO] 05:19:33:041 KernelScheduler/(6164:6875): ## (4) finalizó su ejecución con motivo de EXIT
-[DEBUG] 05:19:33:041 KernelScheduler/(6164:6306): Planificador: proceso (2) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:19:33:041 KernelScheduler/(6164:6306): ## (2) Pasa del estado READY al estado EXEC
-[INFO] 05:19:33:887 KernelScheduler/(6164:6875): ## (2) - Solicitó syscall: SLEEP
-[INFO] 05:19:33:887 KernelScheduler/(6164:6875): ## (2) Pasa del estado EXEC al estado BLOCK
-[DEBUG] 05:19:33:887 KernelScheduler/(6164:6306): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:19:33:887 KernelScheduler/(6164:6306): ## (1) Pasa del estado READY al estado EXEC
-[INFO] 05:19:34:727 KernelScheduler/(6164:6875): ## (1) - Solicitó syscall: SLEEP
-[INFO] 05:19:34:727 KernelScheduler/(6164:6875): ## (1) Pasa del estado EXEC al estado BLOCK
-[INFO] 05:19:53:888 KernelScheduler/(6164:6436): ## (2) Pasa del estado BLOCK al estado READY
-[INFO] 05:19:53:888 KernelScheduler/(6164:6436): ## (2) finalizó IO y pasa a READY
-[DEBUG] 05:19:53:888 KernelScheduler/(6164:6306): Planificador: proceso (2) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:19:53:888 KernelScheduler/(6164:6306): ## (2) Pasa del estado READY al estado EXEC
-[INFO] 05:19:54:739 KernelScheduler/(6164:6875): ## (2) - Solicitó syscall: SLEEP
-[INFO] 05:19:54:739 KernelScheduler/(6164:6875): ## (2) Pasa del estado EXEC al estado BLOCK
-[INFO] 05:20:13:922 KernelScheduler/(6164:6436): ## (1) Pasa del estado BLOCK al estado READY
-[INFO] 05:20:13:922 KernelScheduler/(6164:6436): ## (1) finalizó IO y pasa a READY
-[DEBUG] 05:20:13:922 KernelScheduler/(6164:6306): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:20:13:922 KernelScheduler/(6164:6306): ## (1) Pasa del estado READY al estado EXEC
-[INFO] 05:20:14:174 KernelScheduler/(6164:6875): ## (1) - Solicitó syscall: EXIT
-[INFO] 05:20:14:174 KernelScheduler/(6164:6875): ## (1) Pasa del estado EXEC al estado EXIT
-[INFO] 05:20:14:174 KernelScheduler/(6164:6875): ## (1) finalizó su ejecución con motivo de EXIT
-[DEBUG] 05:20:14:523 KernelScheduler/(6164:6912): Timer de quantum descartado para (1) gen=3: ya no está en EXEC con esa generación de despacho
-[INFO] 05:20:33:891 KernelScheduler/(6164:6907): ## (2) - Timeout de IO: suspendiendo proceso
-[INFO] 05:20:33:891 KernelScheduler/(6164:6907): ## (2) Pasa del estado BLOCK al estado SUSP. BLOCK
-[INFO] 05:20:33:925 KernelScheduler/(6164:6436): ## (2) Pasa del estado SUSP. BLOCK al estado SUSP. READY
-[INFO] 05:20:33:925 KernelScheduler/(6164:6436): ## (2) finalizó IO y pasa a SUSP. READY
-[INFO] 05:20:33:926 KernelScheduler/(6164:6307): ## (2) Pasa del estado SUSP. READY al estado READY
-[DEBUG] 05:20:33:926 KernelScheduler/(6164:6306): Planificador: proceso (2) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
-[INFO] 05:20:33:926 KernelScheduler/(6164:6306): ## (2) Pasa del estado READY al estado EXEC
-[INFO] 05:20:34:177 KernelScheduler/(6164:6875): ## (2) - Solicitó syscall: EXIT
-[INFO] 05:20:34:177 KernelScheduler/(6164:6875): ## (2) Pasa del estado EXEC al estado EXIT
-[INFO] 05:20:34:177 KernelScheduler/(6164:6875): ## (2) finalizó su ejecución con motivo de EXIT
-[DEBUG] 05:20:34:526 KernelScheduler/(6164:6915): Timer de quantum descartado para (2) gen=3: ya no está en EXEC con esa generación de despacho
+[INFO] 05:37:29:733 KernelScheduler/(7789:7789): ## Conectado a Kernel Memory
+[INFO] 05:37:29:733 KernelScheduler/(7789:7789): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 05:37:29:733 KernelScheduler/(7789:7789): ## (0) Pasa del estado NEW al estado READY
+[INFO] 05:37:33:419 KernelScheduler/(7789:8061): ## IO SLEEP Conectada
+[INFO] 05:37:35:165 KernelScheduler/(7789:8190): ## IO STDOUT Conectada
+[INFO] 05:37:36:984 KernelScheduler/(7789:8319): ## IO STDIN Conectada
+[INFO] 05:37:42:549 KernelScheduler/(7789:8500): ## CPU 0 Conectada
+[INFO] 05:37:42:549 KernelScheduler/(7789:7931): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:37:43:554 KernelScheduler/(7789:8500): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:37:43:554 KernelScheduler/(7789:8500): ## (1) Se crea el proceso - Estado: NEW
+[INFO] 05:37:43:555 KernelScheduler/(7789:8500): ## (1) Pasa del estado NEW al estado READY
+[INFO] 05:37:43:603 KernelScheduler/(7789:8500): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 05:37:43:603 KernelScheduler/(7789:7931): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:37:44:105 KernelScheduler/(7789:8500): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:37:44:105 KernelScheduler/(7789:8500): ## (2) Se crea el proceso - Estado: NEW
+[INFO] 05:37:44:105 KernelScheduler/(7789:8500): ## (2) Pasa del estado NEW al estado READY
+[INFO] 05:37:44:147 KernelScheduler/(7789:8500): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 05:37:44:147 KernelScheduler/(7789:7931): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:37:44:649 KernelScheduler/(7789:8500): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:37:44:649 KernelScheduler/(7789:8500): ## (3) Se crea el proceso - Estado: NEW
+[INFO] 05:37:44:650 KernelScheduler/(7789:8500): ## (3) Pasa del estado NEW al estado READY
+[INFO] 05:37:44:695 KernelScheduler/(7789:8500): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 05:37:44:695 KernelScheduler/(7789:7931): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:37:45:244 KernelScheduler/(7789:8500): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:37:45:245 KernelScheduler/(7789:8500): ## (4) Se crea el proceso - Estado: NEW
+[INFO] 05:37:45:288 KernelScheduler/(7789:8500): ## (4) Pasa del estado NEW al estado READY
+[INFO] 05:37:45:288 KernelScheduler/(7789:8500): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 05:37:45:288 KernelScheduler/(7789:7931): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:37:46:879 KernelScheduler/(7789:8500): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:37:46:879 KernelScheduler/(7789:8500): ## (5) Se crea el proceso - Estado: NEW
+[INFO] 05:37:46:879 KernelScheduler/(7789:8500): ## (5) Pasa del estado NEW al estado READY
+[INFO] 05:37:46:879 KernelScheduler/(7789:8500): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 05:37:46:879 KernelScheduler/(7789:7931): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:37:47:405 KernelScheduler/(7789:8500): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:37:47:405 KernelScheduler/(7789:8500): ## (6) Se crea el proceso - Estado: NEW
+[INFO] 05:37:47:406 KernelScheduler/(7789:8500): ## (6) Pasa del estado NEW al estado READY
+[INFO] 05:37:47:407 KernelScheduler/(7789:8500): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 05:37:47:407 KernelScheduler/(7789:7931): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:37:49:000 KernelScheduler/(7789:8500): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:37:49:000 KernelScheduler/(7789:8500): ## (7) Se crea el proceso - Estado: NEW
+[INFO] 05:37:49:045 KernelScheduler/(7789:8500): ## (7) Pasa del estado NEW al estado READY
+[INFO] 05:37:49:046 KernelScheduler/(7789:8500): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 05:37:49:046 KernelScheduler/(7789:7931): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:37:49:600 KernelScheduler/(7789:8500): ## (0) - Solicitó syscall: EXIT
+[INFO] 05:37:49:600 KernelScheduler/(7789:8500): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 05:37:49:600 KernelScheduler/(7789:8500): ## (0) finalizó su ejecución con motivo de EXIT
+[INFO] 05:37:49:601 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:37:50:659 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:37:50:659 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:37:50:660 KernelScheduler/(7789:7931): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:37:51:665 KernelScheduler/(7789:8500): ## (5) - Solicitó syscall: SLEEP
+[INFO] 05:37:51:709 KernelScheduler/(7789:8500): ## (5) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:37:51:709 KernelScheduler/(7789:7931): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 05:37:52:771 KernelScheduler/(7789:8500): ## (6) - Solicitó syscall: SLEEP
+[INFO] 05:37:52:772 KernelScheduler/(7789:8500): ## (6) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:37:52:773 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:37:54:331 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:37:54:331 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:37:54:331 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:37:55:883 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:37:55:883 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:37:55:883 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:37:57:475 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:37:57:475 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:37:57:475 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:37:59:078 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:37:59:078 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:37:59:078 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:38:00:631 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:38:00:631 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:38:00:631 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:38:00:660 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:00:660 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:38:00:660 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:01:175 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:38:01:175 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:02:733 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:02:734 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:02:734 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:38:04:280 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:38:04:280 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:38:04:280 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:38:05:661 KernelScheduler/(7789:8061): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:05:661 KernelScheduler/(7789:8061): ## (5) finalizó IO y pasa a READY
+[INFO] 05:38:05:661 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 2
+[INFO] 05:38:05:884 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:38:05:884 KernelScheduler/(7789:7931): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:38:07:440 KernelScheduler/(7789:8500): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:38:07:440 KernelScheduler/(7789:8500): ## (5) - Desalojado por fin de quantum
+[INFO] 05:38:07:440 KernelScheduler/(7789:7931): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:38:08:991 KernelScheduler/(7789:8500): ## (5) - Solicitó syscall: SLEEP
+[INFO] 05:38:08:991 KernelScheduler/(7789:8500): ## (5) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:08:991 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:38:10:580 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:38:10:580 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:38:10:580 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:38:10:662 KernelScheduler/(7789:8061): ## (6) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:10:662 KernelScheduler/(7789:8061): ## (6) finalizó IO y pasa a READY
+[INFO] 05:38:10:662 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 6 con prioridad 2
+[INFO] 05:38:11:212 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:38:11:212 KernelScheduler/(7789:7931): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 05:38:11:664 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:11:664 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:38:11:664 KernelScheduler/(7789:8061): ## (6) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:11:716 KernelScheduler/(7789:8500): ## (6) Pasa del estado EXEC al estado READY
+[INFO] 05:38:11:716 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:13:312 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:13:312 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:13:312 KernelScheduler/(7789:7931): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 05:38:14:666 KernelScheduler/(7789:8061): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:14:666 KernelScheduler/(7789:8061): ## (5) finalizó IO y pasa a READY
+[INFO] 05:38:14:861 KernelScheduler/(7789:8500): ## (6) Pasa del estado EXEC al estado READY
+[INFO] 05:38:14:861 KernelScheduler/(7789:8500): ## (6) - Desalojado por fin de quantum
+[INFO] 05:38:14:861 KernelScheduler/(7789:7931): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:38:15:668 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:15:668 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:38:15:668 KernelScheduler/(7789:8061): ## (5) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:15:903 KernelScheduler/(7789:8500): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:38:15:903 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:17:492 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:17:492 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:17:492 KernelScheduler/(7789:7931): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:38:18:493 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:18:493 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:38:18:493 KernelScheduler/(7789:8061): ## (5) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:18:538 KernelScheduler/(7789:8500): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:38:18:538 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:20:132 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:20:132 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:20:132 KernelScheduler/(7789:7931): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:38:21:134 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:21:134 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:38:21:134 KernelScheduler/(7789:8061): ## (5) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:21:134 KernelScheduler/(7789:8500): ## (5) - Solicitó syscall: SLEEP
+[INFO] 05:38:21:220 KernelScheduler/(7789:8500): ## (5) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:21:220 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:22:724 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:22:768 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:22:768 KernelScheduler/(7789:7931): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 05:38:23:772 KernelScheduler/(7789:8500): ## (6) - Solicitó syscall: SLEEP
+[INFO] 05:38:23:816 KernelScheduler/(7789:8500): ## (6) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:23:817 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:38:25:411 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:38:25:411 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:38:25:411 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:38:25:660 KernelScheduler/(7789:8505): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:38:25:660 KernelScheduler/(7789:8505): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:38:26:221 KernelScheduler/(7789:8061): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:26:221 KernelScheduler/(7789:8061): ## (5) finalizó IO y pasa a READY
+[INFO] 05:38:26:221 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 2
+[INFO] 05:38:26:455 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:38:26:455 KernelScheduler/(7789:7931): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:38:27:222 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:38:27:222 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:38:27:267 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:38:27:267 KernelScheduler/(7789:7932): ## (5) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:27:503 KernelScheduler/(7789:8500): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:38:27:503 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:27:781 KernelScheduler/(7789:8509): ## (6) - Timeout de IO: suspendiendo proceso
+[INFO] 05:38:27:781 KernelScheduler/(7789:8509): ## (6) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:38:29:103 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:29:103 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:29:103 KernelScheduler/(7789:7931): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:38:30:222 KernelScheduler/(7789:8061): ## (6) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:38:30:222 KernelScheduler/(7789:8061): ## (6) finalizó IO y pasa a SUSP. READY
+[INFO] 05:38:30:222 KernelScheduler/(7789:7932): ## (6) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:38:30:691 KernelScheduler/(7789:8500): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:38:30:691 KernelScheduler/(7789:8500): ## (5) - Desalojado por fin de quantum
+[INFO] 05:38:30:691 KernelScheduler/(7789:7931): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 05:38:32:247 KernelScheduler/(7789:8500): ## (6) Pasa del estado EXEC al estado READY
+[INFO] 05:38:32:247 KernelScheduler/(7789:8500): ## (6) - Desalojado por fin de quantum
+[INFO] 05:38:32:247 KernelScheduler/(7789:7931): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:38:32:802 KernelScheduler/(7789:8500): ## (5) - Solicitó syscall: EXIT
+[INFO] 05:38:32:802 KernelScheduler/(7789:8500): ## (5) Pasa del estado EXEC al estado EXIT
+[INFO] 05:38:32:802 KernelScheduler/(7789:8500): ## (5) finalizó su ejecución con motivo de EXIT
+[INFO] 05:38:32:843 KernelScheduler/(7789:7931): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 05:38:34:388 KernelScheduler/(7789:8500): ## (6) - Solicitó syscall: SLEEP
+[INFO] 05:38:34:388 KernelScheduler/(7789:8500): ## (6) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:34:388 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:38:35:953 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:38:35:953 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:38:35:953 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:38:37:506 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:38:37:506 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:38:37:507 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:38:37:734 KernelScheduler/(7789:8518): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:38:37:735 KernelScheduler/(7789:8518): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:38:39:175 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:38:39:175 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:38:39:175 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:38:40:223 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:38:40:223 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:38:40:223 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:38:40:223 KernelScheduler/(7789:7932): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:40:271 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:38:40:271 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:41:815 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:41:815 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:41:816 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:38:43:408 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:38:43:408 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:38:43:408 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:38:44:956 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:38:44:956 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:38:44:956 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:38:45:223 KernelScheduler/(7789:8061): ## (6) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:45:224 KernelScheduler/(7789:8061): ## (6) finalizó IO y pasa a READY
+[INFO] 05:38:45:224 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 6 con prioridad 2
+[INFO] 05:38:45:459 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:38:45:459 KernelScheduler/(7789:7931): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 05:38:46:225 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:46:225 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:38:46:225 KernelScheduler/(7789:8061): ## (6) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:46:599 KernelScheduler/(7789:8500): ## (6) Pasa del estado EXEC al estado READY
+[INFO] 05:38:46:599 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:48:163 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:48:163 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:48:163 KernelScheduler/(7789:7931): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 05:38:48:312 KernelScheduler/(7789:8527): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:38:48:312 KernelScheduler/(7789:8527): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:38:49:164 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:38:49:164 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:38:49:165 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:38:49:165 KernelScheduler/(7789:7932): ## (6) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:49:707 KernelScheduler/(7789:8500): ## (6) Pasa del estado EXEC al estado READY
+[INFO] 05:38:49:707 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:51:299 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:51:299 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:51:300 KernelScheduler/(7789:7931): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 05:38:51:843 KernelScheduler/(7789:8500): ## (6) - Solicitó syscall: EXIT
+[INFO] 05:38:51:843 KernelScheduler/(7789:8500): ## (6) Pasa del estado EXEC al estado EXIT
+[INFO] 05:38:51:843 KernelScheduler/(7789:8500): ## (6) finalizó su ejecución con motivo de EXIT
+[INFO] 05:38:51:844 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:38:52:301 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:52:301 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:38:52:301 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:52:387 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:38:52:387 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:54:003 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:54:004 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:54:004 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:38:55:007 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:55:007 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:38:55:007 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:55:051 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:38:55:051 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:56:600 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:56:600 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:56:600 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:38:57:606 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:38:57:606 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:38:57:606 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:38:57:699 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:38:57:700 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:38:59:245 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:38:59:287 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:38:59:287 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:00:832 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:00:832 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:39:00:832 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:39:02:423 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:39:02:423 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:39:02:423 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:39:03:968 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:39:03:969 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:39:03:970 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:39:04:104 KernelScheduler/(7789:8545): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:39:04:104 KernelScheduler/(7789:8545): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:39:05:563 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:39:05:563 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:39:05:563 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:07:162 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:07:163 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:39:07:163 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:39:08:755 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:39:08:755 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:39:08:755 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:39:09:288 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:39:09:288 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:39:09:289 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:39:09:289 KernelScheduler/(7789:7932): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:09:803 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:39:09:804 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:11:399 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:11:399 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:11:399 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:39:12:400 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:39:12:400 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:39:12:400 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:12:445 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:39:12:445 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:13:996 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:13:996 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:13:997 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:39:14:999 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:39:15:000 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:39:15:000 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:15:095 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:39:15:095 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:16:621 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:16:663 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:16:663 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:39:16:816 KernelScheduler/(7789:8566): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:39:16:816 KernelScheduler/(7789:8566): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:39:17:665 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:39:17:665 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:39:17:707 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:39:17:707 KernelScheduler/(7789:7932): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:18:219 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:39:18:219 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:19:855 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:19:855 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:19:855 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:39:20:858 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:39:20:858 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:39:20:858 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:20:904 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:39:20:904 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:22:451 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:22:451 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:22:451 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:39:23:167 KernelScheduler/(7789:8603): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:39:23:167 KernelScheduler/(7789:8603): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:39:23:453 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:39:23:453 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:39:23:453 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:39:23:453 KernelScheduler/(7789:7932): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:24:039 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:39:24:039 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:25:591 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:25:591 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:25:591 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:39:26:304 KernelScheduler/(7789:8612): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:39:26:304 KernelScheduler/(7789:8612): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:39:27:143 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:39:27:143 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:39:27:143 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:39:28:824 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:39:28:824 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:39:28:824 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:30:391 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:30:391 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:39:30:391 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:39:31:940 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:39:31:940 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:39:31:940 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:39:33:530 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:39:33:531 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:39:33:531 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:39:35:132 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:39:35:132 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:39:35:132 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:35:595 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:39:35:595 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:39:35:595 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:39:35:595 KernelScheduler/(7789:7932): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:35:679 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:35:679 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:37:271 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:37:271 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:37:271 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:38:273 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:39:38:273 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:39:38:273 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:38:315 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:38:315 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:39:866 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:39:867 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:39:867 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:40:868 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:39:40:868 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:39:40:868 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:40:955 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:40:955 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:42:503 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:42:547 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:42:547 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:43:548 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:39:43:548 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:39:43:548 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:43:601 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:43:601 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:45:191 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:45:192 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:45:192 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:46:193 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:39:46:193 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:39:46:193 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:46:239 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:46:239 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:47:791 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:47:791 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:47:791 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:48:801 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:39:48:801 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:39:48:801 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:39:48:896 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:48:897 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:39:50:571 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:39:50:621 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:39:50:622 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:51:664 KernelScheduler/(7789:8654): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:39:51:664 KernelScheduler/(7789:8654): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:39:52:184 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:52:184 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:39:52:185 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:39:53:931 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:39:53:931 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:39:53:931 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:39:55:520 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:39:55:520 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:39:55:520 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:39:57:071 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:39:57:071 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:39:57:071 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:39:58:668 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:39:58:668 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:39:58:668 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:40:00:232 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:40:00:232 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:40:00:232 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:00:622 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:40:00:622 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:40:00:667 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:40:00:667 KernelScheduler/(7789:7932): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:00:775 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:00:775 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:02:391 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:02:391 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:02:391 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:03:393 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:03:393 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:03:393 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:03:467 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:03:467 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:05:079 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:05:079 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:05:079 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:06:080 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:06:080 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:06:080 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:06:172 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:06:172 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:07:703 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:07:754 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:07:754 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:08:755 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:08:755 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:08:755 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:08:851 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:08:851 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:10:453 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:10:454 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:10:454 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:11:455 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:11:455 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:11:455 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:11:503 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:11:503 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:13:059 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:13:060 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:13:060 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:14:061 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:14:061 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:14:061 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:14:179 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:14:179 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:15:702 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:15:747 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:15:747 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:17:451 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:17:451 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:40:17:451 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:40:17:549 KernelScheduler/(7789:8682): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:40:17:550 KernelScheduler/(7789:8682): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:40:19:051 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:40:19:051 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:40:19:051 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:40:20:598 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:40:20:598 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:40:20:598 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:40:22:147 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:40:22:147 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:40:22:147 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:23:802 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:23:802 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:40:23:802 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:40:25:371 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:40:25:371 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:40:25:371 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:40:25:777 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:40:25:777 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:40:25:778 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:40:25:778 KernelScheduler/(7789:7932): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:25:916 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:40:25:916 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:27:527 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:27:527 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:27:528 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:40:28:530 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:28:530 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:28:530 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:28:581 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:40:28:581 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:30:135 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:30:135 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:30:135 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:40:31:136 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:31:137 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:31:137 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:31:271 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:40:31:271 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:32:880 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:32:935 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:32:937 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:40:33:938 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:33:938 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:33:938 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:33:986 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:40:33:987 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:35:595 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:35:596 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:35:596 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:40:36:596 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:36:597 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:36:597 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:36:705 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:40:36:705 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:38:258 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:38:259 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:38:259 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:40:39:260 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:39:260 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:39:260 KernelScheduler/(7789:8061): ## (2) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:39:351 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:40:39:352 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:40:859 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:40:911 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:40:912 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:40:42:512 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:40:42:512 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:40:42:512 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:40:42:762 KernelScheduler/(7789:8706): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:40:42:763 KernelScheduler/(7789:8706): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:40:44:135 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:40:44:135 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:40:44:135 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:45:785 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:45:785 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:40:45:785 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:40:47:344 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:40:47:344 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:40:47:344 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:40:48:956 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:40:48:956 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:40:48:956 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:40:50:523 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:40:50:524 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:40:50:524 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:50:913 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:40:50:913 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:40:50:913 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:40:50:913 KernelScheduler/(7789:7932): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:51:028 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:51:028 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:52:629 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:52:629 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:52:629 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:53:629 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:53:629 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:53:629 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:53:675 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:53:675 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:55:227 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:55:227 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:55:227 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:56:228 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:56:229 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:56:229 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:56:319 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:56:319 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:40:57:864 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:40:57:907 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:40:57:908 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:40:58:909 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:40:58:909 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:40:58:909 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:40:58:967 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:40:58:967 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:00:650 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:00:651 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:00:651 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:41:01:651 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:41:01:651 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:41:01:652 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:01:707 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:41:01:708 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:03:256 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:03:256 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:03:256 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:41:04:276 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:41:04:276 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:41:04:276 KernelScheduler/(7789:8061): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:04:855 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:41:04:856 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:06:407 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:06:407 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:06:407 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:41:07:940 KernelScheduler/(7789:8732): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:41:07:940 KernelScheduler/(7789:8732): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:41:07:959 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:41:07:959 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:41:07:959 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:41:10:095 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:41:10:095 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:41:10:096 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:41:11:694 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:41:11:694 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:41:11:694 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:41:13:265 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:41:13:265 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:41:13:265 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:41:14:868 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:41:14:869 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:41:14:869 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:41:16:451 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:41:16:451 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:41:16:495 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:41:16:495 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:16:995 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:41:16:995 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:18:543 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:18:544 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:18:544 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:41:19:544 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:41:19:544 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:41:19:544 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:19:631 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:41:19:631 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:21:291 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:21:352 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:21:352 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:41:22:361 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:41:22:361 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:41:22:361 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:22:505 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:41:22:506 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:24:013 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:24:062 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:24:062 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:41:25:071 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:41:25:071 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:41:25:071 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:25:183 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:41:25:184 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:26:690 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:26:735 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:26:735 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:41:27:629 KernelScheduler/(7789:8750): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:41:27:629 KernelScheduler/(7789:8750): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:41:27:737 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:41:27:737 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:41:27:737 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:41:27:737 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:27:792 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:41:27:792 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:29:396 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:29:396 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:29:397 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:41:30:229 KernelScheduler/(7789:8753): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:41:30:229 KernelScheduler/(7789:8753): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:41:30:403 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:41:30:403 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:41:30:404 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:41:30:404 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:30:489 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:41:30:489 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:32:035 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:32:035 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:32:035 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:41:32:908 KernelScheduler/(7789:8756): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:41:32:909 KernelScheduler/(7789:8756): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:41:33:628 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:41:33:628 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:41:33:628 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:41:35:183 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:41:35:183 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:41:35:183 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:41:36:738 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:41:36:738 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:41:36:738 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:41:38:339 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:41:38:339 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:41:38:339 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:41:39:940 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:41:39:940 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:41:39:940 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:41:41:676 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:41:41:676 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:41:41:676 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:41:42:043 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:41:42:043 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:41:42:103 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:41:42:103 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:42:222 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:41:42:222 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:43:831 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:43:831 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:43:831 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:41:44:831 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:41:44:831 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:41:44:831 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:44:961 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:41:44:961 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:46:516 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:46:516 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:46:516 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:41:47:523 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:41:47:523 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:41:47:523 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:48:111 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:41:48:111 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:49:671 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:49:671 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:49:671 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:41:50:674 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:41:50:675 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:41:50:675 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:51:219 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:41:51:220 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:52:826 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:52:826 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:52:826 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:41:53:545 KernelScheduler/(7789:8773): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:41:53:545 KernelScheduler/(7789:8773): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:41:53:831 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:41:53:831 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:41:53:831 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:41:53:831 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:53:879 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:41:53:879 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:55:478 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:55:478 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:55:478 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:41:56:355 KernelScheduler/(7789:8776): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:41:56:356 KernelScheduler/(7789:8776): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:41:56:483 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:41:56:483 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:41:56:483 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:41:56:483 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:41:56:571 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:41:56:571 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:41:58:075 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:41:58:120 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:41:58:120 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:41:59:063 KernelScheduler/(7789:8779): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:41:59:063 KernelScheduler/(7789:8779): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:41:59:667 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:41:59:667 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:41:59:667 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:42:01:259 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:42:01:259 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:42:01:259 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:02:856 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:42:02:856 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:42:02:856 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:42:04:403 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:42:04:403 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:42:04:403 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:42:05:991 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:42:05:991 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:42:05:991 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:42:07:543 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:42:07:543 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:42:07:543 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:08:120 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:42:08:120 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:42:08:163 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:42:08:163 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:08:591 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:42:08:591 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:10:187 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:10:187 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:10:188 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:11:190 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:42:11:190 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:42:11:190 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:11:250 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:42:11:251 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:12:808 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:12:808 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:12:808 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:13:809 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:42:13:809 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:42:13:809 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:13:915 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:42:13:915 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:15:506 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:15:547 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:15:548 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:16:565 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:42:16:565 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:42:16:565 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:17:112 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:42:17:113 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:18:707 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:18:707 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:18:707 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:18:837 KernelScheduler/(7789:8797): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:42:18:837 KernelScheduler/(7789:8797): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:42:19:968 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:42:19:968 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:42:19:968 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:42:19:969 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:20:307 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:42:20:307 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:21:860 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:21:861 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:21:861 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:22:862 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:42:22:863 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:42:22:863 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:22:954 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:42:22:954 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:24:460 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:24:503 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:24:503 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:24:672 KernelScheduler/(7789:8803): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:42:24:672 KernelScheduler/(7789:8803): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:42:26:052 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:42:26:052 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:42:26:052 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:42:27:642 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:42:27:643 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:42:27:643 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:42:29:354 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:42:29:354 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:42:29:354 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:42:30:911 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:42:30:911 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:42:30:911 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:32:510 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:42:32:511 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:42:32:511 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:42:34:063 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:42:34:063 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:42:34:063 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:42:34:503 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:42:34:503 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:42:34:504 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:42:34:504 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:34:564 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:42:34:564 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:36:160 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:36:160 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:36:160 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:42:37:161 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:42:37:161 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:42:37:161 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:37:251 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:42:37:251 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:38:795 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:38:795 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:38:795 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:42:39:797 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:42:39:797 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:42:39:798 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:39:882 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:42:39:882 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:41:394 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:41:439 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:41:439 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:42:42:440 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:42:42:440 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:42:42:440 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:42:547 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:42:42:547 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:44:155 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:44:155 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:44:155 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:42:45:164 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:42:45:164 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:42:45:164 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:45:210 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:42:45:210 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:46:759 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:46:759 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:46:759 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:42:47:764 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:42:47:764 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:42:47:764 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:42:48:359 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:42:48:360 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:42:49:971 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:42:49:972 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:42:49:972 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:42:50:552 KernelScheduler/(7789:8829): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:42:50:552 KernelScheduler/(7789:8829): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:42:51:575 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:42:51:575 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:42:51:575 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:42:53:176 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:42:53:178 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:42:53:178 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:54:759 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:42:54:759 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:42:54:759 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:42:56:351 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:42:56:351 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:42:56:351 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:42:57:975 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:42:57:975 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:42:57:975 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:42:59:589 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:42:59:589 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:42:59:589 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:42:59:973 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:42:59:973 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:43:00:025 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:43:00:025 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:00:163 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:00:163 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:01:759 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:01:759 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:01:759 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:02:764 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:43:02:764 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:43:02:764 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:03:312 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:03:312 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:04:866 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:04:866 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:04:866 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:05:869 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:43:05:869 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:43:05:869 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:06:459 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:06:459 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:08:090 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:08:091 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:08:091 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:09:099 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:43:09:099 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:43:09:099 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:09:149 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:09:149 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:10:747 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:10:747 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:10:747 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:11:219 KernelScheduler/(7789:8849): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:43:11:219 KernelScheduler/(7789:8849): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:43:11:768 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:43:11:768 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:43:11:769 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:43:11:770 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:12:331 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:12:331 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:14:102 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:14:102 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:14:103 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:15:105 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:43:15:105 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:43:15:105 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:15:211 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:15:211 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:16:798 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:16:849 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:16:849 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:18:399 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:18:399 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:43:18:399 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:43:19:165 KernelScheduler/(7789:8858): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:43:19:165 KernelScheduler/(7789:8858): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:43:19:999 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:43:19:999 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:43:19:999 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:43:21:547 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:43:21:547 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:43:21:547 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:43:23:123 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:43:23:123 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:43:23:123 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:24:718 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:24:719 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:43:24:719 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:43:26:322 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:43:26:322 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:43:26:322 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:43:26:864 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:43:26:864 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:43:26:865 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:43:26:865 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:27:383 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:43:27:383 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:28:996 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:28:996 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:28:996 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:43:29:997 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:43:29:997 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:43:29:997 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:30:066 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:43:30:067 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:31:626 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:31:626 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:31:627 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:43:32:629 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:43:32:629 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:43:32:629 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:32:784 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:43:32:785 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:34:294 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:34:342 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:34:343 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:43:35:346 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:43:35:347 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:43:35:347 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:35:440 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:43:35:440 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:37:039 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:37:039 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:37:039 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:43:38:041 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:43:38:041 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:43:38:041 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:38:132 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:43:38:132 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:39:682 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:39:682 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:39:682 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:43:39:868 KernelScheduler/(7789:8876): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:43:39:869 KernelScheduler/(7789:8876): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:43:40:687 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:43:40:687 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:43:40:731 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:43:40:731 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:41:295 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:43:41:296 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:43:221 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:43:222 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:43:222 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:43:44:828 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:43:44:828 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:43:44:828 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:43:45:751 KernelScheduler/(7789:8882): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:43:45:751 KernelScheduler/(7789:8882): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:43:46:431 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:43:46:431 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:43:46:431 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:47:988 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:47:988 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:43:47:988 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:43:49:539 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:43:49:539 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:43:49:539 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:43:51:175 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:43:51:176 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:43:51:176 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:43:52:743 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:43:52:743 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:43:52:743 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:53:223 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:43:53:223 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:43:53:223 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:43:53:223 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:53:244 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:53:244 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:54:837 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:54:837 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:54:837 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:55:839 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:43:55:839 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:43:55:839 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:55:967 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:55:967 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:43:57:515 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:43:57:515 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:43:57:515 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:43:58:517 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:43:58:517 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:43:58:518 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:43:58:607 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:43:58:607 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:00:124 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:00:171 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:00:171 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:01:174 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:01:174 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:01:174 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:01:217 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:01:217 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:02:859 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:02:859 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:02:860 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:03:866 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:03:866 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:03:866 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:03:919 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:03:920 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:05:476 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:05:476 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:05:477 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:06:477 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:06:477 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:06:477 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:06:579 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:06:580 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:08:130 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:08:171 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:08:171 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:09:344 KernelScheduler/(7789:8904): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:44:09:344 KernelScheduler/(7789:8904): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:44:09:771 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:09:771 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:44:09:771 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:44:11:371 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:44:11:371 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:44:11:371 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:44:12:991 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:44:12:991 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:44:12:991 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:44:14:563 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:44:14:563 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:44:14:563 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:16:159 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:16:159 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:44:16:160 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:44:17:751 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:44:17:751 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:44:17:751 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:44:18:175 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:44:18:175 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:44:18:176 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:44:18:176 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:18:252 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:44:18:253 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:19:847 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:19:847 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:19:847 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:44:20:849 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:20:849 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:20:849 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:20:896 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:44:20:897 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:22:447 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:22:448 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:22:448 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:44:23:449 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:23:449 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:23:449 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:23:631 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:44:23:631 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:25:140 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:25:193 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:25:193 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:44:26:202 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:26:202 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:26:202 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:26:264 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:44:26:264 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:27:933 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:27:933 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:27:933 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:44:28:958 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:28:958 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:28:958 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:29:023 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:44:29:023 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:30:588 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:30:589 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:30:589 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:44:31:590 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:31:591 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:31:591 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:31:679 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:44:31:679 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:33:201 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:33:244 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:33:244 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:44:34:796 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:44:34:796 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:44:34:796 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:44:35:174 KernelScheduler/(7789:8928): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:44:35:175 KernelScheduler/(7789:8928): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:44:36:392 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:44:36:392 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:44:36:392 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:37:947 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:37:947 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:44:37:947 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:44:39:545 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:44:39:545 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:44:39:545 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:44:41:141 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:44:41:141 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:44:41:141 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:44:42:731 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:44:42:731 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:44:42:731 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:43:247 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:44:43:247 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:44:43:291 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:44:43:291 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:43:775 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:43:775 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:45:459 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:45:459 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:45:459 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:46:556 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:46:556 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:46:559 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:47:116 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:47:116 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:48:667 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:48:667 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:48:667 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:49:668 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:49:668 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:49:668 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:49:755 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:49:755 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:51:266 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:51:307 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:51:307 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:52:308 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:44:52:308 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:44:52:308 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:52:411 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:52:411 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:54:007 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:54:007 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:54:007 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:54:848 KernelScheduler/(7789:8946): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:44:54:848 KernelScheduler/(7789:8946): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:44:55:013 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:44:55:013 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:44:55:014 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:44:55:014 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:55:059 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:55:059 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:56:614 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:56:614 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:56:614 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:44:57:448 KernelScheduler/(7789:8949): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:44:57:449 KernelScheduler/(7789:8949): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:44:57:621 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:44:57:621 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:44:57:621 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:44:57:621 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:44:57:753 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:44:57:753 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:44:59:258 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:44:59:299 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:44:59:299 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:00:239 KernelScheduler/(7789:8952): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:45:00:239 KernelScheduler/(7789:8952): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:45:00:847 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:00:847 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:45:00:847 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:45:02:448 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:45:02:448 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:45:02:448 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:04:003 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:04:003 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:45:04:003 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:45:05:599 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:45:05:599 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:45:05:599 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:07:187 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:07:187 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:45:07:187 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:45:08:752 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:45:08:752 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:45:08:752 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:09:301 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:45:09:301 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:45:09:343 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:45:09:343 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:09:811 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:09:811 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:11:477 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:11:479 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:11:479 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:12:482 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:45:12:482 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:45:12:482 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:12:575 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:12:575 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:14:127 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:14:128 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:14:128 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:15:131 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:45:15:131 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:45:15:131 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:15:221 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:15:222 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:16:730 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:16:772 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:16:772 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:17:773 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:45:17:773 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:45:17:773 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:17:819 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:17:820 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:19:412 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:19:412 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:19:412 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:20:427 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:45:20:427 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:45:20:427 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:20:503 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:20:503 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:22:064 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:22:064 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:22:064 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:23:073 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:45:23:073 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:45:23:073 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:23:160 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:23:160 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:24:716 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:24:716 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:24:716 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:26:278 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:26:278 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:45:26:279 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:45:26:309 KernelScheduler/(7789:8979): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:45:26:310 KernelScheduler/(7789:8979): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:45:27:935 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:45:27:936 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:45:27:936 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:29:511 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:29:511 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:45:29:511 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:45:31:068 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:45:31:068 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:45:31:069 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:32:677 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:32:677 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:45:32:677 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:45:34:237 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:45:34:237 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:45:34:237 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:34:719 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:45:34:719 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:45:34:719 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:45:34:719 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:34:739 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:34:740 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:36:425 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:36:427 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:36:427 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:37:434 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:45:37:434 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:45:37:434 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:37:475 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:37:476 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:39:056 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:39:056 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:39:056 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:40:058 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:45:40:058 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:45:40:058 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:40:147 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:40:148 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:41:653 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:41:695 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:41:695 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:42:696 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:45:42:696 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:45:42:696 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:42:743 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:42:743 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:44:349 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:44:351 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:44:351 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:45:354 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:45:45:354 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:45:45:354 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:45:443 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:45:443 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:47:007 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:47:008 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:47:009 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:48:012 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:45:48:012 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:45:48:012 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:48:100 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:48:100 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:45:49:608 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:45:49:651 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:45:49:651 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:51:203 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:51:203 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:45:51:203 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:45:51:773 KernelScheduler/(7789:9012): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:45:51:773 KernelScheduler/(7789:9012): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:45:52:796 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:45:52:796 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:45:52:796 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:54:405 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:54:405 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:45:54:405 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:45:56:000 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:45:56:000 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:45:56:000 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:45:57:612 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:45:57:613 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:45:57:613 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:45:59:183 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:45:59:184 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:45:59:184 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:45:59:669 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:45:59:669 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:45:59:669 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:45:59:669 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:45:59:732 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:45:59:732 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:01:341 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:01:341 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:01:341 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:02:457 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:46:02:457 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:46:02:457 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:02:956 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:02:956 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:04:518 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:04:561 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:04:561 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:05:563 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:46:05:564 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:46:05:564 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:05:763 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:05:764 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:07:276 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:07:320 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:07:320 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:08:327 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:46:08:327 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:46:08:327 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:08:369 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:08:370 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:10:011 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:10:015 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:10:015 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:11:021 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:46:11:021 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:46:11:021 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:11:063 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:11:063 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:12:639 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:12:640 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:12:640 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:13:642 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:46:13:642 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:46:13:643 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:13:739 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:13:739 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:15:243 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:15:286 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:15:286 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:16:700 KernelScheduler/(7789:9036): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:46:16:703 KernelScheduler/(7789:9036): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:46:16:932 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:16:932 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:46:16:932 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:46:18:540 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:46:18:540 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:46:18:540 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:46:20:118 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:46:20:118 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:46:20:118 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:46:21:669 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:46:21:669 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:46:21:669 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:23:264 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:23:264 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:46:23:264 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:46:24:872 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:46:24:872 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:46:24:872 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:46:25:347 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:46:25:347 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:46:25:396 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:46:25:396 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:25:979 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:46:25:979 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:27:579 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:27:579 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:27:579 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:46:28:582 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:46:28:582 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:46:28:582 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:28:640 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:46:28:640 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:30:191 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:30:191 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:30:191 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:46:31:244 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:46:31:244 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:46:31:244 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:31:356 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:46:31:356 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:32:912 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:32:955 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:32:955 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:46:33:959 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:46:33:959 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:46:33:959 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:34:503 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:46:34:504 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:36:091 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:36:091 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:36:091 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:46:36:342 KernelScheduler/(7789:9054): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:46:36:342 KernelScheduler/(7789:9054): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:46:37:092 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:46:37:093 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:46:37:093 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:46:37:093 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:37:143 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:46:37:143 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:38:697 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:38:697 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:38:697 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:46:39:563 KernelScheduler/(7789:9057): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:46:39:563 KernelScheduler/(7789:9057): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:46:39:699 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:46:39:699 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:46:39:699 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:46:39:700 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:40:287 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:46:40:287 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:42:147 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:42:147 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:42:147 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:46:42:336 KernelScheduler/(7789:9060): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:46:42:337 KernelScheduler/(7789:9060): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:46:43:761 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:46:43:761 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:46:43:761 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:46:45:382 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:46:45:383 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:46:45:383 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:46:975 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:46:975 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:46:46:975 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:46:48:551 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:46:48:551 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:46:48:551 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:46:50:153 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:46:50:154 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:46:50:154 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:46:51:749 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:46:51:749 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:46:51:749 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:52:168 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:46:52:168 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:46:52:211 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:46:52:211 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:52:299 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:52:299 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:53:927 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:53:928 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:53:928 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:54:929 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:46:54:930 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:46:54:930 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:54:973 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:54:973 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:56:523 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:56:523 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:56:523 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:46:57:524 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:46:57:524 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:46:57:524 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:46:57:670 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:46:57:671 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:46:59:209 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:46:59:258 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:46:59:258 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:00:306 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:47:00:312 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:47:00:313 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:00:424 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:00:424 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:02:024 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:02:024 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:02:024 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:02:584 KernelScheduler/(7789:9078): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:47:02:584 KernelScheduler/(7789:9078): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:47:03:026 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:47:03:026 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:47:03:031 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:47:03:032 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:03:608 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:03:608 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:05:163 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:05:164 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:05:164 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:05:191 KernelScheduler/(7789:9081): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:47:05:192 KernelScheduler/(7789:9081): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:47:06:173 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:47:06:173 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:47:06:175 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:47:06:176 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:06:291 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:06:291 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:07:800 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:07:848 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:07:849 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:07:956 KernelScheduler/(7789:9084): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:47:07:956 KernelScheduler/(7789:9084): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:47:09:516 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:09:516 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:47:09:517 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:47:11:115 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:47:11:115 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:47:11:116 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:47:12:782 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:47:12:782 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:47:12:782 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:47:14:637 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:47:14:637 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:47:14:637 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:16:267 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:16:268 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:47:16:268 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:47:17:831 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:47:17:831 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:47:17:831 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:47:17:850 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:47:17:850 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:47:17:899 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:47:17:899 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:18:424 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:47:18:424 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:20:035 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:20:035 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:20:035 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:47:21:039 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:47:21:039 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:47:21:039 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:21:088 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:47:21:088 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:22:681 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:22:681 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:22:681 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:47:23:684 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:47:23:684 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:47:23:684 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:23:820 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:47:23:820 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:25:332 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:25:385 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:25:386 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:47:26:433 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:47:26:433 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:47:26:433 KernelScheduler/(7789:8061): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:26:495 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:47:26:495 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:28:108 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:28:108 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:28:108 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:47:28:930 KernelScheduler/(7789:9104): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:47:28:930 KernelScheduler/(7789:9104): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:47:29:112 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:47:29:112 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:47:29:113 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:47:29:113 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:29:155 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:47:29:156 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:30:716 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:30:719 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:30:720 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:47:31:524 KernelScheduler/(7789:9107): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:47:31:525 KernelScheduler/(7789:9107): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:47:31:721 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:47:31:721 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:47:31:722 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:47:31:722 KernelScheduler/(7789:7932): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:31:859 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:47:31:859 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:33:373 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:33:416 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:33:418 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:47:34:259 KernelScheduler/(7789:9110): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:47:34:259 KernelScheduler/(7789:9110): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:47:35:010 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:47:35:010 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:47:35:010 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:47:36:659 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:47:36:659 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:47:36:659 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:38:212 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:38:212 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:47:38:212 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:47:39:770 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:47:39:770 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:47:39:770 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:47:41:380 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:47:41:380 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:47:41:380 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:47:42:995 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:47:42:995 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:47:42:995 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:43:420 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:47:43:420 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:47:43:465 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 05:47:43:465 KernelScheduler/(7789:7932): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:43:550 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:43:551 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:45:148 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:45:148 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:45:148 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:46:150 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:47:46:155 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:47:46:155 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:46:259 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:46:259 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:47:823 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:47:823 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:47:823 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:48:828 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:47:48:828 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:47:48:828 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:48:959 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:48:959 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:50:510 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:50:555 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:50:556 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:51:559 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:47:51:559 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:47:51:560 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:51:612 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:51:612 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:53:375 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:53:375 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:53:376 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:54:379 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:47:54:379 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:47:54:379 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:54:428 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:54:428 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:55:981 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:55:983 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:55:983 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:47:56:985 KernelScheduler/(7789:8061): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 05:47:56:985 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a READY
+[INFO] 05:47:56:985 KernelScheduler/(7789:8061): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 05:47:57:164 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:47:57:166 KernelScheduler/(7789:7931): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 05:47:58:700 KernelScheduler/(7789:8500): ## (7) - Solicitó syscall: SLEEP
+[INFO] 05:47:58:749 KernelScheduler/(7789:8500): ## (7) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:47:58:749 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:48:00:312 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 05:48:00:313 KernelScheduler/(7789:8500): ## (3) - Desalojado por fin de quantum
+[INFO] 05:48:00:313 KernelScheduler/(7789:7931): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:48:00:389 KernelScheduler/(7789:9136): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 05:48:00:390 KernelScheduler/(7789:9136): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:48:01:929 KernelScheduler/(7789:8500): ## (4) Pasa del estado EXEC al estado READY
+[INFO] 05:48:01:930 KernelScheduler/(7789:8500): ## (4) - Desalojado por fin de quantum
+[INFO] 05:48:01:930 KernelScheduler/(7789:7931): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:48:03:540 KernelScheduler/(7789:8500): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 05:48:03:540 KernelScheduler/(7789:8500): ## (1) - Desalojado por fin de quantum
+[INFO] 05:48:03:540 KernelScheduler/(7789:7931): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:48:05:094 KernelScheduler/(7789:8500): ## (2) Pasa del estado EXEC al estado READY
+[INFO] 05:48:05:094 KernelScheduler/(7789:8500): ## (2) - Desalojado por fin de quantum
+[INFO] 05:48:05:094 KernelScheduler/(7789:7931): ## (3) Pasa del estado READY al estado EXEC
+[WARNING] 05:48:05:961 KernelScheduler/(7789:8500): ## (3) CPU desconectada durante EXEC — vuelve a READY
+[INFO] 05:48:05:961 KernelScheduler/(7789:8500): ## (3) Pasa del estado EXEC al estado READY
+[WARNING] 05:48:05:961 KernelScheduler/(7789:8500): ## CPU fd=9 desconectada
+[INFO] 05:48:08:752 KernelScheduler/(7789:8061): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:48:08:752 KernelScheduler/(7789:8061): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 05:48:08:752 KernelScheduler/(7789:7932): ## (7) Pasa del estado SUSP. READY al estado READY
