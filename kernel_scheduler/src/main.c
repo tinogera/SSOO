@@ -656,15 +656,20 @@ static void* thread_quantum_timer(void* arg) {
     };
     nanosleep(&ts, NULL);
 
-    // Si el proceso sigue en EXEC del MISMO despacho, interrumpir su CPU
+    // Si el proceso sigue en EXEC del MISMO despacho, interrumpir su CPU.
+    // El envío tiene que hacerse con mutex_exec todavía tomado (mismo patrón
+    // que verificar_preemption/manejar_bsod/handle_compactar): si se suelta
+    // el lock antes de mandar el mensaje, el proceso puede salir de EXEC
+    // (ej. bloquearse por un SLEEP) en el instante entre el check y el envío,
+    // y la interrupción le llega a la CPU cuando ya está esperando el
+    // despacho del PRÓXIMO proceso — ahí la CPU la loguea como mensaje
+    // inesperado y la ignora (op_code=19 en recibir_proceso_a_ejecutar).
     pthread_mutex_lock(&mutex_exec);
     int fd_cpu_target = -1;
     for (int i = 0; i < (int)queue_size(cola_exec); i++) {
         t_proceso* p = list_get(cola_exec->elements, i);
         if (p->PID == qa.pid && p->gen_despacho == qa.gen) { fd_cpu_target = p->fd_cpu; break; }
     }
-    pthread_mutex_unlock(&mutex_exec);
-
     if (fd_cpu_target != -1) {
         t_payload_interrupcion_cpu pay = { .pid = htonl(qa.pid), .motivo = htonl(MOTIVO_INTERRUPCION_QUANTUM) };
         enviar_mensaje(fd_cpu_target, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
@@ -673,6 +678,7 @@ static void* thread_quantum_timer(void* arg) {
             "Timer de quantum descartado para (%d) gen=%d: ya no está en EXEC con esa generación de despacho",
             qa.pid, qa.gen);
     }
+    pthread_mutex_unlock(&mutex_exec);
 
     return NULL;
 }
