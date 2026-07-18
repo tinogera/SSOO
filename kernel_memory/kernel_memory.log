@@ -1,20 +1,26 @@
-[INFO] 04:05:53:234 KernelMemory/(5055:5055): Kernel Memory escuchando en puerto 23841
-[INFO] 04:06:26:100 KernelMemory/(5055:5293): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
-[INFO] 04:07:18:719 KernelMemory/(5055:5464): ## Memory Stick de 16 bytes Conectada
-[INFO] 04:07:39:519 KernelMemory/(5055:5596): ## Memory Stick de 32 bytes Conectada
-[INFO] 04:08:13:933 KernelMemory/(5055:5752): ## Memory Stick de 32 bytes Conectada
-[INFO] 04:08:20:016 KernelMemory/(5055:5875): ## Memory Stick de 32 bytes Conectada
-[INFO] 04:10:36:744 KernelMemory/(5055:5972): ## Memory Stick de 32 bytes Conectada
-[INFO] 04:11:04:540 KernelMemory/(5055:5991): ## Memory Stick de 64 bytes Conectada
-[INFO] 04:11:29:748 KernelMemory/(5055:6005): ## Memory Stick de 128 bytes Conectada
-[INFO] 04:12:31:670 KernelMemory/(5055:6166): ## Kernel Scheduler Conectado - FD del socket: 13
-[INFO] 04:12:31:670 KernelMemory/(5055:6166): ## PID: 0 - Proceso Creado
-[INFO] 04:13:42:649 KernelMemory/(5055:6744): ## CPU Conectada - FD: 14
-[INFO] 04:13:42:907 KernelMemory/(5055:6744): ## PID: 0 - Obtener instrucción: 0 - Instrucción: NOOP
-[INFO] 04:13:43:165 KernelMemory/(5055:6744): ## PID: 0 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 64
-[INFO] 04:13:43:166 KernelMemory/(5055:6166): ## PID: 0 - Segmento Creado 0 - Tamaño: 64
-[INFO] 04:13:43:417 KernelMemory/(5055:6744): ## PID: 0 - Obtener instrucción: 2 - Instrucción: SET AX 64
-[INFO] 04:13:43:669 KernelMemory/(5055:6744): ## PID: 0 - Obtener instrucción: 3 - Instrucción: SET DI 0
-[INFO] 04:13:43:983 KernelMemory/(5055:6744): ## PID: 0 - Obtener instrucción: 4 - Instrucción: MOV_OUT AX
-[INFO] 04:13:43:984 KernelMemory/(5055:6744): Cliente desconectado (fd=14)
-[INFO] 04:13:43:984 KernelMemory/(5055:6166): ## PID: 0 - Proceso finalizado, memoria liberada
+[DEBUG] 04:44:35:818 KernelMemory/(3898:3898): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=128
+[INFO] 04:44:35:819 KernelMemory/(3898:3898): Kernel Memory escuchando en puerto 23841
+[INFO] 04:44:41:307 KernelMemory/(3898:4136): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 04:44:44:640 KernelMemory/(3898:4256): ## Memory Stick de 256 bytes Conectada
+[INFO] 04:45:12:686 KernelMemory/(3898:4398): ## Kernel Scheduler Conectado - FD del socket: 7
+[INFO] 04:45:12:686 KernelMemory/(3898:4398): ## PID: 0 - Proceso Creado
+[DEBUG] 04:45:12:686 KernelMemory/(3898:4398): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PLANI_PRE_0.prc
+[INFO] 04:45:27:245 KernelMemory/(3898:4970): ## CPU Conectada - FD: 8
+[INFO] 04:45:27:496 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 0 - Instrucción: INIT_PROC PLANI_PRE_1.prc 3
+[INFO] 04:45:27:497 KernelMemory/(3898:4398): ## PID: 1 - Proceso Creado
+[DEBUG] 04:45:27:497 KernelMemory/(3898:4398): PID: 1 - Path de script guardado: PLANI_PRE_1.prc
+[INFO] 04:45:27:748 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 1 - Instrucción: INIT_PROC PLANI_PRE_1.prc 3
+[INFO] 04:45:27:749 KernelMemory/(3898:4398): ## PID: 2 - Proceso Creado
+[DEBUG] 04:45:27:749 KernelMemory/(3898:4398): PID: 2 - Path de script guardado: PLANI_PRE_1.prc
+[INFO] 04:45:28:003 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 2 - Instrucción: INIT_PROC PLANI_PRE_2.prc 2
+[INFO] 04:45:28:003 KernelMemory/(3898:4398): ## PID: 3 - Proceso Creado
+[DEBUG] 04:45:28:003 KernelMemory/(3898:4398): PID: 3 - Path de script guardado: PLANI_PRE_2.prc
+[INFO] 04:45:28:344 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 3 - Instrucción: INIT_PROC PLANI_PRE_2.prc 2
+[INFO] 04:45:28:390 KernelMemory/(3898:4398): ## PID: 4 - Proceso Creado
+[DEBUG] 04:45:28:390 KernelMemory/(3898:4398): PID: 4 - Path de script guardado: PLANI_PRE_2.prc
+[INFO] 04:45:28:685 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 4 - Instrucción: INIT_PROC PLANI_PRE_3.prc 1
+[INFO] 04:45:28:686 KernelMemory/(3898:4398): ## PID: 5 - Proceso Creado
+[DEBUG] 04:45:28:686 KernelMemory/(3898:4398): PID: 5 - Path de script guardado: PLANI_PRE_3.prc
+[INFO] 04:45:29:029 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 5 - Instrucción: EXIT
+[INFO] 04:45:29:030 KernelMemory/(3898:4398): ## PID: 0 - Proceso finalizado, memoria liberada
+[INFO] 04:45:29:033 KernelMemory/(3898:4970): Cliente desconectado (fd=8)

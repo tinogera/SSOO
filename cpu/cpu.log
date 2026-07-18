@@ -1,28 +1,51 @@
-[INFO] 04:13:42:649 0/(6563:6563): CPU 0 iniciada
-[INFO] 04:13:42:649 0/(6563:6563): Registros CPU inicializados - PC: 0
-[INFO] 04:13:42:649 0/(6563:6563): Conectado a Kernel Scheduler
-[INFO] 04:13:42:649 0/(6563:6563): ## Conectado a Kernel Scheduler
-[INFO] 04:13:42:649 0/(6563:6563): Conectado a Kernel Memory
-[INFO] 04:13:42:649 0/(6563:6563): ## Conectado a Kernel Memory
-[INFO] 04:13:42:649 0/(6563:6563): ## Conectado a Memory Stick 0
-[INFO] 04:13:42:649 0/(6563:6563): ## PID: 0 - Proceso recibido de Kernel Scheduler
-[INFO] 04:13:42:649 0/(6563:6563): ## PID: 0 - Contexto restaurado - PC: 0 - Segmentos: 0
-[INFO] 04:13:42:649 0/(6563:6563): ## PID: 0 - FETCH - Program Counter: 0
-[INFO] 04:13:42:907 0/(6563:6563): ## PID: 0 - Ejecutando: NOOP - 
-[INFO] 04:13:42:907 0/(6563:6563): ## PID: 0 - FETCH - Program Counter: 1
-[INFO] 04:13:43:165 0/(6563:6563): ## PID: 0 - Ejecutando: MEM_ALLOC - 0 64
-[INFO] 04:13:43:165 0/(6563:6563): ## PID: 0 - Syscall: MEM_ALLOC - Segmento: 0 - Tamanio: 64
-[INFO] 04:13:43:165 0/(6563:6563): ## PID: 0 - Contexto guardado - PC: 2 - Segmentos: 0
-[INFO] 04:13:43:166 0/(6563:6563): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
-[INFO] 04:13:43:166 0/(6563:6563): ## PID: 0 - Proceso recibido de Kernel Scheduler
-[INFO] 04:13:43:166 0/(6563:6563): ## PID: 0 - Contexto restaurado - PC: 2 - Segmentos: 1
-[INFO] 04:13:43:166 0/(6563:6563): ## PID: 0 - FETCH - Program Counter: 2
-[INFO] 04:13:43:418 0/(6563:6563): ## PID: 0 - Ejecutando: SET - AX 64
-[INFO] 04:13:43:418 0/(6563:6563): ## PID: 0 - FETCH - Program Counter: 3
-[INFO] 04:13:43:731 0/(6563:6563): ## PID: 0 - Ejecutando: SET - DI 0
-[INFO] 04:13:43:731 0/(6563:6563): ## PID: 0 - FETCH - Program Counter: 4
-[INFO] 04:13:43:983 0/(6563:6563): ## PID: 0 - Ejecutando: MOV_OUT - AX
-[ERROR] 04:13:43:983 0/(6563:6563): No se pudo ejecutar la instruccion de memoria del PID 0
-[INFO] 04:13:43:984 0/(6563:6563): ## PID: 0 - Contexto guardado - PC: 4 - Segmentos: 1
-[INFO] 04:13:43:984 0/(6563:6563): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: ERROR - PC: 4
-[ERROR] 04:13:43:984 0/(6563:6563): Fallo el ciclo de instruccion para PID 0
+[INFO] 04:45:27:244 0/(4789:4789): CPU 0 iniciada
+[INFO] 04:45:27:244 0/(4789:4789): Registros CPU inicializados - PC: 0
+[DEBUG] 04:45:27:244 0/(4789:4789): Config resuelta: KS=127.0.0.1:19337 KM=127.0.0.1:23841 SEGMENT_MAX_SIZE=128
+[INFO] 04:45:27:244 0/(4789:4789): Conectado a Kernel Scheduler
+[INFO] 04:45:27:245 0/(4789:4789): ## Conectado a Kernel Scheduler
+[INFO] 04:45:27:245 0/(4789:4789): Conectado a Kernel Memory
+[INFO] 04:45:27:245 0/(4789:4789): ## Conectado a Kernel Memory
+[INFO] 04:45:27:245 0/(4789:4789): ## Conectado a Memory Stick 0
+[INFO] 04:45:27:245 0/(4789:4789): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 04:45:27:245 0/(4789:4789): ## PID: 0 - Contexto restaurado - PC: 0 - Segmentos: 0
+[INFO] 04:45:27:245 0/(4789:4789): ## PID: 0 - FETCH - Program Counter: 0
+[INFO] 04:45:27:497 0/(4789:4789): ## PID: 0 - Ejecutando: INIT_PROC - PLANI_PRE_1.prc 3
+[INFO] 04:45:27:497 0/(4789:4789): ## PID: 0 - Syscall: INIT_PROC - Archivo: PLANI_PRE_1.prc - Prioridad: 3
+[INFO] 04:45:27:497 0/(4789:4789): ## PID: 0 - Contexto guardado - PC: 1 - Segmentos: 0
+[INFO] 04:45:27:497 0/(4789:4789): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 1
+[INFO] 04:45:27:497 0/(4789:4789): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 04:45:27:497 0/(4789:4789): ## PID: 0 - Contexto restaurado - PC: 1 - Segmentos: 0
+[INFO] 04:45:27:497 0/(4789:4789): ## PID: 0 - FETCH - Program Counter: 1
+[INFO] 04:45:27:749 0/(4789:4789): ## PID: 0 - Ejecutando: INIT_PROC - PLANI_PRE_1.prc 3
+[INFO] 04:45:27:749 0/(4789:4789): ## PID: 0 - Syscall: INIT_PROC - Archivo: PLANI_PRE_1.prc - Prioridad: 3
+[INFO] 04:45:27:750 0/(4789:4789): ## PID: 0 - Contexto guardado - PC: 2 - Segmentos: 0
+[INFO] 04:45:27:750 0/(4789:4789): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 2
+[INFO] 04:45:27:751 0/(4789:4789): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 04:45:27:751 0/(4789:4789): ## PID: 0 - Contexto restaurado - PC: 2 - Segmentos: 0
+[INFO] 04:45:27:751 0/(4789:4789): ## PID: 0 - FETCH - Program Counter: 2
+[INFO] 04:45:28:003 0/(4789:4789): ## PID: 0 - Ejecutando: INIT_PROC - PLANI_PRE_2.prc 2
+[INFO] 04:45:28:003 0/(4789:4789): ## PID: 0 - Syscall: INIT_PROC - Archivo: PLANI_PRE_2.prc - Prioridad: 2
+[INFO] 04:45:28:047 0/(4789:4789): ## PID: 0 - Contexto guardado - PC: 3 - Segmentos: 0
+[INFO] 04:45:28:047 0/(4789:4789): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 3
+[INFO] 04:45:28:092 0/(4789:4789): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 04:45:28:093 0/(4789:4789): ## PID: 0 - Contexto restaurado - PC: 3 - Segmentos: 0
+[INFO] 04:45:28:093 0/(4789:4789): ## PID: 0 - FETCH - Program Counter: 3
+[INFO] 04:45:28:344 0/(4789:4789): ## PID: 0 - Ejecutando: INIT_PROC - PLANI_PRE_2.prc 2
+[INFO] 04:45:28:344 0/(4789:4789): ## PID: 0 - Syscall: INIT_PROC - Archivo: PLANI_PRE_2.prc - Prioridad: 2
+[INFO] 04:45:28:390 0/(4789:4789): ## PID: 0 - Contexto guardado - PC: 4 - Segmentos: 0
+[INFO] 04:45:28:391 0/(4789:4789): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 4
+[INFO] 04:45:28:391 0/(4789:4789): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 04:45:28:435 0/(4789:4789): ## PID: 0 - Contexto restaurado - PC: 4 - Segmentos: 0
+[INFO] 04:45:28:435 0/(4789:4789): ## PID: 0 - FETCH - Program Counter: 4
+[INFO] 04:45:28:685 0/(4789:4789): ## PID: 0 - Ejecutando: INIT_PROC - PLANI_PRE_3.prc 1
+[INFO] 04:45:28:685 0/(4789:4789): ## PID: 0 - Syscall: INIT_PROC - Archivo: PLANI_PRE_3.prc - Prioridad: 1
+[INFO] 04:45:28:687 0/(4789:4789): ## PID: 0 - Contexto guardado - PC: 5 - Segmentos: 0
+[INFO] 04:45:28:687 0/(4789:4789): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: SYSCALL - PC: 5
+[INFO] 04:45:28:735 0/(4789:4789): ## PID: 0 - Proceso recibido de Kernel Scheduler
+[INFO] 04:45:28:735 0/(4789:4789): ## PID: 0 - Contexto restaurado - PC: 5 - Segmentos: 0
+[INFO] 04:45:28:735 0/(4789:4789): ## PID: 0 - FETCH - Program Counter: 5
+[INFO] 04:45:29:029 0/(4789:4789): ## PID: 0 - Ejecutando: EXIT - 
+[INFO] 04:45:29:029 0/(4789:4789): ## PID: 0 - Syscall: EXIT
+[ERROR] 04:45:29:031 0/(4789:4789): Kernel Memory rechazo guardar contexto del PID 0
+[INFO] 04:45:29:031 0/(4789:4789): ## PID: 0 - Devolviendo proceso a Kernel Scheduler - Motivo: ERROR - PC: 6
+[ERROR] 04:45:29:032 0/(4789:4789): Fallo el ciclo de instruccion para PID 0

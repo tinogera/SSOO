@@ -1,14 +1,57 @@
-[INFO] 04:12:31:670 KernelScheduler/(6026:6026): ## Conectado a Kernel Memory
-[INFO] 04:12:31:670 KernelScheduler/(6026:6026): ## (0) Se crea el proceso - Estado: NEW
-[INFO] 04:12:31:670 KernelScheduler/(6026:6026): ## (0) Pasa del estado NEW al estado READY
-[INFO] 04:12:59:984 KernelScheduler/(6026:6300): ## IO SLEEP Conectada
-[INFO] 04:13:18:730 KernelScheduler/(6026:6429): ## IO STDOUT Conectada
-[INFO] 04:13:31:343 KernelScheduler/(6026:6560): ## IO STDIN Conectada
-[INFO] 04:13:42:649 KernelScheduler/(6026:6743): ## CPU 0 Conectada
-[INFO] 04:13:42:649 KernelScheduler/(6026:6168): ## (0) Pasa del estado READY al estado EXEC
-[INFO] 04:13:43:165 KernelScheduler/(6026:6743): ## (0) - Solicitó syscall: MEM_ALLOC
-[INFO] 04:13:43:166 KernelScheduler/(6026:6746): ## (0) - MEM_ALLOC: solicita crear segmento 0 (64 bytes)
-[INFO] 04:13:43:166 KernelScheduler/(6026:6746): ## (0) - MEM_ALLOC: segmento 0 creado exitosamente
-[INFO] 04:13:43:984 KernelScheduler/(6026:6743): ## (0) Pasa del estado EXEC al estado EXIT
-[INFO] 04:13:43:984 KernelScheduler/(6026:6743): ## (0) finalizó su ejecución con motivo de ERROR
-[WARNING] 04:13:43:984 KernelScheduler/(6026:6743): ## CPU fd=9 desconectada
+[DEBUG] 04:45:12:685 KernelScheduler/(4258:4258): Planificación resuelta: algoritmo=CMN n_colas=4 colas=[FIFO,RR,FIFO,RR] RR_QUANTUM=600ms QUEUE_PREEMPTION=TRUE SUSPENSION_TIMEOUT=60000ms
+[INFO] 04:45:12:686 KernelScheduler/(4258:4258): ## Conectado a Kernel Memory
+[INFO] 04:45:12:686 KernelScheduler/(4258:4258): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 04:45:12:686 KernelScheduler/(4258:4258): ## (0) Pasa del estado NEW al estado READY
+[DEBUG] 04:45:12:686 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
+[INFO] 04:45:16:334 KernelScheduler/(4258:4530): ## IO SLEEP Conectada
+[INFO] 04:45:18:323 KernelScheduler/(4258:4659): ## IO STDOUT Conectada
+[INFO] 04:45:22:688 KernelScheduler/(4258:4788): ## IO STDIN Conectada
+[INFO] 04:45:27:244 KernelScheduler/(4258:4969): ## CPU 0 Conectada
+[DEBUG] 04:45:27:245 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 04:45:27:245 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 04:45:27:497 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 04:45:27:497 KernelScheduler/(4258:4969): ## (1) Se crea el proceso - Estado: NEW
+[INFO] 04:45:27:497 KernelScheduler/(4258:4969): ## (1) Pasa del estado NEW al estado READY
+[DEBUG] 04:45:27:497 KernelScheduler/(4258:4400): Planificador: proceso (1) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 04:45:27:497 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 04:45:27:497 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 04:45:27:497 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 04:45:27:749 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 04:45:27:749 KernelScheduler/(4258:4969): ## (2) Se crea el proceso - Estado: NEW
+[INFO] 04:45:27:749 KernelScheduler/(4258:4969): ## (2) Pasa del estado NEW al estado READY
+[DEBUG] 04:45:27:750 KernelScheduler/(4258:4400): Planificador: proceso (1) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 04:45:27:751 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 04:45:27:751 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 04:45:27:751 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 04:45:28:003 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 04:45:28:003 KernelScheduler/(4258:4969): ## (3) Se crea el proceso - Estado: NEW
+[INFO] 04:45:28:003 KernelScheduler/(4258:4969): ## (3) Pasa del estado NEW al estado READY
+[DEBUG] 04:45:28:003 KernelScheduler/(4258:4400): Planificador: proceso (3) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 04:45:28:092 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 04:45:28:092 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 04:45:28:092 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 04:45:28:344 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 04:45:28:344 KernelScheduler/(4258:4969): ## (4) Se crea el proceso - Estado: NEW
+[INFO] 04:45:28:390 KernelScheduler/(4258:4969): ## (4) Pasa del estado NEW al estado READY
+[DEBUG] 04:45:28:390 KernelScheduler/(4258:4400): Planificador: proceso (3) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 04:45:28:391 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 04:45:28:391 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 04:45:28:391 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 04:45:28:686 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 04:45:28:686 KernelScheduler/(4258:4969): ## (5) Se crea el proceso - Estado: NEW
+[INFO] 04:45:28:686 KernelScheduler/(4258:4969): ## (5) Pasa del estado NEW al estado READY
+[DEBUG] 04:45:28:687 KernelScheduler/(4258:4400): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 04:45:28:735 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 04:45:28:735 KernelScheduler/(4258:4400): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 04:45:28:735 KernelScheduler/(4258:4400): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 04:45:29:030 KernelScheduler/(4258:4969): ## (0) - Solicitó syscall: EXIT
+[INFO] 04:45:29:030 KernelScheduler/(4258:4969): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 04:45:29:030 KernelScheduler/(4258:4969): ## (0) finalizó su ejecución con motivo de EXIT
+[DEBUG] 04:45:29:031 KernelScheduler/(4258:4400): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 04:45:29:031 KernelScheduler/(4258:4400): ## (5) Pasa del estado READY al estado EXEC
+[WARNING] 04:45:29:032 KernelScheduler/(4258:4969): ## (5) CPU desconectada durante EXEC — vuelve a READY
+[INFO] 04:45:29:032 KernelScheduler/(4258:4969): ## (5) Pasa del estado EXEC al estado READY
+[WARNING] 04:45:29:032 KernelScheduler/(4258:4969): ## CPU fd=9 desconectada
+[DEBUG] 04:45:29:032 KernelScheduler/(4258:4400): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 0 CPUs conectadas)
+[DEBUG] 04:45:29:632 KernelScheduler/(4258:4972): Timer de quantum descartado para (5) gen=1: ya no está en EXEC con esa generación de despacho
+[ERROR] 04:47:20:725 KernelScheduler/(4258:4399): KM cerró la conexión
