@@ -40,7 +40,8 @@ static t_mensaje* crear_msg_stdout(uint32_t pid, const char* contenido) {
     size_t len            = strlen(contenido);
     uint32_t payload_size = sizeof(uint32_t) + len;
     void* p               = malloc(payload_size);
-    memcpy(p, &pid, sizeof(uint32_t));
+    uint32_t pid_n        = htonl(pid);
+    memcpy(p, &pid_n, sizeof(uint32_t));
     memcpy((char*)p + sizeof(uint32_t), contenido, len);
     t_mensaje* msg    = malloc(sizeof(t_mensaje));
     msg->op_code      = MSG_IO_STDOUT;

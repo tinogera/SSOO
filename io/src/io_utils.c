@@ -62,8 +62,9 @@ void manejar_stdin(t_mensaje* msg, int fd_scheduler, t_log* logger) {
 }
 
 void manejar_stdout(t_mensaje* msg, int fd_scheduler, t_log* logger) {
-    uint32_t pid;
-    memcpy(&pid, msg->payload, sizeof(pid));
+    uint32_t pid_n;
+    memcpy(&pid_n, msg->payload, sizeof(pid_n));
+    uint32_t pid = ntohl(pid_n);
 
     size_t len = msg->payload_size - sizeof(pid);
     char* contenido = malloc(len + 1);
