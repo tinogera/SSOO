@@ -99,6 +99,7 @@ typedef enum {
     MSG_SWAP_LEER_RESP,         // 49 Swap → KM: bytes leidos
     MSG_SWAP_ESCRIBIR,          // 50 KM → Swap: { nro_bloque, bytes[] }
     MSG_TABLA_SEGMENTOS,        // 51 KM → CPU: tabla actualizada
+    MSG_FINALIZAR_PROCESO,      // 52 KS → KM: { pid } — libera segmentos + contexto al finalizar
 
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD

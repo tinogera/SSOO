@@ -90,6 +90,7 @@ static t_list*         lista_stdin_pendientes = NULL;
 static pthread_mutex_t mutex_stdin_pendientes = PTHREAD_MUTEX_INITIALIZER;
 
 static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size);
+static void       avisar_km_finalizacion(int pid);
 static void       manejar_bsod(void);
 static void*      manejar_mas_memoria(void* _);
 static void*      thread_km_listener(void* _);
@@ -182,6 +183,7 @@ static void finalizar_proceso_bsod(t_proceso* proc) {
     pthread_mutex_lock(&mutex_exit);
     queue_push(cola_exit, proc);
     pthread_mutex_unlock(&mutex_exit);
+    avisar_km_finalizacion(proc->PID);
 }
 
 static void manejar_bsod(void) {
@@ -293,6 +295,17 @@ static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size) {
 
     pthread_mutex_unlock(&mutex_km_req);
     return resp;
+}
+
+// Avisa a KM que el proceso terminó (EXIT/ERROR/SEG_FAULT/BSOD) para que
+// libere los segmentos + contexto que tenía asignados. Sin esto esa memoria
+// queda perdida para siempre: KM no tiene forma propia de enterarse.
+static void avisar_km_finalizacion(int pid) {
+    uint32_t pid_n = htonl((uint32_t)pid);
+    t_mensaje* resp = km_request(MSG_FINALIZAR_PROCESO, &pid_n, sizeof(uint32_t));
+    if (!resp || resp->op_code != MSG_OK)
+        log_error(logger, "KM no confirmó la liberación de memoria del proceso %d", pid);
+    if (resp) free_mensaje(resp);
 }
 
 static void* thread_km_listener(void* _) {
@@ -938,6 +951,7 @@ static void finalizar_por_error_mem(t_proceso* proc) {
     pthread_mutex_lock(&mutex_exit);
     queue_push(cola_exit, proc);
     pthread_mutex_unlock(&mutex_exit);
+    avisar_km_finalizacion(proc->PID);
     sem_post(&sem_cpu_disponible);
 }
 
@@ -1088,6 +1102,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 pthread_mutex_lock(&mutex_exit);
                 queue_push(cola_exit, proc);
                 pthread_mutex_unlock(&mutex_exit);
+                avisar_km_finalizacion(pid);
                 sem_post(&sem_cpu_disponible);
 
             } else if (motivo == MOTIVO_DEVOLUCION_ERROR) {
@@ -1096,6 +1111,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 pthread_mutex_lock(&mutex_exit);
                 queue_push(cola_exit, proc);
                 pthread_mutex_unlock(&mutex_exit);
+                avisar_km_finalizacion(pid);
                 sem_post(&sem_cpu_disponible);
 
             } else if (motivo == MOTIVO_DEVOLUCION_SEG_FAULT) {
@@ -1104,6 +1120,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 pthread_mutex_lock(&mutex_exit);
                 queue_push(cola_exit, proc);
                 pthread_mutex_unlock(&mutex_exit);
+                avisar_km_finalizacion(pid);
                 sem_post(&sem_cpu_disponible);
 
             } else if (motivo == MOTIVO_DEVOLUCION_INTERRUPCION) {
@@ -1259,6 +1276,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 pthread_mutex_lock(&mutex_exit);
                 queue_push(cola_exit, proc);
                 pthread_mutex_unlock(&mutex_exit);
+                avisar_km_finalizacion(pid);
                 sem_post(&sem_cpu_disponible);
             }
             break;
@@ -1373,6 +1391,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 pthread_mutex_lock(&mutex_exit);
                 queue_push(cola_exit, proc);
                 pthread_mutex_unlock(&mutex_exit);
+                avisar_km_finalizacion(pid);
                 sem_post(&sem_cpu_disponible);
             }
             // No se responde MSG_OK: la CPU no lo espera (tras el EXIT devuelve

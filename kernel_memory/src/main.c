@@ -420,6 +420,55 @@ static void eliminar_segmento(t_contexto* ctx, uint32_t id_seg) {
 }
 
 // ---------------------------------------------------------------------------
+// Finalización de proceso — libera todo lo que tenía ocupado
+// (segmentos residentes en memoria, bloques en Swap, contexto y script_path).
+// Se llama cuando el KS avisa que un proceso terminó (EXIT/ERROR/SEG_FAULT);
+// sin esto la memoria que tenía asignada queda perdida para siempre.
+// ---------------------------------------------------------------------------
+static void finalizar_proceso(uint32_t pid) {
+    pthread_mutex_lock(&mutex_contextos);
+    t_contexto* ctx = buscar_contexto(pid);
+    if (!ctx) {
+        pthread_mutex_unlock(&mutex_contextos);
+        return;
+    }
+
+    // Segmentos todavía residentes en memoria física.
+    while (ctx->cant_segmentos > 0) {
+        eliminar_segmento(ctx, ctx->segmentos[0].id_segmento);
+    }
+
+    // Segmentos que quedaron en Swap (proceso suspendido al momento de finalizar).
+    for (int i = list_size(swap_metadata) - 1; i >= 0; i--) {
+        t_swap_metadata* m = list_get(swap_metadata, i);
+        if (m->pid != pid) continue;
+        for (uint32_t b = 0; b < m->cant_bloques; b++) {
+            swap_bitmap[m->bloques[b]] = 0;
+        }
+        list_remove(swap_metadata, i);
+        free(m->bloques);
+        free(m);
+    }
+
+    list_remove_element(contextos, ctx);
+    free(ctx->segmentos);
+    free(ctx);
+
+    for (int i = 0; i < list_size(script_paths); i++) {
+        t_pid_path* pp = list_get(script_paths, i);
+        if (pp->pid == pid) {
+            list_remove(script_paths, i);
+            free(pp->path);
+            free(pp);
+            break;
+        }
+    }
+
+    pthread_mutex_unlock(&mutex_contextos);
+    log_info(logger, "## PID: %u - Proceso finalizado, memoria liberada", pid);
+}
+
+// ---------------------------------------------------------------------------
 // Compactación
 // ---------------------------------------------------------------------------
 static void compactar(void) {
@@ -1022,6 +1071,14 @@ static void* atender_cliente(void* arg) {
                 // suspendido hasta el próximo MSG_MAS_MEMORIA.
                 enviar_mensaje(fd, MSG_ERROR, NULL, 0);
             }
+        }
+
+        // FINALIZAR PROCESO (EXIT/ERROR/SEG_FAULT) — libera su memoria
+        else if (pedido->op_code == MSG_FINALIZAR_PROCESO) {
+            uint32_t pid_n; memcpy(&pid_n, pedido->payload, 4);
+            uint32_t pid = ntohl(pid_n);
+            finalizar_proceso(pid);
+            enviar_mensaje(fd, MSG_OK, NULL, 0);
         }
 
         else {
