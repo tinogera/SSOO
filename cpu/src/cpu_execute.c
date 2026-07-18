@@ -7,6 +7,10 @@
 #include "cpu_logs.h"
 #include "cpu_mmu.h"
 
+/*
+ * En este archivo ejecuto sólo las instrucciones básicas. No hay sockets ni
+ * decisiones de planificación: leo/escribo registros y dejo actualizado el PC.
+ */
 static uint32_t parsear_uint32(const char* valor) {
     return (uint32_t) strtoul(valor, NULL, 10);
 }
@@ -25,6 +29,7 @@ static void loguear_ejecucion(t_instruccion_decodificada* instruccion, uint32_t 
 }
 
 static t_resultado_ejecucion ejecutar_noop(t_registros_cpu* registros) {
+    // NOOP no cambia datos, pero sí consume una instrucción.
     registros->pc++;
     return CPU_EXEC_OK;
 }
@@ -38,6 +43,8 @@ static t_resultado_ejecucion ejecutar_set(t_instruccion_decodificada* instruccio
         return CPU_EXEC_ERROR;
     }
 
+    // Incluso si el destino fue PC, SET termina incrementándolo como indica
+    // este flujo. Por eso SET PC 0 deja la próxima búsqueda en PC 1.
     registros->pc++;
     return CPU_EXEC_OK;
 }
@@ -56,6 +63,7 @@ static t_resultado_ejecucion ejecutar_sum(t_instruccion_decodificada* instruccio
         return CPU_EXEC_ERROR;
     }
 
+    // El primer registro es destino y también uno de los operandos.
     if (!escribir_valor_registro_cpu(registros, instruccion->parametros[0], destino + origen)) {
         return CPU_EXEC_ERROR;
     }
@@ -78,6 +86,7 @@ static t_resultado_ejecucion ejecutar_sub(t_instruccion_decodificada* instruccio
         return CPU_EXEC_ERROR;
     }
 
+    // SUB conserva el orden: destino = destino - origen.
     if (!escribir_valor_registro_cpu(registros, instruccion->parametros[0], destino - origen)) {
         return CPU_EXEC_ERROR;
     }
@@ -96,6 +105,7 @@ static t_resultado_ejecucion ejecutar_jnz(t_instruccion_decodificada* instruccio
         return CPU_EXEC_ERROR;
     }
 
+    // JNZ es la única básica que puede reemplazar PC en vez de incrementarlo.
     if (valor_registro != 0) {
         registros->pc = parsear_uint32(instruccion->parametros[1]);
     } else {
@@ -117,6 +127,7 @@ t_resultado_ejecucion ejecutar_instruccion(
 
     loguear_ejecucion(instruccion, pid, logger);
 
+    // Este switch es el execute de las instrucciones que sólo usan registros.
     switch (instruccion->opcode) {
         case CPU_INST_NOOP:
             return ejecutar_noop(registros);

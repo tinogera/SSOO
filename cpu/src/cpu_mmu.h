@@ -12,6 +12,7 @@ typedef enum {
 } t_resultado_mmu;
 
 typedef struct {
+    // Además de la dirección física guardo cómo llegué a ella y en qué MS está.
     uint32_t id_segmento;
     uint32_t desplazamiento;
     uint32_t id_memory_stick;
@@ -19,6 +20,7 @@ typedef struct {
     uint32_t limite_segmento;
 } t_traduccion_mmu;
 
+// main carga este valor desde config antes de ejecutar procesos.
 void set_segment_max_size(uint32_t tamanio);
 
 t_resultado_mmu traducir_direccion_logica(

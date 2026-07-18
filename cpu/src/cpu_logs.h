@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <commons/log.h>
 
+// Formatos comunes de los eventos obligatorios de CPU.
 void log_cpu_fetch(t_log* logger, uint32_t pid, uint32_t pc);
 void log_cpu_interrupcion(t_log* logger);
 void log_cpu_ejecucion(t_log* logger, uint32_t pid, const char* instruccion, const char* parametros);

@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <commons/log.h>
 
+// Todas estas funciones arman el payload y lo mandan a KS; no ejecutan la
+// operación final. INIT_PROC es la única que espera un OK inmediato.
 bool enviar_syscall_mutex_create(int socket_kernel, uint32_t pid, const char* nombre, t_log* logger);
 bool enviar_syscall_mutex_lock(int socket_kernel, uint32_t pid, const char* nombre, t_log* logger);
 bool enviar_syscall_mutex_unlock(int socket_kernel, uint32_t pid, const char* nombre, t_log* logger);

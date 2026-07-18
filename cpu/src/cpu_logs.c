@@ -1,5 +1,7 @@
 #include "cpu_logs.h"
 
+// Dejé los logs obligatorios centralizados para que todas las instrucciones
+// mantengan el mismo formato y no se repitan strings por distintos archivos.
 void log_cpu_fetch(t_log* logger, uint32_t pid, uint32_t pc) {
     log_info(logger, "## PID: %u - FETCH - Program Counter: %u", pid, pc);
 }

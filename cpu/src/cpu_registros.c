@@ -2,11 +2,17 @@
 
 #include <string.h>
 
+/*
+ * Centralicé el acceso a registros para no repetir casts y comparaciones en
+ * cada instrucción. AX/BX/CX/DX son de 8 bits; el resto y PC son de 32 bits.
+ */
 void inicializar_registros_cpu(t_registros_cpu* registros) {
+    // Al poner toda la estructura en cero también dejo PC en la instrucción 0.
     memset(registros, 0, sizeof(t_registros_cpu));
 }
 
 bool leer_valor_registro_cpu(t_registros_cpu* registros, const char* nombre, uint32_t* valor) {
+    // Devuelvo todo como uint32_t para que execute tenga una interfaz única.
     if (strcmp(nombre, "AX") == 0)  { *valor = registros->ax;  return true; }
     if (strcmp(nombre, "BX") == 0)  { *valor = registros->bx;  return true; }
     if (strcmp(nombre, "CX") == 0)  { *valor = registros->cx;  return true; }
@@ -28,6 +34,7 @@ bool escribir_valor_registro_cpu(t_registros_cpu* registros, const char* nombre,
     }
 
     if (tamanio == 1) {
+        // El cast hace el truncamiento natural. Por ejemplo, 300 en AX queda 44.
         uint8_t valor_8 = (uint8_t) valor;
 
         if (strcmp(nombre, "AX") == 0) { registros->ax = valor_8; return true; }
@@ -48,6 +55,7 @@ bool escribir_valor_registro_cpu(t_registros_cpu* registros, const char* nombre,
 }
 
 bool tamanio_registro_cpu(const char* nombre, uint32_t* tamanio) {
+    // Este tamaño también define cuántos bytes leen/escriben MOV_IN y MOV_OUT.
     if (
         strcmp(nombre, "AX") == 0 ||
         strcmp(nombre, "BX") == 0 ||

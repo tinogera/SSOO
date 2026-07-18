@@ -8,6 +8,7 @@
 
 #include "cpu_registros.h"
 
+// El contexto completo va a KM. A KS le devuelvo este resumen con PID, motivo y PC.
 bool devolver_proceso_a_scheduler(
     int socket_kernel,
     uint32_t pid,

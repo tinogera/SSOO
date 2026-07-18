@@ -7,9 +7,12 @@
 
 #include "cpu_logs.h"
 
+/* FETCH = pedir a KM la instrucción del PID en el PC actual. KM conserva los
+ * scripts; CPU sólo recibe una copia del texto que después va a decodificar. */
 char* fetch_instruccion(int socket_memory, uint32_t pid, t_registros_cpu* registros, t_log* logger) {
     log_cpu_fetch(logger, pid, registros->pc);
 
+    // PID y PC son uint32_t, por eso convierto ambos a byte order de red.
     t_payload_fetch_instruccion pedido = {
         .pid = htonl(pid),
         .pc = htonl(registros->pc)
@@ -29,6 +32,8 @@ char* fetch_instruccion(int socket_memory, uint32_t pid, t_registros_cpu* regist
         return NULL;
     }
 
+    // deserializar_string crea otra reserva; puedo liberar el mensaje y devolver
+    // el texto al ciclo, que se encarga de hacer free después del decode.
     char* instruccion = deserializar_string(respuesta->payload);
     free_mensaje(respuesta);
 

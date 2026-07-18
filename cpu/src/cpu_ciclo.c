@@ -14,6 +14,13 @@
 #include "cpu_contexto.h"
 #include "cpu_mmu.h"
 
+/*
+ * Acá está el corazón de CPU: fetch, decode y execute en un while.
+ * El while no termina porque se acabó un quantum por sí solo. Termina cuando
+ * aparece una syscall, EXIT, una interrupción de KS, un segfault o un error.
+ */
+
+// Armo de nuevo los parámetros únicamente para dejar el log legible.
 static void armar_parametros(t_instruccion_decodificada* instruccion, char* parametros, size_t parametros_size) {
     parametros[0] = '\0';
 
@@ -29,6 +36,8 @@ static uint32_t parsear_uint32(const char* valor) {
     return (uint32_t) strtoul(valor, NULL, 10);
 }
 
+// Esta función no resuelve la syscall: sólo valida parámetros, arma el payload
+// y se la comunica a KS, que es quien decide si el proceso bloquea o continúa.
 static bool ejecutar_syscall(
     int socket_kernel,
     uint32_t pid,
@@ -85,6 +94,8 @@ static bool ejecutar_syscall(
                 return false;
             }
 
+            // En STDIN/STDOUT los parámetros son nombres de registros. Sus
+            // valores contienen la dirección lógica y la cantidad de bytes.
             uint32_t direccion_logica;
             uint32_t tamanio;
             if (
@@ -138,11 +149,13 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     t_log* logger
 ) {
     while (true) {
+        // FETCH: KM tiene los scripts, por eso le pido la línea indicada por PC.
         char* instruccion_texto = fetch_instruccion(socket_memory, pid, registros, logger);
         if (instruccion_texto == NULL) {
             return CPU_CICLO_ERROR_FETCH;
         }
 
+        // DECODE: paso del texto a un opcode y un arreglo de parámetros.
         t_instruccion_decodificada instruccion = decode_instruccion(instruccion_texto);
         free(instruccion_texto);
 
@@ -152,6 +165,8 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
         }
 
         if (es_syscall_o_exit(instruccion.opcode)) {
+            // Avanzo el PC antes de devolver el proceso para que, al reanudarlo,
+            // no vuelva a ejecutar la misma syscall.
             registros->pc++;
 
             if (!ejecutar_syscall(socket_kernel, pid, &instruccion, registros, logger)) {
@@ -162,6 +177,7 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
         }
 
         if (es_instruccion_memoria(instruccion.opcode)) {
+            // MOV_IN, MOV_OUT y COPY_MEM hacen MMU y después hablan con el MS.
             t_resultado_memoria_cpu resultado_memoria = ejecutar_instruccion_memoria(
                 sockets_ms,
                 n_sockets_ms,
@@ -181,6 +197,8 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
                 return CPU_CICLO_ERROR_EXECUTE;
             }
 
+            // El desalojo se revisa entre instrucciones, nunca a mitad de una.
+            // De esta manera el contexto queda en un punto consistente.
             t_interrupcion_cpu interrupcion;
             if (recibir_interrupcion_cpu_si_hay(socket_kernel, &interrupcion, logger)) {
                 return CPU_CICLO_INTERRUPCION;
@@ -189,12 +207,14 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
             continue;
         }
 
+        // Si no era syscall ni memoria, es una instrucción básica de registros.
         t_resultado_ejecucion resultado = ejecutar_instruccion(&instruccion, registros, pid, logger);
         if (resultado != CPU_EXEC_OK) {
             log_error(logger, "No se pudo ejecutar la instruccion del PID %u", pid);
             return CPU_CICLO_ERROR_EXECUTE;
         }
 
+        // También reviso interrupciones después de cada instrucción básica.
         t_interrupcion_cpu interrupcion;
         if (recibir_interrupcion_cpu_si_hay(socket_kernel, &interrupcion, logger)) {
             return CPU_CICLO_INTERRUPCION;

@@ -4,6 +4,8 @@
 #include <utils/protocolo.h>
 #include <utils/sockets.h>
 
+/* Dispatch es la entrada de una ráfaga: KS ya eligió el proceso y acá CPU se
+ * limita a esperar el mensaje y recuperar su PID. */
 bool recibir_proceso_a_ejecutar(int socket_kernel, uint32_t* pid, t_log* logger) {
     while (1) {
         t_mensaje* mensaje = recibir_mensaje(socket_kernel);
@@ -26,6 +28,7 @@ bool recibir_proceso_a_ejecutar(int socket_kernel, uint32_t* pid, t_log* logger)
             return false;
         }
 
+        // Primero validé opcode y tamaño; recién ahora es seguro castear el payload.
         t_payload_despachar_proceso* payload = (t_payload_despachar_proceso*) mensaje->payload;
         *pid = ntohl(payload->pid);
 

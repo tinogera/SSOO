@@ -6,6 +6,14 @@
 #include <utils/protocolo.h>
 #include <utils/sockets.h>
 
+/*
+ * Estas funciones sólo serializan pedidos hacia KS. La CPU no implementa acá
+ * el sleep, la IO, los mutex ni la asignación de segmentos: eso se coordina
+ * entre Scheduler, KM e IO. El PC ya fue incrementado en cpu_ciclo.c.
+ */
+
+// INIT_PROC necesita saber si KS pudo crear al hijo, por eso esta syscall sí
+// espera una respuesta inmediata. Las demás terminan con el envío del pedido.
 static bool esperar_ok_kernel(int socket_kernel, const char* nombre_syscall, t_log* logger) {
     t_mensaje* respuesta = recibir_mensaje(socket_kernel);
     if (respuesta == NULL) {
@@ -23,6 +31,7 @@ static bool esperar_ok_kernel(int socket_kernel, const char* nombre_syscall, t_l
 }
 
 static bool enviar_syscall_mutex(int socket_kernel, uint32_t op_code, uint32_t pid, const char* nombre, const char* nombre_syscall, t_log* logger) {
+    // Los tres mutex comparten el mismo formato: PID seguido del nombre con '\0'.
     uint32_t nombre_size = strlen(nombre) + 1;
     uint32_t payload_size = sizeof(uint32_t) + nombre_size;
     void* payload = malloc(payload_size);
@@ -51,6 +60,7 @@ bool enviar_syscall_mutex_unlock(int socket_kernel, uint32_t pid, const char* no
 }
 
 bool enviar_syscall_sleep(int socket_kernel, uint32_t pid, uint32_t tiempo_ms, t_log* logger) {
+    // KS recibe el tiempo y mueve el proceso a BLOCK mientras trabaja la IO SLEEP.
     t_payload_syscall_sleep payload = {
         .pid = htonl(pid),
         .tiempo_ms = htonl(tiempo_ms)
@@ -71,6 +81,8 @@ static bool enviar_syscall_io_memoria(
     const char* nombre_syscall,
     t_log* logger
 ) {
+    // STDIN y STDOUT usan el mismo payload; sólo cambia el opcode que indica
+    // si los datos entran a memoria o salen de ella.
     t_payload_syscall_io_memoria payload = {
         .pid = htonl(pid),
         .direccion_logica = htonl(direccion_logica),
@@ -99,6 +111,7 @@ bool enviar_syscall_stdin(int socket_kernel, uint32_t pid, uint32_t direccion_lo
 }
 
 bool enviar_syscall_mem_alloc(int socket_kernel, uint32_t pid, uint32_t id_segmento, uint32_t tamanio, t_log* logger) {
+    // CPU pide el segmento, pero la ubicación y la compactación las decide KM.
     t_payload_syscall_mem_alloc payload = {
         .pid         = htonl(pid),
         .id_segmento = htonl(id_segmento),
@@ -118,6 +131,7 @@ bool enviar_syscall_mem_alloc(int socket_kernel, uint32_t pid, uint32_t id_segme
 }
 
 bool enviar_syscall_mem_free(int socket_kernel, uint32_t pid, uint32_t id_segmento, t_log* logger) {
+    // Sólo hace falta identificar proceso y segmento; KM conoce base y límite.
     t_payload_syscall_mem_free payload = {
         .pid         = htonl(pid),
         .id_segmento = htonl(id_segmento)
@@ -130,6 +144,8 @@ bool enviar_syscall_mem_free(int socket_kernel, uint32_t pid, uint32_t id_segmen
 }
 
 bool enviar_syscall_init_proc(int socket_kernel, uint32_t pid, const char* archivo, uint32_t prioridad, t_log* logger) {
+    // El path tiene tamaño variable, así que el layout queda:
+    // [pid][archivo con \0][prioridad]. KS lo desarma en ese mismo orden.
     uint32_t archivo_size = strlen(archivo) + 1;
     uint32_t payload_size = sizeof(uint32_t) + archivo_size + sizeof(uint32_t);
     uint8_t* payload = malloc(payload_size);
@@ -153,10 +169,12 @@ bool enviar_syscall_init_proc(int socket_kernel, uint32_t pid, const char* archi
     enviar_mensaje(socket_kernel, MSG_INIT_PROC, payload, payload_size);
 
     free(payload);
+    // A diferencia del resto, acá espero OK/ERROR antes de devolver al padre.
     return esperar_ok_kernel(socket_kernel, "INIT_PROC", logger);
 }
 
 bool enviar_syscall_exit(int socket_kernel, uint32_t pid, t_log* logger) {
+    // EXIT no apaga la CPU: finaliza este proceso y después puedo recibir otro.
     t_payload_syscall_exit payload = {
         .pid = htonl(pid)
     };
