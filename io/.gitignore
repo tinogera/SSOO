@@ -1,7 +1,6 @@
 # Generated files
 bin/
 obj/
-*.log
 
 # Configuración local (cada uno tiene la suya)
 *.config
