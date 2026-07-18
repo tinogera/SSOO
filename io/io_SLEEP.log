@@ -1,4 +1,24 @@
-[INFO] 04:45:16:334 IO/(4402:4402): Iniciando IO tipo SLEEP
-[INFO] 04:45:16:334 IO/(4402:4402): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
-[INFO] 04:45:16:334 IO/(4402:4402): ## Conectado a Kernel Scheduler
-[WARNING] 04:47:22:992 IO/(4402:4402): Kernel Scheduler cerró la conexión
+[INFO] 05:17:36:233 IO/(6308:6308): Iniciando IO tipo SLEEP
+[INFO] 05:17:36:233 IO/(6308:6308): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 05:17:36:233 IO/(6308:6308): ## Conectado a Kernel Scheduler
+[INFO] 05:17:55:738 IO/(6308:6308): ## PID: 1 - Inicio de IO
+[INFO] 05:17:55:738 IO/(6308:6308): ## PID: 1 - Haciendo sleep por 20000 milisegundos
+[INFO] 05:18:15:787 IO/(6308:6308): ## PID: 1 - Fin de IO
+[INFO] 05:18:15:788 IO/(6308:6308): ## PID: 5 - Inicio de IO
+[INFO] 05:18:15:788 IO/(6308:6308): ## PID: 5 - Haciendo sleep por 100 milisegundos
+[INFO] 05:18:15:895 IO/(6308:6308): ## PID: 5 - Fin de IO
+[INFO] 05:18:19:490 IO/(6308:6308): ## PID: 5 - Inicio de IO
+[INFO] 05:18:19:490 IO/(6308:6308): ## PID: 5 - Haciendo sleep por 100 milisegundos
+[INFO] 05:18:19:591 IO/(6308:6308): ## PID: 5 - Fin de IO
+[INFO] 05:18:22:955 IO/(6308:6308): ## PID: 5 - Inicio de IO
+[INFO] 05:18:22:955 IO/(6308:6308): ## PID: 5 - Haciendo sleep por 100 milisegundos
+[INFO] 05:18:23:071 IO/(6308:6308): ## PID: 5 - Fin de IO
+[INFO] 05:19:33:887 IO/(6308:6308): ## PID: 2 - Inicio de IO
+[INFO] 05:19:33:887 IO/(6308:6308): ## PID: 2 - Haciendo sleep por 20000 milisegundos
+[INFO] 05:19:53:888 IO/(6308:6308): ## PID: 2 - Fin de IO
+[INFO] 05:19:53:888 IO/(6308:6308): ## PID: 1 - Inicio de IO
+[INFO] 05:19:53:888 IO/(6308:6308): ## PID: 1 - Haciendo sleep por 20000 milisegundos
+[INFO] 05:20:13:922 IO/(6308:6308): ## PID: 1 - Fin de IO
+[INFO] 05:20:13:922 IO/(6308:6308): ## PID: 2 - Inicio de IO
+[INFO] 05:20:13:922 IO/(6308:6308): ## PID: 2 - Haciendo sleep por 20000 milisegundos
+[INFO] 05:20:33:925 IO/(6308:6308): ## PID: 2 - Fin de IO

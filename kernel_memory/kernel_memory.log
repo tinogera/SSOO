@@ -1,26 +1,396 @@
-[DEBUG] 04:44:35:818 KernelMemory/(3898:3898): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=128
-[INFO] 04:44:35:819 KernelMemory/(3898:3898): Kernel Memory escuchando en puerto 23841
-[INFO] 04:44:41:307 KernelMemory/(3898:4136): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
-[INFO] 04:44:44:640 KernelMemory/(3898:4256): ## Memory Stick de 256 bytes Conectada
-[INFO] 04:45:12:686 KernelMemory/(3898:4398): ## Kernel Scheduler Conectado - FD del socket: 7
-[INFO] 04:45:12:686 KernelMemory/(3898:4398): ## PID: 0 - Proceso Creado
-[DEBUG] 04:45:12:686 KernelMemory/(3898:4398): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PLANI_PRE_0.prc
-[INFO] 04:45:27:245 KernelMemory/(3898:4970): ## CPU Conectada - FD: 8
-[INFO] 04:45:27:496 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 0 - Instrucción: INIT_PROC PLANI_PRE_1.prc 3
-[INFO] 04:45:27:497 KernelMemory/(3898:4398): ## PID: 1 - Proceso Creado
-[DEBUG] 04:45:27:497 KernelMemory/(3898:4398): PID: 1 - Path de script guardado: PLANI_PRE_1.prc
-[INFO] 04:45:27:748 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 1 - Instrucción: INIT_PROC PLANI_PRE_1.prc 3
-[INFO] 04:45:27:749 KernelMemory/(3898:4398): ## PID: 2 - Proceso Creado
-[DEBUG] 04:45:27:749 KernelMemory/(3898:4398): PID: 2 - Path de script guardado: PLANI_PRE_1.prc
-[INFO] 04:45:28:003 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 2 - Instrucción: INIT_PROC PLANI_PRE_2.prc 2
-[INFO] 04:45:28:003 KernelMemory/(3898:4398): ## PID: 3 - Proceso Creado
-[DEBUG] 04:45:28:003 KernelMemory/(3898:4398): PID: 3 - Path de script guardado: PLANI_PRE_2.prc
-[INFO] 04:45:28:344 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 3 - Instrucción: INIT_PROC PLANI_PRE_2.prc 2
-[INFO] 04:45:28:390 KernelMemory/(3898:4398): ## PID: 4 - Proceso Creado
-[DEBUG] 04:45:28:390 KernelMemory/(3898:4398): PID: 4 - Path de script guardado: PLANI_PRE_2.prc
-[INFO] 04:45:28:685 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 4 - Instrucción: INIT_PROC PLANI_PRE_3.prc 1
-[INFO] 04:45:28:686 KernelMemory/(3898:4398): ## PID: 5 - Proceso Creado
-[DEBUG] 04:45:28:686 KernelMemory/(3898:4398): PID: 5 - Path de script guardado: PLANI_PRE_3.prc
-[INFO] 04:45:29:029 KernelMemory/(3898:4970): ## PID: 0 - Obtener instrucción: 5 - Instrucción: EXIT
-[INFO] 04:45:29:030 KernelMemory/(3898:4398): ## PID: 0 - Proceso finalizado, memoria liberada
-[INFO] 04:45:29:033 KernelMemory/(3898:4970): Cliente desconectado (fd=8)
+[DEBUG] 05:17:06:977 KernelMemory/(5802:5802): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=128
+[INFO] 05:17:06:978 KernelMemory/(5802:5802): Kernel Memory escuchando en puerto 23841
+[INFO] 05:17:10:659 KernelMemory/(5802:6040): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 05:17:22:959 KernelMemory/(5802:6161): ## Memory Stick de 256 bytes Conectada
+[INFO] 05:17:32:877 KernelMemory/(5802:6304): ## Kernel Scheduler Conectado - FD del socket: 7
+[INFO] 05:17:32:878 KernelMemory/(5802:6304): ## PID: 0 - Proceso Creado
+[DEBUG] 05:17:32:878 KernelMemory/(5802:6304): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PLANI_PRE_0.prc
+[INFO] 05:17:54:683 KernelMemory/(5802:6876): ## CPU Conectada - FD: 8
+[INFO] 05:17:54:938 KernelMemory/(5802:6876): ## PID: 0 - Obtener instrucción: 0 - Instrucción: INIT_PROC PLANI_PRE_1.prc 3
+[INFO] 05:17:54:939 KernelMemory/(5802:6304): ## PID: 1 - Proceso Creado
+[DEBUG] 05:17:54:939 KernelMemory/(5802:6304): PID: 1 - Path de script guardado: PLANI_PRE_1.prc
+[INFO] 05:17:55:191 KernelMemory/(5802:6876): ## PID: 1 - Obtener instrucción: 0 - Instrucción: SET AX 1
+[INFO] 05:17:55:442 KernelMemory/(5802:6876): ## PID: 1 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:17:55:694 KernelMemory/(5802:6876): ## PID: 1 - Obtener instrucción: 2 - Instrucción: SLEEP 20000
+[INFO] 05:17:55:999 KernelMemory/(5802:6876): ## PID: 0 - Obtener instrucción: 1 - Instrucción: INIT_PROC PLANI_PRE_1.prc 3
+[INFO] 05:17:56:000 KernelMemory/(5802:6304): ## PID: 2 - Proceso Creado
+[DEBUG] 05:17:56:000 KernelMemory/(5802:6304): PID: 2 - Path de script guardado: PLANI_PRE_1.prc
+[INFO] 05:17:56:299 KernelMemory/(5802:6876): ## PID: 0 - Obtener instrucción: 2 - Instrucción: INIT_PROC PLANI_PRE_2.prc 2
+[INFO] 05:17:56:301 KernelMemory/(5802:6304): ## PID: 3 - Proceso Creado
+[DEBUG] 05:17:56:301 KernelMemory/(5802:6304): PID: 3 - Path de script guardado: PLANI_PRE_2.prc
+[INFO] 05:17:56:642 KernelMemory/(5802:6876): ## PID: 0 - Obtener instrucción: 3 - Instrucción: INIT_PROC PLANI_PRE_2.prc 2
+[INFO] 05:17:56:764 KernelMemory/(5802:6304): ## PID: 4 - Proceso Creado
+[DEBUG] 05:17:56:764 KernelMemory/(5802:6304): PID: 4 - Path de script guardado: PLANI_PRE_2.prc
+[INFO] 05:17:57:016 KernelMemory/(5802:6876): ## PID: 0 - Obtener instrucción: 4 - Instrucción: INIT_PROC PLANI_PRE_3.prc 1
+[INFO] 05:17:57:016 KernelMemory/(5802:6304): ## PID: 5 - Proceso Creado
+[DEBUG] 05:17:57:016 KernelMemory/(5802:6304): PID: 5 - Path de script guardado: PLANI_PRE_3.prc
+[INFO] 05:17:57:268 KernelMemory/(5802:6876): ## PID: 0 - Obtener instrucción: 5 - Instrucción: EXIT
+[INFO] 05:17:57:269 KernelMemory/(5802:6304): ## PID: 0 - Proceso finalizado, memoria liberada
+[DEBUG] 05:17:57:269 KernelMemory/(5802:6876): PID: 0 - MSG_GUARDAR_CONTEXTO llegó después de que el proceso ya fue finalizado — se ignora
+[INFO] 05:17:57:568 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 0 - Instrucción: SET AX 1
+[INFO] 05:17:57:827 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 1 - Instrucción: SET BX 2
+[INFO] 05:17:58:078 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 2 - Instrucción: SET CX 3
+[INFO] 05:17:58:371 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 3 - Instrucción: SET DX 4
+[INFO] 05:17:58:623 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 4 - Instrucción: SET EAX 1001
+[INFO] 05:17:58:875 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 5 - Instrucción: SET EBX 1001
+[INFO] 05:17:59:219 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 6 - Instrucción: SET ECX 1001
+[INFO] 05:17:59:477 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 7 - Instrucción: SET EDX 1001
+[INFO] 05:17:59:730 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 8 - Instrucción: SET SI 0
+[INFO] 05:18:00:028 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 9 - Instrucción: SET DI 0
+[INFO] 05:18:00:280 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 10 - Instrucción: SLEEP 100
+[INFO] 05:18:00:578 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 0 - Instrucción: SET AX 50
+[INFO] 05:18:00:837 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:01:100 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:01:398 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:01:699 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:01:951 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:02:258 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:02:553 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:02:808 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:03:126 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:03:381 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:03:686 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:03:996 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:04:248 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:04:501 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:04:798 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:05:050 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:05:301 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:05:611 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:05:863 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:06:115 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:06:418 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:06:668 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:06:922 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:07:217 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:07:477 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:07:733 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:08:026 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:08:288 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:08:540 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:08:838 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:09:093 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:09:346 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:09:642 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:09:895 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:10:146 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:10:443 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:10:693 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:10:944 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:11:238 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:11:497 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:11:749 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:12:050 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:12:310 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:12:562 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:12:859 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:13:110 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:13:360 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:13:653 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:13:904 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:14:156 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:14:456 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:14:708 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:14:962 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:15:264 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:15:530 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:15:787 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:16:083 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:16:435 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 11 - Instrucción: SET AX 1
+[INFO] 05:18:16:686 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 12 - Instrucción: SET BX 2
+[INFO] 05:18:16:994 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 13 - Instrucción: SET CX 3
+[INFO] 05:18:17:472 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 14 - Instrucción: SET DX 4
+[INFO] 05:18:17:779 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 15 - Instrucción: SET EAX 1001
+[INFO] 05:18:18:050 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 16 - Instrucción: SET EBX 1001
+[INFO] 05:18:18:306 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 17 - Instrucción: SET ECX 1001
+[INFO] 05:18:18:657 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 18 - Instrucción: SET EDX 1001
+[INFO] 05:18:18:940 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 19 - Instrucción: SET SI 0
+[INFO] 05:18:19:194 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 20 - Instrucción: SET DI 0
+[INFO] 05:18:19:488 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 21 - Instrucción: SLEEP 100
+[INFO] 05:18:19:747 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:20:131 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 22 - Instrucción: SET AX 1
+[INFO] 05:18:20:388 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 23 - Instrucción: SET BX 2
+[INFO] 05:18:20:683 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 24 - Instrucción: SET CX 3
+[INFO] 05:18:20:992 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 25 - Instrucción: SET DX 4
+[INFO] 05:18:21:244 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 26 - Instrucción: SET EAX 1001
+[INFO] 05:18:21:495 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 27 - Instrucción: SET EBX 1001
+[INFO] 05:18:21:792 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 28 - Instrucción: SET ECX 1001
+[INFO] 05:18:22:053 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 29 - Instrucción: SET EDX 1001
+[INFO] 05:18:22:304 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 30 - Instrucción: SET SI 0
+[INFO] 05:18:22:649 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 31 - Instrucción: SET DI 0
+[INFO] 05:18:22:906 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 32 - Instrucción: SLEEP 100
+[INFO] 05:18:23:206 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:23:464 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 33 - Instrucción: SET AX 1
+[INFO] 05:18:23:717 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 34 - Instrucción: SET BX 2
+[INFO] 05:18:24:009 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 35 - Instrucción: SET CX 3
+[INFO] 05:18:24:368 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 36 - Instrucción: SET DX 4
+[INFO] 05:18:24:639 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 37 - Instrucción: SET EAX 1001
+[INFO] 05:18:24:992 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 38 - Instrucción: SET EBX 1001
+[INFO] 05:18:25:282 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 39 - Instrucción: SET ECX 1001
+[INFO] 05:18:25:533 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 40 - Instrucción: SET EDX 1001
+[INFO] 05:18:25:826 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 41 - Instrucción: SET SI 0
+[INFO] 05:18:26:103 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 42 - Instrucción: SET DI 0
+[INFO] 05:18:26:355 KernelMemory/(5802:6876): ## PID: 5 - Obtener instrucción: 43 - Instrucción: EXIT
+[INFO] 05:18:26:487 KernelMemory/(5802:6304): ## PID: 5 - Proceso finalizado, memoria liberada
+[INFO] 05:18:26:738 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:26:989 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:27:242 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:27:538 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:27:792 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:28:043 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:28:344 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:28:615 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:28:866 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:29:163 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:29:436 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:29:691 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:29:986 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:30:236 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:30:487 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:30:782 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:31:034 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:31:284 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:31:583 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:31:836 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:32:102 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:32:399 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:32:685 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:32:987 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:33:300 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:33:559 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:33:860 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:34:192 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:34:449 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:34:702 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:34:995 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:35:257 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:35:514 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:35:833 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:36:085 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:36:341 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:36:667 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:36:918 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:37:183 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:37:503 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:37:762 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:38:016 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:38:333 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:38:597 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:38:850 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:39:143 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:39:394 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:39:668 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:39:968 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:40:224 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:40:478 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:40:802 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:41:092 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:41:349 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:41:648 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:41:901 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:42:159 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:42:465 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:42:726 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:43:085 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:43:383 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:43:635 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:43:886 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:44:191 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:44:446 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:44:697 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:45:093 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:45:344 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:45:600 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:45:914 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:46:165 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:46:445 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:46:754 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:47:007 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:47:260 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:47:561 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:47:815 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:48:068 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:48:388 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:48:701 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:48:957 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:49:255 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:49:507 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:49:759 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:50:065 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:50:316 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:50:569 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:50:863 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:51:115 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:51:368 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:51:667 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:51:924 KernelMemory/(5802:6876): ## PID: 3 - Obtener instrucción: 4 - Instrucción: EXIT
+[INFO] 05:18:51:925 KernelMemory/(5802:6304): ## PID: 3 - Proceso finalizado, memoria liberada
+[DEBUG] 05:18:51:925 KernelMemory/(5802:6876): PID: 3 - MSG_GUARDAR_CONTEXTO llegó después de que el proceso ya fue finalizado — se ignora
+[INFO] 05:18:52:222 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 0 - Instrucción: SET AX 50
+[INFO] 05:18:52:472 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:52:726 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:53:026 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:53:278 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:53:528 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:53:823 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:54:074 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:54:324 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:54:633 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:54:893 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:55:148 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:55:469 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:55:793 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:56:057 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:56:411 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:56:663 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:56:919 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:57:221 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:57:479 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:57:731 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:58:026 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:58:280 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:58:533 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:58:828 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:59:079 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:18:59:338 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:18:59:652 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:18:59:903 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:00:172 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:00:470 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:00:729 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:00:984 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:01:283 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:01:536 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:01:787 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:02:091 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:02:342 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:02:606 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:02:946 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:03:232 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:03:483 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:03:790 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:04:046 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:04:297 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:04:594 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:04:850 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:05:102 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:05:404 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:05:664 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:05:915 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:06:213 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:06:465 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:06:716 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:07:010 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:07:261 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:07:515 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:07:809 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:08:061 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:08:319 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:08:613 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:08:864 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:09:122 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:09:417 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:09:668 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:09:919 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:10:214 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:10:465 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:10:716 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:11:009 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:11:332 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:11:601 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:11:897 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:12:147 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:12:415 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:12:712 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:12:967 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:13:242 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:13:535 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:13:785 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:14:036 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:14:341 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:14:596 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:14:847 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:15:141 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:15:392 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:15:642 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:15:938 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:16:197 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:16:448 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:16:745 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:16:997 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:17:248 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:17:541 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:17:793 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:18:044 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:18:338 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:18:589 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:18:840 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:19:133 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:19:384 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:19:634 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:19:934 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:20:185 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:20:437 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:20:730 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:20:981 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:21:232 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:21:525 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:21:777 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:22:029 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:22:326 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:22:578 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:22:830 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:23:121 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:23:372 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:23:623 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:23:918 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:24:169 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:24:420 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:24:713 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:24:972 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:25:222 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:25:517 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:25:769 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:26:019 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:26:313 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:26:564 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:26:816 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:27:112 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:27:363 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:27:614 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:27:911 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:28:161 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:28:412 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:28:708 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:28:959 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:29:250 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:29:552 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:29:803 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:30:058 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:30:379 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:30:630 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:30:890 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:31:191 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:31:442 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:31:693 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:31:990 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:32:245 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:32:496 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 05:19:32:789 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 05:19:33:040 KernelMemory/(5802:6876): ## PID: 4 - Obtener instrucción: 4 - Instrucción: EXIT
+[INFO] 05:19:33:041 KernelMemory/(5802:6304): ## PID: 4 - Proceso finalizado, memoria liberada
+[INFO] 05:19:33:336 KernelMemory/(5802:6876): ## PID: 2 - Obtener instrucción: 0 - Instrucción: SET AX 1
+[INFO] 05:19:33:587 KernelMemory/(5802:6876): ## PID: 2 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 05:19:33:838 KernelMemory/(5802:6876): ## PID: 2 - Obtener instrucción: 2 - Instrucción: SLEEP 20000
+[INFO] 05:19:34:138 KernelMemory/(5802:6876): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET AX 1
+[INFO] 05:19:34:390 KernelMemory/(5802:6876): ## PID: 1 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 05:19:34:641 KernelMemory/(5802:6876): ## PID: 1 - Obtener instrucción: 5 - Instrucción: SLEEP 20000
+[INFO] 05:19:54:189 KernelMemory/(5802:6876): ## PID: 2 - Obtener instrucción: 3 - Instrucción: SET AX 1
+[INFO] 05:19:54:445 KernelMemory/(5802:6876): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 05:19:54:696 KernelMemory/(5802:6876): ## PID: 2 - Obtener instrucción: 5 - Instrucción: SLEEP 20000
+[INFO] 05:20:14:173 KernelMemory/(5802:6876): ## PID: 1 - Obtener instrucción: 6 - Instrucción: EXIT
+[INFO] 05:20:14:216 KernelMemory/(5802:6304): ## PID: 1 - Proceso finalizado, memoria liberada
+[DEBUG] 05:20:33:891 KernelMemory/(5802:6304): PID: 2 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[DEBUG] 05:20:33:925 KernelMemory/(5802:6304): PID: 2 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 05:20:34:176 KernelMemory/(5802:6876): ## PID: 2 - Obtener instrucción: 6 - Instrucción: EXIT
+[INFO] 05:20:34:218 KernelMemory/(5802:6304): ## PID: 2 - Proceso finalizado, memoria liberada

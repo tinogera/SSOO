@@ -55,3 +55,195 @@
 [DEBUG] 04:45:29:032 KernelScheduler/(4258:4400): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 0 CPUs conectadas)
 [DEBUG] 04:45:29:632 KernelScheduler/(4258:4972): Timer de quantum descartado para (5) gen=1: ya no está en EXEC con esa generación de despacho
 [ERROR] 04:47:20:725 KernelScheduler/(4258:4399): KM cerró la conexión
+[DEBUG] 05:17:32:877 KernelScheduler/(6164:6164): Planificación resuelta: algoritmo=CMN n_colas=4 colas=[FIFO,RR,FIFO,RR] RR_QUANTUM=600ms QUEUE_PREEMPTION=TRUE SUSPENSION_TIMEOUT=60000ms
+[INFO] 05:17:32:877 KernelScheduler/(6164:6164): ## Conectado a Kernel Memory
+[INFO] 05:17:32:878 KernelScheduler/(6164:6164): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 05:17:32:878 KernelScheduler/(6164:6164): ## (0) Pasa del estado NEW al estado READY
+[DEBUG] 05:17:32:878 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
+[INFO] 05:17:36:233 KernelScheduler/(6164:6436): ## IO SLEEP Conectada
+[INFO] 05:17:37:830 KernelScheduler/(6164:6565): ## IO STDOUT Conectada
+[INFO] 05:17:39:689 KernelScheduler/(6164:6694): ## IO STDIN Conectada
+[INFO] 05:17:54:682 KernelScheduler/(6164:6875): ## CPU 0 Conectada
+[DEBUG] 05:17:54:682 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:54:682 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:17:54:939 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:17:54:939 KernelScheduler/(6164:6875): ## (1) Se crea el proceso - Estado: NEW
+[INFO] 05:17:54:939 KernelScheduler/(6164:6875): ## (1) Pasa del estado NEW al estado READY
+[INFO] 05:17:54:939 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 05:17:54:939 KernelScheduler/(6164:6306): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:54:939 KernelScheduler/(6164:6306): ## (1) Pasa del estado READY al estado EXEC
+[DEBUG] 05:17:54:939 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 05:17:55:737 KernelScheduler/(6164:6875): ## (1) - Solicitó syscall: SLEEP
+[INFO] 05:17:55:737 KernelScheduler/(6164:6875): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 05:17:55:737 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:55:737 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:17:56:000 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:17:56:000 KernelScheduler/(6164:6875): ## (2) Se crea el proceso - Estado: NEW
+[INFO] 05:17:56:000 KernelScheduler/(6164:6875): ## (2) Pasa del estado NEW al estado READY
+[DEBUG] 05:17:56:001 KernelScheduler/(6164:6306): Planificador: proceso (2) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 05:17:56:045 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 05:17:56:045 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:56:045 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:17:56:300 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:17:56:301 KernelScheduler/(6164:6875): ## (3) Se crea el proceso - Estado: NEW
+[INFO] 05:17:56:301 KernelScheduler/(6164:6875): ## (3) Pasa del estado NEW al estado READY
+[DEBUG] 05:17:56:302 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 05:17:56:346 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 05:17:56:347 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:56:347 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:17:56:686 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:17:56:686 KernelScheduler/(6164:6875): ## (4) Se crea el proceso - Estado: NEW
+[INFO] 05:17:56:764 KernelScheduler/(6164:6875): ## (4) Pasa del estado NEW al estado READY
+[DEBUG] 05:17:56:764 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 05:17:56:764 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 05:17:56:765 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:56:765 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 05:17:57:016 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 05:17:57:016 KernelScheduler/(6164:6875): ## (5) Se crea el proceso - Estado: NEW
+[INFO] 05:17:57:017 KernelScheduler/(6164:6875): ## (5) Pasa del estado NEW al estado READY
+[INFO] 05:17:57:017 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 05:17:57:017 KernelScheduler/(6164:6306): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:57:017 KernelScheduler/(6164:6306): ## (0) Pasa del estado READY al estado EXEC
+[DEBUG] 05:17:57:017 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 05:17:57:269 KernelScheduler/(6164:6875): ## (0) - Solicitó syscall: EXIT
+[INFO] 05:17:57:269 KernelScheduler/(6164:6875): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 05:17:57:269 KernelScheduler/(6164:6875): ## (0) finalizó su ejecución con motivo de EXIT
+[DEBUG] 05:17:57:269 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:57:269 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:17:58:119 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:17:58:119 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:17:58:119 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:58:119 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:17:58:967 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:17:58:968 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:17:58:968 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:58:968 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:17:59:776 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:17:59:776 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:17:59:777 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:17:59:777 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:00:280 KernelScheduler/(6164:6875): ## (5) - Solicitó syscall: SLEEP
+[INFO] 05:18:00:324 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 05:18:00:324 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:00:324 KernelScheduler/(6164:6306): ## (3) Pasa del estado READY al estado EXEC
+[DEBUG] 05:18:00:378 KernelScheduler/(6164:6883): Timer de quantum descartado para (5) gen=4: ya no está en EXEC con esa generación de despacho
+[INFO] 05:18:15:788 KernelScheduler/(6164:6436): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 05:18:15:788 KernelScheduler/(6164:6436): ## (1) finalizó IO y pasa a READY
+[DEBUG] 05:18:15:788 KernelScheduler/(6164:6306): Planificador: proceso (4) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 05:18:15:895 KernelScheduler/(6164:6436): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 05:18:15:895 KernelScheduler/(6164:6436): ## (5) finalizó IO y pasa a READY
+[INFO] 05:18:15:895 KernelScheduler/(6164:6436): ## (3) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 1
+[DEBUG] 05:18:15:895 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 05:18:16:127 KernelScheduler/(6164:6875): ## (3) Pasa del estado EXEC al estado READY
+[DEBUG] 05:18:16:127 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:16:127 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:16:743 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:18:16:743 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:18:16:743 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:16:743 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:17:523 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:18:17:523 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:18:17:523 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:17:523 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:18:396 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:18:18:396 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:18:18:396 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:18:396 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:19:235 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:18:19:235 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:18:19:235 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:19:235 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:19:489 KernelScheduler/(6164:6875): ## (5) - Solicitó syscall: SLEEP
+[INFO] 05:18:19:489 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 05:18:19:490 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:19:490 KernelScheduler/(6164:6306): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:18:19:591 KernelScheduler/(6164:6436): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 05:18:19:591 KernelScheduler/(6164:6436): ## (5) finalizó IO y pasa a READY
+[INFO] 05:18:19:591 KernelScheduler/(6164:6436): ## (3) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 1
+[DEBUG] 05:18:19:591 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 05:18:19:835 KernelScheduler/(6164:6875): ## (3) Pasa del estado EXEC al estado READY
+[DEBUG] 05:18:19:836 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:19:836 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[DEBUG] 05:18:19:836 KernelScheduler/(6164:6889): Timer de quantum descartado para (5) gen=9: ya no está en EXEC con esa generación de despacho
+[INFO] 05:18:20:737 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:18:20:737 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:18:20:737 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:20:737 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:21:539 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:18:21:539 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:18:21:539 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:21:539 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:22:397 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:18:22:397 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:18:22:397 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:22:398 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:22:907 KernelScheduler/(6164:6875): ## (5) - Solicitó syscall: SLEEP
+[INFO] 05:18:22:954 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 05:18:22:954 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:22:955 KernelScheduler/(6164:6306): ## (3) Pasa del estado READY al estado EXEC
+[DEBUG] 05:18:22:998 KernelScheduler/(6164:6896): Timer de quantum descartado para (5) gen=13: ya no está en EXEC con esa generación de despacho
+[INFO] 05:18:23:072 KernelScheduler/(6164:6436): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 05:18:23:072 KernelScheduler/(6164:6436): ## (5) finalizó IO y pasa a READY
+[INFO] 05:18:23:072 KernelScheduler/(6164:6436): ## (3) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 1
+[DEBUG] 05:18:23:073 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 05:18:23:207 KernelScheduler/(6164:6875): ## (3) Pasa del estado EXEC al estado READY
+[DEBUG] 05:18:23:207 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:23:207 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:24:055 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:18:24:055 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:18:24:055 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:24:055 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:24:689 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:18:24:689 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:18:24:690 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:24:690 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:25:575 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 05:18:25:575 KernelScheduler/(6164:6875): ## (5) - Desalojado por fin de quantum
+[DEBUG] 05:18:25:575 KernelScheduler/(6164:6306): Planificador: proceso (5) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:25:575 KernelScheduler/(6164:6306): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 05:18:26:445 KernelScheduler/(6164:6875): ## (5) - Solicitó syscall: EXIT
+[INFO] 05:18:26:445 KernelScheduler/(6164:6875): ## (5) Pasa del estado EXEC al estado EXIT
+[INFO] 05:18:26:445 KernelScheduler/(6164:6875): ## (5) finalizó su ejecución con motivo de EXIT
+[DEBUG] 05:18:26:487 KernelScheduler/(6164:6306): Planificador: proceso (3) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:26:487 KernelScheduler/(6164:6306): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 05:18:51:925 KernelScheduler/(6164:6875): ## (3) - Solicitó syscall: EXIT
+[INFO] 05:18:51:925 KernelScheduler/(6164:6875): ## (3) Pasa del estado EXEC al estado EXIT
+[INFO] 05:18:51:925 KernelScheduler/(6164:6875): ## (3) finalizó su ejecución con motivo de EXIT
+[DEBUG] 05:18:51:925 KernelScheduler/(6164:6306): Planificador: proceso (4) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:18:51:925 KernelScheduler/(6164:6306): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 05:19:33:041 KernelScheduler/(6164:6875): ## (4) - Solicitó syscall: EXIT
+[INFO] 05:19:33:041 KernelScheduler/(6164:6875): ## (4) Pasa del estado EXEC al estado EXIT
+[INFO] 05:19:33:041 KernelScheduler/(6164:6875): ## (4) finalizó su ejecución con motivo de EXIT
+[DEBUG] 05:19:33:041 KernelScheduler/(6164:6306): Planificador: proceso (2) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:19:33:041 KernelScheduler/(6164:6306): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:19:33:887 KernelScheduler/(6164:6875): ## (2) - Solicitó syscall: SLEEP
+[INFO] 05:19:33:887 KernelScheduler/(6164:6875): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 05:19:33:887 KernelScheduler/(6164:6306): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:19:33:887 KernelScheduler/(6164:6306): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:19:34:727 KernelScheduler/(6164:6875): ## (1) - Solicitó syscall: SLEEP
+[INFO] 05:19:34:727 KernelScheduler/(6164:6875): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:19:53:888 KernelScheduler/(6164:6436): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 05:19:53:888 KernelScheduler/(6164:6436): ## (2) finalizó IO y pasa a READY
+[DEBUG] 05:19:53:888 KernelScheduler/(6164:6306): Planificador: proceso (2) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:19:53:888 KernelScheduler/(6164:6306): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:19:54:739 KernelScheduler/(6164:6875): ## (2) - Solicitó syscall: SLEEP
+[INFO] 05:19:54:739 KernelScheduler/(6164:6875): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 05:20:13:922 KernelScheduler/(6164:6436): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 05:20:13:922 KernelScheduler/(6164:6436): ## (1) finalizó IO y pasa a READY
+[DEBUG] 05:20:13:922 KernelScheduler/(6164:6306): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:20:13:922 KernelScheduler/(6164:6306): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 05:20:14:174 KernelScheduler/(6164:6875): ## (1) - Solicitó syscall: EXIT
+[INFO] 05:20:14:174 KernelScheduler/(6164:6875): ## (1) Pasa del estado EXEC al estado EXIT
+[INFO] 05:20:14:174 KernelScheduler/(6164:6875): ## (1) finalizó su ejecución con motivo de EXIT
+[DEBUG] 05:20:14:523 KernelScheduler/(6164:6912): Timer de quantum descartado para (1) gen=3: ya no está en EXEC con esa generación de despacho
+[INFO] 05:20:33:891 KernelScheduler/(6164:6907): ## (2) - Timeout de IO: suspendiendo proceso
+[INFO] 05:20:33:891 KernelScheduler/(6164:6907): ## (2) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 05:20:33:925 KernelScheduler/(6164:6436): ## (2) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 05:20:33:925 KernelScheduler/(6164:6436): ## (2) finalizó IO y pasa a SUSP. READY
+[INFO] 05:20:33:926 KernelScheduler/(6164:6307): ## (2) Pasa del estado SUSP. READY al estado READY
+[DEBUG] 05:20:33:926 KernelScheduler/(6164:6306): Planificador: proceso (2) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 05:20:33:926 KernelScheduler/(6164:6306): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 05:20:34:177 KernelScheduler/(6164:6875): ## (2) - Solicitó syscall: EXIT
+[INFO] 05:20:34:177 KernelScheduler/(6164:6875): ## (2) Pasa del estado EXEC al estado EXIT
+[INFO] 05:20:34:177 KernelScheduler/(6164:6875): ## (2) finalizó su ejecución con motivo de EXIT
+[DEBUG] 05:20:34:526 KernelScheduler/(6164:6915): Timer de quantum descartado para (2) gen=3: ya no está en EXEC con esa generación de despacho

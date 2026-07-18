@@ -1,7 +1,5 @@
-[INFO] 04:44:44:639 MemoryStick/(4137:4137): Se creo log en memory_stick_27643.log
-[INFO] 04:44:44:641 MemoryStick/(4137:4137): ## Conectado a Kernel Memory
-[DEBUG] 04:44:44:641 MemoryStick/(4137:4137): Offset global de este stick dentro del espacio de direcciones: 0
-[INFO] 04:44:44:641 MemoryStick/(4137:4137): Escuchando CPUs en puerto 27643
-[INFO] 04:45:27:245 MemoryStick/(4137:4971): ## CPU 0 Conectada
-[INFO] 04:45:29:032 MemoryStick/(4137:4971): CPU 0 desconectada
-[WARNING] 04:47:20:726 MemoryStick/(4137:4257): Kernel Memory cerró la conexión
+[INFO] 05:17:22:958 MemoryStick/(6041:6041): Se creo log en memory_stick_27643.log
+[INFO] 05:17:22:959 MemoryStick/(6041:6041): ## Conectado a Kernel Memory
+[DEBUG] 05:17:22:959 MemoryStick/(6041:6041): Offset global de este stick dentro del espacio de direcciones: 0
+[INFO] 05:17:22:959 MemoryStick/(6041:6041): Escuchando CPUs en puerto 27643
+[INFO] 05:17:54:683 MemoryStick/(6041:6877): ## CPU 0 Conectada
