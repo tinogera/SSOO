@@ -83,6 +83,7 @@ rm -rf so-commons-library
 Con clave SSH configurada:
 
 ```bash
+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
 git clone git@github.com:sisoputnfrba/tp-2026-1c-Impactante.git
 cd tp-2026-1c-Impactante
 ```
