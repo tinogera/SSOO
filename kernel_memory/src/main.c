@@ -666,7 +666,12 @@ static void* atender_cliente(void* arg) {
                 agregar_hueco(ms->offset_global, tamanio);
                 pthread_mutex_unlock(&mutex_memoria);
 
-                enviar_mensaje(fd, MSG_OK, NULL, 0);
+                // El stick necesita saber dónde empieza dentro del espacio
+                // global de direcciones para poder traducir las direcciones
+                // globales que le llegan directo de la CPU (MOV_IN/MOV_OUT/
+                // COPY_MEM) a un offset local a su propio buffer.
+                uint32_t offset_n = htonl(ms->offset_global);
+                enviar_mensaje(fd, MSG_OK, &offset_n, sizeof(offset_n));
 
                 // Notificar al KS que hay más memoria
                 if (fd_ks >= 0)

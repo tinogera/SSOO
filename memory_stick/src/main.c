@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <arpa/inet.h>
@@ -9,14 +10,21 @@
 #include <pthread.h>
 #include <unistd.h>
 
-int obtenerId(int id);
 void* atender_cpu(void* arg);
 void* atender_kernel_memory(void* arg);
-void manejar_write(int fd_cpu, t_mensaje* msg);
-void manejar_read(int fd_cpu, t_mensaje* msg);
+// direccion_global: true si la dirección que llega es global (viene directo
+// de la CPU, vía MOV_IN/MOV_OUT/COPY_MEM) y hay que restarle offset_global_ms
+// antes de indexar el buffer propio; false si ya viene local (KM, que ya hace
+// la traducción global->local del lado de kernel_memory antes de pedir).
+void manejar_write(int fd_cpu, t_mensaje* msg, bool direccion_global);
+void manejar_read(int fd_cpu, t_mensaje* msg, bool direccion_global);
 void manejar_read_cpu(int fd_cpu, t_mensaje* msg);
 
 int delay;
+
+// Dónde empieza este stick dentro del espacio global de direcciones físicas.
+// Lo informa Kernel Memory en la respuesta del handshake de identificación.
+uint32_t offset_global_ms = 0;
 
 typedef struct {
     int fd_cpu;
@@ -35,16 +43,7 @@ typedef struct {
 t_log* logger;
 t_memory_stick memoria_global;
 
-int id = 0;
-
 int main(int argc, char* argv[]) {
-    // -------------------------------------------------------------------
-    // 0. generar id de memorystick
-    // -------------------------------------------------------------------
-
-    id = obtenerId(id);
-    // log_info(logger, "id: %d", id);
-
     // -------------------------------------------------------------------
     // 1. Validar argumentos
     // -------------------------------------------------------------------
@@ -97,8 +96,14 @@ int main(int argc, char* argv[]) {
     // 3. Inicializar logger
     // -------------------------------------------------------------------
 
+    // Se usa el puerto propio como identificador del archivo de log: es el
+    // único dato disponible en este punto (antes de conectar a KM) que ya
+    // está garantizado como único por instancia — dos sticks en la misma
+    // máquina no pueden compartir puerto. Un contador local (id) no serviría:
+    // cada instancia de memory_stick es un proceso aparte, así que un
+    // contador que arranca en 0 en cada uno siempre da el mismo valor.
     char log_file[64];
-    snprintf(log_file, sizeof(log_file), "memory_stick_%d.log", id);
+    snprintf(log_file, sizeof(log_file), "memory_stick_%d.log", puerto);
 
     logger = log_create(log_file, "MemoryStick", true, log_level_from_string(logLevel));
     if (logger == NULL) {
@@ -107,7 +112,7 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    log_info(logger, "Se creo log en memory_stick_%d.log", id);
+    log_info(logger, "Se creo log en memory_stick_%d.log", puerto);
     // -------------------------------------------------------------------
     // 4. Conectarse al Kernel Memory
     // -------------------------------------------------------------------
@@ -170,9 +175,15 @@ int main(int argc, char* argv[]) {
         log_destroy(logger);
         return EXIT_FAILURE;
     }
+    if (respuesta->payload_size >= sizeof(uint32_t)) {
+        uint32_t offset_n;
+        memcpy(&offset_n, respuesta->payload, sizeof(uint32_t));
+        offset_global_ms = ntohl(offset_n);
+    }
     free_mensaje(respuesta);
 
     log_info(logger, "## Conectado a Kernel Memory");
+    log_debug(logger, "Offset global de este stick dentro del espacio de direcciones: %u", offset_global_ms);
 
     // NOTA [fix]: KM usa esta conexión para leer/escribir memoria física
     // (compactación, STDOUT/STDIN, suspensión). Antes nadie leía fd_km después
@@ -241,10 +252,13 @@ void* atender_kernel_memory(void* arg) {
 
         switch (msg->op_code) {
             case MSG_MEMORY_READ:
-                manejar_read(fd_km, msg);
+                // Conexión dedicada de KM: KM ya traduce global->local de su
+                // lado antes de pedir (ms_para_direccion), así que la
+                // dirección que manda acá ya es local a este stick.
+                manejar_read(fd_km, msg, false);
                 break;
             case MSG_MEMORY_WRITE:
-                manejar_write(fd_km, msg);
+                manejar_write(fd_km, msg, false);
                 break;
             default:
                 log_warning(logger, "KM: opcode inesperado %u", msg->op_code);
@@ -293,18 +307,21 @@ void* atender_cpu(void* arg) {
             break;
         }
 
+        // Esta conexión es siempre CPU (KM habla por su propia conexión,
+        // atendida en atender_kernel_memory) — toda dirección que llega acá
+        // es global y hay que traducirla a local antes de usarla.
         switch (msg->op_code) {
             case MSG_LEER_MEMORIA:      // CPU usa este op_code (36)
                 manejar_read_cpu(fd_cpu, msg);
                 break;
             case MSG_ESCRIBIR_MEMORIA:  // CPU usa este op_code (38)
-                manejar_write(fd_cpu, msg);  // responde MSG_OK — está bien
+                manejar_write(fd_cpu, msg, true);  // responde MSG_OK — está bien
                 break;
-            case MSG_MEMORY_READ:       // KM usa este op_code (30) — mantener compatibilidad
-                manejar_read(fd_cpu, msg);
+            case MSG_MEMORY_READ:       // CPU usa realmente este op_code (30) en la práctica
+                manejar_read(fd_cpu, msg, true);
                 break;
-            case MSG_MEMORY_WRITE:      // KM usa este op_code (29) — mantener compatibilidad
-                manejar_write(fd_cpu, msg);
+            case MSG_MEMORY_WRITE:      // CPU usa realmente este op_code (29) en la práctica
+                manejar_write(fd_cpu, msg, true);
                 break;
             default:
                 log_info(logger, "CPU %u: opcode desconocido %u", cpu_id, msg->op_code);
@@ -319,7 +336,7 @@ void* atender_cpu(void* arg) {
     return NULL;
 }
 
-void manejar_write(int fd_cpu, t_mensaje* msg) {
+void manejar_write(int fd_cpu, t_mensaje* msg, bool direccion_global) {
 
     uint32_t direccion_n;
     uint32_t size_n;
@@ -329,6 +346,7 @@ void manejar_write(int fd_cpu, t_mensaje* msg) {
     memcpy(&size_n,msg->payload + 4,4);
 
     uint32_t direccion = ntohl(direccion_n);
+    if (direccion_global) direccion -= offset_global_ms;
 
     uint32_t size = ntohl(size_n);
 
@@ -361,13 +379,13 @@ void manejar_write(int fd_cpu, t_mensaje* msg) {
 
     pthread_mutex_unlock(&memoria_global.mutex);
 
-    log_debug(logger, "Escritura en dirección=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
+    log_debug(logger, "Escritura en dirección local=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
     log_info(logger,"## Escritura de %u bytes",size);
 
     enviar_mensaje(fd_cpu,MSG_OK,NULL,0);
 }
 
-void manejar_read(int fd_cpu, t_mensaje* msg) {
+void manejar_read(int fd_cpu, t_mensaje* msg, bool direccion_global) {
 
     uint32_t direccion_n;
     uint32_t size_n;
@@ -377,6 +395,7 @@ void manejar_read(int fd_cpu, t_mensaje* msg) {
     memcpy(&size_n,msg->payload + 4,4);
 
     uint32_t direccion = ntohl(direccion_n);
+    if (direccion_global) direccion -= offset_global_ms;
 
     uint32_t size = ntohl(size_n);
 
@@ -396,7 +415,7 @@ void manejar_read(int fd_cpu, t_mensaje* msg) {
 
     pthread_mutex_unlock(&memoria_global.mutex);
 
-    log_debug(logger, "Lectura (KM) en dirección=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
+    log_debug(logger, "Lectura en dirección local=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
     log_info(logger, "## Lectura de %u bytes", size);
 
     enviar_mensaje(fd_cpu, MSG_MEMORY_READ_RESPUESTA, buffer, size);
@@ -411,7 +430,7 @@ void manejar_read_cpu(int fd_cpu, t_mensaje* msg) {
     memcpy(&direccion_n, msg->payload, 4);
     memcpy(&size_n, (uint8_t*)msg->payload + 4, 4);
 
-    uint32_t direccion = ntohl(direccion_n);
+    uint32_t direccion = ntohl(direccion_n) - offset_global_ms; // siempre CPU: dirección global
     uint32_t size      = ntohl(size_n);
 
     usleep(delay);
@@ -428,14 +447,10 @@ void manejar_read_cpu(int fd_cpu, t_mensaje* msg) {
     memcpy(buffer, (char*)memoria_global.buffer + direccion, size);
     pthread_mutex_unlock(&memoria_global.mutex);
 
-    log_debug(logger, "Lectura en dirección=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
+    log_debug(logger, "Lectura en dirección local=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
     log_info(logger, "## Lectura de %u bytes", size);
 
     enviar_mensaje(fd_cpu, MSG_LEER_MEMORIA_RESP, buffer, size);  // ← op_code correcto para CPU
 
     free(buffer);
-}
-
-int obtenerId(int id) {
-    return id++;
 }
