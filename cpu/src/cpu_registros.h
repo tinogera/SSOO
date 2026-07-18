@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <utils/sockets.h>
 
+// Estas funciones esconden la diferencia entre registros de 8 y 32 bits.
 void inicializar_registros_cpu(t_registros_cpu* registros);
 bool leer_valor_registro_cpu(t_registros_cpu* registros, const char* nombre, uint32_t* valor);
 bool escribir_valor_registro_cpu(t_registros_cpu* registros, const char* nombre, uint32_t valor);

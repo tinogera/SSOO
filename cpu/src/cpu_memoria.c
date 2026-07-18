@@ -10,6 +10,14 @@
 #include "cpu_logs.h"
 #include "cpu_mmu.h"
 
+/*
+ * Acá se ejecutan MOV_IN, MOV_OUT y COPY_MEM. El orden siempre es el mismo:
+ * obtener dirección/tamaño, pedir traducción a MMU, elegir el MS y recién ahí
+ * leer o escribir. Si MMU falla, el pedido nunca llega a memoria física.
+ */
+
+// Los registros de 32 bits también se convierten a byte order de red. Para un
+// registro de 8 bits no hace falta porque es un solo byte.
 static void valor_a_bytes(uint32_t valor, uint32_t tamanio, uint8_t* destino) {
     if (tamanio == 1) {
         destino[0] = (uint8_t) valor;
@@ -31,6 +39,8 @@ static uint32_t bytes_a_valor(uint8_t* origen, uint32_t tamanio) {
 }
 
 bool memoria_read(int socket_memory, uint32_t direccion, uint32_t tamanio, void* valor) {
+    // Aunque el parámetro se llama socket_memory, desde CPU este fd es el del
+    // Memory Stick elegido por la tabla de segmentos.
     if (socket_memory < 0 || valor == NULL) {
         return false;
     }
@@ -40,6 +50,7 @@ bool memoria_read(int socket_memory, uint32_t direccion, uint32_t tamanio, void*
         .tamanio = htonl(tamanio)
     };
 
+    // El MS recibe dirección física y cantidad; los bytes vienen en la respuesta.
     enviar_mensaje(socket_memory, MSG_MEMORY_READ, &pedido, sizeof(pedido));
 
     t_mensaje* respuesta = recibir_mensaje(socket_memory);
@@ -62,6 +73,7 @@ bool memoria_write(int socket_memory, uint32_t direccion, uint32_t tamanio, cons
         return false;
     }
 
+    // En write el payload lleva el encabezado y, pegados atrás, los datos.
     uint32_t payload_size = sizeof(t_payload_escribir_memoria) + tamanio;
     void* payload = malloc(payload_size);
     if (payload == NULL) {
@@ -82,6 +94,7 @@ bool memoria_write(int socket_memory, uint32_t direccion, uint32_t tamanio, cons
         return false;
     }
 
+    // La escritura no devuelve contenido: alcanza con la confirmación de MS.
     bool ok = respuesta->op_code == MSG_OK;
     free_mensaje(respuesta);
     return ok;
@@ -110,6 +123,8 @@ static t_resultado_memoria_cpu traducir_o_fallar(
     }
 
     log_error(logger, "Fallo MMU: %s", resultado_mmu_to_string(resultado));
+    // Para el proceso, tanto pasarse del límite como pedir un segmento que no
+    // existe son accesos inválidos y se informan como segmentation fault.
     if (resultado == CPU_MMU_SEGMENTATION_FAULT || resultado == CPU_MMU_SEGMENTO_NO_ENCONTRADO) {
         return CPU_MEMORIA_SEG_FAULT;
     }
@@ -118,6 +133,7 @@ static t_resultado_memoria_cpu traducir_o_fallar(
 }
 
 static int fd_para_ms(int* sockets_ms, int n_sockets_ms, uint32_t id_ms) {
+    // El id del Memory Stick se usa como índice en el arreglo armado en main.
     if ((int)id_ms < n_sockets_ms) return sockets_ms[id_ms];
     return -1;
 }
@@ -145,6 +161,8 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
         return CPU_MEMORIA_ERROR;
     }
 
+    // MOV_IN trae memoria -> registro. La dirección lógica está siempre en SI
+    // y la cantidad de bytes depende del registro destino (1 o 4).
     uint32_t tamanio_registro;
     if (!tamanio_registro_cpu(instruccion->parametros[0], &tamanio_registro)) {
         return CPU_MEMORIA_ERROR;
@@ -168,12 +186,14 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
         return CPU_MEMORIA_ERROR;
     }
 
+    // Recién después de una lectura válida convierto y modifico el registro.
     uint32_t valor = bytes_a_valor(buffer, tamanio_registro);
     if (!escribir_valor_registro_cpu(registros, instruccion->parametros[0], valor)) {
         return CPU_MEMORIA_ERROR;
     }
 
     log_cpu_acceso_memoria(logger, pid, "LEER", traduccion.direccion_fisica, valor);
+    // PC avanza sólo si toda la operación terminó bien.
     registros->pc++;
     return CPU_MEMORIA_OK;
 }
@@ -191,6 +211,8 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
         return CPU_MEMORIA_ERROR;
     }
 
+    // MOV_OUT hace el camino inverso: registro -> memoria. La dirección lógica
+    // de destino sale de DI.
     uint32_t tamanio_registro;
     uint32_t valor;
     if (
@@ -214,6 +236,7 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
 
     int fd = fd_para_ms_logueado(sockets_ms, n_sockets_ms, traduccion.id_memory_stick, logger);
     uint8_t buffer[sizeof(uint32_t)] = {0};
+    // Convierto el valor al formato que espera el otro extremo antes de enviarlo.
     valor_a_bytes(valor, tamanio_registro, buffer);
     if (!memoria_write(fd, traduccion.direccion_fisica, tamanio_registro, buffer)) {
         return CPU_MEMORIA_ERROR;
@@ -237,11 +260,15 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
         return CPU_MEMORIA_ERROR;
     }
 
+    // El único parámetro de COPY_MEM es un registro cuyo valor indica cuántos
+    // bytes copiar. SI es origen y DI es destino.
     uint32_t tamanio;
     if (!leer_valor_registro_cpu(registros, instruccion->parametros[0], &tamanio) || tamanio == 0) {
         return CPU_MEMORIA_ERROR;
     }
 
+    // Traduzco por separado porque cada dirección puede pertenecer a un segmento
+    // e incluso a un Memory Stick distinto.
     t_traduccion_mmu origen;
     t_resultado_memoria_cpu resultado_origen = traducir_o_fallar(
         contexto,
@@ -266,6 +293,7 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
         return resultado_destino;
     }
 
+    // Uso un buffer temporal: primero completo la lectura y después escribo.
     uint8_t* buffer = malloc(tamanio);
     if (buffer == NULL) {
         return CPU_MEMORIA_ERROR;
@@ -284,6 +312,8 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
         return CPU_MEMORIA_ERROR;
     }
 
+    // En COPY_MEM el último campo del log guarda el tamaño, no el contenido,
+    // porque se está moviendo un bloque y no un único valor de registro.
     log_cpu_acceso_memoria(logger, pid, "LEER", origen.direccion_fisica, tamanio);
     log_cpu_acceso_memoria(logger, pid, "ESCRIBIR", destino.direccion_fisica, tamanio);
     free(buffer);
@@ -313,6 +343,7 @@ t_resultado_memoria_cpu ejecutar_instruccion_memoria(
     }
     log_cpu_ejecucion(logger, pid, opcode_cpu_to_string(instruccion->opcode), parametros);
 
+    // Este switch es el execute específico de las instrucciones de memoria.
     switch (instruccion->opcode) {
         case CPU_INST_MOV_IN:
             return ejecutar_mov_in(sockets_ms, n_sockets_ms, instruccion, contexto, registros, pid, logger);

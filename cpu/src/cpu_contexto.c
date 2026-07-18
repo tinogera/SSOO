@@ -4,7 +4,12 @@
 #include <utils/protocolo.h>
 #include <utils/sockets.h>
 
+/*
+ * El contexto permite pausar y reanudar procesos. KM guarda la versión estable;
+ * CPU trabaja con una copia durante la ráfaga y la devuelve al terminar.
+ */
 bool restaurar_contexto_desde_memory(int socket_memory, uint32_t pid, t_contexto** contexto, t_registros_cpu* registros, t_log* logger) {
+    // Para restaurar alcanza con el PID: KM ya tiene registros y segmentos.
     uint32_t pid_n = htonl(pid);
     enviar_mensaje(socket_memory, MSG_RESTAURAR_CONTEXTO, &pid_n, sizeof(pid_n));
 
@@ -27,6 +32,7 @@ bool restaurar_contexto_desde_memory(int socket_memory, uint32_t pid, t_contexto
         return false;
     }
 
+    // Mantengo registros aparte porque son lo que execute modifica todo el tiempo.
     *registros = ctx->registros;
     *contexto = ctx;
     log_info(
@@ -46,9 +52,12 @@ bool guardar_contexto_en_memory(int socket_memory, t_contexto* contexto, t_regis
         return false;
     }
 
+    // Antes de serializar vuelco al contexto los valores finales de la ráfaga.
     contexto->registros = *registros;
 
     uint32_t size;
+    // Se manda el contexto serializado completo. KM conserva la autoridad sobre
+    // la tabla de segmentos y actualiza los registros para no pisar cambios suyos.
     void* buf = serializar_contexto(contexto, &size);
     enviar_mensaje(socket_memory, MSG_GUARDAR_CONTEXTO, buf, size);
     free(buf);
@@ -77,5 +86,6 @@ bool guardar_contexto_en_memory(int socket_memory, t_contexto* contexto, t_regis
 }
 
 void liberar_contexto_cpu(t_contexto* contexto) {
+    // El contexto restaurado fue reservado en heap, incluidos sus segmentos.
     free_contexto(contexto);
 }

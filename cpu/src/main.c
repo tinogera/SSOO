@@ -15,8 +15,15 @@
 #include "cpu_registros.h"
 #include "cpu_handshake.h"
 
+/*
+ * Este archivo es el recorrido general de la CPU. Para explicarlo en el oral:
+ * primero levanto conexiones, después espero un PID, recupero su contexto,
+ * ejecuto la ráfaga y finalmente guardo y devuelvo el proceso al Scheduler.
+ * La CPU no elige qué proceso corre ni qué algoritmo se usa; eso lo decide KS.
+ */
 int main(int argc, char* argv[]) {
 
+    // La CPU necesita el config para las conexiones y un ID para identificarse.
     if (argc < 3) {
         printf("Uso: ./cpu [CONFIG] [ID]\n");
         return 1;
@@ -38,6 +45,9 @@ int main(int argc, char* argv[]) {
 
     char* ip_memory = config_get_string_value(config, "IP_MEMORY");
     int puerto_memory = config_get_int_value(config, "PUERTO_MEMORY");
+
+    // Este valor tiene que coincidir con KM. Si no coincide, los dos módulos
+    // interpretarían una misma dirección lógica como segmentos distintos.
     uint32_t tamanio_max_segmento = 256;
     if (config_has_property(config, "SEGMENT_MAX_SIZE")) {
         tamanio_max_segmento = (uint32_t) config_get_int_value(config, "SEGMENT_MAX_SIZE");
@@ -54,7 +64,7 @@ int main(int argc, char* argv[]) {
     } else {
         log_info(logger, "Conectado a Kernel Scheduler");
 
-        // HANDSHAKE CPU -> KS
+        // Con KS mando el ID como string porque puede haber varias CPUs.
         uint32_t size;
         void* payload = serializar_string(cpu_id, &size);
         enviar_mensaje(socket_kernel, MSG_CPU_IDENTIFICACION, payload, size);
@@ -81,7 +91,7 @@ int main(int argc, char* argv[]) {
     } else {
         log_info(logger, "Conectado a Kernel Memory");
 
-        // HANDSHAKE CPU -> Kernel Memory
+        // A KM sólo le aviso que soy una CPU; por eso acá no hace falta payload.
         enviar_mensaje(socket_memory, MSG_CPU_IDENTIFICACION, NULL, 0);
 
         t_mensaje* respuesta = recibir_mensaje(socket_memory);
@@ -104,6 +114,8 @@ int main(int argc, char* argv[]) {
     // Si no existe _0, se intenta con las claves sin índice (compatibilidad
     // con configs de un solo MS: IP_MEMORY_STICK / PUERTO_MEMORY_STICK).
 #define CPU_MAX_MS 8
+    // La posición del fd es importante: sockets_ms[0] corresponde al MS 0,
+    // sockets_ms[1] al MS 1, etc. La tabla de segmentos me dice cuál usar.
     int sockets_ms[CPU_MAX_MS];
     int n_sockets_ms = 0;
     for (int i = 0; i < CPU_MAX_MS; i++) sockets_ms[i] = -1;
@@ -131,6 +143,7 @@ int main(int argc, char* argv[]) {
             continue;
         }
 
+        // Los enteros que viajan por socket se mandan en byte order de red.
         uint32_t cpu_id_n = htonl((uint32_t) atoi(cpu_id));
         enviar_mensaje(fd, MSG_CPU_IDENTIFICACION, &cpu_id_n, sizeof(cpu_id_n));
 
@@ -148,19 +161,24 @@ int main(int argc, char* argv[]) {
         n_sockets_ms = idx + 1;
     }
 
-    // Esperar procesos despachados por Kernel Scheduler
+    // Este while representa las distintas ráfagas que atiende una misma CPU.
     while (socket_kernel != -1 && socket_memory != -1) {
         uint32_t pid;
+
+        // Me quedo bloqueado hasta que KS elija un proceso y mande su PID.
         if (!recibir_proceso_a_ejecutar(socket_kernel, &pid, logger)) {
             break;
         }
 
+        // El contexto vive en KM. Lo traigo al empezar para continuar exactamente
+        // desde el PC y los registros que dejó la ráfaga anterior.
         t_contexto* contexto = NULL;
         if (!restaurar_contexto_desde_memory(socket_memory, pid, &contexto, &registros, logger)) {
             log_error(logger, "No se pudo restaurar contexto para PID %u", pid);
             break;
         }
 
+        // Acá ocurre fetch-decode-execute hasta que aparece un motivo de corte.
         t_resultado_ciclo_cpu resultado_ciclo = ejecutar_ciclo_proceso(
             socket_kernel,
             socket_memory,
@@ -171,6 +189,8 @@ int main(int argc, char* argv[]) {
             &registros,
             logger
         );
+        // El ciclo usa resultados internos; antes de hablar con KS los traduzco
+        // a los motivos que forman parte del protocolo compartido.
         t_motivo_devolucion_cpu motivo_devolucion;
         if (resultado_ciclo == CPU_CICLO_SYSCALL) {
             motivo_devolucion = MOTIVO_DEVOLUCION_SYSCALL;
@@ -184,6 +204,8 @@ int main(int argc, char* argv[]) {
             motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
         }
 
+        // Primero guardo el contexto y recién después devuelvo el proceso. Así KS
+        // puede volver a planificarlo sin perder el avance de registros y PC.
         if (!guardar_contexto_en_memory(socket_memory, contexto, &registros, logger)) {
             motivo_devolucion = MOTIVO_DEVOLUCION_ERROR;
         }

@@ -1,9 +1,11 @@
 #ifndef CPU_DECODE_H_
 #define CPU_DECODE_H_
 
+// Límites fijos para no guardar parámetros de tamaño indefinido en el decode.
 #define CPU_MAX_PARAMETROS 3
 #define CPU_MAX_PARAMETRO_LENGTH 64
 
+// Es el conjunto completo de instrucciones que esta CPU sabe reconocer.
 typedef enum {
     CPU_INST_NOOP,
     CPU_INST_SET,
@@ -24,14 +26,10 @@ typedef enum {
     CPU_INST_COPY_MEM,
     CPU_INST_EXIT,
     CPU_INST_UNKNOWN,
-    // CPU_INST_MOV_IN,
-    // CPU_INST_MOV_OUT,
-    // CPU_INST_COPY_MEM,
-    // CPU_INST_MEM_ALLOC,
-    // CPU_INST_MEM_FREE
 } t_opcode_cpu;
 
 typedef struct {
+    // opcode dice qué hacer; parametros conserva todavía los operandos como texto.
     t_opcode_cpu opcode;
     int cantidad_parametros;
     char parametros[CPU_MAX_PARAMETROS][CPU_MAX_PARAMETRO_LENGTH];

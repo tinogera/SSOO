@@ -6,8 +6,10 @@
 
 #include "cpu_registros.h"
 
+// Resultado de una ráfaga completa, no de una sola instrucción. main lo
+// convierte después al motivo de devolución que entiende KS.
 typedef enum {
-    CPU_CICLO_OK,
+    CPU_CICLO_OK, // Está reservado; el while actual siempre termina por algún motivo de corte.
     CPU_CICLO_ERROR_FETCH,
     CPU_CICLO_ERROR_DECODE,
     CPU_CICLO_ERROR_EXECUTE,
@@ -18,8 +20,10 @@ typedef enum {
 } t_resultado_ciclo_cpu;
 
 t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
+    // KS se usa para syscalls/interrupciones y KM para cada fetch.
     int socket_kernel,
     int socket_memory,
+    // Los accesos físicos van directo al MS indicado en el contexto.
     int* sockets_ms,
     int n_sockets_ms,
     uint32_t pid,

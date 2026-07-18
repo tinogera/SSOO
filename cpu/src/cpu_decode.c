@@ -2,6 +2,11 @@
 
 #include <string.h>
 
+/*
+ * Decode no ejecuta nada. Su trabajo es reconocer el primer token como opcode
+ * y guardar los siguientes como parámetros. Después otra parte de CPU decide
+ * si la instrucción es básica, de memoria o una syscall.
+ */
 static t_opcode_cpu obtener_opcode(const char* nombre) {
     if (strcmp(nombre, "NOOP") == 0) return CPU_INST_NOOP;
     if (strcmp(nombre, "SET") == 0) return CPU_INST_SET;
@@ -26,6 +31,8 @@ static t_opcode_cpu obtener_opcode(const char* nombre) {
 }
 
 t_instruccion_decodificada decode_instruccion(const char* instruccion) {
+    // Arranco en UNKNOWN para que una entrada nula, vacía o inválida falle de
+    // forma controlada y no termine ejecutando cualquier cosa.
     t_instruccion_decodificada resultado = {
         .opcode = CPU_INST_UNKNOWN,
         .cantidad_parametros = 0
@@ -35,10 +42,12 @@ t_instruccion_decodificada decode_instruccion(const char* instruccion) {
         return resultado;
     }
 
+    // Trabajo sobre una copia porque strtok modifica el string que recibe.
     char buffer[256];
     strncpy(buffer, instruccion, sizeof(buffer) - 1);
     buffer[sizeof(buffer) - 1] = '\0';
 
+    // El primer token siempre es el nombre de la instrucción.
     char* token = strtok(buffer, " \t\r\n");
     if (token == NULL) {
         return resultado;
@@ -46,6 +55,7 @@ t_instruccion_decodificada decode_instruccion(const char* instruccion) {
 
     resultado.opcode = obtener_opcode(token);
 
+    // El formato admite como máximo tres parámetros, cada uno con tamaño fijo.
     while (resultado.cantidad_parametros < CPU_MAX_PARAMETROS) {
         token = strtok(NULL, " \t\r\n");
         if (token == NULL) {
@@ -65,6 +75,7 @@ t_instruccion_decodificada decode_instruccion(const char* instruccion) {
 }
 
 const char* opcode_cpu_to_string(t_opcode_cpu opcode) {
+    // Esta conversión es para logs; la lógica trabaja con el enum.
     switch (opcode) {
         case CPU_INST_NOOP: return "NOOP";
         case CPU_INST_SET: return "SET";
