@@ -471,32 +471,47 @@ static void finalizar_proceso(uint32_t pid) {
 // ---------------------------------------------------------------------------
 // Compactación
 // ---------------------------------------------------------------------------
+static bool comparar_base_segmento(void* a, void* b) {
+    return ((t_entrada_segmento*)a)->base < ((t_entrada_segmento*)b)->base;
+}
+
 static void compactar(void) {
     pthread_mutex_lock(&mutex_memoria);
 
-    uint32_t cursor = 0;
-
-    // Recorrer todos los contextos y mover cada segmento al inicio
+    // Los segmentos se mueven en orden ascendente de base física: como los
+    // destinos se empaquetan desde 0, cada copia escribe en cursor <= base y
+    // no puede pisar el origen de un segmento todavía no movido (todos los
+    // pendientes tienen base mayor). En cualquier otro orden una copia puede
+    // sobreescribir datos vivos antes de que se muevan.
+    t_list* ordenados = list_create();
     for (int c = 0; c < list_size(contextos); c++) {
         t_contexto* ctx = list_get(contextos, c);
-        for (uint32_t s = 0; s < ctx->cant_segmentos; s++) {
-            t_entrada_segmento* seg = &ctx->segmentos[s];
-            if (seg->base != cursor) {
-                // Leer datos actuales
-                uint8_t* datos = leer_fisico(seg->base, seg->limite);
-                if (datos) {
-                    escribir_fisico(cursor, datos, seg->limite);
-                    free(datos);
-                }
-                seg->base = cursor;
-                // Actualizar id_memory_stick
-                uint32_t dl;
-                t_memory_stick* ms = ms_para_direccion(cursor, &dl);
-                if (ms) seg->id_memory_stick = ms->id;
-            }
-            cursor += seg->limite;
-        }
+        for (uint32_t s = 0; s < ctx->cant_segmentos; s++)
+            list_add(ordenados, &ctx->segmentos[s]);
     }
+    list_sort(ordenados, comparar_base_segmento);
+
+    uint32_t cursor = 0;
+
+    for (int i = 0; i < list_size(ordenados); i++) {
+        t_entrada_segmento* seg = list_get(ordenados, i);
+        if (seg->base != cursor) {
+            // Leer datos actuales
+            uint8_t* datos = leer_fisico(seg->base, seg->limite);
+            if (datos) {
+                escribir_fisico(cursor, datos, seg->limite);
+                free(datos);
+            }
+            seg->base = cursor;
+            // Actualizar id_memory_stick
+            uint32_t dl;
+            t_memory_stick* ms = ms_para_direccion(cursor, &dl);
+            if (ms) seg->id_memory_stick = ms->id;
+        }
+        cursor += seg->limite;
+    }
+
+    list_destroy(ordenados);
 
     // Reconstruir lista de huecos: un único hueco al final
     list_destroy_and_destroy_elements(huecos, free);

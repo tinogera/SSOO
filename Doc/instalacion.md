@@ -705,6 +705,39 @@ cp plug-n-pray-pruebas/*.prc /home/utnso/pruebas/
 3. `MEMORIA_PRE_1` completa el ciclo alloc → write → free → realloc → read sin errores.
 4. `MEMORIA_PRE_2` bloquea en STDIN esperando input; al recibirlo, lo escribe por STDOUT y termina.
 
+### 10.3 Prueba Memoria oficial — arrancar Memory Stick y CPU directamente
+
+La "Prueba Memoria" oficial de la cátedra (`PLANI_MEM.prc`, corrida dos veces: una con `ALLOCATION_STRATEGY=BEST` y otra con `WORST`) usa **4 Memory Sticks** de 16, 32, 64 y 128 bytes. La guía completa (KM, Swap, KS e IO incluidos, con los resultados esperados de cada corrida) está en `PruebaFalla/pasos.md`.
+
+Para no tener que armar esos 4 configs de Memory Stick y el de CPU a mano cada vez, ya existen listos para esta prueba puntual, pensados para levantar **el binario directamente** (sin pasar por `deploy.sh`):
+
+- `memory_stick/PruebaMem/msPruebaMem.config` (16 B, puerto 27643, id 0)
+- `memory_stick/PruebaMem/msPruebaMem2.config` (32 B, puerto 27644, id 1)
+- `memory_stick/PruebaMem/msPruebaMem3.config` (64 B, puerto 27645, id 2)
+- `memory_stick/PruebaMem/msPruebaMem4.config` (128 B, puerto 27646, id 3)
+- `cpu/PruebaMem/cpu.config` (ya apunta a los 4 sticks de arriba)
+
+> Estos `.config` quedan ignorados por git igual que el resto (regla `*.config` del `.gitignore` — ver [Sección 4](#4-configurar-cada-módulo)), son copias locales de conveniencia. Si hacen falta en otra máquina, hay que copiarlos a mano o forzar el `git add`.
+
+**Memory Sticks — levantarlos EN ESTE ORDEN** (el tamaño es el 2.º argumento; el orden de conexión al KM define el id que después busca la CPU), una terminal por comando:
+
+```bash
+cd memory_stick
+./bin/memory_stick PruebaMem/msPruebaMem.config  16
+./bin/memory_stick PruebaMem/msPruebaMem2.config 32
+./bin/memory_stick PruebaMem/msPruebaMem3.config 64
+./bin/memory_stick PruebaMem/msPruebaMem4.config 128
+```
+
+**CPU** (levantarla última, después de que KM, Swap, Kernel Scheduler e IO ya estén arriba — ver orden completo en `PruebaFalla/pasos.md`):
+
+```bash
+cd cpu
+./bin/cpu PruebaMem/cpu.config CPU_A
+```
+
+Esta sección cubre solo Memory Stick y CPU. Para KM, Swap, Kernel Scheduler e IO seguí usando los configs de `PruebaFalla/` (`km.config`/`km_worst.config`, `swap.config`, `ks.config`, `io.config`) tal como se describe en `PruebaFalla/pasos.md`.
+
 ---
 
 ## 11. Cambios introducidos en v1.1 del enunciado
