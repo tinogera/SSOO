@@ -1,0 +1,128 @@
+[INFO] 03:26:20:013 KernelScheduler/(24403:24403): ## Conectado a Kernel Memory
+[INFO] 03:26:20:013 KernelScheduler/(24403:24403): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 03:26:20:108 KernelScheduler/(24403:24403): ## (0) Pasa del estado NEW al estado READY
+[INFO] 03:26:27:004 KernelScheduler/(24403:24675): ## IO SLEEP Conectada
+[INFO] 03:26:31:067 KernelScheduler/(24403:24804): ## IO STDOUT Conectada
+[INFO] 03:26:35:262 KernelScheduler/(24403:24933): ## IO STDIN Conectada
+[INFO] 03:26:44:562 KernelScheduler/(24403:25115): ## CPU 0 Conectada
+[INFO] 03:26:44:562 KernelScheduler/(24403:24545): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:26:45:892 KernelScheduler/(24403:25115): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 03:26:45:893 KernelScheduler/(24403:25115): ## (1) Se crea el proceso - Estado: NEW
+[INFO] 03:26:45:937 KernelScheduler/(24403:25115): ## (1) Pasa del estado NEW al estado READY
+[INFO] 03:26:45:937 KernelScheduler/(24403:25115): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 03:26:45:937 KernelScheduler/(24403:24545): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:26:46:716 KernelScheduler/(24403:25115): ## (0) - Solicitó syscall: SLEEP
+[INFO] 03:26:46:717 KernelScheduler/(24403:25115): ## (0) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:26:46:717 KernelScheduler/(24403:24545): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:26:48:152 KernelScheduler/(24403:25115): ## (1) - Solicitó syscall: MEM_ALLOC
+[INFO] 03:26:48:152 KernelScheduler/(24403:25122): ## (1) - MEM_ALLOC: solicita crear segmento 0 (64 bytes)
+[INFO] 03:26:48:196 KernelScheduler/(24403:25122): ## (1) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 03:26:49:957 KernelScheduler/(24403:25115): ## (1) - Solicitó syscall: STDIN
+[INFO] 03:26:50:000 KernelScheduler/(24403:25115): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:26:51:629 KernelScheduler/(24403:24933): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 03:26:51:629 KernelScheduler/(24403:24933): ## (1) finalizó IO y pasa a READY
+[INFO] 03:26:51:629 KernelScheduler/(24403:24545): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:26:51:765 KernelScheduler/(24403:24675): ## (0) Pasa del estado BLOCK al estado READY
+[INFO] 03:26:51:765 KernelScheduler/(24403:24675): ## (0) finalizó IO y pasa a READY
+[INFO] 03:26:51:765 KernelScheduler/(24403:24675): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 0 con prioridad 0
+[INFO] 03:26:52:308 KernelScheduler/(24403:25115): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 03:26:52:308 KernelScheduler/(24403:24545): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:26:53:088 KernelScheduler/(24403:25115): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 03:26:53:088 KernelScheduler/(24403:25115): ## (2) Se crea el proceso - Estado: NEW
+[INFO] 03:26:53:089 KernelScheduler/(24403:25115): ## (2) Pasa del estado NEW al estado READY
+[INFO] 03:26:53:133 KernelScheduler/(24403:25115): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 03:26:53:134 KernelScheduler/(24403:24545): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:26:53:894 KernelScheduler/(24403:25115): ## (0) - Solicitó syscall: SLEEP
+[INFO] 03:26:53:894 KernelScheduler/(24403:25115): ## (0) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:26:53:895 KernelScheduler/(24403:24545): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 03:26:55:234 KernelScheduler/(24403:25115): ## (2) - Solicitó syscall: MEM_ALLOC
+[INFO] 03:26:55:237 KernelScheduler/(24403:25125): ## (2) - MEM_ALLOC: solicita crear segmento 0 (32 bytes)
+[INFO] 03:26:55:280 KernelScheduler/(24403:25125): ## (2) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 03:26:56:728 KernelScheduler/(24403:25121): ## (0) - Timeout de IO: suspendiendo proceso
+[INFO] 03:26:56:728 KernelScheduler/(24403:25121): ## (0) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 03:26:57:013 KernelScheduler/(24403:25115): ## (2) - Solicitó syscall: STDIN
+[INFO] 03:26:57:061 KernelScheduler/(24403:25115): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:26:57:061 KernelScheduler/(24403:24545): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:26:57:811 KernelScheduler/(24403:25115): ## (1) - Solicitó syscall: STDIN
+[INFO] 03:26:57:812 KernelScheduler/(24403:25115): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:26:58:117 KernelScheduler/(24403:24933): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 03:26:58:117 KernelScheduler/(24403:24933): ## (2) finalizó IO y pasa a READY
+[INFO] 03:26:58:117 KernelScheduler/(24403:24545): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 03:26:58:895 KernelScheduler/(24403:24675): ## (0) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 03:26:58:895 KernelScheduler/(24403:24675): ## (0) finalizó IO y pasa a SUSP. READY
+[INFO] 03:26:58:896 KernelScheduler/(24403:24546): ## (0) Pasa del estado SUSP. READY al estado READY
+[INFO] 03:26:58:896 KernelScheduler/(24403:24546): ## (2) Prioridad: 1 - Desalojado por cola más prioritaria por el proceso 0 con prioridad 0
+[INFO] 03:26:59:320 KernelScheduler/(24403:25115): ## (2) - Solicitó syscall: STDIN
+[INFO] 03:26:59:369 KernelScheduler/(24403:25115): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:26:59:369 KernelScheduler/(24403:24545): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:27:00:002 KernelScheduler/(24403:25123): ## (1) - Timeout de IO: suspendiendo proceso
+[INFO] 03:27:00:002 KernelScheduler/(24403:25123): ## (1) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 03:27:00:104 KernelScheduler/(24403:25115): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 03:27:00:104 KernelScheduler/(24403:25115): ## (3) Se crea el proceso - Estado: NEW
+[INFO] 03:27:00:192 KernelScheduler/(24403:25115): ## (3) Pasa del estado NEW al estado READY
+[INFO] 03:27:00:192 KernelScheduler/(24403:25115): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 03:27:00:192 KernelScheduler/(24403:24545): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:27:00:918 KernelScheduler/(24403:25115): ## (0) - Solicitó syscall: SLEEP
+[INFO] 03:27:00:918 KernelScheduler/(24403:25115): ## (0) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:27:00:918 KernelScheduler/(24403:24545): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 03:27:02:192 KernelScheduler/(24403:25115): ## (3) - Solicitó syscall: MEM_ALLOC
+[INFO] 03:27:02:192 KernelScheduler/(24403:25133): ## (3) - MEM_ALLOC: solicita crear segmento 0 (32 bytes)
+[INFO] 03:27:02:241 KernelScheduler/(24403:25133): ## (3) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 03:27:03:921 KernelScheduler/(24403:25124): ## (0) - Timeout de IO: suspendiendo proceso
+[INFO] 03:27:03:922 KernelScheduler/(24403:25124): ## (0) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 03:27:03:977 KernelScheduler/(24403:25115): ## (3) - Solicitó syscall: STDIN
+[INFO] 03:27:04:020 KernelScheduler/(24403:25115): ## (3) Pasa del estado EXEC al estado BLOCK
+[WARNING] 03:27:04:545 KernelScheduler/(24403:24933): ## (1) - STDIN: error al escribir datos en KM
+[INFO] 03:27:04:545 KernelScheduler/(24403:24933): ## (1) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 03:27:04:546 KernelScheduler/(24403:24933): ## (1) finalizó IO y pasa a SUSP. READY
+[INFO] 03:27:05:570 KernelScheduler/(24403:24933): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 03:27:05:570 KernelScheduler/(24403:24933): ## (2) finalizó IO y pasa a READY
+[INFO] 03:27:05:570 KernelScheduler/(24403:24545): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 03:27:05:943 KernelScheduler/(24403:24675): ## (0) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 03:27:05:943 KernelScheduler/(24403:24675): ## (0) finalizó IO y pasa a SUSP. READY
+[INFO] 03:27:05:943 KernelScheduler/(24403:24546): ## (0) Pasa del estado SUSP. READY al estado READY
+[INFO] 03:27:05:943 KernelScheduler/(24403:24546): ## (2) Prioridad: 1 - Desalojado por cola más prioritaria por el proceso 0 con prioridad 0
+[INFO] 03:27:06:209 KernelScheduler/(24403:25115): ## (2) - Solicitó syscall: SLEEP
+[INFO] 03:27:06:252 KernelScheduler/(24403:25115): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:27:06:253 KernelScheduler/(24403:24545): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:27:06:484 KernelScheduler/(24403:24933): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 03:27:06:484 KernelScheduler/(24403:24933): ## (3) finalizó IO y pasa a READY
+[INFO] 03:27:06:980 KernelScheduler/(24403:25115): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 03:27:06:980 KernelScheduler/(24403:25115): ## (4) Se crea el proceso - Estado: NEW
+[INFO] 03:27:06:980 KernelScheduler/(24403:25115): ## (4) Pasa del estado NEW al estado READY
+[INFO] 03:27:07:031 KernelScheduler/(24403:25115): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 03:27:07:033 KernelScheduler/(24403:24545): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:27:07:063 KernelScheduler/(24403:25129): ## (2) - Timeout de IO: suspendiendo proceso
+[INFO] 03:27:07:063 KernelScheduler/(24403:25129): ## (2) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 03:27:07:813 KernelScheduler/(24403:25115): ## (0) - Solicitó syscall: EXIT
+[INFO] 03:27:07:813 KernelScheduler/(24403:25115): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 03:27:07:813 KernelScheduler/(24403:25115): ## (0) finalizó su ejecución con motivo de EXIT
+[INFO] 03:27:07:813 KernelScheduler/(24403:24545): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 03:27:09:112 KernelScheduler/(24403:25115): ## (3) - Solicitó syscall: STDIN
+[INFO] 03:27:09:113 KernelScheduler/(24403:25115): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:27:09:113 KernelScheduler/(24403:24545): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 03:27:09:851 KernelScheduler/(24403:25115): ## (4) - Solicitó syscall: MEM_ALLOC
+[INFO] 03:27:09:852 KernelScheduler/(24403:25137): ## (4) - MEM_ALLOC: solicita crear segmento 0 (32 bytes)
+[INFO] 03:27:09:892 KernelScheduler/(24403:25137): ## (4) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 03:27:10:411 KernelScheduler/(24403:24933): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 03:27:10:411 KernelScheduler/(24403:24933): ## (3) finalizó IO y pasa a READY
+[INFO] 03:27:10:548 KernelScheduler/(24403:25115): ## (4) - Solicitó syscall: MEM_ALLOC
+[INFO] 03:27:10:596 KernelScheduler/(24403:25138): ## (4) - MEM_ALLOC: solicita crear segmento 1 (32 bytes)
+[INFO] 03:27:10:596 KernelScheduler/(24403:25138): ## (4) - MEM_ALLOC: segmento 1 creado exitosamente
+[INFO] 03:27:11:416 KernelScheduler/(24403:25115): ## (4) - Solicitó syscall: MEM_ALLOC
+[INFO] 03:27:11:416 KernelScheduler/(24403:25139): ## (4) - MEM_ALLOC: solicita crear segmento 2 (32 bytes)
+[INFO] 03:27:11:465 KernelScheduler/(24403:25139): ## (4) - MEM_ALLOC: segmento 2 creado exitosamente
+[INFO] 03:27:12:114 KernelScheduler/(24403:25115): ## (4) - Solicitó syscall: MEM_ALLOC
+[INFO] 03:27:12:158 KernelScheduler/(24403:25140): ## (4) - MEM_ALLOC: solicita crear segmento 3 (32 bytes)
+[ERROR] 03:27:12:210 KernelScheduler/(24403:25140): ## (4) - MEM_ALLOC: KM no pudo crear segmento 3
+[INFO] 03:27:12:210 KernelScheduler/(24403:25140): ## (4) Pasa del estado EXEC al estado EXIT
+[INFO] 03:27:12:210 KernelScheduler/(24403:25140): ## (4) finalizó su ejecución con motivo de ERROR
+[INFO] 03:27:12:300 KernelScheduler/(24403:24545): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 03:27:12:944 KernelScheduler/(24403:25115): ## (3) - Solicitó syscall: SLEEP
+[INFO] 03:27:12:992 KernelScheduler/(24403:25115): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:27:14:024 KernelScheduler/(24403:25134): ## (3) - Timeout de IO: suspendiendo proceso
+[INFO] 03:27:14:024 KernelScheduler/(24403:25134): ## (3) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 03:27:36:258 KernelScheduler/(24403:24675): ## (2) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 03:27:36:258 KernelScheduler/(24403:24675): ## (2) finalizó IO y pasa a SUSP. READY
+[INFO] 03:28:06:262 KernelScheduler/(24403:24675): ## (3) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 03:28:06:262 KernelScheduler/(24403:24675): ## (3) finalizó IO y pasa a SUSP. READY

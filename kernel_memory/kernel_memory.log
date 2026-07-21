@@ -1,0 +1,90 @@
+[DEBUG] 03:25:47:225 KernelMemory/(23676:23676): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=128
+[INFO] 03:25:47:225 KernelMemory/(23676:23676): Kernel Memory escuchando en puerto 23841
+[INFO] 03:25:48:985 KernelMemory/(23676:23914): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 03:25:54:758 KernelMemory/(23676:24035): ## Memory Stick de 16 bytes Conectada
+[INFO] 03:25:59:438 KernelMemory/(23676:24157): ## Memory Stick de 16 bytes Conectada
+[INFO] 03:26:02:989 KernelMemory/(23676:24279): ## Memory Stick de 32 bytes Conectada
+[INFO] 03:26:06:524 KernelMemory/(23676:24401): ## Memory Stick de 64 bytes Conectada
+[INFO] 03:26:20:013 KernelMemory/(23676:24543): ## Kernel Scheduler Conectado - FD del socket: 10
+[INFO] 03:26:20:066 KernelMemory/(23676:24543): ## PID: 0 - Proceso Creado
+[DEBUG] 03:26:20:067 KernelMemory/(23676:24543): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PMP.prc
+[INFO] 03:26:44:563 KernelMemory/(23676:25116): ## CPU Conectada - FD: 11
+[INFO] 03:26:45:248 KernelMemory/(23676:25116): ## PID: 0 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 03:26:45:802 KernelMemory/(23676:25116): ## PID: 0 - Obtener instrucción: 1 - Instrucción: INIT_PROC PMP_1.prc 2
+[INFO] 03:26:45:936 KernelMemory/(23676:24543): ## PID: 1 - Proceso Creado
+[DEBUG] 03:26:45:937 KernelMemory/(23676:24543): PID: 1 - Path de script guardado: PMP_1.prc
+[INFO] 03:26:46:618 KernelMemory/(23676:25116): ## PID: 0 - Obtener instrucción: 2 - Instrucción: SLEEP 5000
+[INFO] 03:26:47:466 KernelMemory/(23676:25116): ## PID: 1 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 03:26:48:061 KernelMemory/(23676:25116): ## PID: 1 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 64
+[DEBUG] 03:26:48:196 KernelMemory/(23676:24543): PID: 1 - crear_segmento 0 (64 bytes): hueco elegido (BEST) base=64 tamanio_hueco=64
+[INFO] 03:26:48:196 KernelMemory/(23676:24543): ## PID: 1 - Segmento Creado 0 - Tamaño: 64
+[INFO] 03:26:48:792 KernelMemory/(23676:25116): ## PID: 1 - Obtener instrucción: 2 - Instrucción: SET SI 0
+[INFO] 03:26:49:339 KernelMemory/(23676:25116): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET AX 16
+[INFO] 03:26:49:904 KernelMemory/(23676:25116): ## PID: 1 - Obtener instrucción: 4 - Instrucción: STDIN SI AX
+[INFO] 03:26:51:585 KernelMemory/(23676:24543): ## PID: 1 - Escritura - Dir. Física: 64 - Tamaño: 16
+[INFO] 03:26:52:216 KernelMemory/(23676:25116): ## PID: 1 - Obtener instrucción: 5 - Instrucción: SET SI 16
+[INFO] 03:26:52:983 KernelMemory/(23676:25116): ## PID: 0 - Obtener instrucción: 3 - Instrucción: INIT_PROC PMP_2.prc 1
+[INFO] 03:26:53:088 KernelMemory/(23676:24543): ## PID: 2 - Proceso Creado
+[DEBUG] 03:26:53:088 KernelMemory/(23676:24543): PID: 2 - Path de script guardado: PMP_2.prc
+[INFO] 03:26:53:780 KernelMemory/(23676:25116): ## PID: 0 - Obtener instrucción: 4 - Instrucción: SLEEP 5000
+[INFO] 03:26:54:583 KernelMemory/(23676:25116): ## PID: 2 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 03:26:55:125 KernelMemory/(23676:25116): ## PID: 2 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 32
+[DEBUG] 03:26:55:280 KernelMemory/(23676:24543): PID: 2 - crear_segmento 0 (32 bytes): hueco elegido (BEST) base=32 tamanio_hueco=32
+[INFO] 03:26:55:280 KernelMemory/(23676:24543): ## PID: 2 - Segmento Creado 0 - Tamaño: 32
+[INFO] 03:26:55:873 KernelMemory/(23676:25116): ## PID: 2 - Obtener instrucción: 2 - Instrucción: SET SI 0
+[INFO] 03:26:56:421 KernelMemory/(23676:25116): ## PID: 2 - Obtener instrucción: 3 - Instrucción: SET AX 16
+[DEBUG] 03:26:56:776 KernelMemory/(23676:24543): PID: 0 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[INFO] 03:26:56:965 KernelMemory/(23676:25116): ## PID: 2 - Obtener instrucción: 4 - Instrucción: STDIN SI AX
+[INFO] 03:26:57:713 KernelMemory/(23676:25116): ## PID: 1 - Obtener instrucción: 6 - Instrucción: STDIN SI AX
+[INFO] 03:26:58:068 KernelMemory/(23676:24543): ## PID: 2 - Escritura - Dir. Física: 32 - Tamaño: 16
+[INFO] 03:26:58:723 KernelMemory/(23676:25116): ## PID: 2 - Obtener instrucción: 5 - Instrucción: SET SI 16
+[DEBUG] 03:26:58:895 KernelMemory/(23676:24543): PID: 0 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 03:26:59:276 KernelMemory/(23676:25116): ## PID: 2 - Obtener instrucción: 6 - Instrucción: STDIN SI AX
+[INFO] 03:27:00:014 KernelMemory/(23676:25116): ## PID: 0 - Obtener instrucción: 5 - Instrucción: INIT_PROC PMP_3.prc 1
+[DEBUG] 03:27:00:045 KernelMemory/(23676:24543): PID: 1 - suspender_proceso: moviendo 1 segmento(s) a Swap
+[DEBUG] 03:27:00:045 KernelMemory/(23676:24543): PID: 1 - segmento 0 (64 bytes) -> 1 bloque(s) de swap
+[INFO] 03:27:00:147 KernelMemory/(23676:24543): ## PID: 3 - Proceso Creado
+[DEBUG] 03:27:00:147 KernelMemory/(23676:24543): PID: 3 - Path de script guardado: PMP_3.prc
+[INFO] 03:27:00:829 KernelMemory/(23676:25116): ## PID: 0 - Obtener instrucción: 6 - Instrucción: SLEEP 5000
+[INFO] 03:27:01:552 KernelMemory/(23676:25116): ## PID: 3 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 03:27:02:099 KernelMemory/(23676:25116): ## PID: 3 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 32
+[DEBUG] 03:27:02:240 KernelMemory/(23676:24543): PID: 3 - crear_segmento 0 (32 bytes): hueco elegido (BEST) base=0 tamanio_hueco=32
+[INFO] 03:27:02:240 KernelMemory/(23676:24543): ## PID: 3 - Segmento Creado 0 - Tamaño: 32
+[INFO] 03:27:02:840 KernelMemory/(23676:25116): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SET SI 0
+[INFO] 03:27:03:382 KernelMemory/(23676:25116): ## PID: 3 - Obtener instrucción: 3 - Instrucción: SET AX 16
+[INFO] 03:27:03:932 KernelMemory/(23676:25116): ## PID: 3 - Obtener instrucción: 4 - Instrucción: STDIN SI AX
+[DEBUG] 03:27:03:965 KernelMemory/(23676:24543): PID: 0 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[DEBUG] 03:27:04:545 KernelMemory/(23676:24543): PID: 1 - traducir_direccion: segmento 0 inexistente (proceso tiene 0) — dir_logica=16
+[DEBUG] 03:27:04:588 KernelMemory/(23676:24543): PID: 1 - dessuspender_proceso: 1 segmento(s) a restaurar desde Swap
+[INFO] 03:27:05:521 KernelMemory/(23676:24543): ## PID: 2 - Escritura - Dir. Física: 48 - Tamaño: 16
+[DEBUG] 03:27:05:943 KernelMemory/(23676:24543): PID: 0 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[DEBUG] 03:27:05:985 KernelMemory/(23676:24543): PID: 1 - dessuspender_proceso: 1 segmento(s) a restaurar desde Swap
+[INFO] 03:27:06:166 KernelMemory/(23676:25116): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 30000
+[INFO] 03:27:06:436 KernelMemory/(23676:24543): ## PID: 3 - Escritura - Dir. Física: 0 - Tamaño: 16
+[INFO] 03:27:06:889 KernelMemory/(23676:25116): ## PID: 0 - Obtener instrucción: 7 - Instrucción: INIT_PROC PMP_4.prc 1
+[INFO] 03:27:06:980 KernelMemory/(23676:24543): ## PID: 4 - Proceso Creado
+[DEBUG] 03:27:06:980 KernelMemory/(23676:24543): PID: 4 - Path de script guardado: PMP_4.prc
+[DEBUG] 03:27:07:104 KernelMemory/(23676:24543): PID: 2 - suspender_proceso: moviendo 1 segmento(s) a Swap
+[DEBUG] 03:27:07:104 KernelMemory/(23676:24543): PID: 2 - segmento 0 (32 bytes) -> 1 bloque(s) de swap
+[INFO] 03:27:07:721 KernelMemory/(23676:25116): ## PID: 0 - Obtener instrucción: 8 - Instrucción: EXIT
+[INFO] 03:27:07:813 KernelMemory/(23676:24543): ## PID: 0 - Proceso finalizado, memoria liberada
+[INFO] 03:27:08:470 KernelMemory/(23676:25116): ## PID: 3 - Obtener instrucción: 5 - Instrucción: SET SI 16
+[INFO] 03:27:09:017 KernelMemory/(23676:25116): ## PID: 3 - Obtener instrucción: 6 - Instrucción: STDIN SI AX
+[INFO] 03:27:09:760 KernelMemory/(23676:25116): ## PID: 4 - Obtener instrucción: 0 - Instrucción: MEM_ALLOC 0 32
+[DEBUG] 03:27:09:892 KernelMemory/(23676:24543): PID: 4 - crear_segmento 0 (32 bytes): hueco elegido (BEST) base=32 tamanio_hueco=96
+[INFO] 03:27:09:892 KernelMemory/(23676:24543): ## PID: 4 - Segmento Creado 0 - Tamaño: 32
+[INFO] 03:27:10:353 KernelMemory/(23676:24543): ## PID: 3 - Escritura - Dir. Física: 16 - Tamaño: 16
+[INFO] 03:27:10:498 KernelMemory/(23676:25116): ## PID: 4 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 1 32
+[DEBUG] 03:27:10:596 KernelMemory/(23676:24543): PID: 4 - crear_segmento 1 (32 bytes): hueco elegido (BEST) base=64 tamanio_hueco=64
+[INFO] 03:27:10:596 KernelMemory/(23676:24543): ## PID: 4 - Segmento Creado 1 - Tamaño: 32
+[INFO] 03:27:11:329 KernelMemory/(23676:25116): ## PID: 4 - Obtener instrucción: 2 - Instrucción: MEM_ALLOC 2 32
+[DEBUG] 03:27:11:464 KernelMemory/(23676:24543): PID: 4 - crear_segmento 2 (32 bytes): hueco elegido (BEST) base=96 tamanio_hueco=32
+[INFO] 03:27:11:465 KernelMemory/(23676:24543): ## PID: 4 - Segmento Creado 2 - Tamaño: 32
+[INFO] 03:27:12:066 KernelMemory/(23676:25116): ## PID: 4 - Obtener instrucción: 3 - Instrucción: MEM_ALLOC 3 32
+[DEBUG] 03:27:12:209 KernelMemory/(23676:24543): PID: 4 - crear_segmento 3 (32 bytes): sin hueco contiguo — libre_total=0 -> sin espacio total, error
+[INFO] 03:27:12:254 KernelMemory/(23676:24543): ## PID: 4 - Proceso finalizado, memoria liberada
+[INFO] 03:27:12:901 KernelMemory/(23676:25116): ## PID: 3 - Obtener instrucción: 7 - Instrucción: SLEEP 30000
+[DEBUG] 03:27:14:069 KernelMemory/(23676:24543): PID: 3 - suspender_proceso: moviendo 1 segmento(s) a Swap
+[DEBUG] 03:27:14:069 KernelMemory/(23676:24543): PID: 3 - segmento 0 (32 bytes) -> 1 bloque(s) de swap
+[DEBUG] 03:27:36:258 KernelMemory/(23676:24543): PID: 2 - dessuspender_proceso: 1 segmento(s) a restaurar desde Swap
+[DEBUG] 03:28:06:304 KernelMemory/(23676:24543): PID: 2 - dessuspender_proceso: 1 segmento(s) a restaurar desde Swap

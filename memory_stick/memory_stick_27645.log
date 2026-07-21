@@ -1,0 +1,11 @@
+[INFO] 03:26:02:989 MemoryStick/(24159:24159): Se creo log en memory_stick_27645.log
+[INFO] 03:26:02:989 MemoryStick/(24159:24159): ## Conectado a Kernel Memory
+[DEBUG] 03:26:02:989 MemoryStick/(24159:24159): Offset global de este stick dentro del espacio de direcciones: 32
+[INFO] 03:26:02:989 MemoryStick/(24159:24159): Escuchando CPUs en puerto 27645
+[INFO] 03:26:44:564 MemoryStick/(24159:25119): ## CPU 0 Conectada
+[DEBUG] 03:26:58:070 MemoryStick/(24159:24280): Escritura en dirección local=0 (tamaño propio del stick=32)
+[INFO] 03:26:58:070 MemoryStick/(24159:24280): ## Escritura de 16 bytes
+[DEBUG] 03:27:05:570 MemoryStick/(24159:24280): Escritura en dirección local=16 (tamaño propio del stick=32)
+[INFO] 03:27:05:570 MemoryStick/(24159:24280): ## Escritura de 16 bytes
+[DEBUG] 03:27:07:171 MemoryStick/(24159:24280): Lectura en dirección local=0 (tamaño propio del stick=32)
+[INFO] 03:27:07:171 MemoryStick/(24159:24280): ## Lectura de 32 bytes

@@ -1,0 +1,27 @@
+[INFO] 03:26:35:262 IO/(24805:24805): Iniciando IO tipo STDIN
+[INFO] 03:26:35:262 IO/(24805:24805): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante-1/io/io.config
+[INFO] 03:26:35:262 IO/(24805:24805): ## Conectado a Kernel Scheduler
+[INFO] 03:26:50:001 IO/(24805:24805): ## PID: 1 - Inicio de IO
+[INFO] 03:26:50:001 IO/(24805:24805): ## PID: 1 - Ingrese 16 caracteres:
+[DEBUG] 03:26:51:460 IO/(24805:24805): PID: 1 - STDIN: 2 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 03:26:51:460 IO/(24805:24805): ## PID: 1 - Fin de IO
+[INFO] 03:26:57:061 IO/(24805:24805): ## PID: 2 - Inicio de IO
+[INFO] 03:26:57:061 IO/(24805:24805): ## PID: 2 - Ingrese 16 caracteres:
+[DEBUG] 03:26:58:027 IO/(24805:24805): PID: 2 - STDIN: 2 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 03:26:58:028 IO/(24805:24805): ## PID: 2 - Fin de IO
+[INFO] 03:26:58:028 IO/(24805:24805): ## PID: 1 - Inicio de IO
+[INFO] 03:26:58:028 IO/(24805:24805): ## PID: 1 - Ingrese 16 caracteres:
+[DEBUG] 03:27:04:503 IO/(24805:24805): PID: 1 - STDIN: 2 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 03:27:04:504 IO/(24805:24805): ## PID: 1 - Fin de IO
+[INFO] 03:27:04:504 IO/(24805:24805): ## PID: 2 - Inicio de IO
+[INFO] 03:27:04:504 IO/(24805:24805): ## PID: 2 - Ingrese 16 caracteres:
+[DEBUG] 03:27:05:472 IO/(24805:24805): PID: 2 - STDIN: 2 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 03:27:05:472 IO/(24805:24805): ## PID: 2 - Fin de IO
+[INFO] 03:27:05:473 IO/(24805:24805): ## PID: 3 - Inicio de IO
+[INFO] 03:27:05:473 IO/(24805:24805): ## PID: 3 - Ingrese 16 caracteres:
+[DEBUG] 03:27:06:394 IO/(24805:24805): PID: 3 - STDIN: 2 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 03:27:06:395 IO/(24805:24805): ## PID: 3 - Fin de IO
+[INFO] 03:27:09:113 IO/(24805:24805): ## PID: 3 - Inicio de IO
+[INFO] 03:27:09:113 IO/(24805:24805): ## PID: 3 - Ingrese 16 caracteres:
+[DEBUG] 03:27:10:312 IO/(24805:24805): PID: 3 - STDIN: 2 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 03:27:10:312 IO/(24805:24805): ## PID: 3 - Fin de IO
