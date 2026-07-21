@@ -262,8 +262,8 @@ context (io_utils) {
             uint32_t pid_recv, n_recv;
             memcpy(&pid_recv, respuesta->payload, sizeof(uint32_t));
             memcpy(&n_recv, (char*)respuesta->payload + sizeof(uint32_t), sizeof(uint32_t));
-            should_int(pid_recv) be equal to(55);
-            should_int(n_recv)   be equal to(4);
+            should_int(ntohl(pid_recv)) be equal to(55);
+            should_int(ntohl(n_recv))   be equal to(4);
 
             free_mensaje(respuesta);
             log_destroy(log);

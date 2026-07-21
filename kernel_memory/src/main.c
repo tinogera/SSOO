@@ -1016,32 +1016,48 @@ static void* atender_cliente(void* arg) {
 
         // ESCRIBIR DATOS (KS → KM → MS, para STDIN)
         else if (pedido->op_code == MSG_ESCRIBIR_DATOS) {
-            uint32_t pid_n, dl_n, tam_n;
-            memcpy(&pid_n, pedido->payload,      4);
-            memcpy(&dl_n,  (uint8_t*)pedido->payload + 4, 4);
-            memcpy(&tam_n, (uint8_t*)pedido->payload + 8, 4);
-            uint32_t pid        = ntohl(pid_n);
-            uint32_t dir_logica = ntohl(dl_n);
-            uint32_t tamanio    = ntohl(tam_n);
-            uint8_t* datos      = (uint8_t*)pedido->payload + 12;
-
-            pthread_mutex_lock(&mutex_contextos);
-            t_contexto* ctx = buscar_contexto(pid);
-            if (!ctx) {
-                pthread_mutex_unlock(&mutex_contextos);
-                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-                free_mensaje(pedido); continue;
-            }
-            uint32_t dir_fisica = traducir_direccion(ctx, dir_logica, tamanio);
-            pthread_mutex_unlock(&mutex_contextos);
-
-            if (dir_fisica == UINT32_MAX) {
+            if (pedido->payload_size < 12u) {
+                log_warning(logger, "MSG_ESCRIBIR_DATOS con payload incompleto");
                 enviar_mensaje(fd, MSG_ERROR, NULL, 0);
             } else {
-                log_info(logger, "## PID: %u - Escritura - Dir. Física: %u - Tamaño: %u",
-                         pid, dir_fisica, tamanio);
-                int ok = escribir_fisico(dir_fisica, datos, tamanio);
-                enviar_mensaje(fd, ok == 0 ? MSG_OK : MSG_ERROR, NULL, 0);
+                uint32_t pid_n, dl_n, tam_n;
+                memcpy(&pid_n, pedido->payload,      4);
+                memcpy(&dl_n,  (uint8_t*)pedido->payload + 4, 4);
+                memcpy(&tam_n, (uint8_t*)pedido->payload + 8, 4);
+                uint32_t pid        = ntohl(pid_n);
+                uint32_t dir_logica = ntohl(dl_n);
+                uint32_t tamanio    = ntohl(tam_n);
+
+                // El tamaño declarado debe coincidir exactamente con los bytes
+                // presentes. Evita lecturas fuera del payload ante mensajes
+                // truncados o corruptos.
+                if (tamanio != pedido->payload_size - 12u) {
+                    log_warning(logger,
+                        "PID: %u - MSG_ESCRIBIR_DATOS inválido: declaró %u bytes y recibió %u",
+                        pid, tamanio, pedido->payload_size - 12u);
+                    enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                } else {
+                    uint8_t* datos = (uint8_t*)pedido->payload + 12;
+
+                    pthread_mutex_lock(&mutex_contextos);
+                    t_contexto* ctx = buscar_contexto(pid);
+                    if (!ctx) {
+                        pthread_mutex_unlock(&mutex_contextos);
+                        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                    } else {
+                        uint32_t dir_fisica = traducir_direccion(ctx, dir_logica, tamanio);
+                        pthread_mutex_unlock(&mutex_contextos);
+
+                        if (dir_fisica == UINT32_MAX) {
+                            enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                        } else {
+                            log_info(logger, "## PID: %u - Escritura - Dir. Física: %u - Tamaño: %u",
+                                     pid, dir_fisica, tamanio);
+                            int ok = escribir_fisico(dir_fisica, datos, tamanio);
+                            enviar_mensaje(fd, ok == 0 ? MSG_OK : MSG_ERROR, NULL, 0);
+                        }
+                    }
+                }
             }
         }
 
