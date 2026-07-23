@@ -1,0 +1,12 @@
+[INFO] 20:09:28:118 IO/(3985:3985): Iniciando IO tipo SLEEP
+[INFO] 20:09:28:118 IO/(3985:3985): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 20:09:28:118 IO/(3985:3985): ## Conectado a Kernel Scheduler
+[INFO] 20:10:10:788 IO/(3985:3985): ## PID: 0 - Inicio de IO
+[INFO] 20:10:10:788 IO/(3985:3985): ## PID: 0 - Haciendo sleep por 5000 milisegundos
+[INFO] 20:10:15:789 IO/(3985:3985): ## PID: 0 - Fin de IO
+[INFO] 20:10:16:962 IO/(3985:3985): ## PID: 0 - Inicio de IO
+[INFO] 20:10:16:962 IO/(3985:3985): ## PID: 0 - Haciendo sleep por 5000 milisegundos
+[INFO] 20:10:21:963 IO/(3985:3985): ## PID: 0 - Fin de IO
+[INFO] 20:10:23:056 IO/(3985:3985): ## PID: 0 - Inicio de IO
+[INFO] 20:10:23:056 IO/(3985:3985): ## PID: 0 - Haciendo sleep por 5000 milisegundos
+[INFO] 20:10:28:063 IO/(3985:3985): ## PID: 0 - Fin de IO

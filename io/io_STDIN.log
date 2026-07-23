@@ -1,0 +1,15 @@
+[INFO] 20:09:52:463 IO/(4244:4244): Iniciando IO tipo STDIN
+[INFO] 20:09:52:463 IO/(4244:4244): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 20:09:52:464 IO/(4244:4244): ## Conectado a Kernel Scheduler
+[INFO] 20:10:13:572 IO/(4244:4244): ## PID: 1 - Inicio de IO
+[INFO] 20:10:13:572 IO/(4244:4244): ## PID: 1 - Ingrese 16 caracteres:
+[DEBUG] 20:10:22:018 IO/(4244:4244): PID: 1 - STDIN: 17 byte(s) leídos de 16 pedidos (truncado)
+[INFO] 20:10:22:018 IO/(4244:4244): ## PID: 1 - Fin de IO
+[INFO] 20:10:22:018 IO/(4244:4244): ## PID: 2 - Inicio de IO
+[INFO] 20:10:22:018 IO/(4244:4244): ## PID: 2 - Ingrese 16 caracteres:
+[DEBUG] 20:10:28:929 IO/(4244:4244): PID: 2 - STDIN: 16 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 20:10:28:929 IO/(4244:4244): ## PID: 2 - Fin de IO
+[INFO] 20:10:28:930 IO/(4244:4244): ## PID: 3 - Inicio de IO
+[INFO] 20:10:28:930 IO/(4244:4244): ## PID: 3 - Ingrese 16 caracteres:
+[DEBUG] 20:10:35:493 IO/(4244:4244): PID: 3 - STDIN: 16 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 20:10:35:493 IO/(4244:4244): ## PID: 3 - Fin de IO

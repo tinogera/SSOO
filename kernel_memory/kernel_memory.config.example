@@ -4,5 +4,8 @@ KERNEL_MEMORY_PORT=37215
 # Directorio donde están los archivos de instrucciones (un .txt por proceso, nombrado por PID)
 SCRIPTS_BASEPATH=/home/utnso/scripts
 
-# Retardo artificial al leer una instrucción (en milisegundos)
-INSTRUCTION_DELAY=0
+SEGMENT_MAX_SIZE=128
+ALLOCATION_STRATEGY=BEST
+INSTRUCTION_DELAY=500
+COMPACTION_DELAY=30000
+
