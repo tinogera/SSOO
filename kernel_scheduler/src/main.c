@@ -174,7 +174,7 @@ static const char* estado_str(t_estado e) {
     switch (e) {
         case NEW:        return "NEW";
         case READY:      return "READY";
-<        case EXEC:       return "EXEC";
+        case EXEC:       return "EXEC";
         case BLOCK:      return "BLOCK";
         case SUSP_BLOCK: return "SUSP. BLOCK";
         case SUSP_READY: return "SUSP. READY";
