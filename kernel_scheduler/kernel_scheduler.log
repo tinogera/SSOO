@@ -91,3 +91,201 @@
 [INFO] 20:10:35:776 KernelScheduler/(3859:4568): ## (3) Pasa del estado BLOCK al estado SUSP. BLOCK
 [WARNING] 20:10:49:217 KernelScheduler/(3859:4372): ## IO STDIN desconectada
 [WARNING] 20:10:51:496 KernelScheduler/(3859:4554): ## CPU fd=9 desconectada
+[INFO] 02:58:53:450 KernelScheduler/(9453:9453): ## Conectado a Kernel Memory
+[INFO] 02:58:53:450 KernelScheduler/(9453:9453): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 02:58:53:451 KernelScheduler/(9453:9453): ## (0) Pasa del estado NEW al estado READY
+[INFO] 02:58:59:867 KernelScheduler/(9453:9735): ## IO SLEEP Conectada
+[INFO] 02:59:03:645 KernelScheduler/(9453:9872): ## IO STDIN Conectada
+[INFO] 02:59:07:188 KernelScheduler/(9453:10002): ## IO STDOUT Conectada
+[INFO] 02:59:12:374 KernelScheduler/(9453:10197): ## CPU 0 Conectada
+[INFO] 02:59:12:374 KernelScheduler/(9453:9597): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 02:59:13:397 KernelScheduler/(9453:10197): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 02:59:13:397 KernelScheduler/(9453:10197): ## (1) Se crea el proceso - Estado: NEW
+[INFO] 02:59:13:399 KernelScheduler/(9453:10197): ## (1) Pasa del estado NEW al estado READY
+[INFO] 02:59:13:455 KernelScheduler/(9453:10197): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 02:59:13:455 KernelScheduler/(9453:9597): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 02:59:13:958 KernelScheduler/(9453:10197): ## (0) - Solicitó syscall: SLEEP
+[INFO] 02:59:13:961 KernelScheduler/(9453:10197): ## (0) Pasa del estado EXEC al estado BLOCK
+[INFO] 02:59:13:961 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 02:59:15:074 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: MEM_ALLOC
+[INFO] 02:59:15:075 KernelScheduler/(9453:10206): ## (1) - MEM_ALLOC: solicita crear segmento 0 (64 bytes)
+[INFO] 02:59:15:075 KernelScheduler/(9453:10206): ## (1) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 02:59:16:685 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: STDIN
+[INFO] 02:59:16:687 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 02:59:18:857 KernelScheduler/(9453:9872): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 02:59:18:857 KernelScheduler/(9453:9872): ## (1) finalizó IO y pasa a READY
+[INFO] 02:59:18:857 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 02:59:18:962 KernelScheduler/(9453:9735): ## (0) Pasa del estado BLOCK al estado READY
+[INFO] 02:59:18:962 KernelScheduler/(9453:9735): ## (0) finalizó IO y pasa a READY
+[INFO] 02:59:18:962 KernelScheduler/(9453:9735): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 0 con prioridad 0
+[INFO] 02:59:19:412 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado READY
+[INFO] 02:59:19:412 KernelScheduler/(9453:9597): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 02:59:19:919 KernelScheduler/(9453:10197): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 02:59:19:919 KernelScheduler/(9453:10197): ## (2) Se crea el proceso - Estado: NEW
+[INFO] 02:59:19:963 KernelScheduler/(9453:10197): ## (2) Pasa del estado NEW al estado READY
+[INFO] 02:59:19:965 KernelScheduler/(9453:10197): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 02:59:19:965 KernelScheduler/(9453:9597): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 02:59:20:517 KernelScheduler/(9453:10197): ## (0) - Solicitó syscall: SLEEP
+[INFO] 02:59:20:517 KernelScheduler/(9453:10197): ## (0) Pasa del estado EXEC al estado BLOCK
+[INFO] 02:59:20:518 KernelScheduler/(9453:9597): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 02:59:21:615 KernelScheduler/(9453:10197): ## (2) - Solicitó syscall: MEM_ALLOC
+[INFO] 02:59:21:616 KernelScheduler/(9453:10218): ## (2) - MEM_ALLOC: solicita crear segmento 0 (32 bytes)
+[INFO] 02:59:21:616 KernelScheduler/(9453:10218): ## (2) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 02:59:23:213 KernelScheduler/(9453:10197): ## (2) - Solicitó syscall: STDIN
+[INFO] 02:59:23:216 KernelScheduler/(9453:10197): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 02:59:23:216 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 02:59:23:720 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: STDIN
+[INFO] 02:59:23:764 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 02:59:24:388 KernelScheduler/(9453:9872): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 02:59:24:388 KernelScheduler/(9453:9872): ## (2) finalizó IO y pasa a READY
+[INFO] 02:59:24:388 KernelScheduler/(9453:9597): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 02:59:25:393 KernelScheduler/(9453:10197): ## (2) - Solicitó syscall: STDIN
+[INFO] 02:59:25:394 KernelScheduler/(9453:10197): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 02:59:25:519 KernelScheduler/(9453:9735): ## (0) Pasa del estado BLOCK al estado READY
+[INFO] 02:59:25:519 KernelScheduler/(9453:9735): ## (0) finalizó IO y pasa a READY
+[INFO] 02:59:25:519 KernelScheduler/(9453:9597): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 02:59:26:008 KernelScheduler/(9453:9872): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 02:59:26:008 KernelScheduler/(9453:9872): ## (1) finalizó IO y pasa a READY
+[INFO] 02:59:26:021 KernelScheduler/(9453:10197): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 02:59:26:021 KernelScheduler/(9453:10197): ## (3) Se crea el proceso - Estado: NEW
+[INFO] 02:59:26:022 KernelScheduler/(9453:10197): ## (3) Pasa del estado NEW al estado READY
+[INFO] 02:59:26:112 KernelScheduler/(9453:10197): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 02:59:26:112 KernelScheduler/(9453:9597): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 02:59:26:660 KernelScheduler/(9453:10197): ## (0) - Solicitó syscall: SLEEP
+[INFO] 02:59:26:660 KernelScheduler/(9453:10197): ## (0) Pasa del estado EXEC al estado BLOCK
+[INFO] 02:59:26:660 KernelScheduler/(9453:9597): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 02:59:27:615 KernelScheduler/(9453:9872): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 02:59:27:615 KernelScheduler/(9453:9872): ## (2) finalizó IO y pasa a READY
+[INFO] 02:59:27:678 KernelScheduler/(9453:10197): ## (3) - Solicitó syscall: MEM_ALLOC
+[INFO] 02:59:27:721 KernelScheduler/(9453:10223): ## (3) - MEM_ALLOC: solicita crear segmento 0 (32 bytes)
+[INFO] 02:59:27:764 KernelScheduler/(9453:10224): ## Inicio de compactación
+[INFO] 02:59:31:661 KernelScheduler/(9453:9735): ## (0) Pasa del estado BLOCK al estado READY
+[INFO] 02:59:31:662 KernelScheduler/(9453:9735): ## (0) finalizó IO y pasa a READY
+[INFO] 02:59:57:874 KernelScheduler/(9453:10223): ## (3) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 02:59:57:878 KernelScheduler/(9453:10224): ## Fin de compactación
+[INFO] 02:59:59:428 KernelScheduler/(9453:10197): ## (3) - Solicitó syscall: STDIN
+[INFO] 02:59:59:478 KernelScheduler/(9453:10197): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 02:59:59:478 KernelScheduler/(9453:9597): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:00:00:027 KernelScheduler/(9453:10197): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 03:00:00:028 KernelScheduler/(9453:10197): ## (4) Se crea el proceso - Estado: NEW
+[INFO] 03:00:00:029 KernelScheduler/(9453:10197): ## (4) Pasa del estado NEW al estado READY
+[INFO] 03:00:00:029 KernelScheduler/(9453:10197): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 03:00:00:029 KernelScheduler/(9453:9597): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 03:00:00:582 KernelScheduler/(9453:10197): ## (0) - Solicitó syscall: EXIT
+[INFO] 03:00:00:583 KernelScheduler/(9453:10197): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 03:00:00:583 KernelScheduler/(9453:10197): ## (0) finalizó su ejecución con motivo de EXIT
+[INFO] 03:00:00:584 KernelScheduler/(9453:9597): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 03:00:01:133 KernelScheduler/(9453:10197): ## (2) - Solicitó syscall: SLEEP
+[INFO] 03:00:01:134 KernelScheduler/(9453:10197): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:00:01:135 KernelScheduler/(9453:9597): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 03:00:01:696 KernelScheduler/(9453:10197): ## (4) - Solicitó syscall: MEM_ALLOC
+[INFO] 03:00:01:698 KernelScheduler/(9453:10243): ## (4) - MEM_ALLOC: solicita crear segmento 0 (32 bytes)
+[ERROR] 03:00:01:747 KernelScheduler/(9453:10243): ## (4) - MEM_ALLOC: KM no pudo crear segmento 0
+[INFO] 03:00:01:747 KernelScheduler/(9453:10243): ## (4) Pasa del estado EXEC al estado EXIT
+[INFO] 03:00:01:747 KernelScheduler/(9453:10243): ## (4) finalizó su ejecución con motivo de ERROR
+[INFO] 03:00:01:748 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:00:02:808 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: STDIN
+[INFO] 03:00:02:808 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:00:07:543 KernelScheduler/(9453:9872): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 03:00:07:543 KernelScheduler/(9453:9872): ## (3) finalizó IO y pasa a READY
+[INFO] 03:00:07:543 KernelScheduler/(9453:9597): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 03:00:08:601 KernelScheduler/(9453:10197): ## (3) - Solicitó syscall: STDIN
+[INFO] 03:00:08:601 KernelScheduler/(9453:10197): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:00:09:014 KernelScheduler/(9453:9872): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 03:00:09:014 KernelScheduler/(9453:9872): ## (1) finalizó IO y pasa a READY
+[INFO] 03:00:09:014 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:00:10:027 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: STDIN
+[INFO] 03:00:10:075 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:00:10:325 KernelScheduler/(9453:9872): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 03:00:10:325 KernelScheduler/(9453:9872): ## (3) finalizó IO y pasa a READY
+[INFO] 03:00:10:325 KernelScheduler/(9453:9597): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 03:00:10:882 KernelScheduler/(9453:10197): ## (3) - Solicitó syscall: SLEEP
+[INFO] 03:00:10:882 KernelScheduler/(9453:10197): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:00:11:135 KernelScheduler/(9453:10242): ## (2) - Timeout de IO: suspendiendo proceso
+[INFO] 03:00:11:143 KernelScheduler/(9453:10242): ## (2) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 03:00:12:732 KernelScheduler/(9453:9872): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 03:00:12:732 KernelScheduler/(9453:9872): ## (1) finalizó IO y pasa a READY
+[INFO] 03:00:12:732 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:00:13:234 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: SLEEP
+[INFO] 03:00:13:234 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:00:20:887 KernelScheduler/(9453:10255): ## (3) - Timeout de IO: suspendiendo proceso
+[INFO] 03:00:20:890 KernelScheduler/(9453:10255): ## (3) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 03:00:23:234 KernelScheduler/(9453:10264): ## (1) - Timeout de IO: suspendiendo proceso
+[INFO] 03:00:23:339 KernelScheduler/(9453:10264): ## (1) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 03:00:31:137 KernelScheduler/(9453:9735): ## (2) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 03:00:31:137 KernelScheduler/(9453:9735): ## (2) finalizó IO y pasa a SUSP. READY
+[INFO] 03:00:31:204 KernelScheduler/(9453:9598): ## (2) Pasa del estado SUSP. READY al estado READY
+[INFO] 03:00:31:205 KernelScheduler/(9453:9597): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 03:00:33:912 KernelScheduler/(9453:10197): ## (2) - Solicitó syscall: STDOUT
+[INFO] 03:00:33:912 KernelScheduler/(9453:10197): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:00:33:965 KernelScheduler/(9453:10002): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 03:00:33:965 KernelScheduler/(9453:10002): ## (2) finalizó IO y pasa a READY
+[INFO] 03:00:33:966 KernelScheduler/(9453:9597): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 03:00:35:024 KernelScheduler/(9453:10197): ## (2) - Solicitó syscall: STDOUT
+[INFO] 03:00:35:072 KernelScheduler/(9453:10197): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:00:35:155 KernelScheduler/(9453:10002): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 03:00:35:155 KernelScheduler/(9453:10002): ## (2) finalizó IO y pasa a READY
+[INFO] 03:00:35:157 KernelScheduler/(9453:9597): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 03:00:35:662 KernelScheduler/(9453:10197): ## (2) - Solicitó syscall: SLEEP
+[INFO] 03:00:35:663 KernelScheduler/(9453:10197): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:00:45:665 KernelScheduler/(9453:10291): ## (2) - Timeout de IO: suspendiendo proceso
+[INFO] 03:00:45:678 KernelScheduler/(9453:10291): ## (2) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 03:01:01:140 KernelScheduler/(9453:9735): ## (3) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 03:01:01:140 KernelScheduler/(9453:9735): ## (3) finalizó IO y pasa a SUSP. READY
+[INFO] 03:01:01:149 KernelScheduler/(9453:9598): ## (3) Pasa del estado SUSP. READY al estado READY
+[INFO] 03:01:01:149 KernelScheduler/(9453:9597): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 03:01:03:718 KernelScheduler/(9453:10197): ## (3) - Solicitó syscall: STDOUT
+[INFO] 03:01:03:765 KernelScheduler/(9453:10197): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:01:03:813 KernelScheduler/(9453:10002): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 03:01:03:813 KernelScheduler/(9453:10002): ## (3) finalizó IO y pasa a READY
+[INFO] 03:01:03:815 KernelScheduler/(9453:9597): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 03:01:04:875 KernelScheduler/(9453:10197): ## (3) - Solicitó syscall: STDOUT
+[INFO] 03:01:04:876 KernelScheduler/(9453:10197): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:01:04:984 KernelScheduler/(9453:10002): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 03:01:04:984 KernelScheduler/(9453:10002): ## (3) finalizó IO y pasa a READY
+[INFO] 03:01:04:985 KernelScheduler/(9453:9597): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 03:01:05:488 KernelScheduler/(9453:10197): ## (3) - Solicitó syscall: SLEEP
+[INFO] 03:01:05:540 KernelScheduler/(9453:10197): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:01:15:591 KernelScheduler/(9453:10310): ## (3) - Timeout de IO: suspendiendo proceso
+[INFO] 03:01:15:650 KernelScheduler/(9453:10310): ## (3) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 03:02:01:141 KernelScheduler/(9453:9735): ## (1) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 03:02:01:141 KernelScheduler/(9453:9735): ## (1) finalizó IO y pasa a SUSP. READY
+[INFO] 03:02:01:151 KernelScheduler/(9453:9598): ## (1) Pasa del estado SUSP. READY al estado READY
+[INFO] 03:02:01:152 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:02:02:172 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: STDOUT
+[INFO] 03:02:02:176 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:02:02:268 KernelScheduler/(9453:10002): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 03:02:02:268 KernelScheduler/(9453:10002): ## (1) finalizó IO y pasa a READY
+[INFO] 03:02:02:268 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:02:03:387 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: STDOUT
+[INFO] 03:02:03:389 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:02:03:444 KernelScheduler/(9453:10002): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 03:02:03:444 KernelScheduler/(9453:10002): ## (1) finalizó IO y pasa a READY
+[INFO] 03:02:03:444 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:02:04:520 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: STDOUT
+[INFO] 03:02:04:581 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:02:04:676 KernelScheduler/(9453:10002): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 03:02:04:677 KernelScheduler/(9453:10002): ## (1) finalizó IO y pasa a READY
+[INFO] 03:02:04:678 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:02:05:684 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: STDOUT
+[INFO] 03:02:05:685 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 03:02:05:688 KernelScheduler/(9453:10002): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 03:02:05:688 KernelScheduler/(9453:10002): ## (1) finalizó IO y pasa a READY
+[INFO] 03:02:05:688 KernelScheduler/(9453:9597): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 03:02:06:807 KernelScheduler/(9453:10197): ## (1) - Solicitó syscall: EXIT
+[INFO] 03:02:06:808 KernelScheduler/(9453:10197): ## (1) Pasa del estado EXEC al estado EXIT
+[INFO] 03:02:06:808 KernelScheduler/(9453:10197): ## (1) finalizó su ejecución con motivo de EXIT
+[INFO] 03:02:09:144 KernelScheduler/(9453:9735): ## (2) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 03:02:09:144 KernelScheduler/(9453:9735): ## (2) finalizó IO y pasa a SUSP. READY
+[INFO] 03:02:09:149 KernelScheduler/(9453:9598): ## (2) Pasa del estado SUSP. READY al estado READY
+[INFO] 03:02:09:149 KernelScheduler/(9453:9597): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 03:02:10:157 KernelScheduler/(9453:10197): ## (2) - Solicitó syscall: EXIT
+[INFO] 03:02:10:157 KernelScheduler/(9453:10197): ## (2) Pasa del estado EXEC al estado EXIT
+[INFO] 03:02:10:157 KernelScheduler/(9453:10197): ## (2) finalizó su ejecución con motivo de EXIT
+[INFO] 03:02:17:160 KernelScheduler/(9453:9735): ## (3) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 03:02:17:160 KernelScheduler/(9453:9735): ## (3) finalizó IO y pasa a SUSP. READY
+[INFO] 03:02:17:221 KernelScheduler/(9453:9598): ## (3) Pasa del estado SUSP. READY al estado READY
+[INFO] 03:02:17:222 KernelScheduler/(9453:9597): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 03:02:18:239 KernelScheduler/(9453:10197): ## (3) - Solicitó syscall: EXIT
+[INFO] 03:02:18:239 KernelScheduler/(9453:10197): ## (3) Pasa del estado EXEC al estado EXIT
+[INFO] 03:02:18:239 KernelScheduler/(9453:10197): ## (3) finalizó su ejecución con motivo de EXIT

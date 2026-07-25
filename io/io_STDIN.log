@@ -13,3 +13,38 @@
 [INFO] 20:10:28:930 IO/(4244:4244): ## PID: 3 - Ingrese 16 caracteres:
 [DEBUG] 20:10:35:493 IO/(4244:4244): PID: 3 - STDIN: 16 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
 [INFO] 20:10:35:493 IO/(4244:4244): ## PID: 3 - Fin de IO
+[INFO] 02:59:03:645 IO/(9744:9744): Iniciando IO tipo STDIN
+[INFO] 02:59:03:645 IO/(9744:9744): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 02:59:03:645 IO/(9744:9744): ## Conectado a Kernel Scheduler
+[INFO] 02:59:16:688 IO/(9744:9744): ## PID: 1 - Inicio de IO
+[INFO] 02:59:16:688 IO/(9744:9744): ## PID: 1 - Ingrese 16 caracteres:
+[DEBUG] 02:59:18:854 IO/(9744:9744): PID: 1 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 02:59:18:854 IO/(9744:9744): ## PID: 1 - Fin de IO
+[INFO] 02:59:23:216 IO/(9744:9744): ## PID: 2 - Inicio de IO
+[INFO] 02:59:23:216 IO/(9744:9744): ## PID: 2 - Ingrese 16 caracteres:
+[DEBUG] 02:59:24:383 IO/(9744:9744): PID: 2 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 02:59:24:384 IO/(9744:9744): ## PID: 2 - Fin de IO
+[INFO] 02:59:24:384 IO/(9744:9744): ## PID: 1 - Inicio de IO
+[INFO] 02:59:24:384 IO/(9744:9744): ## PID: 1 - Ingrese 16 caracteres:
+[DEBUG] 02:59:25:951 IO/(9744:9744): PID: 1 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 02:59:25:951 IO/(9744:9744): ## PID: 1 - Fin de IO
+[INFO] 02:59:25:951 IO/(9744:9744): ## PID: 2 - Inicio de IO
+[INFO] 02:59:25:953 IO/(9744:9744): ## PID: 2 - Ingrese 16 caracteres:
+[DEBUG] 02:59:27:613 IO/(9744:9744): PID: 2 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 02:59:27:613 IO/(9744:9744): ## PID: 2 - Fin de IO
+[INFO] 02:59:59:478 IO/(9744:9744): ## PID: 3 - Inicio de IO
+[INFO] 02:59:59:478 IO/(9744:9744): ## PID: 3 - Ingrese 16 caracteres:
+[DEBUG] 03:00:07:538 IO/(9744:9744): PID: 3 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 03:00:07:538 IO/(9744:9744): ## PID: 3 - Fin de IO
+[INFO] 03:00:07:538 IO/(9744:9744): ## PID: 1 - Inicio de IO
+[INFO] 03:00:07:538 IO/(9744:9744): ## PID: 1 - Ingrese 16 caracteres:
+[DEBUG] 03:00:09:008 IO/(9744:9744): PID: 1 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 03:00:09:008 IO/(9744:9744): ## PID: 1 - Fin de IO
+[INFO] 03:00:09:011 IO/(9744:9744): ## PID: 3 - Inicio de IO
+[INFO] 03:00:09:011 IO/(9744:9744): ## PID: 3 - Ingrese 16 caracteres:
+[DEBUG] 03:00:10:214 IO/(9744:9744): PID: 3 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 03:00:10:214 IO/(9744:9744): ## PID: 3 - Fin de IO
+[INFO] 03:00:10:214 IO/(9744:9744): ## PID: 1 - Inicio de IO
+[INFO] 03:00:10:214 IO/(9744:9744): ## PID: 1 - Ingrese 16 caracteres:
+[DEBUG] 03:00:12:727 IO/(9744:9744): PID: 1 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 03:00:12:727 IO/(9744:9744): ## PID: 1 - Fin de IO

@@ -6,3 +6,17 @@
 [DEBUG] 20:10:23:576 MemoryStick/(3729:3850): Lectura en dirección local=0 (tamaño propio del stick=64)
 [INFO] 20:10:23:576 MemoryStick/(3729:3850): ## Lectura de 64 bytes
 [INFO] 20:10:51:496 MemoryStick/(3729:4559): CPU 0 desconectada
+[INFO] 02:58:46:577 MemoryStick/(9317:9317): Se creo log en memory_stick_27646.log
+[INFO] 02:58:46:578 MemoryStick/(9317:9317): ## Conectado a Kernel Memory
+[INFO] 02:58:46:578 MemoryStick/(9317:9317): Escuchando CPUs en puerto 27646
+[INFO] 02:59:12:393 MemoryStick/(9317:10202): ## CPU 0 Conectada
+[INFO] 02:59:18:857 MemoryStick/(9317:9438): ## Escritura de 16 bytes
+[INFO] 02:59:26:007 MemoryStick/(9317:9438): ## Escritura de 16 bytes
+[INFO] 02:59:27:775 MemoryStick/(9317:9438): ## Lectura de 64 bytes
+[INFO] 02:59:27:870 MemoryStick/(9317:9438): ## Escritura de 32 bytes
+[INFO] 03:00:07:542 MemoryStick/(9317:9438): ## Escritura de 16 bytes
+[INFO] 03:00:09:013 MemoryStick/(9317:9438): ## Escritura de 16 bytes
+[INFO] 03:00:10:325 MemoryStick/(9317:9438): ## Escritura de 16 bytes
+[INFO] 03:00:12:732 MemoryStick/(9317:9438): ## Escritura de 16 bytes
+[INFO] 03:00:20:890 MemoryStick/(9317:9438): ## Lectura de 32 bytes
+[INFO] 03:00:23:338 MemoryStick/(9317:9438): ## Lectura de 32 bytes

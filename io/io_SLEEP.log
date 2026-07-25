@@ -10,3 +10,30 @@
 [INFO] 20:10:23:056 IO/(3985:3985): ## PID: 0 - Inicio de IO
 [INFO] 20:10:23:056 IO/(3985:3985): ## PID: 0 - Haciendo sleep por 5000 milisegundos
 [INFO] 20:10:28:063 IO/(3985:3985): ## PID: 0 - Fin de IO
+[INFO] 02:58:59:866 IO/(9607:9607): Iniciando IO tipo SLEEP
+[INFO] 02:58:59:866 IO/(9607:9607): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 02:58:59:867 IO/(9607:9607): ## Conectado a Kernel Scheduler
+[INFO] 02:59:13:961 IO/(9607:9607): ## PID: 0 - Inicio de IO
+[INFO] 02:59:13:961 IO/(9607:9607): ## PID: 0 - Haciendo sleep por 5000 milisegundos
+[INFO] 02:59:18:962 IO/(9607:9607): ## PID: 0 - Fin de IO
+[INFO] 02:59:20:518 IO/(9607:9607): ## PID: 0 - Inicio de IO
+[INFO] 02:59:20:518 IO/(9607:9607): ## PID: 0 - Haciendo sleep por 5000 milisegundos
+[INFO] 02:59:25:518 IO/(9607:9607): ## PID: 0 - Fin de IO
+[INFO] 02:59:26:660 IO/(9607:9607): ## PID: 0 - Inicio de IO
+[INFO] 02:59:26:660 IO/(9607:9607): ## PID: 0 - Haciendo sleep por 5000 milisegundos
+[INFO] 02:59:31:661 IO/(9607:9607): ## PID: 0 - Fin de IO
+[INFO] 03:00:01:135 IO/(9607:9607): ## PID: 2 - Inicio de IO
+[INFO] 03:00:01:135 IO/(9607:9607): ## PID: 2 - Haciendo sleep por 30000 milisegundos
+[INFO] 03:00:31:136 IO/(9607:9607): ## PID: 2 - Fin de IO
+[INFO] 03:00:31:136 IO/(9607:9607): ## PID: 3 - Inicio de IO
+[INFO] 03:00:31:137 IO/(9607:9607): ## PID: 3 - Haciendo sleep por 30000 milisegundos
+[INFO] 03:01:01:138 IO/(9607:9607): ## PID: 3 - Fin de IO
+[INFO] 03:01:01:139 IO/(9607:9607): ## PID: 1 - Inicio de IO
+[INFO] 03:01:01:140 IO/(9607:9607): ## PID: 1 - Haciendo sleep por 60000 milisegundos
+[INFO] 03:02:01:141 IO/(9607:9607): ## PID: 1 - Fin de IO
+[INFO] 03:02:01:141 IO/(9607:9607): ## PID: 2 - Inicio de IO
+[INFO] 03:02:01:142 IO/(9607:9607): ## PID: 2 - Haciendo sleep por 8000 milisegundos
+[INFO] 03:02:09:143 IO/(9607:9607): ## PID: 2 - Fin de IO
+[INFO] 03:02:09:144 IO/(9607:9607): ## PID: 3 - Inicio de IO
+[INFO] 03:02:09:144 IO/(9607:9607): ## PID: 3 - Haciendo sleep por 8000 milisegundos
+[INFO] 03:02:17:159 IO/(9607:9607): ## PID: 3 - Fin de IO

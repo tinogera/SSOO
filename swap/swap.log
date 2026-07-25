@@ -3,3 +3,14 @@
 [INFO] 20:10:23:576 Swap/(3169:3169): ## Escritura del bloque: 0
 [INFO] 20:10:29:689 Swap/(3169:3169): ## Escritura del bloque: 1
 [INFO] 20:10:35:781 Swap/(3169:3169): ## Escritura del bloque: 2
+[INFO] 02:58:26:522 Swap/(8805:8805): ## Conectado a Kernel Memory
+[INFO] 03:00:11:142 Swap/(8805:8805): ## Escritura del bloque: 0
+[INFO] 03:00:20:890 Swap/(8805:8805): ## Escritura del bloque: 1
+[INFO] 03:00:23:339 Swap/(8805:8805): ## Escritura del bloque: 2
+[INFO] 03:00:31:195 Swap/(8805:8805): ## Lectura del bloque: 0
+[INFO] 03:00:45:676 Swap/(8805:8805): ## Escritura del bloque: 0
+[INFO] 03:01:01:141 Swap/(8805:8805): ## Lectura del bloque: 1
+[INFO] 03:01:15:648 Swap/(8805:8805): ## Escritura del bloque: 1
+[INFO] 03:02:01:142 Swap/(8805:8805): ## Lectura del bloque: 2
+[INFO] 03:02:09:144 Swap/(8805:8805): ## Lectura del bloque: 0
+[INFO] 03:02:17:212 Swap/(8805:8805): ## Lectura del bloque: 1

@@ -1,3 +1,30 @@
 [INFO] 20:09:43:128 IO/(4114:4114): Iniciando IO tipo STDOUT
 [INFO] 20:09:43:129 IO/(4114:4114): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
 [INFO] 20:09:43:129 IO/(4114:4114): ## Conectado a Kernel Scheduler
+[INFO] 02:59:07:187 IO/(9873:9873): Iniciando IO tipo STDOUT
+[INFO] 02:59:07:187 IO/(9873:9873): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 02:59:07:188 IO/(9873:9873): ## Conectado a Kernel Scheduler
+[INFO] 03:00:33:965 IO/(9873:9873): ## PID: 2 - Inicio de IO
+[INFO] 03:00:33:965 IO/(9873:9873): ## PID: 2 - chau
+[INFO] 03:00:33:965 IO/(9873:9873): ## PID: 2 - Fin de IO
+[INFO] 03:00:35:155 IO/(9873:9873): ## PID: 2 - Inicio de IO
+[INFO] 03:00:35:155 IO/(9873:9873): ## PID: 2 - chua
+[INFO] 03:00:35:155 IO/(9873:9873): ## PID: 2 - Fin de IO
+[INFO] 03:01:03:813 IO/(9873:9873): ## PID: 3 - Inicio de IO
+[INFO] 03:01:03:813 IO/(9873:9873): ## PID: 3 - hola
+[INFO] 03:01:03:813 IO/(9873:9873): ## PID: 3 - Fin de IO
+[INFO] 03:01:04:981 IO/(9873:9873): ## PID: 3 - Inicio de IO
+[INFO] 03:01:04:982 IO/(9873:9873): ## PID: 3 - hola
+[INFO] 03:01:04:984 IO/(9873:9873): ## PID: 3 - Fin de IO
+[INFO] 03:02:02:267 IO/(9873:9873): ## PID: 1 - Inicio de IO
+[INFO] 03:02:02:267 IO/(9873:9873): ## PID: 1 - hola
+[INFO] 03:02:02:268 IO/(9873:9873): ## PID: 1 - Fin de IO
+[INFO] 03:02:03:444 IO/(9873:9873): ## PID: 1 - Inicio de IO
+[INFO] 03:02:03:444 IO/(9873:9873): ## PID: 1 - chua
+[INFO] 03:02:03:444 IO/(9873:9873): ## PID: 1 - Fin de IO
+[INFO] 03:02:04:676 IO/(9873:9873): ## PID: 1 - Inicio de IO
+[INFO] 03:02:04:676 IO/(9873:9873): ## PID: 1 - hola
+[INFO] 03:02:04:676 IO/(9873:9873): ## PID: 1 - Fin de IO
+[INFO] 03:02:05:688 IO/(9873:9873): ## PID: 1 - Inicio de IO
+[INFO] 03:02:05:688 IO/(9873:9873): ## PID: 1 - hola
+[INFO] 03:02:05:688 IO/(9873:9873): ## PID: 1 - Fin de IO

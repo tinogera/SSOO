@@ -6,3 +6,32 @@
 [DEBUG] 20:10:35:779 MemoryStick/(3355:3476): Lectura en dirección local=0 (tamaño propio del stick=16)
 [INFO] 20:10:35:779 MemoryStick/(3355:3476): ## Lectura de 16 bytes
 [INFO] 20:10:51:496 MemoryStick/(3355:4556): CPU 0 desconectada
+[INFO] 02:58:35:432 MemoryStick/(8935:8935): Se creo log en memory_stick_27643.log
+[INFO] 02:58:35:434 MemoryStick/(8935:8935): ## Conectado a Kernel Memory
+[DEBUG] 02:58:35:434 MemoryStick/(8935:8935): Offset global de este stick dentro del espacio de direcciones: 0
+[INFO] 02:58:35:434 MemoryStick/(8935:8935): Escuchando CPUs en puerto 27643
+[INFO] 02:59:12:379 MemoryStick/(8935:10199): ## CPU 0 Conectada
+[DEBUG] 02:59:27:769 MemoryStick/(8935:9056): Escritura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 02:59:27:769 MemoryStick/(8935:9056): ## Escritura de 16 bytes
+[DEBUG] 03:00:11:138 MemoryStick/(8935:9056): Lectura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:00:11:139 MemoryStick/(8935:9056): ## Lectura de 16 bytes
+[DEBUG] 03:00:31:200 MemoryStick/(8935:9056): Escritura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:00:31:200 MemoryStick/(8935:9056): ## Escritura de 16 bytes
+[DEBUG] 03:00:33:964 MemoryStick/(8935:9056): Lectura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:00:33:964 MemoryStick/(8935:9056): ## Lectura de 16 bytes
+[DEBUG] 03:00:45:669 MemoryStick/(8935:9056): Lectura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:00:45:669 MemoryStick/(8935:9056): ## Lectura de 16 bytes
+[DEBUG] 03:01:01:144 MemoryStick/(8935:9056): Escritura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:01:01:145 MemoryStick/(8935:9056): ## Escritura de 16 bytes
+[DEBUG] 03:01:03:811 MemoryStick/(8935:9056): Lectura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:01:03:812 MemoryStick/(8935:9056): ## Lectura de 16 bytes
+[DEBUG] 03:01:15:594 MemoryStick/(8935:9056): Lectura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:01:15:594 MemoryStick/(8935:9056): ## Lectura de 16 bytes
+[DEBUG] 03:02:01:145 MemoryStick/(8935:9056): Escritura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:02:01:145 MemoryStick/(8935:9056): ## Escritura de 16 bytes
+[DEBUG] 03:02:02:266 MemoryStick/(8935:9056): Lectura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:02:02:267 MemoryStick/(8935:9056): ## Lectura de 16 bytes
+[DEBUG] 03:02:09:146 MemoryStick/(8935:9056): Escritura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:02:09:146 MemoryStick/(8935:9056): ## Escritura de 16 bytes
+[DEBUG] 03:02:17:217 MemoryStick/(8935:9056): Escritura en dirección local=0 (tamaño propio del stick=16)
+[INFO] 03:02:17:217 MemoryStick/(8935:9056): ## Escritura de 16 bytes
