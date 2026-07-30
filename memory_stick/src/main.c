@@ -8,6 +8,8 @@
 #include <utils/sockets.h>
 #include <utils/protocolo.h>
 #include <pthread.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <unistd.h>
 
 void* atender_cpu(void* arg);
@@ -86,28 +88,41 @@ int main(int argc, char* argv[]) {
     }
 
 
-    // char * ip         = config_get_string_value(config,    "MEMORY_STICK_IP");
-    int   puerto      = config_get_int_value(config,    "MEMORY_STICK_PORT");
-          delay       = config_get_int_value(config,    "MEMORY_DELAY");
+    delay           = config_get_int_value(config, "MEMORY_DELAY");
     int   kernel_port = config_get_int_value(config,    "KERNEL_MEMORY_PORT");
     char* kernel_ip   = config_get_string_value(config, "KERNEL_MEMORY_IP");
     char* logLevel    = config_get_string_value(config, "LOG_LEVEL");
+
+    // El servidor debe estar escuchando antes de publicar el stick en KM.
+    // bind(0) elige un puerto libre y permite reutilizar el mismo config.
+    int fd_servidor = crear_servidor(0);
+    if (fd_servidor < 0) {
+        fprintf(stderr, "No se pudo levantar el servidor de Memory Stick\n");
+        config_destroy(config);
+        return EXIT_FAILURE;
+    }
+
+    struct sockaddr_in servidor_addr;
+    socklen_t servidor_addr_len = sizeof(servidor_addr);
+    if (getsockname(fd_servidor, (struct sockaddr*)&servidor_addr, &servidor_addr_len) < 0) {
+        fprintf(stderr, "No se pudo obtener el puerto del Memory Stick\n");
+        close(fd_servidor);
+        config_destroy(config);
+        return EXIT_FAILURE;
+    }
+    int puerto = ntohs(servidor_addr.sin_port);
     // -------------------------------------------------------------------
     // 3. Inicializar logger
     // -------------------------------------------------------------------
 
-    // Se usa el puerto propio como identificador del archivo de log: es el
-    // único dato disponible en este punto (antes de conectar a KM) que ya
-    // está garantizado como único por instancia — dos sticks en la misma
-    // máquina no pueden compartir puerto. Un contador local (id) no serviría:
-    // cada instancia de memory_stick es un proceso aparte, así que un
-    // contador que arranca en 0 en cada uno siempre da el mismo valor.
+    // El puerto efectivo es único aunque varias instancias compartan config.
     char log_file[64];
     snprintf(log_file, sizeof(log_file), "memory_stick_%d.log", puerto);
 
     logger = log_create(log_file, "MemoryStick", true, log_level_from_string(logLevel));
     if (logger == NULL) {
         fprintf(stderr, "Error al crear el logger\n");
+        close(fd_servidor);
         config_destroy(config);
         return EXIT_FAILURE;
     }
@@ -119,67 +134,42 @@ int main(int argc, char* argv[]) {
 
     if (kernel_ip == NULL) {
         log_error(logger, "Falta KERNEL_MEMORY_IP en el archivo de configuración");
+        close(fd_servidor);
         config_destroy(config);
         log_destroy(logger);
         return EXIT_FAILURE;
     }
 
-    // int fd = conectar_a_servidor(kernel_ip, kernel_port);
-    // log_info(logger, "Kernel IP: %s", kernel_ip);
-    // if (fd < 0) {
-    //     log_error(logger, "Kernel Memory no esta levantado o los datos son incorrectos\n");
-    // }
-    // log_info(logger, "## Conectado a Kernel Memory\n");
-
-    // -------------------------------------------------------------------
-    // 6. Envio de datos propios a kernel memory 
-    //    FORMATO: "MEMORYSTICK IP, MEMORYSTICK PORT"
-    // -------------------------------------------------------------------
-
-    // char msdatos[128];
-    // snprintf(msdatos, sizeof(msdatos), "%d", ip);
-    // snprintf(msdatos, sizeof(msdatos), ", %d", puerto);
-    // uint32_t size;
-    // void* payload = serializar_string(msdatos, &size);
-    // enviar_mensaje(fd, MSG_MEMORY_STICK_IDENTIFICACION, payload, size);
-    // free(payload);
-    // Conectarse a Kernel Memory
     int fd_km = conectar_a_servidor(kernel_ip, kernel_port);
     if (fd_km < 0) {
         log_error(logger, "No se pudo conectar a Kernel Memory en %s:%d", kernel_ip, kernel_port);
+        close(fd_servidor);
         config_destroy(config);
         log_destroy(logger);
         return EXIT_FAILURE;
     }
 
-    // Identificarse con tamaño en el payload
-    //  4 + 4 + 32
-    // u_int64_t  payload[40];
-    // uint32_t ip_n = htonl(ms.ip);
-    // memcpy(payload, &ip_n, 32);
-    // uint32_t puerto_n = htonl(ms.puerto);
-    // memcpy(payload, &puerto_n, 4);
-    // uint32_t tamanio_n = htonl(tamanio);
-    // memcpy(payload, &tamanio_n, 4);
-    uint8_t  payload[4];
-    uint32_t tamanio_n = htonl(tamanio);
-    memcpy(payload, &tamanio_n, 4);
-
-    enviar_mensaje(fd_km, MSG_MEMORY_STICK_IDENTIFICACION, payload, sizeof(payload));
+    t_payload_memory_stick_identificacion identificacion = {
+        .tamanio = htonl(tamanio),
+        .puerto = htonl((uint32_t)puerto)
+    };
+    enviar_mensaje(fd_km, MSG_MEMORY_STICK_IDENTIFICACION,
+                   &identificacion, sizeof(identificacion));
 
     t_mensaje* respuesta = recibir_mensaje(fd_km);
-    if (respuesta == NULL || respuesta->op_code != MSG_OK) {
+    if (respuesta == NULL || respuesta->op_code != MSG_OK ||
+        respuesta->payload_size != sizeof(uint32_t)) {
         log_error(logger, "Kernel Memory rechazó la conexión");
         if (respuesta) free_mensaje(respuesta);
+        close(fd_km);
+        close(fd_servidor);
         config_destroy(config);
         log_destroy(logger);
         return EXIT_FAILURE;
     }
-    if (respuesta->payload_size >= sizeof(uint32_t)) {
-        uint32_t offset_n;
-        memcpy(&offset_n, respuesta->payload, sizeof(uint32_t));
-        offset_global_ms = ntohl(offset_n);
-    }
+    uint32_t offset_n;
+    memcpy(&offset_n, respuesta->payload, sizeof(uint32_t));
+    offset_global_ms = ntohl(offset_n);
     free_mensaje(respuesta);
 
     log_info(logger, "## Conectado a Kernel Memory");
@@ -195,19 +185,6 @@ int main(int argc, char* argv[]) {
         pthread_t t_km;
         pthread_create(&t_km, NULL, atender_kernel_memory, fd_km_heap);
         pthread_detach(t_km);
-    }
-
-    // -------------------------------------------------------------------
-    // 7. Creo servidor y se queda la espera de una CPU
-    // -------------------------------------------------------------------
-
-    // Levantar servidor para CPUs
-    int fd_servidor = crear_servidor(puerto);
-    if (fd_servidor < 0) {
-        log_error(logger, "No se pudo levantar servidor en puerto %d", puerto);
-        config_destroy(config);
-        log_destroy(logger);
-        return EXIT_FAILURE;
     }
 
     log_info(logger, "Escuchando CPUs en puerto %d", puerto);
@@ -228,8 +205,6 @@ int main(int argc, char* argv[]) {
         pthread_create(&tid, NULL, atender_cpu, args);
 
         pthread_detach(tid);
-
-        // TODO Check 2: loop de lectura/escritura por CPU
     }
 
     config_destroy(config);
@@ -283,8 +258,10 @@ void* atender_cpu(void* arg) {
         close(fd_cpu);
         return NULL;
     }
-    if (id_msg->op_code != MSG_CPU_IDENTIFICACION) {
-        log_info(logger, "Primer mensaje no es identificacion: %u", id_msg->op_code);
+    if (id_msg->op_code != MSG_CPU_IDENTIFICACION ||
+        id_msg->payload_size != sizeof(uint32_t)) {
+        log_info(logger, "Identificacion de CPU invalida: opcode=%u payload=%u",
+                 id_msg->op_code, id_msg->payload_size);
         enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
         free_mensaje(id_msg);
         close(fd_cpu);

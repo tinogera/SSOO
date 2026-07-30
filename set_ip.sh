@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
 #
-# set_ip.sh — Actualiza la IP de un rol (Kernel Memory, Kernel Scheduler o Memory Stick)
+# set_ip.sh — Actualiza la IP de un rol (Kernel Memory o Kernel Scheduler)
 # en TODOS los .config que la referencian, sin editar cada archivo a mano.
 #
 # Uso:
 #   ./set_ip.sh km <ip>              # IP de la VM donde corre Kernel Memory
 #   ./set_ip.sh ks <ip>              # IP de la VM donde corre Kernel Scheduler
-#   ./set_ip.sh ms <ip> [indice]     # IP de la VM donde corre un Memory Stick (indice por defecto: 0)
 #
 # Correr una vez por cada rol cuya VM sea distinta a la propia (ver Sección 7 de Doc/instalacion.md).
 #
 # Ejemplos:
 #   ./set_ip.sh km 10.100.3.10
 #   ./set_ip.sh ks 10.100.3.11
-#   ./set_ip.sh ms 10.100.3.14 0
 
 set -uo pipefail
 
@@ -46,15 +44,9 @@ case "$ROL" in
         log_ok "IP de Kernel Scheduler ($IP) actualizada en cpu e io."
         ;;
 
-    ms|memory_stick)
-        IDX="${3:-0}"
-        "$SET_CONFIG" cpu "IP_MEMORY_STICK_${IDX}=$IP"
-        log_ok "IP de Memory Stick #$IDX ($IP) actualizada en cpu."
-        ;;
-
     *)
         log_err "Rol desconocido: '$ROL'"
-        echo "Roles válidos: km, ks, ms"
+        echo "Roles válidos: km, ks"
         exit 1
         ;;
 esac

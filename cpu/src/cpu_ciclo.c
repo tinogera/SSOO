@@ -141,8 +141,7 @@ static bool es_instruccion_memoria(t_opcode_cpu opcode) {
 t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     int socket_kernel,
     int socket_memory,
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     uint32_t pid,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -179,8 +178,7 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
         if (es_instruccion_memoria(instruccion.opcode)) {
             // MOV_IN, MOV_OUT y COPY_MEM hacen MMU y después hablan con el MS.
             t_resultado_memoria_cpu resultado_memoria = ejecutar_instruccion_memoria(
-                sockets_ms,
-                n_sockets_ms,
+                memory_sticks,
                 &instruccion,
                 contexto,
                 registros,

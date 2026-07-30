@@ -122,3 +122,47 @@ jobs:
           mkdir -p bin
           make test
           ./bin/kernel_scheduler_tests
+
+  test-cpu:
+    name: Build y tests de CPU
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v5
+
+      - name: Instalar dependencias del sistema
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y build-essential libreadline-dev
+
+      - name: Instalar so-commons-library
+        run: |
+          git clone https://x-access-token:${{ github.token }}@github.com/sisoputnfrba/so-commons-library.git
+          cd so-commons-library
+          sudo make install
+
+      - name: Compilar cspecs y copiar a vendor
+        run: |
+          mkdir -p /tmp/cspec
+          curl -fsSL "https://github.com/mumuki/cspec/archive/043089d9c55871526f1d6728af4d0febdbe8c38a.tar.gz" \
+            | tar -xzC /tmp/cspec --strip-components=1
+          make -C /tmp/cspec
+          mkdir -p cpu/vendor/cspecs/lib
+          cp /tmp/cspec/release/libcspecs.so cpu/vendor/cspecs/lib/libcspecs.so
+
+      - name: Compilar utils
+        run: cd utils && make
+
+      - name: Compilar Kernel Memory y Memory Stick
+        run: |
+          make -C kernel_memory
+          make -C memory_stick
+
+      - name: Compilar y ejecutar tests de CPU
+        run: |
+          cd cpu
+          mkdir -p bin
+          make test
+          ./bin/cpu_tests

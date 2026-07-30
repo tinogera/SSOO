@@ -123,19 +123,17 @@ Ejemplos:
 ./set_config.sh ks PLANIFICATION_ALGORITHM=RR RR_QUANTUM=1500
 ```
 
-**`set_ip.sh`** es un atajo para el caso más común: cambiar la IP de un rol (Kernel Memory, Kernel Scheduler o un Memory Stick) en **todos** los `.config` que la referencian, en una sola línea — evita tener que editar varios archivos a mano cuando pasás de local a distribuido (ver [Sección 7](#7-despliegue-distribuido-en-múltiples-vms)):
+**`set_ip.sh`** es un atajo para el caso más común: cambiar la IP de Kernel Memory o Kernel Scheduler en **todos** los `.config` que la referencian, en una sola línea — evita tener que editar varios archivos a mano cuando pasás de local a distribuido (ver [Sección 7](#7-despliegue-distribuido-en-múltiples-vms)):
 
 ```bash
 ./set_ip.sh km <ip>              # actualiza KERNEL_MEMORY_IP / IP_MEMORY en ks, cpu, ms y swap
 ./set_ip.sh ks <ip>              # actualiza IP_KERNEL / KERNEL_SCHEDULER_IP en cpu e io
-./set_ip.sh ms <ip> [indice]     # actualiza IP_MEMORY_STICK_<indice> en cpu (indice por defecto: 0)
 ```
 
 Ejemplo real (usando las IPs de ejemplo de la sección 7.3): parado en cualquier VM que tenga el repo clonado,
 ```bash
 ./set_ip.sh km 10.100.3.10
 ./set_ip.sh ks 10.100.3.11
-./set_ip.sh ms 10.100.3.14 0
 ```
 deja los `.config` de `cpu`, `io`, `kernel_scheduler`, `memory_stick` y `swap` listos con las IPs correctas, sin abrir ningún archivo.
 
@@ -162,9 +160,9 @@ Cada módulo también tiene un archivo `*.config.example` al lado (ej. `kernel_m
 |---|---|
 | `kernel_memory` | `KERNEL_MEMORY_PORT`, `SCRIPTS_BASEPATH`, `SEGMENT_MAX_SIZE`, `INSTRUCTION_DELAY` |
 | `kernel_scheduler` | `KERNEL_MEMORY_IP`, `KERNEL_MEMORY_PORT`, `KERNEL_SCHEDULER_PORT`, `PLANIFICATION_ALGORITHM`, `RR_QUANTUM`, `SUSPENSION_TIMEOUT` |
-| `cpu` | `IP_KERNEL`, `PUERTO_KERNEL`, `IP_MEMORY`, `PUERTO_MEMORY`, `SEGMENT_MAX_SIZE`, `IP_MEMORY_STICK_0`, `PUERTO_MEMORY_STICK_0` |
+| `cpu` | `IP_KERNEL`, `PUERTO_KERNEL`, `IP_MEMORY`, `PUERTO_MEMORY`, `SEGMENT_MAX_SIZE` |
 | `io` | `KERNEL_SCHEDULER_IP`, `KERNEL_SCHEDULER_PORT` |
-| `memory_stick` | `KERNEL_MEMORY_IP`, `KERNEL_MEMORY_PORT`, `MEMORY_STICK_PORT`, `MEMORY_DELAY` |
+| `memory_stick` | `KERNEL_MEMORY_IP`, `KERNEL_MEMORY_PORT`, `MEMORY_DELAY` |
 | `swap` | `KERNEL_MEMORY_IP`, `KERNEL_MEMORY_PORT`, `SWAP_FILE_PATH`, `SWAP_FILE_SIZE`, `BLOCK_SIZE` |
 
 ### Puertos del proyecto
@@ -173,9 +171,9 @@ Cada módulo también tiene un archivo `*.config.example` al lado (ej. `kernel_m
 |---|---|---|
 | Kernel Memory | `23841` | KS, CPU, MS, Swap |
 | Kernel Scheduler | `19337` | CPU, IO |
-| Memory Stick | `27643` | CPU |
+| Memory Stick | automático por instancia | CPU |
 
-Estos puertos son altos y no redondos para minimizar conflictos en laboratorios ajenos.
+Kernel Memory informa a cada CPU el endpoint de los Memory Sticks cuando se necesitan.
 
 ---
 
@@ -247,8 +245,6 @@ PUERTO_KERNEL=19337
 IP_MEMORY=127.0.0.1
 PUERTO_MEMORY=23841
 SEGMENT_MAX_SIZE=128
-IP_MEMORY_STICK_0=127.0.0.1
-PUERTO_MEMORY_STICK_0=27643
 ```
 
 `io/io.config`:
@@ -263,7 +259,6 @@ KERNEL_SCHEDULER_PORT=19337
 LOG_LEVEL=INFO
 KERNEL_MEMORY_IP=127.0.0.1
 KERNEL_MEMORY_PORT=23841
-MEMORY_STICK_PORT=27643
 MEMORY_DELAY=0
 ```
 
@@ -491,11 +486,9 @@ PUERTO_KERNEL=19337
 IP_MEMORY=10.100.3.10
 PUERTO_MEMORY=23841
 SEGMENT_MAX_SIZE=128
-IP_MEMORY_STICK_0=10.100.3.14
-PUERTO_MEMORY_STICK_0=27643
 ```
-> `IP_KERNEL` = IP de VM2 (KS). `IP_MEMORY` = IP de VM1 (KM). `IP_MEMORY_STICK_0` = IP de VM5 (MS).
-> Con los scripts (corridos en VM3): `./set_ip.sh ks 10.100.3.11` y `./set_ip.sh km 10.100.3.10` y `./set_ip.sh ms 10.100.3.14 0`.
+> `IP_KERNEL` = IP de VM2 (KS). `IP_MEMORY` = IP de VM1 (KM). Los Memory Sticks se descubren dinámicamente mediante KM.
+> Con los scripts (corridos en VM3): `./set_ip.sh ks 10.100.3.11` y `./set_ip.sh km 10.100.3.10`.
 
 ---
 
@@ -515,10 +508,9 @@ KERNEL_SCHEDULER_PORT=19337
 LOG_LEVEL=INFO
 KERNEL_MEMORY_IP=10.100.3.10
 KERNEL_MEMORY_PORT=23841
-MEMORY_STICK_PORT=27643
 MEMORY_DELAY=0
 ```
-> `KERNEL_MEMORY_IP` = IP de VM1.
+> `KERNEL_MEMORY_IP` = IP de VM1. Cada instancia elige un puerto libre y lo publica en KM.
 > Con el script: `./set_ip.sh km 10.100.3.10` (corrido en VM5).
 
 ---
@@ -597,18 +589,19 @@ Si un módulo no puede conectarse:
 
 ## 8. Orden de inicio
 
-Los módulos deben levantarse en este orden porque cada uno espera que sus dependencias ya estén escuchando:
+Los módulos deben respetar sus dependencias; los Memory Sticks pueden agregarse en cualquier momento después de KM:
 
 ```
 1. Kernel Memory     — no depende de nadie; todos los demás se conectan a él
 2. Swap              — conecta a KM
-3. Memory Stick      — conecta a KM
-4. Kernel Scheduler  — conecta a KM; luego espera conexiones de CPU e IO
-5. IO SLEEP          — conecta a KS
-6. IO STDOUT         — conecta a KS
-7. IO STDIN          — conecta a KS
-8. CPU               — conecta a KS y KM (último en iniciar)
+3. Kernel Scheduler  — conecta a KM; luego espera conexiones de CPU e IO
+4. IO SLEEP          — conecta a KS
+5. IO STDOUT         — conecta a KS
+6. IO STDIN          — conecta a KS
+7. CPU               — conecta a KS y KM
 ```
+
+Uno o más Memory Sticks pueden levantarse después del paso 1, incluso con CPUs y Procesos ya activos. Cada instancia elige un puerto libre, se registra en KM y las CPUs la descubren al necesitarla.
 
 > Si un módulo falla con "connection refused", el módulo destino todavía no está escuchando. Esperar unos segundos y volver a levantar el que falló.
 

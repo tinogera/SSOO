@@ -90,7 +90,7 @@ Todos los mensajes entre módulos usan el mismo formato:
 | `MSG_KS_IDENTIFICACION` | 2 | KS → KM | sin payload |
 | `MSG_OK` | 3 | cualquiera | sin payload — respuesta exitosa |
 | `MSG_ERROR` | 4 | cualquiera | sin payload — respuesta de error |
-| `MSG_MEMORY_STICK_IDENTIFICACION` | 5 | MS → KM | sin payload |
+| `MSG_MEMORY_STICK_IDENTIFICACION` | 5 | MS → KM | `uint32_t tamanio` + `uint32_t puerto` |
 | `MSG_SWAP_IDENTIFICACION` | 6 | Swap → KM | sin payload |
 | `MSG_CPU_A_KERNEL_MEMORY` | 7 | CPU → KM | sin payload |
 
@@ -111,6 +111,13 @@ Todos los mensajes entre módulos usan el mismo formato:
 | `MSG_MUTEX_CREATE` | 13 | CPU → KS | `uint32_t pid` + `char nombre[]` |
 | `MSG_MUTEX_LOCK` | 14 | CPU → KS | `uint32_t pid` + `char nombre[]` |
 | `MSG_MUTEX_UNLOCK` | 15 | CPU → KS | `uint32_t pid` + `char nombre[]` |
+
+### Descubrimiento dinámico de Memory Sticks
+
+| Código | Valor | Dirección | Payload |
+|--------|-------|-----------|---------|
+| `MSG_SOLICITAR_MEMORY_STICK` | 53 | CPU → KM | `uint32_t id_memory_stick` |
+| `MSG_MEMORY_STICK_ENDPOINT` | 54 | KM → CPU | `uint32_t id_memory_stick` + `uint32_t ipv4` + `uint32_t puerto` |
 
 ---
 

@@ -7,6 +7,7 @@
 #include <utils/sockets.h>
 
 #include "cpu_decode.h"
+#include "cpu_memory_sticks.h"
 #include "cpu_registros.h"
 
 // Distingo un fallo técnico de un acceso lógico inválido, porque KS necesita
@@ -22,8 +23,7 @@ bool memoria_read(int socket_memory, uint32_t direccion, uint32_t tamanio, void*
 bool memoria_write(int socket_memory, uint32_t direccion, uint32_t tamanio, const void* datos);
 
 t_resultado_memoria_cpu ejecutar_instruccion_memoria(
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,

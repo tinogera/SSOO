@@ -5,6 +5,7 @@
 #include <commons/log.h>
 
 #include "cpu_registros.h"
+#include "cpu_memory_sticks.h"
 
 // Resultado de una ráfaga completa, no de una sola instrucción. main lo
 // convierte después al motivo de devolución que entiende KS.
@@ -23,9 +24,8 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     // KS se usa para syscalls/interrupciones y KM para cada fetch.
     int socket_kernel,
     int socket_memory,
-    // Los accesos físicos van directo al MS indicado en el contexto.
-    int* sockets_ms,
-    int n_sockets_ms,
+    // Los accesos físicos resuelven el MS por ID cuando se usa por primera vez.
+    t_cpu_memory_sticks* memory_sticks,
     uint32_t pid,
     t_contexto* contexto,
     t_registros_cpu* registros,

@@ -14,6 +14,7 @@
 #include "cpu_dispatch.h"
 #include "cpu_registros.h"
 #include "cpu_handshake.h"
+#include "cpu_memory_sticks.h"
 
 /*
  * Este archivo es el recorrido general de la CPU. Para explicarlo en el oral:
@@ -108,58 +109,15 @@ int main(int argc, char* argv[]) {
         free_mensaje(respuesta);
     }
 
-    // Conectar a todos los Memory Sticks configurados.
-    // El índice en el array corresponde al id_memory_stick que asigna KM.
-    // Config: IP_MEMORY_STICK_0 / PUERTO_MEMORY_STICK_0, luego _1, _2, ...
-    // Si no existe _0, se intenta con las claves sin índice (compatibilidad
-    // con configs de un solo MS: IP_MEMORY_STICK / PUERTO_MEMORY_STICK).
-#define CPU_MAX_MS 8
-    // La posición del fd es importante: sockets_ms[0] corresponde al MS 0,
-    // sockets_ms[1] al MS 1, etc. La tabla de segmentos me dice cuál usar.
-    int sockets_ms[CPU_MAX_MS];
-    int n_sockets_ms = 0;
-    for (int i = 0; i < CPU_MAX_MS; i++) sockets_ms[i] = -1;
-
-    for (int idx = 0; idx < CPU_MAX_MS; idx++) {
-        char key_ip[32], key_puerto[32];
-        snprintf(key_ip,    sizeof(key_ip),    "IP_MEMORY_STICK_%d", idx);
-        snprintf(key_puerto, sizeof(key_puerto), "PUERTO_MEMORY_STICK_%d", idx);
-
-        if (!config_has_property(config, key_ip)) {
-            if (idx == 0 && config_has_property(config, "IP_MEMORY_STICK")) {
-                snprintf(key_ip,    sizeof(key_ip),    "%s", "IP_MEMORY_STICK");
-                snprintf(key_puerto, sizeof(key_puerto), "%s", "PUERTO_MEMORY_STICK");
-            } else {
-                break;
-            }
-        }
-
-        char* ip_ms    = config_get_string_value(config, key_ip);
-        int   puerto_ms = config_get_int_value(config, key_puerto);
-
-        int fd = conectar_a_servidor(ip_ms, puerto_ms);
-        if (fd == -1) {
-            log_error(logger, "No se pudo conectar a Memory Stick %d (%s:%d)", idx, ip_ms, puerto_ms);
-            continue;
-        }
-
-        // Los enteros que viajan por socket se mandan en byte order de red.
-        uint32_t cpu_id_n = htonl((uint32_t) atoi(cpu_id));
-        enviar_mensaje(fd, MSG_CPU_IDENTIFICACION, &cpu_id_n, sizeof(cpu_id_n));
-
-        t_mensaje* resp_ms = recibir_mensaje(fd);
-        if (!handshake_exitoso(resp_ms)) {
-            log_error(logger, "Memory Stick %d rechazó la conexión", idx);
-            if (resp_ms) free_mensaje(resp_ms);
-            close(fd);
-            continue;
-        }
-        free_mensaje(resp_ms);
-
-        log_info(logger, "## Conectado a Memory Stick %d", idx);
-        sockets_ms[idx] = fd;
-        n_sockets_ms = idx + 1;
-    }
+    // Los Memory Sticks se descubren a través de KM cuando una instrucción
+    // necesita por primera vez el ID indicado en la tabla de segmentos.
+    t_cpu_memory_sticks memory_sticks;
+    cpu_memory_sticks_inicializar(
+        &memory_sticks,
+        socket_memory,
+        (uint32_t)strtoul(cpu_id, NULL, 10),
+        logger
+    );
 
     // Este while representa las distintas ráfagas que atiende una misma CPU.
     while (socket_kernel != -1 && socket_memory != -1) {
@@ -182,8 +140,7 @@ int main(int argc, char* argv[]) {
         t_resultado_ciclo_cpu resultado_ciclo = ejecutar_ciclo_proceso(
             socket_kernel,
             socket_memory,
-            sockets_ms,
-            n_sockets_ms,
+            &memory_sticks,
             pid,
             contexto,
             &registros,
@@ -221,9 +178,7 @@ int main(int argc, char* argv[]) {
 
     close(socket_kernel);
     close(socket_memory);
-    for (int i = 0; i < CPU_MAX_MS; i++) {
-        if (sockets_ms[i] != -1) close(sockets_ms[i]);
-    }
+    cpu_memory_sticks_destruir(&memory_sticks);
 
     log_destroy(logger);
     config_destroy(config);

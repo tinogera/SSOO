@@ -132,25 +132,18 @@ static t_resultado_memoria_cpu traducir_o_fallar(
     return CPU_MEMORIA_ERROR;
 }
 
-static int fd_para_ms(int* sockets_ms, int n_sockets_ms, uint32_t id_ms) {
-    // El id del Memory Stick se usa como índice en el arreglo armado en main.
-    if ((int)id_ms < n_sockets_ms) return sockets_ms[id_ms];
-    return -1;
-}
-
-static int fd_para_ms_logueado(int* sockets_ms, int n_sockets_ms, uint32_t id_ms, t_log* logger) {
-    int fd = fd_para_ms(sockets_ms, n_sockets_ms, id_ms);
+static int fd_para_ms_logueado(t_cpu_memory_sticks* memory_sticks, uint32_t id_ms, t_log* logger) {
+    int fd = cpu_memory_sticks_obtener_socket(memory_sticks, id_ms);
     if (fd < 0) {
         log_debug(logger,
-            "fd_para_ms: Memory Stick %u no está conectado a esta CPU (hay %d conectados)",
-            id_ms, n_sockets_ms);
+            "fd_para_ms: Memory Stick %u no está disponible para esta CPU",
+            id_ms);
     }
     return fd;
 }
 
 static t_resultado_memoria_cpu ejecutar_mov_in(
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -180,7 +173,7 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
         return resultado;
     }
 
-    int fd = fd_para_ms_logueado(sockets_ms, n_sockets_ms, traduccion.id_memory_stick, logger);
+    int fd = fd_para_ms_logueado(memory_sticks, traduccion.id_memory_stick, logger);
     uint8_t buffer[sizeof(uint32_t)] = {0};
     if (!memoria_read(fd, traduccion.direccion_fisica, tamanio_registro, buffer)) {
         return CPU_MEMORIA_ERROR;
@@ -199,8 +192,7 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
 }
 
 static t_resultado_memoria_cpu ejecutar_mov_out(
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -234,7 +226,7 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
         return resultado;
     }
 
-    int fd = fd_para_ms_logueado(sockets_ms, n_sockets_ms, traduccion.id_memory_stick, logger);
+    int fd = fd_para_ms_logueado(memory_sticks, traduccion.id_memory_stick, logger);
     uint8_t buffer[sizeof(uint32_t)] = {0};
     // Convierto el valor al formato que espera el otro extremo antes de enviarlo.
     valor_a_bytes(valor, tamanio_registro, buffer);
@@ -248,8 +240,7 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
 }
 
 static t_resultado_memoria_cpu ejecutar_copy_mem(
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -299,8 +290,8 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
         return CPU_MEMORIA_ERROR;
     }
 
-    int fd_origen  = fd_para_ms_logueado(sockets_ms, n_sockets_ms, origen.id_memory_stick, logger);
-    int fd_destino = fd_para_ms_logueado(sockets_ms, n_sockets_ms, destino.id_memory_stick, logger);
+    int fd_origen  = fd_para_ms_logueado(memory_sticks, origen.id_memory_stick, logger);
+    int fd_destino = fd_para_ms_logueado(memory_sticks, destino.id_memory_stick, logger);
 
     if (!memoria_read(fd_origen, origen.direccion_fisica, tamanio, buffer)) {
         free(buffer);
@@ -322,8 +313,7 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
 }
 
 t_resultado_memoria_cpu ejecutar_instruccion_memoria(
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -346,11 +336,11 @@ t_resultado_memoria_cpu ejecutar_instruccion_memoria(
     // Este switch es el execute específico de las instrucciones de memoria.
     switch (instruccion->opcode) {
         case CPU_INST_MOV_IN:
-            return ejecutar_mov_in(sockets_ms, n_sockets_ms, instruccion, contexto, registros, pid, logger);
+            return ejecutar_mov_in(memory_sticks, instruccion, contexto, registros, pid, logger);
         case CPU_INST_MOV_OUT:
-            return ejecutar_mov_out(sockets_ms, n_sockets_ms, instruccion, contexto, registros, pid, logger);
+            return ejecutar_mov_out(memory_sticks, instruccion, contexto, registros, pid, logger);
         case CPU_INST_COPY_MEM:
-            return ejecutar_copy_mem(sockets_ms, n_sockets_ms, instruccion, contexto, registros, pid, logger);
+            return ejecutar_copy_mem(memory_sticks, instruccion, contexto, registros, pid, logger);
         default:
             return CPU_MEMORIA_ERROR;
     }
