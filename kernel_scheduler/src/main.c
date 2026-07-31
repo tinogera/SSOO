@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <sys/socket.h>
 #include <time.h>
 #include <commons/log.h>
 #include <commons/collections/queue.h>
@@ -37,6 +38,8 @@ static sem_t           sem_planificador_ok; // 1=normal, 0=compactando (bloquea 
 static sem_t           sem_fin_compactacion;
 static int             esperando_fin_compactacion = 0; // protegido por mutex_compactando
 static pthread_mutex_t mutex_km_send = PTHREAD_MUTEX_INITIALIZER; // serializa envíos crudos a fd_km
+static pthread_mutex_t mutex_bsod = PTHREAD_MUTEX_INITIALIZER;
+static int             bsod_iniciado = 0;
 
 t_queue *cola_new, *cola_exec;
 t_queue *cola_block, *cola_susp_block, *cola_susp_ready, *cola_exit;
@@ -104,7 +107,7 @@ static pthread_mutex_t mutex_transiciones_io = PTHREAD_MUTEX_INITIALIZER;
 
 static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size);
 static void       avisar_km_finalizacion(int pid);
-static void       manejar_bsod(void);
+static void*      manejar_bsod(void* _);
 static void*      manejar_mas_memoria(void* _);
 static void*      thread_km_listener(void* _);
 t_proceso* crear_proceso(char* path, int prioridad);
@@ -141,9 +144,9 @@ static void verificar_preemption(t_proceso* entrante) {
     t_proceso* victima = NULL;
     for (int i = 0; i < (int)queue_size(cola_exec); i++) {
         t_proceso* p = list_get(cola_exec->elements, i);
-        if (p->prioridad > entrante->prioridad) {
+        if (p->prioridad > entrante->prioridad &&
+            (victima == NULL || p->prioridad > victima->prioridad)) {
             victima = p;
-            break;
         }
     }
     if (victima) {
@@ -254,6 +257,7 @@ static void finalizar_por_error_io(t_proceso* proc, const char* detalle) {
 
 
 static void finalizar_proceso_bsod(t_proceso* proc) {
+    if (!proc || proc->estado == EXIT) return;
     cambiar_estado(proc, EXIT);
     log_info(logger, "## (%d) finalizó su ejecución con motivo de BSOD", proc->PID);
     pthread_mutex_lock(&mutex_exit);
@@ -262,49 +266,73 @@ static void finalizar_proceso_bsod(t_proceso* proc) {
     avisar_km_finalizacion(proc->PID);
 }
 
-static void manejar_bsod(void) {
+static void mover_cola_a_lista(t_queue* cola, pthread_mutex_t* mutex, t_list* destino) {
+    pthread_mutex_lock(mutex);
+    while (queue_size(cola) > 0) {
+        list_add(destino, queue_pop(cola));
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+static bool hay_bsod(void) {
+    pthread_mutex_lock(&mutex_bsod);
+    bool activo = bsod_iniciado != 0;
+    pthread_mutex_unlock(&mutex_bsod);
+    return activo;
+}
+
+static void* manejar_bsod(void* _) {
+    (void)_;
     log_warning(logger, "## BSOD: Memory Stick desconectado — finalizando todos los procesos");
 
-    // Interrumpir CPUs en EXEC antes de vaciar la cola
+    t_list* procesos_a_finalizar = list_create();
+    if (!procesos_a_finalizar) {
+        log_error(logger, "## BSOD: no se pudo reservar la lista de finalización");
+        exit(EXIT_FAILURE);
+    }
+
+    // Primero se retiran los procesos de las colas. Las llamadas síncronas a
+    // KM se hacen después de liberar los mutex para no bloquear otros hilos.
+    mover_cola_a_lista(cola_new, &mutex_new, procesos_a_finalizar);
+
     pthread_mutex_lock(&mutex_exec);
-    int sz = queue_size(cola_exec);
-    for (int i = 0; i < sz; i++) {
+    while (queue_size(cola_exec) > 0) {
         t_proceso* proc = queue_pop(cola_exec);
-        t_payload_interrupcion_cpu pay = {
-            .pid    = htonl((uint32_t)proc->PID),
-            .motivo = htonl(MOTIVO_INTERRUPCION_DESALOJO)
-        };
-        enviar_mensaje(proc->fd_cpu, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
+        if (proc->fd_cpu >= 0) {
+            t_payload_interrupcion_cpu pay = {
+                .pid    = htonl((uint32_t)proc->PID),
+                .motivo = htonl(MOTIVO_INTERRUPCION_DESALOJO)
+            };
+            enviar_mensaje(proc->fd_cpu, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
+        }
         proc->fd_cpu = -1;
-        finalizar_proceso_bsod(proc);
+        list_add(procesos_a_finalizar, proc);
     }
     pthread_mutex_unlock(&mutex_exec);
 
-    // Vaciar el resto de las colas
     for (int i = 0; i < n_colas; i++) {
-        pthread_mutex_lock(&mutex_colas_ready[i]);
-        while (queue_size(colas_ready[i]) > 0)
-            finalizar_proceso_bsod(queue_pop(colas_ready[i]));
-        pthread_mutex_unlock(&mutex_colas_ready[i]);
+        mover_cola_a_lista(colas_ready[i], &mutex_colas_ready[i], procesos_a_finalizar);
     }
+    mover_cola_a_lista(cola_block, &mutex_block, procesos_a_finalizar);
+    mover_cola_a_lista(cola_susp_block, &mutex_susp_block, procesos_a_finalizar);
+    mover_cola_a_lista(cola_susp_ready, &mutex_susp_ready, procesos_a_finalizar);
 
-    pthread_mutex_lock(&mutex_block);
-    while (queue_size(cola_block) > 0)
-        finalizar_proceso_bsod(queue_pop(cola_block));
-    pthread_mutex_unlock(&mutex_block);
+    for (int i = 0; i < list_size(procesos_a_finalizar); i++) {
+        finalizar_proceso_bsod(list_get(procesos_a_finalizar, i));
+    }
+    list_destroy(procesos_a_finalizar);
 
-    pthread_mutex_lock(&mutex_susp_block);
-    while (queue_size(cola_susp_block) > 0)
-        finalizar_proceso_bsod(queue_pop(cola_susp_block));
-    pthread_mutex_unlock(&mutex_susp_block);
-
-    pthread_mutex_lock(&mutex_susp_ready);
-    while (queue_size(cola_susp_ready) > 0)
-        finalizar_proceso_bsod(queue_pop(cola_susp_ready));
-    pthread_mutex_unlock(&mutex_susp_ready);
+    // No debe quedar ninguna CPU ejecutando ni esperando un nuevo despacho.
+    pthread_mutex_lock(&mutex_cpus);
+    for (int i = 0; i < list_size(lista_cpus); i++) {
+        t_cpu_entry* cpu = list_get(lista_cpus, i);
+        shutdown(cpu->fd, SHUT_RDWR);
+    }
+    pthread_mutex_unlock(&mutex_cpus);
 
     log_warning(logger, "## BSOD: sistema finalizado");
     exit(EXIT_FAILURE);
+    return NULL;
 }
 
 static bool cmp_suspension(void* a, void* b) {
@@ -440,7 +468,18 @@ static void* thread_km_listener(void* _) {
             break;
         case MSG_BSOD:
             free_mensaje(msg);
-            manejar_bsod();
+            pthread_mutex_lock(&mutex_bsod);
+            if (!bsod_iniciado) {
+                bsod_iniciado = 1;
+                pthread_t t_bsod;
+                if (pthread_create(&t_bsod, NULL, manejar_bsod, NULL) != 0) {
+                    pthread_mutex_unlock(&mutex_bsod);
+                    log_error(logger, "## BSOD: no se pudo iniciar la finalización");
+                    exit(EXIT_FAILURE);
+                }
+                pthread_detach(t_bsod);
+            }
+            pthread_mutex_unlock(&mutex_bsod);
             break;
         default:
             log_warning(logger, "KM: op_code inesperado %u", msg->op_code);
@@ -639,11 +678,19 @@ static void handle_compactar(void) {
 }
 
 t_proceso* crear_proceso(char* path, int prioridad) {
+    if (path == NULL || path[0] == '\0' ||
+        (strcmp(algoritmo, "CMN") == 0 &&
+         (prioridad < 0 || prioridad >= n_colas))) {
+        log_error(logger, "No se puede crear proceso: path o prioridad inválidos");
+        return NULL;
+    }
+
     pthread_mutex_lock(&mutex_pid);
     uint32_t pid = next_pid++;
     pthread_mutex_unlock(&mutex_pid);
 
     t_proceso* proc = malloc(sizeof(t_proceso));
+    if (proc == NULL) return NULL;
     proc->PID                    = (int)pid;
     proc->estado                 = NEW;
     proc->controladorDeProgramas = 0;
@@ -657,9 +704,18 @@ t_proceso* crear_proceso(char* path, int prioridad) {
 
     log_info(logger, "## (%u) Se crea el proceso - Estado: NEW", pid);
 
-    uint32_t path_len     = strlen(path) + 1;
+    size_t path_len_real = strlen(path) + 1;
+    if (path_len_real > UINT32_MAX - sizeof(uint32_t)) {
+        free(proc);
+        return NULL;
+    }
+    uint32_t path_len     = (uint32_t) path_len_real;
     uint32_t payload_size = sizeof(uint32_t) + path_len;
     void*    payload      = malloc(payload_size);
+    if (payload == NULL) {
+        free(proc);
+        return NULL;
+    }
     uint32_t pid_n        = htonl(pid);
     memcpy(payload, &pid_n, sizeof(uint32_t));
     memcpy((char*)payload + sizeof(uint32_t), path, path_len);
@@ -731,7 +787,6 @@ static void despachar(t_proceso* proc, t_cpu_entry* cpu) {
     cambiar_estado(proc, EXEC);
     proc->fd_cpu = cpu->fd;
     proc->gen_despacho++;
-    cpu->ocupada  = 1;
 
     pthread_mutex_lock(&mutex_exec);
     queue_push(cola_exec, proc);
@@ -795,6 +850,7 @@ static void* thread_planificador(void* _) {
         // Bloquea mientras haya una compactación en curso; se libera al terminar.
         sem_wait(&sem_planificador_ok);
         sem_post(&sem_planificador_ok);
+        if (hay_bsod()) return NULL;
 
         // Seleccionar el proceso de la cola no vacía de mayor prioridad (índice 0 = mayor)
         t_proceso* proc = NULL;
@@ -816,7 +872,16 @@ static void* thread_planificador(void* _) {
         int cant_cpus = list_size(lista_cpus);
         for (int i = 0; i < cant_cpus; i++) {
             t_cpu_entry* e = list_get(lista_cpus, i);
-            if (!e->ocupada) { cpu = e; break; }
+            if (!e->ocupada) {
+                cpu = e;
+                e->ocupada = 1;
+                break;
+            }
+        }
+        if (cpu != NULL) {
+            // Se despacha antes de liberar mutex_cpus para que una desconexión
+            // no pueda retirar la CPU entre la reserva y el alta en EXEC.
+            despachar(proc, cpu);
         }
         pthread_mutex_unlock(&mutex_cpus);
 
@@ -832,8 +897,6 @@ static void* thread_planificador(void* _) {
             pthread_mutex_unlock(&mutex_colas_ready[nivel_elegido]);
             continue;
         }
-
-        despachar(proc, cpu);
 
         if (strcmp(algoritmos_cola[nivel_elegido], "RR") == 0)
             lanzar_quantum_timer(proc);
@@ -965,7 +1028,48 @@ static t_proceso* buscar_proceso_activo(int pid) {
     pthread_mutex_lock(&mutex_block);
     p = buscar_pid_en_queue(cola_block, pid);
     pthread_mutex_unlock(&mutex_block);
+    if (p) return p;
+
+    pthread_mutex_lock(&mutex_susp_block);
+    p = buscar_pid_en_queue(cola_susp_block, pid);
+    pthread_mutex_unlock(&mutex_susp_block);
+    if (p) return p;
+
+    pthread_mutex_lock(&mutex_susp_ready);
+    p = buscar_pid_en_queue(cola_susp_ready, pid);
+    pthread_mutex_unlock(&mutex_susp_ready);
     return p;
+}
+
+// Si el proceso estaba en READY, además de cambiar el campo hay que moverlo a
+// la cola de su nueva prioridad. Dejarlo en la cola anterior anula en la
+// práctica la herencia hasta el próximo cambio de estado.
+static void aplicar_cambio_prioridad(t_proceso* proc, int nueva_prioridad) {
+    if (!proc || proc->prioridad == nueva_prioridad) return;
+
+    bool estaba_en_ready = false;
+    if (strcmp(algoritmo, "CMN") == 0 &&
+        nueva_prioridad >= 0 && nueva_prioridad < n_colas) {
+        for (int i = 0; i < n_colas; i++) {
+            pthread_mutex_lock(&mutex_colas_ready[i]);
+        }
+        for (int i = 0; i < n_colas; i++) {
+            if (list_remove_element(colas_ready[i]->elements, proc)) {
+                estaba_en_ready = true;
+                break;
+            }
+        }
+        proc->prioridad = nueva_prioridad;
+        if (estaba_en_ready) {
+            queue_push(colas_ready[nueva_prioridad], proc);
+        }
+        for (int i = n_colas - 1; i >= 0; i--) {
+            pthread_mutex_unlock(&mutex_colas_ready[i]);
+        }
+        return;
+    }
+
+    proc->prioridad = nueva_prioridad;
 }
 
 static void* thread_suspension_timer(void* arg) {
@@ -1467,7 +1571,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                     if (owner && owner->prioridad > nueva_prioridad_owner) {
                         log_info(logger, "## %d Cambio de prioridad: %d - %d",
                                  owner->PID, owner->prioridad, nueva_prioridad_owner);
-                        owner->prioridad = nueva_prioridad_owner;
+                        aplicar_cambio_prioridad(owner, nueva_prioridad_owner);
                     }
                 }
                 mover_a_block(proc);
@@ -1558,7 +1662,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 if (owner && owner->prioridad != prioridad_restaurar) {
                     log_info(logger, "## %d Cambio de prioridad: %d - %d",
                              owner->PID, owner->prioridad, prioridad_restaurar);
-                    owner->prioridad = prioridad_restaurar;
+                    aplicar_cambio_prioridad(owner, prioridad_restaurar);
                 }
             }
 
@@ -1607,7 +1711,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
         }
 
         case MSG_INIT_PROC: {
-            if (msg->payload_size < sizeof(uint32_t)) {
+            if (msg->payload == NULL || msg->payload_size < 2u * sizeof(uint32_t) + 1u) {
                 enviar_mensaje(fd, MSG_ERROR, NULL, 0);
                 break;
             }
@@ -1617,7 +1721,17 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             int pid_padre = (int)ntohl(pid_padre_n);
 
             char* path_hijo = (char*)msg->payload + sizeof(uint32_t);
-            size_t path_len = strlen(path_hijo) + 1;
+            size_t espacio_path = msg->payload_size - 2u * sizeof(uint32_t);
+            char* fin_path = memchr(path_hijo, '\0', espacio_path);
+            if (fin_path == NULL) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                break;
+            }
+            size_t path_len = (size_t)(fin_path - path_hijo) + 1u;
+            if (sizeof(uint32_t) + path_len + sizeof(uint32_t) != msg->payload_size) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                break;
+            }
             uint32_t prioridad_n;
             memcpy(&prioridad_n,
                    (char*)msg->payload + sizeof(uint32_t) + path_len,

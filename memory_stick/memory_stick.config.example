@@ -7,5 +7,5 @@ MEMORY_STICK_PORT=37216
 KERNEL_MEMORY_IP=127.0.0.1
 KERNEL_MEMORY_PORT=37215
 
-# Retardo artificial por operación de lectura/escritura (en microsegundos)
+# Retardo artificial por operación de lectura/escritura (en milisegundos)
 MEMORY_DELAY=500

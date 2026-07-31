@@ -13,9 +13,6 @@ static uint32_t g_segment_max_size = 256;
 void set_segment_max_size(uint32_t tamanio) {
     g_segment_max_size = tamanio;
 }
-
-uint32_t calcular_segmento(uint32_t limite, uint32_t base);
-
 // Busco por id y no por posición, porque la tabla puede no estar ordenada o
 // puede haber perdido entradas después de un MEM_FREE.
 static t_entrada_segmento* buscar_segmento(t_contexto* contexto, uint32_t id_segmento) {
@@ -31,7 +28,6 @@ static t_entrada_segmento* buscar_segmento(t_contexto* contexto, uint32_t id_seg
 
     return NULL;
 }
-
 t_resultado_mmu traducir_direccion_logica(
     t_contexto* contexto,
     uint32_t direccion_logica,
@@ -90,8 +86,3 @@ const char* resultado_mmu_to_string(t_resultado_mmu resultado) {
     }
 }
 
-uint32_t calcular_segmento(uint32_t limite, uint32_t base) {
-    // Helper viejo que no participa de traducir_direccion_logica. La cuenta
-    // vigente para obtener el id es dirección lógica / tamaño máximo.
-    return limite - base;
-}

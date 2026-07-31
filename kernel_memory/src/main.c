@@ -1,12 +1,14 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/time.h>
+#include <poll.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <commons/log.h>
@@ -25,6 +27,10 @@ typedef struct {
     int      fd;
     uint32_t tamanio;
     uint32_t offset_global; // dónde empieza en el espacio de memoria total
+    uint32_t ipv4;          // byte order de red
+    uint32_t puerto;        // host order
+    bool activo;
+    pthread_mutex_t mutex_io;
 } t_memory_stick;
 
 // Un hueco libre en memoria
@@ -51,6 +57,7 @@ t_config* config;
 pthread_mutex_t mutex_contextos   = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_memoria     = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_swap        = PTHREAD_MUTEX_INITIALIZER;
+pthread_rwlock_t rwlock_memory_sticks = PTHREAD_RWLOCK_INITIALIZER;
 
 t_list* contextos;      // t_contexto*
 t_list* memory_sticks;  // t_memory_stick*
@@ -67,6 +74,9 @@ uint32_t swap_cant_bloques = 0;
 uint8_t* swap_bitmap       = NULL; // 0=libre, 1=ocupado
 
 uint32_t next_ms_id = 0;
+static pthread_mutex_t mutex_estado_memoria = PTHREAD_MUTEX_INITIALIZER;
+static int memoria_corrupta = 0;
+static int bsod_enviado = 0;
 
 // NOTA [fix deadlock compactación]: la versión anterior sincronizaba con un
 // semáforo: el handler de MSG_CREAR_SEGMENTO se bloqueaba en sem_wait esperando
@@ -99,23 +109,34 @@ static t_contexto* buscar_contexto(uint32_t pid) {
 
 // Dirección global → MS y dirección local dentro de ese MS
 static t_memory_stick* ms_para_direccion(uint32_t dir_global, uint32_t* dir_local) {
+    t_memory_stick* encontrado = NULL;
+    pthread_rwlock_rdlock(&rwlock_memory_sticks);
     for (int i = 0; i < list_size(memory_sticks); i++) {
         t_memory_stick* ms = list_get(memory_sticks, i);
-        if (dir_global >= ms->offset_global &&
-            dir_global <  ms->offset_global + ms->tamanio) {
+        if (ms->activo && dir_global >= ms->offset_global &&
+            dir_global - ms->offset_global < ms->tamanio) {
             *dir_local = dir_global - ms->offset_global;
-            return ms;
+            encontrado = ms;
+            break;
         }
     }
-    return NULL;
+    pthread_rwlock_unlock(&rwlock_memory_sticks);
+    return encontrado;
 }
 
-static uint32_t memoria_total(void) {
+static uint32_t memoria_total_sin_lock(void) {
     uint32_t total = 0;
     for (int i = 0; i < list_size(memory_sticks); i++) {
         t_memory_stick* ms = list_get(memory_sticks, i);
         total += ms->tamanio;
     }
+    return total;
+}
+
+static uint32_t memoria_total(void) {
+    pthread_rwlock_rdlock(&rwlock_memory_sticks);
+    uint32_t total = memoria_total_sin_lock();
+    pthread_rwlock_unlock(&rwlock_memory_sticks);
     return total;
 }
 
@@ -192,44 +213,70 @@ static t_hueco* seleccionar_hueco(uint32_t tamanio) {
 static int ms_escribir(t_memory_stick* ms, uint32_t dir_local,
                         uint8_t* datos, uint32_t tamanio) {
     // Payload: [dir_local:4][tamanio:4][datos]
+    if (ms == NULL || datos == NULL || tamanio == 0 || tamanio > UINT32_MAX - 8u) {
+        return -1;
+    }
     uint32_t psize = 8 + tamanio;
     uint8_t* buf   = malloc(psize);
+    if (buf == NULL) {
+        return -1;
+    }
     uint32_t dl_n  = htonl(dir_local);
     uint32_t ts_n  = htonl(tamanio);
     memcpy(buf,     &dl_n, 4);
     memcpy(buf + 4, &ts_n, 4);
     memcpy(buf + 8, datos, tamanio);
+    pthread_mutex_lock(&ms->mutex_io);
     enviar_mensaje(ms->fd, MSG_MEMORY_WRITE, buf, psize);
     free(buf);
 
     t_mensaje* resp = recibir_mensaje(ms->fd);
-    int ok = (resp && resp->op_code == MSG_OK);
+    int ok = resp != NULL && resp->op_code == MSG_OK;
     if (resp) free_mensaje(resp);
+    pthread_mutex_unlock(&ms->mutex_io);
     return ok ? 0 : -1;
 }
 
 static uint8_t* ms_leer(t_memory_stick* ms, uint32_t dir_local, uint32_t tamanio) {
+    if (ms == NULL || tamanio == 0) {
+        return NULL;
+    }
     uint8_t buf[8];
     uint32_t dl_n = htonl(dir_local);
     uint32_t ts_n = htonl(tamanio);
     memcpy(buf,     &dl_n, 4);
     memcpy(buf + 4, &ts_n, 4);
+    pthread_mutex_lock(&ms->mutex_io);
     enviar_mensaje(ms->fd, MSG_MEMORY_READ, buf, 8);
 
     t_mensaje* resp = recibir_mensaje(ms->fd);
-    if (!resp || resp->op_code != MSG_MEMORY_READ_RESPUESTA) {
+    if (!resp || resp->op_code != MSG_MEMORY_READ_RESPUESTA ||
+        resp->payload == NULL || resp->payload_size != tamanio) {
         if (resp) free_mensaje(resp);
+        pthread_mutex_unlock(&ms->mutex_io);
         return NULL;
     }
     uint8_t* datos = malloc(tamanio);
+    if (datos == NULL) {
+        free_mensaje(resp);
+        pthread_mutex_unlock(&ms->mutex_io);
+        return NULL;
+    }
     memcpy(datos, resp->payload, tamanio);
     free_mensaje(resp);
+    pthread_mutex_unlock(&ms->mutex_io);
     return datos;
 }
 
 // Leer/escribir abarcando múltiples Memory Sticks
 static uint8_t* leer_fisico(uint32_t dir_global, uint32_t tamanio) {
+    if (tamanio == 0 || dir_global > UINT32_MAX - (tamanio - 1)) {
+        return NULL;
+    }
     uint8_t* resultado = malloc(tamanio);
+    if (resultado == NULL) {
+        return NULL;
+    }
     uint32_t leido = 0;
     while (leido < tamanio) {
         uint32_t dir_local;
@@ -249,6 +296,10 @@ static uint8_t* leer_fisico(uint32_t dir_global, uint32_t tamanio) {
 }
 
 static int escribir_fisico(uint32_t dir_global, uint8_t* datos, uint32_t tamanio) {
+    if (datos == NULL || tamanio == 0 ||
+        dir_global > UINT32_MAX - (tamanio - 1)) {
+        return -1;
+    }
     uint32_t escrito = 0;
     while (escrito < tamanio) {
         uint32_t dir_local;
@@ -270,22 +321,38 @@ static int escribir_fisico(uint32_t dir_global, uint8_t* datos, uint32_t tamanio
 // ---------------------------------------------------------------------------
 static uint32_t traducir_direccion(t_contexto* ctx, uint32_t dir_logica,
                                     uint32_t tamanio_acceso) {
-    uint32_t seg_max = (uint32_t)config_get_int_value(config, "SEGMENT_MAX_SIZE");
+    int seg_max_config = config_get_int_value(config, "SEGMENT_MAX_SIZE");
+    if (ctx == NULL || seg_max_config <= 0 || tamanio_acceso == 0) {
+        return UINT32_MAX;
+    }
+
+    uint32_t seg_max = (uint32_t) seg_max_config;
     uint32_t num_seg      = dir_logica / seg_max;
     uint32_t desplazamiento = dir_logica % seg_max;
 
-    if (num_seg >= ctx->cant_segmentos) {
+    t_entrada_segmento* seg = NULL;
+    for (uint32_t i = 0; i < ctx->cant_segmentos; i++) {
+        if (ctx->segmentos[i].id_segmento == num_seg) {
+            seg = &ctx->segmentos[i];
+            break;
+        }
+    }
+
+    if (seg == NULL) {
         log_debug(logger,
             "PID: %u - traducir_direccion: segmento %u inexistente (proceso tiene %u) — dir_logica=%u",
             ctx->pid, num_seg, ctx->cant_segmentos, dir_logica);
         return UINT32_MAX;
     }
 
-    t_entrada_segmento* seg = &ctx->segmentos[num_seg];
-    if (desplazamiento + tamanio_acceso > seg->limite) {
+    if (desplazamiento > seg->limite || tamanio_acceso > seg->limite - desplazamiento) {
         log_debug(logger,
             "PID: %u - traducir_direccion: SEG_FAULT en segmento %u — desplazamiento=%u + tamanio=%u > limite=%u",
             ctx->pid, num_seg, desplazamiento, tamanio_acceso, seg->limite);
+        return UINT32_MAX;
+    }
+
+    if (seg->base > UINT32_MAX - desplazamiento) {
         return UINT32_MAX;
     }
 
@@ -386,8 +453,16 @@ static int swap_escribir_bloque(uint32_t nro_bloque, uint8_t* datos) {
 // Retorna 1 si hay que compactar, 0 si OK, -1 si error
 // ---------------------------------------------------------------------------
 static int crear_segmento(t_contexto* ctx, uint32_t id_seg, uint32_t tamanio) {
-    uint32_t seg_max = (uint32_t)config_get_int_value(config, "SEGMENT_MAX_SIZE");
-    if (tamanio > seg_max) return -1;
+    int seg_max_config = config_get_int_value(config, "SEGMENT_MAX_SIZE");
+    if (ctx == NULL || seg_max_config <= 0 || tamanio == 0 ||
+        tamanio > (uint32_t) seg_max_config) {
+        return -1;
+    }
+    for (uint32_t i = 0; i < ctx->cant_segmentos; i++) {
+        if (ctx->segmentos[i].id_segmento == id_seg) {
+            return -1;
+        }
+    }
 
     pthread_mutex_lock(&mutex_memoria);
     t_hueco* h = seleccionar_hueco(tamanio);
@@ -418,6 +493,21 @@ static int crear_segmento(t_contexto* ctx, uint32_t id_seg, uint32_t tamanio) {
     t_memory_stick* ms = ms_para_direccion(base, &dir_local);
     if (!ms) { pthread_mutex_unlock(&mutex_memoria); return -1; }
 
+    if (ctx->cant_segmentos == UINT32_MAX) {
+        pthread_mutex_unlock(&mutex_memoria);
+        return -1;
+    }
+    uint32_t nueva_cantidad = ctx->cant_segmentos + 1;
+    t_entrada_segmento* nuevos_segmentos = realloc(
+        ctx->segmentos,
+        (size_t) nueva_cantidad * sizeof(t_entrada_segmento)
+    );
+    if (nuevos_segmentos == NULL) {
+        pthread_mutex_unlock(&mutex_memoria);
+        return -1;
+    }
+    ctx->segmentos = nuevos_segmentos;
+
     // Actualizar hueco
     if (h->tamanio == tamanio) {
         // NOTA LUCIANO [FIX list_get_index en crear_segmento]:
@@ -433,10 +523,8 @@ static int crear_segmento(t_contexto* ctx, uint32_t id_seg, uint32_t tamanio) {
     }
 
     // Agregar entrada a la tabla de segmentos del proceso
-    ctx->cant_segmentos++;
-    ctx->segmentos = realloc(ctx->segmentos,
-                             ctx->cant_segmentos * sizeof(t_entrada_segmento));
-    t_entrada_segmento* seg = &ctx->segmentos[ctx->cant_segmentos - 1];
+    ctx->cant_segmentos = nueva_cantidad;
+    t_entrada_segmento* seg = &ctx->segmentos[nueva_cantidad - 1];
     seg->id_segmento    = id_seg;
     seg->id_memory_stick = ms->id;
     seg->base           = base;
@@ -462,8 +550,18 @@ static void eliminar_segmento(t_contexto* ctx, uint32_t id_seg) {
             for (uint32_t j = i; j < ctx->cant_segmentos - 1; j++)
                 ctx->segmentos[j] = ctx->segmentos[j + 1];
             ctx->cant_segmentos--;
-            ctx->segmentos = realloc(ctx->segmentos,
-                                     ctx->cant_segmentos * sizeof(t_entrada_segmento));
+            if (ctx->cant_segmentos == 0) {
+                free(ctx->segmentos);
+                ctx->segmentos = NULL;
+            } else {
+                t_entrada_segmento* segmentos_reducidos = realloc(
+                    ctx->segmentos,
+                    (size_t) ctx->cant_segmentos * sizeof(t_entrada_segmento)
+                );
+                if (segmentos_reducidos != NULL) {
+                    ctx->segmentos = segmentos_reducidos;
+                }
+            }
             break;
         }
     }
@@ -928,6 +1026,97 @@ static char* leer_instruccion(uint32_t pid, uint32_t pc);
 
 // Hilo por cliente
 // ---------------------------------------------------------------------------
+static void completar_endpoint(
+    const t_memory_stick* ms,
+    t_payload_memory_stick_endpoint* endpoint
+) {
+    endpoint->id_memory_stick = htonl(ms->id);
+    endpoint->ipv4 = ms->ipv4;
+    endpoint->puerto = htonl(ms->puerto);
+    endpoint->base_global = htonl(ms->offset_global);
+    endpoint->tamanio = htonl(ms->tamanio);
+}
+
+static bool endpoint_por_id(
+    uint32_t id_memory_stick,
+    t_payload_memory_stick_endpoint* endpoint
+) {
+    bool encontrado = false;
+    pthread_rwlock_rdlock(&rwlock_memory_sticks);
+    for (int i = 0; i < list_size(memory_sticks); i++) {
+        t_memory_stick* ms = list_get(memory_sticks, i);
+        if (ms->activo && ms->id == id_memory_stick) {
+            completar_endpoint(ms, endpoint);
+            encontrado = true;
+            break;
+        }
+    }
+    pthread_rwlock_unlock(&rwlock_memory_sticks);
+    return encontrado;
+}
+
+static bool endpoint_por_direccion(
+    uint32_t direccion_fisica,
+    t_payload_memory_stick_endpoint* endpoint
+) {
+    bool encontrado = false;
+    pthread_rwlock_rdlock(&rwlock_memory_sticks);
+    for (int i = 0; i < list_size(memory_sticks); i++) {
+        t_memory_stick* ms = list_get(memory_sticks, i);
+        if (ms->activo && direccion_fisica >= ms->offset_global &&
+            direccion_fisica - ms->offset_global < ms->tamanio) {
+            completar_endpoint(ms, endpoint);
+            encontrado = true;
+            break;
+        }
+    }
+    pthread_rwlock_unlock(&rwlock_memory_sticks);
+    return encontrado;
+}
+
+static void notificar_bsod_si_corresponde(void) {
+    pthread_mutex_lock(&mutex_estado_memoria);
+    if (memoria_corrupta && !bsod_enviado && fd_ks >= 0) {
+        bsod_enviado = 1;
+        log_error(logger, "## Memoria corrupta - notificando BSOD a Kernel Scheduler");
+        enviar_mensaje(fd_ks, MSG_BSOD, NULL, 0);
+    }
+    pthread_mutex_unlock(&mutex_estado_memoria);
+}
+
+static void marcar_memory_stick_desconectado(t_memory_stick* ms) {
+    pthread_rwlock_wrlock(&rwlock_memory_sticks);
+    bool estaba_activo = ms->activo;
+    ms->activo = false;
+    pthread_rwlock_unlock(&rwlock_memory_sticks);
+
+    if (!estaba_activo) return;
+
+    log_error(logger, "## Memory Stick %u desconectado - memoria corrupta", ms->id);
+    pthread_mutex_lock(&mutex_estado_memoria);
+    memoria_corrupta = 1;
+    pthread_mutex_unlock(&mutex_estado_memoria);
+    notificar_bsod_si_corresponde();
+}
+
+static void* monitor_memory_stick(void* arg) {
+    t_memory_stick* ms = arg;
+    struct pollfd descriptor = {
+        .fd = ms->fd,
+        .events = POLLRDHUP
+    };
+
+    while (1) {
+        int resultado = poll(&descriptor, 1, -1);
+        if (resultado < 0 && errno == EINTR) continue;
+        if (resultado < 0 ||
+            (descriptor.revents & (POLLHUP | POLLRDHUP | POLLERR | POLLNVAL))) {
+            marcar_memory_stick_desconectado(ms);
+            return NULL;
+        }
+    }
+}
+
 typedef struct { int fd; } t_args;
 
 static void* atender_cliente(void* arg) {
@@ -948,43 +1137,108 @@ static void* atender_cliente(void* arg) {
 
         case MSG_KS_IDENTIFICACION:
             log_info(logger, "## Kernel Scheduler Conectado - FD del socket: %d", fd);
-            fd_ks = fd;
             enviar_mensaje(fd, MSG_OK, NULL, 0);
+            pthread_mutex_lock(&mutex_estado_memoria);
+            fd_ks = fd;
+            pthread_mutex_unlock(&mutex_estado_memoria);
+            notificar_bsod_si_corresponde();
             break;
 
         case MSG_MEMORY_STICK_IDENTIFICACION: {
-            if (msg->payload_size >= 4) {
-                uint32_t tn; memcpy(&tn, msg->payload, 4);
-                uint32_t tamanio = ntohl(tn);
-                log_info(logger, "## Memory Stick de %u bytes Conectada", tamanio);
-
-                pthread_mutex_lock(&mutex_memoria);
-                t_memory_stick* ms = malloc(sizeof(t_memory_stick));
-                ms->id           = next_ms_id++;
-                ms->fd           = fd;
-                ms->tamanio      = tamanio;
-                ms->offset_global = memoria_total();
-                list_add(memory_sticks, ms);
-                agregar_hueco(ms->offset_global, tamanio);
-                pthread_mutex_unlock(&mutex_memoria);
-
-                // El stick necesita saber dónde empieza dentro del espacio
-                // global de direcciones para poder traducir las direcciones
-                // globales que le llegan directo de la CPU (MOV_IN/MOV_OUT/
-                // COPY_MEM) a un offset local a su propio buffer.
-                uint32_t offset_n = htonl(ms->offset_global);
-                enviar_mensaje(fd, MSG_OK, &offset_n, sizeof(offset_n));
-
-                // Notificar al KS que hay más memoria
-                if (fd_ks >= 0)
-                    enviar_mensaje(fd_ks, MSG_MAS_MEMORIA, NULL, 0);
-
-                conexion_pasiva = 1;
-            } else {
-                log_warning(logger, "Memory Stick sin payload (fd=%d)", fd);
+            if (msg->payload == NULL ||
+                (msg->payload_size != sizeof(uint32_t) &&
+                 msg->payload_size != sizeof(t_payload_memory_stick_identificacion))) {
+                log_warning(logger, "Identificacion de Memory Stick invalida (fd=%d)", fd);
                 enviar_mensaje(fd, MSG_ERROR, NULL, 0);
                 identificado = 0;
+                break;
             }
+
+            uint32_t tamanio_n;
+            memcpy(&tamanio_n, msg->payload, sizeof(tamanio_n));
+            uint32_t tamanio = ntohl(tamanio_n);
+            uint32_t puerto = 0;
+            if (msg->payload_size == sizeof(t_payload_memory_stick_identificacion)) {
+                uint32_t puerto_n;
+                memcpy(
+                    &puerto_n,
+                    (uint8_t*) msg->payload + sizeof(uint32_t),
+                    sizeof(puerto_n)
+                );
+                puerto = ntohl(puerto_n);
+            }
+
+            struct sockaddr_in peer;
+            socklen_t peer_len = sizeof(peer);
+            memset(&peer, 0, sizeof(peer));
+            bool endpoint_valido = tamanio > 0 && puerto <= UINT16_MAX &&
+                                    getpeername(fd, (struct sockaddr*) &peer, &peer_len) == 0 &&
+                                    peer.sin_family == AF_INET;
+            if (!endpoint_valido) {
+                log_warning(logger, "Datos invalidos de Memory Stick (fd=%d)", fd);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                identificado = 0;
+                break;
+            }
+
+            t_memory_stick* ms = calloc(1, sizeof(t_memory_stick));
+            if (ms == NULL || pthread_mutex_init(&ms->mutex_io, NULL) != 0) {
+                free(ms);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                identificado = 0;
+                break;
+            }
+
+            pthread_mutex_lock(&mutex_memoria);
+            pthread_rwlock_wrlock(&rwlock_memory_sticks);
+            uint32_t offset_global = memoria_total_sin_lock();
+            if (offset_global > UINT32_MAX - tamanio) {
+                pthread_rwlock_unlock(&rwlock_memory_sticks);
+                pthread_mutex_unlock(&mutex_memoria);
+                pthread_mutex_destroy(&ms->mutex_io);
+                free(ms);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                identificado = 0;
+                break;
+            }
+
+            ms->id = next_ms_id++;
+            ms->fd = fd;
+            ms->tamanio = tamanio;
+            ms->offset_global = offset_global;
+            ms->ipv4 = peer.sin_addr.s_addr;
+            ms->puerto = puerto;
+            ms->activo = true;
+            list_add(memory_sticks, ms);
+            pthread_rwlock_unlock(&rwlock_memory_sticks);
+            agregar_hueco(ms->offset_global, tamanio);
+            pthread_mutex_unlock(&mutex_memoria);
+
+            pthread_t monitor;
+            if (pthread_create(&monitor, NULL, monitor_memory_stick, ms) != 0) {
+                log_error(logger, "No se pudo monitorear Memory Stick %u", ms->id);
+                marcar_memory_stick_desconectado(ms);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                identificado = 0;
+                break;
+            }
+            pthread_detach(monitor);
+
+            log_info(logger, "## Memory Stick de %u bytes Conectada", tamanio);
+            log_debug(logger, "Memory Stick %u - Rango físico: %u-%u - Puerto: %u",
+                      ms->id, ms->offset_global,
+                      ms->offset_global + tamanio - 1, ms->puerto);
+
+            uint32_t offset_n = htonl(ms->offset_global);
+            enviar_mensaje(fd, MSG_OK, &offset_n, sizeof(offset_n));
+
+            pthread_mutex_lock(&mutex_estado_memoria);
+            if (fd_ks >= 0) {
+                enviar_mensaje(fd_ks, MSG_MAS_MEMORIA, NULL, 0);
+            }
+            pthread_mutex_unlock(&mutex_estado_memoria);
+
+            conexion_pasiva = 1;
             break;
         }
 
@@ -1139,6 +1393,38 @@ static void* atender_cliente(void* arg) {
             free(req);
         }
 
+        else if (pedido->op_code == MSG_SOLICITAR_MEMORY_STICK) {
+            if (pedido->payload == NULL ||
+                pedido->payload_size != sizeof(t_payload_solicitar_memory_stick)) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+            } else {
+                t_payload_solicitar_memory_stick solicitud;
+                memcpy(&solicitud, pedido->payload, sizeof(solicitud));
+                t_payload_memory_stick_endpoint endpoint;
+                if (endpoint_por_id(ntohl(solicitud.id_memory_stick), &endpoint)) {
+                    enviar_mensaje(fd, MSG_MEMORY_STICK_ENDPOINT, &endpoint, sizeof(endpoint));
+                } else {
+                    enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                }
+            }
+        }
+
+        else if (pedido->op_code == MSG_SOLICITAR_MEMORY_STICK_DIRECCION) {
+            if (pedido->payload == NULL ||
+                pedido->payload_size != sizeof(t_payload_solicitar_memory_stick_direccion)) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+            } else {
+                t_payload_solicitar_memory_stick_direccion solicitud;
+                memcpy(&solicitud, pedido->payload, sizeof(solicitud));
+                t_payload_memory_stick_endpoint endpoint;
+                if (endpoint_por_direccion(ntohl(solicitud.direccion_fisica), &endpoint)) {
+                    enviar_mensaje(fd, MSG_MEMORY_STICK_ENDPOINT, &endpoint, sizeof(endpoint));
+                } else {
+                    enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                }
+            }
+        }
+
         // GUARDAR CONTEXTO
         else if (pedido->op_code == MSG_GUARDAR_CONTEXTO) {
             t_contexto* nuevo = deserializar_contexto(pedido->payload, pedido->payload_size);
@@ -1230,7 +1516,7 @@ static void* atender_cliente(void* arg) {
                 compact_pend_pid     = pid;
                 compact_pend_id_seg  = id_seg;
                 compact_pend_tamanio = tamanio;
-                if (fd_ks >= 0) enviar_mensaje(fd_ks, MSG_COMPACTAR, NULL, 0);
+                enviar_mensaje(fd, MSG_COMPACTAR, NULL, 0);
                 free_mensaje(pedido); continue;
             }
 
@@ -1427,7 +1713,15 @@ static void* atender_cliente(void* arg) {
     }
 
     log_info(logger, "Cliente desconectado (fd=%d)", fd);
-    close(fd);
+    pthread_mutex_lock(&mutex_estado_memoria);
+    if (fd_ks == fd) {
+        fd_ks = -1;
+        bsod_enviado = 0;
+        close(fd);
+        fd = -1;
+    }
+    pthread_mutex_unlock(&mutex_estado_memoria);
+    if (fd >= 0) close(fd);
     return NULL;
 }
 
