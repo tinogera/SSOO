@@ -1,0 +1,60 @@
+[INFO] 21:27:47:274 IO/(3608:3608): Iniciando IO tipo STDIN
+[INFO] 21:27:47:274 IO/(3608:3608): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 21:27:47:275 IO/(3608:3608): ## Conectado a Kernel Scheduler
+[WARNING] 21:31:53:069 IO/(3608:3608): Kernel Scheduler cerró la conexión
+[INFO] 21:37:14:516 IO/(5887:5887): Iniciando IO tipo STDIN
+[INFO] 21:37:14:516 IO/(5887:5887): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 21:37:14:517 IO/(5887:5887): ## Conectado a Kernel Scheduler
+[WARNING] 21:39:45:316 IO/(5887:5887): Kernel Scheduler cerró la conexión
+[INFO] 21:48:14:004 IO/(7596:7596): Iniciando IO tipo STDIN
+[INFO] 21:48:14:005 IO/(7596:7596): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 21:48:14:007 IO/(7596:7596): ## Conectado a Kernel Scheduler
+[WARNING] 21:49:17:074 IO/(7596:7596): Kernel Scheduler cerró la conexión
+[INFO] 21:50:02:455 IO/(9100:9100): Iniciando IO tipo STDIN
+[INFO] 21:50:02:455 IO/(9100:9100): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 21:50:02:457 IO/(9100:9100): ## Conectado a Kernel Scheduler
+[WARNING] 21:51:49:532 IO/(9100:9100): Kernel Scheduler cerró la conexión
+[INFO] 21:55:30:530 IO/(10560:10560): Iniciando IO tipo STDIN
+[INFO] 21:55:30:530 IO/(10560:10560): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 21:55:30:531 IO/(10560:10560): ## Conectado a Kernel Scheduler
+[INFO] 21:58:44:022 IO/(10560:10560): ## PID: 1 - Inicio de IO
+[INFO] 21:58:44:022 IO/(10560:10560): ## PID: 1 - Ingrese 16 caracteres:
+[DEBUG] 21:58:53:247 IO/(10560:10560): PID: 1 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 21:58:53:247 IO/(10560:10560): ## PID: 1 - Fin de IO
+[INFO] 21:58:53:248 IO/(10560:10560): ## PID: 2 - Inicio de IO
+[INFO] 21:58:53:248 IO/(10560:10560): ## PID: 2 - Ingrese 16 caracteres:
+[DEBUG] 21:58:55:319 IO/(10560:10560): PID: 2 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 21:58:55:319 IO/(10560:10560): ## PID: 2 - Fin de IO
+[INFO] 21:59:27:637 IO/(10560:10560): ## PID: 3 - Inicio de IO
+[INFO] 21:59:27:637 IO/(10560:10560): ## PID: 3 - Ingrese 16 caracteres:
+[DEBUG] 21:59:30:575 IO/(10560:10560): PID: 3 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 21:59:30:575 IO/(10560:10560): ## PID: 3 - Fin de IO
+[INFO] 21:59:30:575 IO/(10560:10560): ## PID: 2 - Inicio de IO
+[INFO] 21:59:30:575 IO/(10560:10560): ## PID: 2 - Ingrese 16 caracteres:
+[DEBUG] 21:59:33:827 IO/(10560:10560): PID: 2 - STDIN: 4 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 21:59:33:827 IO/(10560:10560): ## PID: 2 - Fin de IO
+[INFO] 21:59:33:827 IO/(10560:10560): ## PID: 1 - Inicio de IO
+[INFO] 21:59:33:827 IO/(10560:10560): ## PID: 1 - Ingrese 16 caracteres:
+[DEBUG] 21:59:36:522 IO/(10560:10560): PID: 1 - STDIN: 5 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 21:59:36:522 IO/(10560:10560): ## PID: 1 - Fin de IO
+[INFO] 21:59:36:522 IO/(10560:10560): ## PID: 3 - Inicio de IO
+[INFO] 21:59:36:523 IO/(10560:10560): ## PID: 3 - Ingrese 16 caracteres:
+[DEBUG] 21:59:38:082 IO/(10560:10560): PID: 3 - STDIN: 7 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 21:59:38:082 IO/(10560:10560): ## PID: 3 - Fin de IO
+[INFO] 21:59:38:082 IO/(10560:10560): ## PID: 1 - Inicio de IO
+[INFO] 21:59:38:082 IO/(10560:10560): ## PID: 1 - Ingrese 16 caracteres:
+[DEBUG] 21:59:41:710 IO/(10560:10560): PID: 1 - STDIN: 11 byte(s) leídos de 16 pedidos (rellenado con ceros si faltó)
+[INFO] 21:59:41:712 IO/(10560:10560): ## PID: 1 - Fin de IO
+[WARNING] 22:00:41:620 IO/(10560:10560): Kernel Scheduler cerró la conexión
+[INFO] 22:04:45:947 IO/(12113:12113): Iniciando IO tipo STDIN
+[INFO] 22:04:45:947 IO/(12113:12113): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 22:04:45:949 IO/(12113:12113): ## Conectado a Kernel Scheduler
+[WARNING] 22:09:42:235 IO/(12113:12113): Kernel Scheduler cerró la conexión
+[INFO] 22:14:24:167 IO/(13794:13794): Iniciando IO tipo STDIN
+[INFO] 22:14:24:168 IO/(13794:13794): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 22:14:24:168 IO/(13794:13794): ## Conectado a Kernel Scheduler
+[WARNING] 22:15:47:468 IO/(13794:13794): Kernel Scheduler cerró la conexión
+[INFO] 22:16:43:271 IO/(15582:15582): Iniciando IO tipo STDIN
+[INFO] 22:16:43:271 IO/(15582:15582): Configuración cargada desde /home/utnso/tp-2026-1c-Impactante/io/io.config
+[INFO] 22:16:43:272 IO/(15582:15582): ## Conectado a Kernel Scheduler
+[WARNING] 22:17:46:182 IO/(15582:15582): Kernel Scheduler cerró la conexión

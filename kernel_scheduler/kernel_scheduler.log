@@ -1,0 +1,1595 @@
+[INFO] 21:27:17:733 KernelScheduler/(3334:3334): ## Conectado a Kernel Memory
+[INFO] 21:27:17:733 KernelScheduler/(3334:3334): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 21:27:17:733 KernelScheduler/(3334:3334): ## (0) Pasa del estado NEW al estado READY
+[INFO] 21:27:40:920 KernelScheduler/(3334:3607): ## IO SLEEP Conectada
+[INFO] 21:27:47:275 KernelScheduler/(3334:3736): ## IO STDIN Conectada
+[INFO] 21:28:02:594 KernelScheduler/(3334:3866): ## IO STDOUT Conectada
+[INFO] 21:28:11:154 KernelScheduler/(3334:4053): ## CPU 0 Conectada
+[INFO] 21:28:11:155 KernelScheduler/(3334:3477): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:28:11:426 KernelScheduler/(3334:4053): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:28:11:427 KernelScheduler/(3334:4053): ## (1) Se crea el proceso - Estado: NEW
+[INFO] 21:28:11:427 KernelScheduler/(3334:4053): ## (1) Pasa del estado NEW al estado READY
+[INFO] 21:28:11:429 KernelScheduler/(3334:4053): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:28:11:429 KernelScheduler/(3334:3477): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:28:11:694 KernelScheduler/(3334:4053): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:28:11:694 KernelScheduler/(3334:4053): ## (2) Se crea el proceso - Estado: NEW
+[INFO] 21:28:11:695 KernelScheduler/(3334:4053): ## (2) Pasa del estado NEW al estado READY
+[INFO] 21:28:11:737 KernelScheduler/(3334:4053): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:28:11:737 KernelScheduler/(3334:3477): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:28:12:036 KernelScheduler/(3334:4053): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:28:12:036 KernelScheduler/(3334:4053): ## (3) Se crea el proceso - Estado: NEW
+[INFO] 21:28:12:036 KernelScheduler/(3334:4053): ## (3) Pasa del estado NEW al estado READY
+[INFO] 21:28:12:036 KernelScheduler/(3334:4053): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:28:12:036 KernelScheduler/(3334:3477): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:28:12:324 KernelScheduler/(3334:4053): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:28:12:324 KernelScheduler/(3334:4053): ## (4) Se crea el proceso - Estado: NEW
+[INFO] 21:28:12:375 KernelScheduler/(3334:4053): ## (4) Pasa del estado NEW al estado READY
+[INFO] 21:28:12:382 KernelScheduler/(3334:4053): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:28:12:383 KernelScheduler/(3334:3477): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:28:12:677 KernelScheduler/(3334:4053): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:28:12:677 KernelScheduler/(3334:4053): ## (5) Se crea el proceso - Estado: NEW
+[INFO] 21:28:12:677 KernelScheduler/(3334:4053): ## (5) Pasa del estado NEW al estado READY
+[INFO] 21:28:12:726 KernelScheduler/(3334:4053): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:28:12:727 KernelScheduler/(3334:3477): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:28:12:981 KernelScheduler/(3334:4053): ## (0) - Solicitó syscall: EXIT
+[INFO] 21:28:12:981 KernelScheduler/(3334:4053): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 21:28:12:981 KernelScheduler/(3334:4053): ## (0) finalizó su ejecución con motivo de EXIT
+[INFO] 21:28:12:982 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:13:654 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:13:655 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:13:655 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:14:604 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:14:604 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:14:604 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:15:414 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:15:414 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:15:414 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:16:242 KernelScheduler/(3334:4053): ## (5) - Solicitó syscall: SLEEP
+[INFO] 21:28:16:243 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:28:16:243 KernelScheduler/(3334:3477): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 21:28:16:347 KernelScheduler/(3334:3607): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 21:28:16:347 KernelScheduler/(3334:3607): ## (5) finalizó IO y pasa a READY
+[INFO] 21:28:16:347 KernelScheduler/(3334:3607): ## (3) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 1
+[INFO] 21:28:16:550 KernelScheduler/(3334:4053): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 21:28:16:551 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:17:401 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:17:401 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:17:401 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:18:213 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:18:214 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:18:214 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:19:124 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:19:125 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:19:125 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:19:667 KernelScheduler/(3334:4053): ## (5) - Solicitó syscall: SLEEP
+[INFO] 21:28:19:719 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:28:19:720 KernelScheduler/(3334:3477): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 21:28:19:823 KernelScheduler/(3334:3607): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 21:28:19:823 KernelScheduler/(3334:3607): ## (5) finalizó IO y pasa a READY
+[INFO] 21:28:19:823 KernelScheduler/(3334:3607): ## (3) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 1
+[INFO] 21:28:19:980 KernelScheduler/(3334:4053): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 21:28:19:980 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:20:629 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:20:629 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:20:629 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:21:433 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:21:433 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:21:433 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:22:244 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:22:244 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:22:244 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:23:143 KernelScheduler/(3334:4053): ## (5) - Solicitó syscall: SLEEP
+[INFO] 21:28:23:143 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:28:23:144 KernelScheduler/(3334:3477): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 21:28:23:246 KernelScheduler/(3334:3607): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 21:28:23:246 KernelScheduler/(3334:3607): ## (5) finalizó IO y pasa a READY
+[INFO] 21:28:23:246 KernelScheduler/(3334:3607): ## (3) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 1
+[INFO] 21:28:23:396 KernelScheduler/(3334:4053): ## (3) Pasa del estado EXEC al estado READY
+[INFO] 21:28:23:396 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:24:005 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:24:005 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:24:005 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:24:925 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:24:925 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:24:925 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:25:737 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:25:737 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:25:737 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:26:344 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado READY
+[INFO] 21:28:26:345 KernelScheduler/(3334:4053): ## (5) - Desalojado por fin de quantum
+[INFO] 21:28:26:345 KernelScheduler/(3334:3477): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:28:26:654 KernelScheduler/(3334:4053): ## (5) - Solicitó syscall: EXIT
+[INFO] 21:28:26:654 KernelScheduler/(3334:4053): ## (5) Pasa del estado EXEC al estado EXIT
+[INFO] 21:28:26:654 KernelScheduler/(3334:4053): ## (5) finalizó su ejecución con motivo de EXIT
+[INFO] 21:28:26:700 KernelScheduler/(3334:3477): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 21:29:07:310 KernelScheduler/(3334:4053): ## (3) - Solicitó syscall: EXIT
+[INFO] 21:29:07:310 KernelScheduler/(3334:4053): ## (3) Pasa del estado EXEC al estado EXIT
+[INFO] 21:29:07:310 KernelScheduler/(3334:4053): ## (3) finalizó su ejecución con motivo de EXIT
+[INFO] 21:29:07:311 KernelScheduler/(3334:3477): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 21:29:49:061 KernelScheduler/(3334:4053): ## (4) - Solicitó syscall: EXIT
+[INFO] 21:29:49:061 KernelScheduler/(3334:4053): ## (4) Pasa del estado EXEC al estado EXIT
+[INFO] 21:29:49:061 KernelScheduler/(3334:4053): ## (4) finalizó su ejecución con motivo de EXIT
+[INFO] 21:29:49:061 KernelScheduler/(3334:3477): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:29:49:933 KernelScheduler/(3334:4053): ## (1) - Solicitó syscall: SLEEP
+[INFO] 21:29:49:933 KernelScheduler/(3334:4053): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:29:49:933 KernelScheduler/(3334:3477): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 21:29:50:872 KernelScheduler/(3334:4053): ## (2) - Solicitó syscall: SLEEP
+[INFO] 21:29:50:873 KernelScheduler/(3334:4053): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:30:09:936 KernelScheduler/(3334:3607): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 21:30:09:936 KernelScheduler/(3334:3607): ## (1) finalizó IO y pasa a READY
+[INFO] 21:30:09:936 KernelScheduler/(3334:3477): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:30:10:753 KernelScheduler/(3334:4053): ## (1) - Solicitó syscall: SLEEP
+[INFO] 21:30:10:754 KernelScheduler/(3334:4053): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:30:29:937 KernelScheduler/(3334:3607): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 21:30:29:937 KernelScheduler/(3334:3607): ## (2) finalizó IO y pasa a READY
+[INFO] 21:30:29:937 KernelScheduler/(3334:3477): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 21:30:30:791 KernelScheduler/(3334:4053): ## (2) - Solicitó syscall: SLEEP
+[INFO] 21:30:30:792 KernelScheduler/(3334:4053): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:30:49:935 KernelScheduler/(3334:4083): ## (1) - Timeout de IO: suspendiendo proceso
+[INFO] 21:30:49:935 KernelScheduler/(3334:4083): ## (1) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:30:49:938 KernelScheduler/(3334:3607): ## (1) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:30:49:938 KernelScheduler/(3334:3607): ## (1) finalizó IO y pasa a SUSP. READY
+[INFO] 21:30:49:982 KernelScheduler/(3334:3478): ## (1) Pasa del estado SUSP. READY al estado READY
+[INFO] 21:30:49:982 KernelScheduler/(3334:3477): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:30:50:235 KernelScheduler/(3334:4053): ## (1) - Solicitó syscall: EXIT
+[INFO] 21:30:50:235 KernelScheduler/(3334:4053): ## (1) Pasa del estado EXEC al estado EXIT
+[INFO] 21:30:50:236 KernelScheduler/(3334:4053): ## (1) finalizó su ejecución con motivo de EXIT
+[INFO] 21:30:50:873 KernelScheduler/(3334:4085): ## (2) - Timeout de IO: suspendiendo proceso
+[INFO] 21:30:50:874 KernelScheduler/(3334:4085): ## (2) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:31:09:938 KernelScheduler/(3334:3607): ## (2) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:31:09:938 KernelScheduler/(3334:3607): ## (2) finalizó IO y pasa a SUSP. READY
+[INFO] 21:31:09:981 KernelScheduler/(3334:3478): ## (2) Pasa del estado SUSP. READY al estado READY
+[INFO] 21:31:09:981 KernelScheduler/(3334:3477): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 21:31:10:238 KernelScheduler/(3334:4053): ## (2) - Solicitó syscall: EXIT
+[INFO] 21:31:10:238 KernelScheduler/(3334:4053): ## (2) Pasa del estado EXEC al estado EXIT
+[INFO] 21:31:10:238 KernelScheduler/(3334:4053): ## (2) finalizó su ejecución con motivo de EXIT
+[WARNING] 21:31:49:637 KernelScheduler/(3334:4053): ## CPU fd=9 desconectada
+[DEBUG] 21:36:56:474 KernelScheduler/(5613:5613): Planificación resuelta: algoritmo=CMN n_colas=4 colas=[FIFO,FIFO,FIFO,FIFO] RR_QUANTUM=1500ms QUEUE_PREEMPTION=TRUE SUSPENSION_TIMEOUT=10000ms
+[INFO] 21:36:56:475 KernelScheduler/(5613:5613): ## Conectado a Kernel Memory
+[INFO] 21:36:56:475 KernelScheduler/(5613:5613): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 21:36:56:478 KernelScheduler/(5613:5613): ## (0) Pasa del estado NEW al estado READY
+[DEBUG] 21:36:56:478 KernelScheduler/(5613:5756): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
+[INFO] 21:37:10:549 KernelScheduler/(5613:5886): ## IO SLEEP Conectada
+[INFO] 21:37:14:517 KernelScheduler/(5613:6015): ## IO STDIN Conectada
+[INFO] 21:37:16:792 KernelScheduler/(5613:6144): ## IO STDOUT Conectada
+[INFO] 21:37:22:910 KernelScheduler/(5613:6331): ## CPU 0 Conectada
+[DEBUG] 21:37:22:910 KernelScheduler/(5613:5756): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:22:910 KernelScheduler/(5613:5756): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:37:23:925 KernelScheduler/(5613:6331): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:37:23:925 KernelScheduler/(5613:6331): ## (1) Se crea el proceso - Estado: NEW
+[INFO] 21:37:23:926 KernelScheduler/(5613:6331): ## (1) Pasa del estado NEW al estado READY
+[DEBUG] 21:37:23:927 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:23:927 KernelScheduler/(5613:6331): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:23:927 KernelScheduler/(5613:5756): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:23:927 KernelScheduler/(5613:5756): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:37:24:428 KernelScheduler/(5613:6331): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:37:24:428 KernelScheduler/(5613:6331): ## (2) Se crea el proceso - Estado: NEW
+[INFO] 21:37:24:429 KernelScheduler/(5613:6331): ## (2) Pasa del estado NEW al estado READY
+[DEBUG] 21:37:24:430 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:24:474 KernelScheduler/(5613:6331): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:24:474 KernelScheduler/(5613:5756): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:24:474 KernelScheduler/(5613:5756): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:37:25:038 KernelScheduler/(5613:6331): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:37:25:038 KernelScheduler/(5613:6331): ## (3) Se crea el proceso - Estado: NEW
+[INFO] 21:37:25:043 KernelScheduler/(5613:6331): ## (3) Pasa del estado NEW al estado READY
+[DEBUG] 21:37:25:044 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:25:044 KernelScheduler/(5613:6331): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:25:045 KernelScheduler/(5613:5756): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:25:045 KernelScheduler/(5613:5756): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:37:25:606 KernelScheduler/(5613:6331): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:37:25:606 KernelScheduler/(5613:6331): ## (4) Se crea el proceso - Estado: NEW
+[INFO] 21:37:25:662 KernelScheduler/(5613:6331): ## (4) Pasa del estado NEW al estado READY
+[DEBUG] 21:37:25:663 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:25:671 KernelScheduler/(5613:6331): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:25:673 KernelScheduler/(5613:5756): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:25:673 KernelScheduler/(5613:5756): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:37:27:351 KernelScheduler/(5613:6331): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:37:27:351 KernelScheduler/(5613:6331): ## (5) Se crea el proceso - Estado: NEW
+[INFO] 21:37:27:353 KernelScheduler/(5613:6331): ## (5) Pasa del estado NEW al estado READY
+[DEBUG] 21:37:27:354 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:27:399 KernelScheduler/(5613:6331): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:27:405 KernelScheduler/(5613:5756): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:27:405 KernelScheduler/(5613:5756): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:37:27:946 KernelScheduler/(5613:6331): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:37:27:947 KernelScheduler/(5613:6331): ## (6) Se crea el proceso - Estado: NEW
+[INFO] 21:37:27:949 KernelScheduler/(5613:6331): ## (6) Pasa del estado NEW al estado READY
+[DEBUG] 21:37:27:949 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:27:950 KernelScheduler/(5613:6331): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:27:954 KernelScheduler/(5613:5756): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:27:954 KernelScheduler/(5613:5756): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:37:29:613 KernelScheduler/(5613:6331): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:37:29:613 KernelScheduler/(5613:6331): ## (7) Se crea el proceso - Estado: NEW
+[INFO] 21:37:29:663 KernelScheduler/(5613:6331): ## (7) Pasa del estado NEW al estado READY
+[DEBUG] 21:37:29:664 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:29:666 KernelScheduler/(5613:6331): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:29:666 KernelScheduler/(5613:5756): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:29:666 KernelScheduler/(5613:5756): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:37:30:320 KernelScheduler/(5613:6331): ## (0) - Solicitó syscall: EXIT
+[INFO] 21:37:30:321 KernelScheduler/(5613:6331): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 21:37:30:321 KernelScheduler/(5613:6331): ## (0) finalizó su ejecución con motivo de EXIT
+[DEBUG] 21:37:30:321 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:30:321 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:37:31:382 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:37:31:383 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:37:31:385 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:31:385 KernelScheduler/(5613:5756): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:37:32:471 KernelScheduler/(5613:6331): ## (5) - Solicitó syscall: SLEEP
+[INFO] 21:37:32:513 KernelScheduler/(5613:6331): ## (5) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:37:32:513 KernelScheduler/(5613:5756): Planificador: proceso (6) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:32:514 KernelScheduler/(5613:5756): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 21:37:33:578 KernelScheduler/(5613:6331): ## (6) - Solicitó syscall: SLEEP
+[INFO] 21:37:33:582 KernelScheduler/(5613:6331): ## (6) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:37:33:583 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:33:583 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:37:41:390 KernelScheduler/(5613:6333): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 21:37:41:390 KernelScheduler/(5613:6333): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:37:41:392 KernelScheduler/(5613:5886): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:37:41:393 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 21:37:41:447 KernelScheduler/(5613:5757): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 21:37:41:447 KernelScheduler/(5613:5757): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:37:41:447 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:41:952 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:41:953 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:41:953 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:37:42:518 KernelScheduler/(5613:6334): ## (5) - Timeout de IO: suspendiendo proceso
+[INFO] 21:37:42:519 KernelScheduler/(5613:6334): ## (5) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:37:43:590 KernelScheduler/(5613:6335): ## (6) - Timeout de IO: suspendiendo proceso
+[INFO] 21:37:43:590 KernelScheduler/(5613:6335): ## (6) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:37:43:598 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:37:43:598 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:37:43:598 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:43:598 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:37:46:391 KernelScheduler/(5613:5886): ## (5) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:37:46:391 KernelScheduler/(5613:5886): ## (5) finalizó IO y pasa a SUSP. READY
+[INFO] 21:37:46:435 KernelScheduler/(5613:5757): ## (5) Pasa del estado SUSP. READY al estado READY
+[INFO] 21:37:46:435 KernelScheduler/(5613:5757): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 2
+[DEBUG] 21:37:46:435 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:46:789 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:46:790 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:46:791 KernelScheduler/(5613:5756): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:37:49:902 KernelScheduler/(5613:6331): ## (5) - Solicitó syscall: SLEEP
+[INFO] 21:37:49:902 KernelScheduler/(5613:6331): ## (5) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:37:49:903 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:49:903 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:37:51:394 KernelScheduler/(5613:5886): ## (6) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:37:51:394 KernelScheduler/(5613:5886): ## (6) finalizó IO y pasa a SUSP. READY
+[INFO] 21:37:51:394 KernelScheduler/(5613:5757): ## (6) Pasa del estado SUSP. READY al estado READY
+[INFO] 21:37:51:394 KernelScheduler/(5613:5757): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 6 con prioridad 2
+[DEBUG] 21:37:51:394 KernelScheduler/(5613:5756): Planificador: proceso (6) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:51:469 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:51:469 KernelScheduler/(5613:5756): Planificador: proceso (6) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:51:469 KernelScheduler/(5613:5756): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 21:37:52:396 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:37:52:397 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:37:52:397 KernelScheduler/(5613:5886): ## (6) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:37:52:397 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:52:562 KernelScheduler/(5613:6331): ## (6) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:52:563 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:52:563 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:37:54:185 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:37:54:185 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:37:54:186 KernelScheduler/(5613:5756): Planificador: proceso (6) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:54:186 KernelScheduler/(5613:5756): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 21:37:55:398 KernelScheduler/(5613:5886): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 21:37:55:398 KernelScheduler/(5613:5886): ## (5) finalizó IO y pasa a READY
+[DEBUG] 21:37:55:398 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:56:247 KernelScheduler/(5613:6331): ## (6) - Solicitó syscall: SLEEP
+[INFO] 21:37:56:248 KernelScheduler/(5613:6331): ## (6) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:37:56:249 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:56:249 KernelScheduler/(5613:5756): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:37:56:400 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:37:56:400 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:37:56:400 KernelScheduler/(5613:5886): ## (5) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:37:56:400 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:37:56:851 KernelScheduler/(5613:6331): ## (5) Pasa del estado EXEC al estado READY
+[DEBUG] 21:37:56:852 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:56:852 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:37:58:435 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:37:58:438 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:37:58:439 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:37:58:440 KernelScheduler/(5613:5756): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:37:59:404 KernelScheduler/(5613:5886): ## (6) Pasa del estado BLOCK al estado READY
+[INFO] 21:37:59:405 KernelScheduler/(5613:5886): ## (6) finalizó IO y pasa a READY
+[DEBUG] 21:37:59:405 KernelScheduler/(5613:5756): Planificador: proceso (6) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:00:424 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:00:427 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:38:00:428 KernelScheduler/(5613:5886): ## (5) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:00:428 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:00:562 KernelScheduler/(5613:6331): ## (5) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:00:562 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:00:562 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:02:184 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:02:185 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:02:185 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:02:185 KernelScheduler/(5613:5756): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:38:02:690 KernelScheduler/(5613:6331): ## (5) - Solicitó syscall: SLEEP
+[INFO] 21:38:02:737 KernelScheduler/(5613:6331): ## (5) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:02:738 KernelScheduler/(5613:5756): Planificador: proceso (6) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:02:738 KernelScheduler/(5613:5756): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 21:38:03:194 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:03:195 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:38:03:195 KernelScheduler/(5613:5886): ## (6) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:03:195 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:03:283 KernelScheduler/(5613:6331): ## (6) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:03:283 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:03:284 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:04:881 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:04:882 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:04:883 KernelScheduler/(5613:5756): Planificador: proceso (6) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:04:883 KernelScheduler/(5613:5756): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 21:38:07:455 KernelScheduler/(5613:6331): ## (6) - Solicitó syscall: SLEEP
+[INFO] 21:38:07:506 KernelScheduler/(5613:6331): ## (6) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:07:512 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:07:513 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:08:196 KernelScheduler/(5613:5886): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:08:196 KernelScheduler/(5613:5886): ## (5) finalizó IO y pasa a READY
+[INFO] 21:38:08:196 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 5 con prioridad 2
+[DEBUG] 21:38:08:197 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:08:451 KernelScheduler/(5613:6340): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 21:38:08:452 KernelScheduler/(5613:6340): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:38:08:569 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:08:569 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:08:569 KernelScheduler/(5613:5756): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:38:09:198 KernelScheduler/(5613:5886): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:38:09:198 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 21:38:09:254 KernelScheduler/(5613:5757): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 21:38:09:256 KernelScheduler/(5613:5757): ## (5) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:09:256 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:09:673 KernelScheduler/(5613:6331): ## (5) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:09:673 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:09:673 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:11:226 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:11:291 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:11:292 KernelScheduler/(5613:5756): Planificador: proceso (5) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:11:292 KernelScheduler/(5613:5756): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 21:38:12:187 KernelScheduler/(5613:6341): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 21:38:12:188 KernelScheduler/(5613:6341): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:38:13:401 KernelScheduler/(5613:6331): ## (5) - Solicitó syscall: EXIT
+[INFO] 21:38:13:405 KernelScheduler/(5613:6331): ## (5) Pasa del estado EXEC al estado EXIT
+[INFO] 21:38:13:407 KernelScheduler/(5613:6331): ## (5) finalizó su ejecución con motivo de EXIT
+[DEBUG] 21:38:13:410 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:13:410 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:14:200 KernelScheduler/(5613:5886): ## (6) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:14:200 KernelScheduler/(5613:5886): ## (6) finalizó IO y pasa a READY
+[INFO] 21:38:14:200 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 6 con prioridad 2
+[DEBUG] 21:38:14:200 KernelScheduler/(5613:5756): Planificador: proceso (6) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:14:581 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:14:581 KernelScheduler/(5613:5756): Planificador: proceso (6) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:14:584 KernelScheduler/(5613:5756): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 21:38:17:706 KernelScheduler/(5613:6331): ## (6) - Solicitó syscall: EXIT
+[INFO] 21:38:17:707 KernelScheduler/(5613:6331): ## (6) Pasa del estado EXEC al estado EXIT
+[INFO] 21:38:17:707 KernelScheduler/(5613:6331): ## (6) finalizó su ejecución con motivo de EXIT
+[DEBUG] 21:38:17:751 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:17:751 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:24:202 KernelScheduler/(5613:5886): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:38:24:203 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 21:38:24:206 KernelScheduler/(5613:5757): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 21:38:24:206 KernelScheduler/(5613:5757): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:24:206 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:24:522 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:24:522 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:24:522 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:26:152 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:26:153 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:26:153 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:26:154 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:27:186 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:27:201 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[DEBUG] 21:38:27:223 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:27:224 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[INFO] 21:38:27:295 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:27:295 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:27:295 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:28:866 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:28:867 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:28:868 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:28:868 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:29:870 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:29:871 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:38:29:871 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:29:871 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:29:930 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:29:931 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:29:931 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:31:592 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:31:593 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:31:593 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:31:593 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:32:598 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:32:598 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:38:32:598 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:32:598 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:32:648 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:32:649 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:32:649 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:34:259 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:34:263 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:34:265 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:34:265 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:35:269 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:35:269 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:38:35:269 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:35:269 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:35:374 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:35:375 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:35:375 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:36:940 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:36:997 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:36:998 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:36:998 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:38:005 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:38:005 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:38:38:005 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:38:005 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:38:568 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:38:568 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:38:568 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:40:161 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:40:161 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:40:161 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:40:161 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:41:593 KernelScheduler/(5613:6348): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 21:38:41:594 KernelScheduler/(5613:6348): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:38:50:163 KernelScheduler/(5613:5886): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:38:50:163 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 21:38:50:213 KernelScheduler/(5613:5757): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 21:38:50:214 KernelScheduler/(5613:5757): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:50:214 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:50:653 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:50:654 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:50:654 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:52:277 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:52:282 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:52:282 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:52:290 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:53:299 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:53:301 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:38:53:301 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:53:301 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:53:418 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:53:418 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:53:418 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:54:997 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:55:074 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:55:074 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:55:075 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:56:085 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:56:086 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:38:56:087 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:56:092 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:56:634 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:56:634 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:56:634 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:38:58:294 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:38:58:298 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:38:58:299 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:58:301 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:38:59:307 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:38:59:307 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:38:59:307 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:38:59:307 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:38:59:398 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:38:59:412 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:38:59:412 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:39:00:974 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:39:00:975 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:39:00:978 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:00:978 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:39:01:986 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:39:01:987 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:39:01:987 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:39:01:987 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:39:02:105 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:39:02:105 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:02:105 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:39:03:664 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:39:03:711 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:39:03:711 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:03:711 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:39:04:811 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:39:04:811 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:39:04:812 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:39:04:812 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:39:05:278 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:39:05:278 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:05:278 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:39:06:965 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:39:06:965 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:39:06:965 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:06:965 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:39:08:301 KernelScheduler/(5613:6356): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 21:39:08:301 KernelScheduler/(5613:6356): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:39:16:970 KernelScheduler/(5613:5886): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:39:16:971 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a SUSP. READY
+[INFO] 21:39:16:971 KernelScheduler/(5613:5757): ## (7) Pasa del estado SUSP. READY al estado READY
+[INFO] 21:39:16:972 KernelScheduler/(5613:5757): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:39:16:972 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:39:17:092 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:39:17:093 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:17:093 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:39:18:748 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:39:18:752 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:39:18:753 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:18:753 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:39:19:755 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:39:19:755 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:39:19:755 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:39:19:755 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:39:19:943 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:39:19:944 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:19:947 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:39:21:551 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:39:21:554 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:39:21:555 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:21:555 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:39:22:558 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:39:22:558 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:39:22:558 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:39:22:558 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:39:22:666 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:39:22:667 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:22:667 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:39:24:270 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:39:24:270 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:39:24:270 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:24:270 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:39:25:273 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:39:25:273 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:39:25:273 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:39:25:274 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:39:25:465 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:39:25:465 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:25:465 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:39:27:097 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:39:27:098 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:39:27:099 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:27:101 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:39:28:107 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:39:28:107 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:39:28:108 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:39:28:108 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:39:28:245 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:39:28:246 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:28:246 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:39:29:772 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:39:29:814 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:39:29:814 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:29:814 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:39:30:818 KernelScheduler/(5613:5886): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 21:39:30:821 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a READY
+[INFO] 21:39:30:821 KernelScheduler/(5613:5886): ## (1) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 7 con prioridad 1
+[DEBUG] 21:39:30:822 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:39:30:874 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 21:39:30:874 KernelScheduler/(5613:5756): Planificador: proceso (7) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:30:874 KernelScheduler/(5613:5756): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 21:39:32:480 KernelScheduler/(5613:6331): ## (7) - Solicitó syscall: SLEEP
+[INFO] 21:39:32:481 KernelScheduler/(5613:6331): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:39:32:481 KernelScheduler/(5613:5756): Planificador: proceso (1) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:39:32:481 KernelScheduler/(5613:5756): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:39:34:271 KernelScheduler/(5613:6362): ## (7) - Timeout de IO: suspendiendo proceso
+[INFO] 21:39:34:271 KernelScheduler/(5613:6362): ## (7) Pasa del estado BLOCK al estado SUSP. BLOCK
+[WARNING] 21:39:37:678 KernelScheduler/(5613:6331): ## (1) CPU desconectada durante EXEC — vuelve a READY
+[INFO] 21:39:37:678 KernelScheduler/(5613:6331): ## (1) Pasa del estado EXEC al estado READY
+[WARNING] 21:39:37:678 KernelScheduler/(5613:6331): ## CPU fd=9 desconectada
+[DEBUG] 21:39:37:679 KernelScheduler/(5613:5756): Planificador: proceso (2) nivel=3 -> sin CPU libre (de 0 CPUs conectadas)
+[ERROR] 21:39:41:176 KernelScheduler/(5613:5755): KM cerró la conexión
+[INFO] 21:39:42:484 KernelScheduler/(5613:5886): ## (7) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:39:42:484 KernelScheduler/(5613:5886): ## (7) finalizó IO y pasa a SUSP. READY
+[DEBUG] 21:48:06:841 KernelScheduler/(7320:7320): Planificación resuelta: algoritmo=RR n_colas=1 colas=[RR] RR_QUANTUM=1500ms QUEUE_PREEMPTION=FALSE SUSPENSION_TIMEOUT=35000ms
+[INFO] 21:48:06:842 KernelScheduler/(7320:7320): ## Conectado a Kernel Memory
+[INFO] 21:48:06:842 KernelScheduler/(7320:7320): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 21:48:06:843 KernelScheduler/(7320:7320): ## (0) Pasa del estado NEW al estado READY
+[DEBUG] 21:48:06:843 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
+[INFO] 21:48:12:381 KernelScheduler/(7320:7595): ## IO SLEEP Conectada
+[INFO] 21:48:14:007 KernelScheduler/(7320:7724): ## IO STDIN Conectada
+[INFO] 21:48:17:543 KernelScheduler/(7320:7853): ## IO STDOUT Conectada
+[INFO] 21:48:22:577 KernelScheduler/(7320:8038): ## CPU 0 Conectada
+[DEBUG] 21:48:22:577 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:22:577 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:23:615 KernelScheduler/(7320:8038): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:48:23:618 KernelScheduler/(7320:8041): ## (0) - MEM_ALLOC: solicita crear segmento 0 (64 bytes)
+[INFO] 21:48:23:619 KernelScheduler/(7320:8041): ## (0) - MEM_ALLOC: segmento 0 creado exitosamente
+[DEBUG] 21:48:24:078 KernelScheduler/(7320:8040): Timer de quantum descartado para (0) gen=1: ya no está en EXEC con esa generación de despacho
+[INFO] 21:48:25:268 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:25:268 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:25:268 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:25:268 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:25:771 KernelScheduler/(7320:8038): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:48:25:772 KernelScheduler/(7320:8045): ## (0) - MEM_ALLOC: solicita crear segmento 1 (32 bytes)
+[INFO] 21:48:25:774 KernelScheduler/(7320:8045): ## (0) - MEM_ALLOC: segmento 1 creado exitosamente
+[DEBUG] 21:48:26:774 KernelScheduler/(7320:8044): Timer de quantum descartado para (0) gen=3: ya no está en EXEC con esa generación de despacho
+[INFO] 21:48:27:485 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:27:485 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:27:485 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:27:485 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:27:992 KernelScheduler/(7320:8038): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:48:27:998 KernelScheduler/(7320:8049): ## (0) - MEM_ALLOC: solicita crear segmento 2 (16 bytes)
+[INFO] 21:48:28:002 KernelScheduler/(7320:8049): ## (0) - MEM_ALLOC: segmento 2 creado exitosamente
+[DEBUG] 21:48:28:987 KernelScheduler/(7320:8048): Timer de quantum descartado para (0) gen=5: ya no está en EXEC con esa generación de despacho
+[INFO] 21:48:29:613 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:29:613 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:29:613 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:29:613 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:30:165 KernelScheduler/(7320:8038): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:48:30:170 KernelScheduler/(7320:8053): ## (0) - MEM_ALLOC: solicita crear segmento 3 (32 bytes)
+[INFO] 21:48:30:219 KernelScheduler/(7320:8053): ## (0) - MEM_ALLOC: segmento 3 creado exitosamente
+[DEBUG] 21:48:31:117 KernelScheduler/(7320:8052): Timer de quantum descartado para (0) gen=7: ya no está en EXEC con esa generación de despacho
+[INFO] 21:48:31:828 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:31:828 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:31:828 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:31:828 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:32:337 KernelScheduler/(7320:8038): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:48:32:338 KernelScheduler/(7320:8057): ## (0) - MEM_ALLOC: solicita crear segmento 4 (64 bytes)
+[INFO] 21:48:32:339 KernelScheduler/(7320:8057): ## (0) - MEM_ALLOC: segmento 4 creado exitosamente
+[DEBUG] 21:48:33:341 KernelScheduler/(7320:8056): Timer de quantum descartado para (0) gen=9: ya no está en EXEC con esa generación de despacho
+[INFO] 21:48:33:970 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:33:970 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:33:970 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:33:970 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:34:568 KernelScheduler/(7320:8038): ## (0) - Solicitó syscall: MEM_FREE
+[INFO] 21:48:34:568 KernelScheduler/(7320:8060): ## (0) - MEM_FREE: solicita eliminar segmento 0
+[INFO] 21:48:34:570 KernelScheduler/(7320:8060): ## (0) - MEM_FREE: segmento 0 eliminado
+[DEBUG] 21:48:35:503 KernelScheduler/(7320:8059): Timer de quantum descartado para (0) gen=11: ya no está en EXEC con esa generación de despacho
+[INFO] 21:48:36:140 KernelScheduler/(7320:8038): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:48:36:143 KernelScheduler/(7320:8062): ## (0) - MEM_ALLOC: solicita crear segmento 5 (32 bytes)
+[INFO] 21:48:36:192 KernelScheduler/(7320:8062): ## (0) - MEM_ALLOC: segmento 5 creado exitosamente
+[INFO] 21:48:37:885 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:37:886 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:37:886 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:37:886 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:38:396 KernelScheduler/(7320:8038): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:48:38:447 KernelScheduler/(7320:8065): ## (0) - MEM_ALLOC: solicita crear segmento 6 (48 bytes)
+[INFO] 21:48:38:454 KernelScheduler/(7320:8065): ## (0) - MEM_ALLOC: segmento 6 creado exitosamente
+[DEBUG] 21:48:39:387 KernelScheduler/(7320:8064): Timer de quantum descartado para (0) gen=14: ya no está en EXEC con esa generación de despacho
+[INFO] 21:48:40:064 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:40:065 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:40:066 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:40:066 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:41:680 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:41:680 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:41:680 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:41:681 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:43:239 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:43:239 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:43:239 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:43:239 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:44:980 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:44:980 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:44:980 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:44:980 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:46:605 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:48:46:606 KernelScheduler/(7320:8038): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:48:46:606 KernelScheduler/(7320:7465): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:48:46:606 KernelScheduler/(7320:7465): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:48:47:618 KernelScheduler/(7320:8038): ## (0) - Solicitó syscall: EXIT
+[INFO] 21:48:47:619 KernelScheduler/(7320:8038): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 21:48:47:619 KernelScheduler/(7320:8038): ## (0) finalizó su ejecución con motivo de EXIT
+[DEBUG] 21:48:48:107 KernelScheduler/(7320:8072): Timer de quantum descartado para (0) gen=20: ya no está en EXEC con esa generación de despacho
+[WARNING] 21:49:09:019 KernelScheduler/(7320:8038): ## CPU fd=9 desconectada
+[ERROR] 21:49:11:264 KernelScheduler/(7320:7464): KM cerró la conexión
+[DEBUG] 21:49:57:634 KernelScheduler/(8826:8826): Planificación resuelta: algoritmo=RR n_colas=1 colas=[RR] RR_QUANTUM=1500ms QUEUE_PREEMPTION=FALSE SUSPENSION_TIMEOUT=35000ms
+[INFO] 21:49:57:635 KernelScheduler/(8826:8826): ## Conectado a Kernel Memory
+[INFO] 21:49:57:635 KernelScheduler/(8826:8826): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 21:49:57:635 KernelScheduler/(8826:8826): ## (0) Pasa del estado NEW al estado READY
+[DEBUG] 21:49:57:636 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
+[INFO] 21:50:00:419 KernelScheduler/(8826:9099): ## IO SLEEP Conectada
+[INFO] 21:50:02:456 KernelScheduler/(8826:9228): ## IO STDIN Conectada
+[INFO] 21:50:04:705 KernelScheduler/(8826:9357): ## IO STDOUT Conectada
+[INFO] 21:50:08:298 KernelScheduler/(8826:9542): ## CPU 0 Conectada
+[DEBUG] 21:50:08:299 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:50:08:299 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:50:09:373 KernelScheduler/(8826:9542): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:50:09:374 KernelScheduler/(8826:9545): ## (0) - MEM_ALLOC: solicita crear segmento 0 (64 bytes)
+[INFO] 21:50:09:377 KernelScheduler/(8826:9545): ## (0) - MEM_ALLOC: segmento 0 creado exitosamente
+[DEBUG] 21:50:09:801 KernelScheduler/(8826:9544): Timer de quantum descartado para (0) gen=1: ya no está en EXEC con esa generación de despacho
+[INFO] 21:50:10:945 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:50:10:945 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:50:10:945 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:50:10:945 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:50:11:507 KernelScheduler/(8826:9542): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:50:11:559 KernelScheduler/(8826:9549): ## (0) - MEM_ALLOC: solicita crear segmento 1 (32 bytes)
+[INFO] 21:50:11:564 KernelScheduler/(8826:9549): ## (0) - MEM_ALLOC: segmento 1 creado exitosamente
+[DEBUG] 21:50:12:447 KernelScheduler/(8826:9548): Timer de quantum descartado para (0) gen=3: ya no está en EXEC con esa generación de despacho
+[INFO] 21:50:13:199 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:50:13:199 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:50:13:199 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:50:13:199 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:50:13:749 KernelScheduler/(8826:9542): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:50:13:752 KernelScheduler/(8826:9553): ## (0) - MEM_ALLOC: solicita crear segmento 2 (16 bytes)
+[INFO] 21:50:13:752 KernelScheduler/(8826:9553): ## (0) - MEM_ALLOC: segmento 2 creado exitosamente
+[DEBUG] 21:50:14:700 KernelScheduler/(8826:9552): Timer de quantum descartado para (0) gen=5: ya no está en EXEC con esa generación de despacho
+[INFO] 21:50:15:370 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:50:15:370 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:50:15:370 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:50:15:370 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:50:15:969 KernelScheduler/(8826:9542): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:50:15:973 KernelScheduler/(8826:9556): ## (0) - MEM_ALLOC: solicita crear segmento 3 (32 bytes)
+[INFO] 21:50:16:018 KernelScheduler/(8826:9556): ## (0) - MEM_ALLOC: segmento 3 creado exitosamente
+[DEBUG] 21:50:16:871 KernelScheduler/(8826:9555): Timer de quantum descartado para (0) gen=7: ya no está en EXEC con esa generación de despacho
+[INFO] 21:50:17:591 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:50:17:591 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:50:17:592 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:50:17:593 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:50:18:217 KernelScheduler/(8826:9542): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:50:18:218 KernelScheduler/(8826:9559): ## (0) - MEM_ALLOC: solicita crear segmento 4 (64 bytes)
+[INFO] 21:50:18:218 KernelScheduler/(8826:9560): ## Inicio de compactación
+[DEBUG] 21:50:19:094 KernelScheduler/(8826:9558): Timer de quantum descartado para (0) gen=9: ya no está en EXEC con esa generación de despacho
+[INFO] 21:50:48:319 KernelScheduler/(8826:9559): ## (0) - MEM_ALLOC: segmento 4 creado exitosamente
+[INFO] 21:50:48:320 KernelScheduler/(8826:9560): ## Fin de compactación
+[INFO] 21:50:49:946 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:50:49:946 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:50:49:948 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:50:49:948 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:50:50:459 KernelScheduler/(8826:9542): ## (0) - Solicitó syscall: MEM_FREE
+[INFO] 21:50:50:502 KernelScheduler/(8826:9565): ## (0) - MEM_FREE: solicita eliminar segmento 0
+[INFO] 21:50:50:504 KernelScheduler/(8826:9565): ## (0) - MEM_FREE: segmento 0 eliminado
+[DEBUG] 21:50:51:454 KernelScheduler/(8826:9564): Timer de quantum descartado para (0) gen=11: ya no está en EXEC con esa generación de despacho
+[INFO] 21:50:52:157 KernelScheduler/(8826:9542): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:50:52:158 KernelScheduler/(8826:9567): ## (0) - MEM_ALLOC: solicita crear segmento 5 (32 bytes)
+[INFO] 21:50:52:202 KernelScheduler/(8826:9567): ## (0) - MEM_ALLOC: segmento 5 creado exitosamente
+[INFO] 21:50:53:818 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:50:53:819 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:50:53:819 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:50:53:819 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:50:54:337 KernelScheduler/(8826:9542): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:50:54:395 KernelScheduler/(8826:9571): ## (0) - MEM_ALLOC: solicita crear segmento 6 (48 bytes)
+[INFO] 21:50:54:413 KernelScheduler/(8826:9572): ## Inicio de compactación
+[DEBUG] 21:50:55:322 KernelScheduler/(8826:9570): Timer de quantum descartado para (0) gen=14: ya no está en EXEC con esa generación de despacho
+[INFO] 21:51:24:733 KernelScheduler/(8826:9571): ## (0) - MEM_ALLOC: segmento 6 creado exitosamente
+[INFO] 21:51:24:734 KernelScheduler/(8826:9572): ## Fin de compactación
+[INFO] 21:51:26:352 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:51:26:352 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:51:26:352 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:51:26:352 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:51:27:988 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:51:27:989 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:51:27:989 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:51:27:989 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:51:29:674 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:51:29:674 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:51:29:674 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:51:29:674 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:51:31:286 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:51:31:286 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:51:31:287 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:51:31:287 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:51:32:881 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 21:51:32:882 KernelScheduler/(8826:9542): ## (0) - Desalojado por fin de quantum
+[DEBUG] 21:51:32:882 KernelScheduler/(8826:8969): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:51:32:882 KernelScheduler/(8826:8969): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:51:33:944 KernelScheduler/(8826:9542): ## (0) - Solicitó syscall: EXIT
+[INFO] 21:51:33:945 KernelScheduler/(8826:9542): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 21:51:33:945 KernelScheduler/(8826:9542): ## (0) finalizó su ejecución con motivo de EXIT
+[DEBUG] 21:51:34:384 KernelScheduler/(8826:9582): Timer de quantum descartado para (0) gen=20: ya no está en EXEC con esa generación de despacho
+[WARNING] 21:51:41:255 KernelScheduler/(8826:9542): ## CPU fd=9 desconectada
+[ERROR] 21:51:44:999 KernelScheduler/(8826:8968): KM cerró la conexión
+[DEBUG] 21:55:27:710 KernelScheduler/(10415:10415): Planificación resuelta: algoritmo=CMN n_colas=4 colas=[FIFO,FIFO,FIFO,FIFO] RR_QUANTUM=1500ms QUEUE_PREEMPTION=TRUE SUSPENSION_TIMEOUT=10000ms
+[INFO] 21:55:27:711 KernelScheduler/(10415:10415): ## Conectado a Kernel Memory
+[INFO] 21:55:27:712 KernelScheduler/(10415:10415): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 21:55:27:713 KernelScheduler/(10415:10415): ## (0) Pasa del estado NEW al estado READY
+[DEBUG] 21:55:27:713 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
+[INFO] 21:55:30:531 KernelScheduler/(10415:10688): ## IO STDIN Conectada
+[INFO] 21:55:33:636 KernelScheduler/(10415:10817): ## IO SLEEP Conectada
+[INFO] 21:55:35:953 KernelScheduler/(10415:10946): ## IO STDOUT Conectada
+[INFO] 21:58:39:627 KernelScheduler/(10415:11241): ## CPU 0 Conectada
+[DEBUG] 21:58:39:627 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:58:39:628 KernelScheduler/(10415:10558): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:58:40:758 KernelScheduler/(10415:11241): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:58:40:758 KernelScheduler/(10415:11241): ## (1) Se crea el proceso - Estado: NEW
+[INFO] 21:58:40:759 KernelScheduler/(10415:11241): ## (1) Pasa del estado NEW al estado READY
+[INFO] 21:58:40:761 KernelScheduler/(10415:11241): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:58:40:764 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:58:40:767 KernelScheduler/(10415:10558): ## (0) Pasa del estado READY al estado EXEC
+[DEBUG] 21:58:40:767 KernelScheduler/(10415:10558): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:58:41:279 KernelScheduler/(10415:11241): ## (0) - Solicitó syscall: SLEEP
+[INFO] 21:58:41:322 KernelScheduler/(10415:11241): ## (0) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:58:41:324 KernelScheduler/(10415:10558): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:58:41:324 KernelScheduler/(10415:10558): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:58:42:390 KernelScheduler/(10415:11241): ## (1) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:58:42:391 KernelScheduler/(10415:11244): ## (1) - MEM_ALLOC: solicita crear segmento 0 (64 bytes)
+[INFO] 21:58:42:395 KernelScheduler/(10415:11244): ## (1) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 21:58:44:021 KernelScheduler/(10415:11241): ## (1) - Solicitó syscall: STDIN
+[INFO] 21:58:44:022 KernelScheduler/(10415:11241): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:58:46:333 KernelScheduler/(10415:10817): ## (0) Pasa del estado BLOCK al estado READY
+[INFO] 21:58:46:335 KernelScheduler/(10415:10817): ## (0) finalizó IO y pasa a READY
+[DEBUG] 21:58:46:336 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:58:46:336 KernelScheduler/(10415:10558): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:58:46:892 KernelScheduler/(10415:11241): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:58:46:892 KernelScheduler/(10415:11241): ## (2) Se crea el proceso - Estado: NEW
+[INFO] 21:58:46:892 KernelScheduler/(10415:11241): ## (2) Pasa del estado NEW al estado READY
+[DEBUG] 21:58:46:892 KernelScheduler/(10415:10558): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:58:46:934 KernelScheduler/(10415:11241): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:58:46:935 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:58:46:935 KernelScheduler/(10415:10558): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:58:47:491 KernelScheduler/(10415:11241): ## (0) - Solicitó syscall: SLEEP
+[INFO] 21:58:47:491 KernelScheduler/(10415:11241): ## (0) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:58:47:493 KernelScheduler/(10415:10558): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:58:47:493 KernelScheduler/(10415:10558): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 21:58:48:636 KernelScheduler/(10415:11241): ## (2) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:58:48:641 KernelScheduler/(10415:11247): ## (2) - MEM_ALLOC: solicita crear segmento 0 (32 bytes)
+[INFO] 21:58:48:687 KernelScheduler/(10415:11247): ## (2) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 21:58:50:260 KernelScheduler/(10415:11241): ## (2) - Solicitó syscall: STDIN
+[INFO] 21:58:50:260 KernelScheduler/(10415:11241): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:58:51:325 KernelScheduler/(10415:11243): ## (0) - Timeout de IO: suspendiendo proceso
+[INFO] 21:58:51:325 KernelScheduler/(10415:11243): ## (0) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:58:52:500 KernelScheduler/(10415:10817): ## (0) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:58:52:501 KernelScheduler/(10415:10817): ## (0) finalizó IO y pasa a SUSP. READY
+[INFO] 21:58:52:502 KernelScheduler/(10415:10559): ## (0) Pasa del estado SUSP. READY al estado READY
+[DEBUG] 21:58:52:502 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:58:52:503 KernelScheduler/(10415:10558): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:58:53:057 KernelScheduler/(10415:11241): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:58:53:057 KernelScheduler/(10415:11241): ## (3) Se crea el proceso - Estado: NEW
+[INFO] 21:58:53:102 KernelScheduler/(10415:11241): ## (3) Pasa del estado NEW al estado READY
+[DEBUG] 21:58:53:102 KernelScheduler/(10415:10558): Planificador: proceso (3) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:58:53:102 KernelScheduler/(10415:11241): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:58:53:102 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:58:53:102 KernelScheduler/(10415:10558): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:58:53:252 KernelScheduler/(10415:10688): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 21:58:53:252 KernelScheduler/(10415:10688): ## (1) finalizó IO y pasa a READY
+[DEBUG] 21:58:53:252 KernelScheduler/(10415:10558): Planificador: proceso (3) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:58:53:607 KernelScheduler/(10415:11241): ## (0) - Solicitó syscall: SLEEP
+[INFO] 21:58:53:607 KernelScheduler/(10415:11241): ## (0) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:58:53:608 KernelScheduler/(10415:10558): Planificador: proceso (3) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:58:53:608 KernelScheduler/(10415:10558): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 21:58:54:706 KernelScheduler/(10415:11241): ## (3) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:58:54:708 KernelScheduler/(10415:11250): ## (3) - MEM_ALLOC: solicita crear segmento 0 (32 bytes)
+[INFO] 21:58:54:711 KernelScheduler/(10415:11251): ## Inicio de compactación
+[INFO] 21:58:57:495 KernelScheduler/(10415:11246): ## (0) - Timeout de IO: suspendiendo proceso
+[INFO] 21:58:57:495 KernelScheduler/(10415:11246): ## (0) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:58:58:612 KernelScheduler/(10415:10817): ## (0) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:58:58:613 KernelScheduler/(10415:10817): ## (0) finalizó IO y pasa a SUSP. READY
+[INFO] 21:59:00:263 KernelScheduler/(10415:11248): ## (2) - Timeout de IO: suspendiendo proceso
+[INFO] 21:59:00:263 KernelScheduler/(10415:11248): ## (2) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:59:24:794 KernelScheduler/(10415:11250): ## (3) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 21:59:24:794 KernelScheduler/(10415:11251): ## Fin de compactación
+[DEBUG] 21:59:24:794 KernelScheduler/(10415:10558): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:59:24:848 KernelScheduler/(10415:10688): ## (2) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:59:24:849 KernelScheduler/(10415:10688): ## (2) finalizó IO y pasa a SUSP. READY
+[INFO] 21:59:24:850 KernelScheduler/(10415:10559): ## (0) Pasa del estado SUSP. READY al estado READY
+[INFO] 21:59:24:850 KernelScheduler/(10415:10559): ## (3) Prioridad: 1 - Desalojado por cola más prioritaria por el proceso 0 con prioridad 0
+[DEBUG] 21:59:24:850 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:59:24:850 KernelScheduler/(10415:10559): ## (2) Pasa del estado SUSP. READY al estado READY
+[DEBUG] 21:59:24:850 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:59:25:295 KernelScheduler/(10415:11241): ## (3) Pasa del estado EXEC al estado READY
+[DEBUG] 21:59:25:296 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:59:25:296 KernelScheduler/(10415:10558): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:59:25:885 KernelScheduler/(10415:11241): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 21:59:25:885 KernelScheduler/(10415:11241): ## (4) Se crea el proceso - Estado: NEW
+[INFO] 21:59:25:885 KernelScheduler/(10415:11241): ## (4) Pasa del estado NEW al estado READY
+[DEBUG] 21:59:25:885 KernelScheduler/(10415:10558): Planificador: proceso (3) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:59:25:886 KernelScheduler/(10415:11241): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 21:59:25:887 KernelScheduler/(10415:10558): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:59:25:887 KernelScheduler/(10415:10558): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 21:59:26:431 KernelScheduler/(10415:11241): ## (0) - Solicitó syscall: EXIT
+[INFO] 21:59:26:431 KernelScheduler/(10415:11241): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 21:59:26:431 KernelScheduler/(10415:11241): ## (0) finalizó su ejecución con motivo de EXIT
+[DEBUG] 21:59:26:431 KernelScheduler/(10415:10558): Planificador: proceso (3) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:59:26:432 KernelScheduler/(10415:10558): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 21:59:27:631 KernelScheduler/(10415:11241): ## (3) - Solicitó syscall: STDIN
+[INFO] 21:59:27:635 KernelScheduler/(10415:11241): ## (3) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:59:27:635 KernelScheduler/(10415:10558): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:59:27:635 KernelScheduler/(10415:10558): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 21:59:28:689 KernelScheduler/(10415:11241): ## (2) - Solicitó syscall: STDIN
+[INFO] 21:59:28:690 KernelScheduler/(10415:11241): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:59:28:690 KernelScheduler/(10415:10558): Planificador: proceso (4) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:59:28:691 KernelScheduler/(10415:10558): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 21:59:29:205 KernelScheduler/(10415:11241): ## (4) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:59:29:206 KernelScheduler/(10415:11255): ## (4) - MEM_ALLOC: solicita crear segmento 0 (32 bytes)
+[INFO] 21:59:29:250 KernelScheduler/(10415:11255): ## (4) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 21:59:29:807 KernelScheduler/(10415:11241): ## (4) - Solicitó syscall: MEM_ALLOC
+[INFO] 21:59:29:849 KernelScheduler/(10415:11256): ## (4) - MEM_ALLOC: solicita crear segmento 1 (32 bytes)
+[ERROR] 21:59:29:852 KernelScheduler/(10415:11256): ## (4) - MEM_ALLOC: KM no pudo crear segmento 1
+[INFO] 21:59:29:853 KernelScheduler/(10415:11256): ## (4) Pasa del estado EXEC al estado EXIT
+[INFO] 21:59:29:853 KernelScheduler/(10415:11256): ## (4) finalizó su ejecución con motivo de ERROR
+[DEBUG] 21:59:29:853 KernelScheduler/(10415:10558): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:59:29:853 KernelScheduler/(10415:10558): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:59:30:635 KernelScheduler/(10415:10688): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 21:59:30:635 KernelScheduler/(10415:10688): ## (3) finalizó IO y pasa a READY
+[INFO] 21:59:30:635 KernelScheduler/(10415:10688): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 3 con prioridad 1
+[DEBUG] 21:59:30:636 KernelScheduler/(10415:10558): Planificador: proceso (3) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 21:59:30:857 KernelScheduler/(10415:11241): ## (1) - Solicitó syscall: STDIN
+[INFO] 21:59:30:901 KernelScheduler/(10415:11241): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 21:59:30:901 KernelScheduler/(10415:10558): Planificador: proceso (3) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:59:30:902 KernelScheduler/(10415:10558): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 21:59:31:961 KernelScheduler/(10415:11241): ## (3) - Solicitó syscall: STDIN
+[INFO] 21:59:31:962 KernelScheduler/(10415:11241): ## (3) Pasa del estado EXEC al estado BLOCK
+[WARNING] 21:59:33:828 KernelScheduler/(10415:10688): ## (2) - STDIN: error al escribir datos en KM
+[INFO] 21:59:33:829 KernelScheduler/(10415:10688): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 21:59:33:829 KernelScheduler/(10415:10688): ## (2) finalizó IO y pasa a READY
+[DEBUG] 21:59:33:829 KernelScheduler/(10415:10558): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:59:33:829 KernelScheduler/(10415:10558): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 21:59:34:332 KernelScheduler/(10415:11241): ## (2) - Solicitó syscall: SLEEP
+[INFO] 21:59:34:333 KernelScheduler/(10415:11241): ## (2) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:59:36:534 KernelScheduler/(10415:10688): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 21:59:36:534 KernelScheduler/(10415:10688): ## (1) finalizó IO y pasa a READY
+[DEBUG] 21:59:36:535 KernelScheduler/(10415:10558): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 21:59:36:535 KernelScheduler/(10415:10558): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 21:59:37:594 KernelScheduler/(10415:11241): ## (1) - Solicitó syscall: STDIN
+[INFO] 21:59:37:637 KernelScheduler/(10415:11253): ## (3) - Timeout de IO: suspendiendo proceso
+[INFO] 21:59:37:638 KernelScheduler/(10415:11241): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 21:59:37:638 KernelScheduler/(10415:11253): ## (3) Pasa del estado BLOCK al estado SUSP. BLOCK
+[WARNING] 21:59:38:083 KernelScheduler/(10415:10688): ## (3) - STDIN: error al escribir datos en KM
+[INFO] 21:59:38:083 KernelScheduler/(10415:10688): ## (3) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:59:38:083 KernelScheduler/(10415:10688): ## (3) finalizó IO y pasa a SUSP. READY
+[INFO] 21:59:38:696 KernelScheduler/(10415:11254): ## (2) - Timeout de IO: suspendiendo proceso
+[INFO] 21:59:38:697 KernelScheduler/(10415:11254): ## (2) Pasa del estado BLOCK al estado SUSP. BLOCK
+[INFO] 21:59:40:903 KernelScheduler/(10415:11257): ## (1) - Timeout de IO: suspendiendo proceso
+[INFO] 21:59:40:904 KernelScheduler/(10415:11257): ## (1) Pasa del estado BLOCK al estado SUSP. BLOCK
+[WARNING] 21:59:41:762 KernelScheduler/(10415:10688): ## (1) - STDIN: error al escribir datos en KM
+[INFO] 21:59:41:762 KernelScheduler/(10415:10688): ## (1) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 21:59:41:762 KernelScheduler/(10415:10688): ## (1) finalizó IO y pasa a SUSP. READY
+[INFO] 22:00:04:335 KernelScheduler/(10415:10817): ## (2) Pasa del estado SUSP. BLOCK al estado SUSP. READY
+[INFO] 22:00:04:335 KernelScheduler/(10415:10817): ## (2) finalizó IO y pasa a SUSP. READY
+[ERROR] 22:00:35:677 KernelScheduler/(10415:10557): KM cerró la conexión
+[DEBUG] 22:04:37:921 KernelScheduler/(11839:11839): Planificación resuelta: algoritmo=CMN n_colas=6 colas=[FIFO,FIFO,FIFO,FIFO,FIFO,FIFO] RR_QUANTUM=1500ms QUEUE_PREEMPTION=TRUE SUSPENSION_TIMEOUT=1000000ms
+[INFO] 22:04:37:922 KernelScheduler/(11839:11839): ## Conectado a Kernel Memory
+[INFO] 22:04:37:922 KernelScheduler/(11839:11839): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 22:04:37:923 KernelScheduler/(11839:11839): ## (0) Pasa del estado NEW al estado READY
+[DEBUG] 22:04:37:923 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
+[INFO] 22:04:42:765 KernelScheduler/(11839:12112): ## IO SLEEP Conectada
+[INFO] 22:04:45:948 KernelScheduler/(11839:12241): ## IO STDIN Conectada
+[INFO] 22:04:48:235 KernelScheduler/(11839:12370): ## IO STDOUT Conectada
+[INFO] 22:04:52:831 KernelScheduler/(11839:12555): ## CPU 0 Conectada
+[DEBUG] 22:04:52:832 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:04:52:832 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:04:53:854 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: MUTEX_CREATE
+[INFO] 22:04:53:902 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:04:53:903 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:04:53:904 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:04:54:408 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: MUTEX_CREATE
+[INFO] 22:04:54:408 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:04:54:408 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:04:54:409 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:04:54:972 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: MUTEX_CREATE
+[INFO] 22:04:55:023 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:04:55:023 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:04:55:023 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:04:56:699 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 22:04:56:699 KernelScheduler/(11839:12555): ## (1) Se crea el proceso - Estado: NEW
+[INFO] 22:04:56:702 KernelScheduler/(11839:12555): ## (1) Pasa del estado NEW al estado READY
+[DEBUG] 22:04:56:703 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=5 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:04:56:704 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:04:56:704 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:04:56:704 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:04:57:207 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 22:04:57:207 KernelScheduler/(11839:12555): ## (2) Se crea el proceso - Estado: NEW
+[INFO] 22:04:57:207 KernelScheduler/(11839:12555): ## (2) Pasa del estado NEW al estado READY
+[DEBUG] 22:04:57:208 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=4 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:04:57:208 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:04:57:209 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:04:57:209 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:04:57:721 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: SLEEP
+[INFO] 22:04:57:722 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:04:57:723 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=4 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:04:57:723 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:04:58:876 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:04:58:877 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:04:58:878 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=5 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:04:58:878 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:04:59:898 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: MUTEX_LOCK
+[INFO] 22:04:59:953 KernelScheduler/(11839:12555): ## (1) Toma el Mutex MUTEX_1
+[INFO] 22:04:59:953 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:04:59:953 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=5 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:04:59:953 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:05:02:562 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:05:02:614 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 22:05:07:727 KernelScheduler/(11839:12112): ## (0) Pasa del estado BLOCK al estado READY
+[INFO] 22:05:07:727 KernelScheduler/(11839:12112): ## (0) finalizó IO y pasa a READY
+[DEBUG] 22:05:07:727 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:07:728 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:05:08:233 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 22:05:08:233 KernelScheduler/(11839:12555): ## (3) Se crea el proceso - Estado: NEW
+[INFO] 22:05:08:234 KernelScheduler/(11839:12555): ## (3) Pasa del estado NEW al estado READY
+[DEBUG] 22:05:08:234 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:05:08:289 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:05:08:290 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:08:291 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:05:08:802 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 22:05:08:802 KernelScheduler/(11839:12555): ## (4) Se crea el proceso - Estado: NEW
+[INFO] 22:05:08:853 KernelScheduler/(11839:12555): ## (4) Pasa del estado NEW al estado READY
+[DEBUG] 22:05:08:854 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:05:08:854 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:05:08:855 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:08:855 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:05:09:413 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 22:05:09:413 KernelScheduler/(11839:12555): ## (5) Se crea el proceso - Estado: NEW
+[INFO] 22:05:09:414 KernelScheduler/(11839:12555): ## (5) Pasa del estado NEW al estado READY
+[DEBUG] 22:05:09:415 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:05:09:469 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:05:09:472 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:09:472 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:05:10:061 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 22:05:10:061 KernelScheduler/(11839:12555): ## (6) Se crea el proceso - Estado: NEW
+[INFO] 22:05:10:063 KernelScheduler/(11839:12555): ## (6) Pasa del estado NEW al estado READY
+[DEBUG] 22:05:10:064 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:05:10:065 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:05:10:065 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:10:065 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:05:10:568 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 22:05:10:568 KernelScheduler/(11839:12555): ## (7) Se crea el proceso - Estado: NEW
+[INFO] 22:05:10:618 KernelScheduler/(11839:12555): ## (7) Pasa del estado NEW al estado READY
+[DEBUG] 22:05:10:618 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:05:10:618 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:05:10:619 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:10:619 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:05:11:714 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 22:05:11:714 KernelScheduler/(11839:12555): ## (8) Se crea el proceso - Estado: NEW
+[INFO] 22:05:11:716 KernelScheduler/(11839:12555): ## (8) Pasa del estado NEW al estado READY
+[DEBUG] 22:05:11:716 KernelScheduler/(11839:11982): Planificador: proceso (8) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:05:11:824 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:05:11:824 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:11:824 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:05:13:418 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: INIT_PROC
+[INFO] 22:05:13:418 KernelScheduler/(11839:12555): ## (9) Se crea el proceso - Estado: NEW
+[INFO] 22:05:13:419 KernelScheduler/(11839:12555): ## (9) Pasa del estado NEW al estado READY
+[DEBUG] 22:05:13:420 KernelScheduler/(11839:11982): Planificador: proceso (9) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:05:13:465 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado READY
+[DEBUG] 22:05:13:465 KernelScheduler/(11839:11982): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:13:465 KernelScheduler/(11839:11982): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:05:14:010 KernelScheduler/(11839:12555): ## (0) - Solicitó syscall: EXIT
+[INFO] 22:05:14:010 KernelScheduler/(11839:12555): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 22:05:14:010 KernelScheduler/(11839:12555): ## (0) finalizó su ejecución con motivo de EXIT
+[DEBUG] 22:05:14:054 KernelScheduler/(11839:11982): Planificador: proceso (9) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:14:054 KernelScheduler/(11839:11982): ## (9) Pasa del estado READY al estado EXEC
+[INFO] 22:05:15:138 KernelScheduler/(11839:12555): ## (9) - Solicitó syscall: SLEEP
+[INFO] 22:05:15:140 KernelScheduler/(11839:12555): ## (9) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:05:15:141 KernelScheduler/(11839:11982): Planificador: proceso (8) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:15:141 KernelScheduler/(11839:11982): ## (8) Pasa del estado READY al estado EXEC
+[INFO] 22:05:16:203 KernelScheduler/(11839:12555): ## (8) - Solicitó syscall: SLEEP
+[INFO] 22:05:16:249 KernelScheduler/(11839:12555): ## (8) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:05:16:250 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:16:250 KernelScheduler/(11839:11982): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 22:05:17:319 KernelScheduler/(11839:12555): ## (3) - Solicitó syscall: SLEEP
+[INFO] 22:05:17:377 KernelScheduler/(11839:12555): ## (3) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:05:17:383 KernelScheduler/(11839:11982): Planificador: proceso (4) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:17:383 KernelScheduler/(11839:11982): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 22:05:17:802 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:05:17:803 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[DEBUG] 22:05:17:803 KernelScheduler/(11839:11982): Planificador: proceso (5) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:05:18:449 KernelScheduler/(11839:12555): ## (4) - Solicitó syscall: SLEEP
+[INFO] 22:05:18:450 KernelScheduler/(11839:12555): ## (4) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:05:18:451 KernelScheduler/(11839:11982): Planificador: proceso (5) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:18:451 KernelScheduler/(11839:11982): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 22:05:18:824 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:05:18:824 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[DEBUG] 22:05:18:825 KernelScheduler/(11839:11982): Planificador: proceso (6) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:05:19:586 KernelScheduler/(11839:12555): ## (5) - Solicitó syscall: SLEEP
+[INFO] 22:05:19:630 KernelScheduler/(11839:12555): ## (5) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:05:19:631 KernelScheduler/(11839:11982): Planificador: proceso (6) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:19:631 KernelScheduler/(11839:11982): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 22:05:20:650 KernelScheduler/(11839:12555): ## (6) - Solicitó syscall: SLEEP
+[INFO] 22:05:20:700 KernelScheduler/(11839:12555): ## (6) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:05:20:701 KernelScheduler/(11839:11982): Planificador: proceso (7) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:20:701 KernelScheduler/(11839:11982): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 22:05:21:805 KernelScheduler/(11839:12555): ## (7) - Solicitó syscall: SLEEP
+[INFO] 22:05:21:805 KernelScheduler/(11839:12555): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:05:21:809 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=4 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:21:809 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:05:22:354 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: MUTEX_LOCK
+[INFO] 22:05:22:355 KernelScheduler/(11839:12555): ## (2) Toma el Mutex MUTEX_2
+[INFO] 22:05:22:355 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado READY
+[DEBUG] 22:05:22:355 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=4 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:22:355 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:05:24:953 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:05:24:960 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:05:24:961 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=5 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:24:961 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:05:29:196 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:05:29:196 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[INFO] 22:05:48:829 KernelScheduler/(11839:12112): ## (9) Pasa del estado BLOCK al estado READY
+[INFO] 22:05:48:829 KernelScheduler/(11839:12112): ## (9) finalizó IO y pasa a READY
+[DEBUG] 22:05:48:830 KernelScheduler/(11839:11982): Planificador: proceso (9) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:05:48:830 KernelScheduler/(11839:11982): ## (9) Pasa del estado READY al estado EXEC
+[INFO] 22:05:49:406 KernelScheduler/(11839:12555): ## (9) - Solicitó syscall: MUTEX_LOCK
+[DEBUG] 22:05:49:406 KernelScheduler/(11839:12555): Mutex MUTEX_2: (9) queda esperando — 1 proceso(s) en cola de espera
+[INFO] 22:05:49:406 KernelScheduler/(11839:12555): ## 2 Cambio de prioridad: 4 - 1
+[INFO] 22:05:49:406 KernelScheduler/(11839:12555): ## (9) Pasa del estado EXEC al estado BLOCK
+[INFO] 22:06:08:833 KernelScheduler/(11839:12112): ## (8) Pasa del estado BLOCK al estado READY
+[INFO] 22:06:08:833 KernelScheduler/(11839:12112): ## (8) finalizó IO y pasa a READY
+[DEBUG] 22:06:08:834 KernelScheduler/(11839:11982): Planificador: proceso (8) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:06:08:834 KernelScheduler/(11839:11982): ## (8) Pasa del estado READY al estado EXEC
+[INFO] 22:06:09:341 KernelScheduler/(11839:12555): ## (8) - Solicitó syscall: MUTEX_LOCK
+[DEBUG] 22:06:09:342 KernelScheduler/(11839:12555): Mutex MUTEX_1: (8) queda esperando — 1 proceso(s) en cola de espera
+[INFO] 22:06:09:342 KernelScheduler/(11839:12555): ## 1 Cambio de prioridad: 5 - 2
+[INFO] 22:06:09:342 KernelScheduler/(11839:12555): ## (8) Pasa del estado EXEC al estado BLOCK
+[INFO] 22:06:23:841 KernelScheduler/(11839:12112): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 22:06:23:841 KernelScheduler/(11839:12112): ## (3) finalizó IO y pasa a READY
+[DEBUG] 22:06:23:841 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:06:23:842 KernelScheduler/(11839:11982): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 22:06:25:491 KernelScheduler/(11839:12555): ## (3) - Solicitó syscall: MUTEX_LOCK
+[INFO] 22:06:25:491 KernelScheduler/(11839:12555): ## (3) Toma el Mutex MUTEX_3
+[INFO] 22:06:25:491 KernelScheduler/(11839:12555): ## (3) Pasa del estado EXEC al estado READY
+[DEBUG] 22:06:25:491 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:06:25:491 KernelScheduler/(11839:11982): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 22:06:26:550 KernelScheduler/(11839:12555): ## (3) - Solicitó syscall: SLEEP
+[INFO] 22:06:26:550 KernelScheduler/(11839:12555): ## (3) Pasa del estado EXEC al estado BLOCK
+[INFO] 22:06:38:850 KernelScheduler/(11839:12112): ## (4) Pasa del estado BLOCK al estado READY
+[INFO] 22:06:38:850 KernelScheduler/(11839:12112): ## (4) finalizó IO y pasa a READY
+[DEBUG] 22:06:38:851 KernelScheduler/(11839:11982): Planificador: proceso (4) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:06:38:851 KernelScheduler/(11839:11982): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 22:06:40:418 KernelScheduler/(11839:12555): ## (4) - Solicitó syscall: MUTEX_LOCK
+[DEBUG] 22:06:40:418 KernelScheduler/(11839:12555): Mutex MUTEX_3: (4) queda esperando — 1 proceso(s) en cola de espera
+[INFO] 22:06:40:418 KernelScheduler/(11839:12555): ## (4) Pasa del estado EXEC al estado BLOCK
+[INFO] 22:06:53:851 KernelScheduler/(11839:12112): ## (5) Pasa del estado BLOCK al estado READY
+[INFO] 22:06:53:851 KernelScheduler/(11839:12112): ## (5) finalizó IO y pasa a READY
+[DEBUG] 22:06:53:851 KernelScheduler/(11839:11982): Planificador: proceso (5) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:06:53:852 KernelScheduler/(11839:11982): ## (5) Pasa del estado READY al estado EXEC
+[INFO] 22:06:55:477 KernelScheduler/(11839:12555): ## (5) - Solicitó syscall: MUTEX_LOCK
+[DEBUG] 22:06:55:478 KernelScheduler/(11839:12555): Mutex MUTEX_3: (5) queda esperando — 2 proceso(s) en cola de espera
+[INFO] 22:06:55:479 KernelScheduler/(11839:12555): ## (5) Pasa del estado EXEC al estado BLOCK
+[INFO] 22:07:08:852 KernelScheduler/(11839:12112): ## (6) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:08:852 KernelScheduler/(11839:12112): ## (6) finalizó IO y pasa a READY
+[DEBUG] 22:07:08:853 KernelScheduler/(11839:11982): Planificador: proceso (6) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:08:854 KernelScheduler/(11839:11982): ## (6) Pasa del estado READY al estado EXEC
+[INFO] 22:07:10:420 KernelScheduler/(11839:12555): ## (6) - Solicitó syscall: MUTEX_LOCK
+[DEBUG] 22:07:10:421 KernelScheduler/(11839:12555): Mutex MUTEX_3: (6) queda esperando — 3 proceso(s) en cola de espera
+[INFO] 22:07:10:421 KernelScheduler/(11839:12555): ## (6) Pasa del estado EXEC al estado BLOCK
+[INFO] 22:07:23:853 KernelScheduler/(11839:12112): ## (7) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:23:853 KernelScheduler/(11839:12112): ## (7) finalizó IO y pasa a READY
+[DEBUG] 22:07:23:854 KernelScheduler/(11839:11982): Planificador: proceso (7) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:23:854 KernelScheduler/(11839:11982): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 22:07:24:854 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:24:855 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:07:24:855 KernelScheduler/(11839:12112): ## (7) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:07:24:855 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:07:24:913 KernelScheduler/(11839:12555): ## (7) Pasa del estado EXEC al estado READY
+[DEBUG] 22:07:24:913 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:24:913 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:07:25:857 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:25:857 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[DEBUG] 22:07:25:857 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:07:26:858 KernelScheduler/(11839:12112): ## (3) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:26:858 KernelScheduler/(11839:12112): ## (3) finalizó IO y pasa a READY
+[DEBUG] 22:07:26:858 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:07:29:107 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:07:29:155 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:07:29:157 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:29:157 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:07:30:159 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:30:159 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:07:30:159 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:07:30:159 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:07:30:253 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:07:30:254 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:30:254 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:07:34:762 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:07:34:762 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:07:34:763 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:34:763 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:07:35:795 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:35:797 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[DEBUG] 22:07:35:797 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:07:35:797 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 22:07:35:864 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:07:35:868 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:35:869 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:07:40:146 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:07:40:146 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:07:40:146 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:40:148 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:07:41:174 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:41:177 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[DEBUG] 22:07:41:177 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:07:41:177 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 22:07:41:232 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:07:41:233 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:41:233 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:07:45:455 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:07:45:505 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:07:45:506 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:45:506 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:07:46:507 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:46:508 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:07:46:508 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:07:46:508 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:07:46:679 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:07:46:683 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:07:46:717 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:46:719 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:07:47:720 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:47:720 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[DEBUG] 22:07:47:720 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:07:50:972 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:07:50:974 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:07:50:975 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:50:975 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:07:51:979 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:51:979 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:07:51:979 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:07:51:979 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:07:52:087 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:07:52:088 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:52:091 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:07:56:423 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:07:56:424 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:07:56:425 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:56:425 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:07:57:430 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:07:57:430 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:07:57:431 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:07:57:431 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:07:57:486 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:07:57:486 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:07:57:486 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:01:638 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:01:686 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:01:687 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:01:688 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:02:693 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:02:693 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:08:02:693 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:08:02:693 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:02:852 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:08:02:853 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:02:854 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:07:121 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:07:180 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:07:181 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:07:181 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:08:186 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:08:186 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:08:08:186 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:08:08:186 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:08:250 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:08:08:294 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:08:294 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:08:294 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:09:306 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:09:307 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[DEBUG] 22:08:09:307 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:12:629 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:12:629 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:12:630 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:12:630 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:13:638 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:13:638 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:08:13:638 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:08:13:639 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:13:693 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:08:13:694 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:13:694 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:17:968 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:18:023 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:18:023 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:18:023 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:19:027 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:19:027 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:08:19:027 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:08:19:027 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:19:182 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:08:19:183 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:19:183 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:23:351 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:23:406 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:23:408 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:23:408 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:24:409 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:24:409 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:08:24:409 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:08:24:409 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:24:509 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:08:24:509 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:24:509 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:28:712 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:28:715 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:28:715 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:28:715 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:29:721 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:29:721 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[DEBUG] 22:08:29:726 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:29:726 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 22:08:29:790 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:08:29:839 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:29:840 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:29:840 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:30:858 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:30:860 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[DEBUG] 22:08:30:860 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:34:029 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:34:029 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:34:030 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:34:030 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:35:033 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:35:036 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[DEBUG] 22:08:35:037 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:35:037 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[INFO] 22:08:35:177 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:08:35:177 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:35:177 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:39:324 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:39:325 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:39:326 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:39:326 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:40:328 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:40:328 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:08:40:328 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:08:40:328 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:40:395 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:08:40:395 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:40:395 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:44:663 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:44:663 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:44:663 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:44:663 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:45:669 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:45:670 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:08:45:670 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:08:45:670 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:45:767 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:08:45:767 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:45:767 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:50:172 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:50:231 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:50:232 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:50:232 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:51:242 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:51:242 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:08:51:242 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:08:51:242 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:51:337 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:08:51:337 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:51:338 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:51:338 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:08:52:341 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:52:341 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[DEBUG] 22:08:52:342 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:55:511 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:08:55:572 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:08:55:578 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:55:578 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:08:56:596 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:08:56:597 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:08:56:597 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:08:56:598 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:08:56:679 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:08:56:686 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:08:56:686 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:09:00:874 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:09:00:875 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:09:00:875 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:00:875 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:09:01:876 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:09:01:876 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:09:01:876 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:09:01:876 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:01:931 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:09:01:931 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:01:931 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:09:06:196 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: SLEEP
+[INFO] 22:09:06:245 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:09:06:245 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:06:245 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:09:07:274 KernelScheduler/(11839:12112): ## (2) Pasa del estado BLOCK al estado READY
+[INFO] 22:09:07:274 KernelScheduler/(11839:12112): ## (2) finalizó IO y pasa a READY
+[INFO] 22:09:07:274 KernelScheduler/(11839:12112): ## (1) Prioridad: 2 - Desalojado por cola más prioritaria por el proceso 2 con prioridad 1
+[DEBUG] 22:09:07:274 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:07:452 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[DEBUG] 22:09:07:453 KernelScheduler/(11839:11982): Planificador: proceso (2) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:07:453 KernelScheduler/(11839:11982): ## (2) Pasa del estado READY al estado EXEC
+[INFO] 22:09:10:025 KernelScheduler/(11839:12555): ## (2) - Solicitó syscall: MUTEX_UNLOCK
+[INFO] 22:09:10:025 KernelScheduler/(11839:12555): ## (2) Libera el Mutex MUTEX_2
+[DEBUG] 22:09:10:025 KernelScheduler/(11839:12555): Mutex MUTEX_2: liberado por (2) — 1 proceso(s) esperando
+[INFO] 22:09:10:025 KernelScheduler/(11839:12555): ## (9) Toma el Mutex MUTEX_2
+[INFO] 22:09:10:025 KernelScheduler/(11839:12555): ## 2 Cambio de prioridad: 1 - 4
+[INFO] 22:09:10:029 KernelScheduler/(11839:12555): ## (9) Pasa del estado BLOCK al estado READY
+[INFO] 22:09:10:029 KernelScheduler/(11839:12555): ## (2) Prioridad: 4 - Desalojado por cola más prioritaria por el proceso 9 con prioridad 1
+[DEBUG] 22:09:10:029 KernelScheduler/(11839:11982): Planificador: proceso (9) nivel=1 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:10:030 KernelScheduler/(11839:12555): ## (2) Pasa del estado EXEC al estado READY
+[DEBUG] 22:09:10:030 KernelScheduler/(11839:11982): Planificador: proceso (9) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:10:030 KernelScheduler/(11839:11982): ## (9) Pasa del estado READY al estado EXEC
+[INFO] 22:09:11:087 KernelScheduler/(11839:12555): ## (9) - Solicitó syscall: MUTEX_UNLOCK
+[INFO] 22:09:11:087 KernelScheduler/(11839:12555): ## (9) Libera el Mutex MUTEX_2
+[DEBUG] 22:09:11:087 KernelScheduler/(11839:12555): Mutex MUTEX_2: liberado por (9) — 0 proceso(s) esperando
+[INFO] 22:09:11:134 KernelScheduler/(11839:12555): ## (9) Pasa del estado EXEC al estado READY
+[DEBUG] 22:09:11:135 KernelScheduler/(11839:11982): Planificador: proceso (9) nivel=1 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:11:135 KernelScheduler/(11839:11982): ## (9) Pasa del estado READY al estado EXEC
+[INFO] 22:09:11:698 KernelScheduler/(11839:12555): ## (9) - Solicitó syscall: EXIT
+[INFO] 22:09:11:699 KernelScheduler/(11839:12555): ## (9) Pasa del estado EXEC al estado EXIT
+[INFO] 22:09:11:699 KernelScheduler/(11839:12555): ## (9) finalizó su ejecución con motivo de EXIT
+[DEBUG] 22:09:11:701 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:11:702 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:09:12:802 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:09:12:802 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:09:12:805 KernelScheduler/(11839:11982): Planificador: proceso (7) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:12:805 KernelScheduler/(11839:11982): ## (7) Pasa del estado READY al estado EXEC
+[INFO] 22:09:13:308 KernelScheduler/(11839:12555): ## (7) - Solicitó syscall: MUTEX_LOCK
+[DEBUG] 22:09:13:308 KernelScheduler/(11839:12555): Mutex MUTEX_3: (7) queda esperando — 4 proceso(s) en cola de espera
+[INFO] 22:09:13:308 KernelScheduler/(11839:12555): ## (7) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:09:13:310 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:13:310 KernelScheduler/(11839:11982): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 22:09:13:808 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:09:13:809 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[INFO] 22:09:13:809 KernelScheduler/(11839:12112): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 1 con prioridad 2
+[DEBUG] 22:09:13:809 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:13:913 KernelScheduler/(11839:12555): ## (3) Pasa del estado EXEC al estado READY
+[DEBUG] 22:09:13:913 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:13:913 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:09:18:187 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:09:18:187 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:09:18:193 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:18:194 KernelScheduler/(11839:11982): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 22:09:18:706 KernelScheduler/(11839:12555): ## (3) - Solicitó syscall: MUTEX_UNLOCK
+[INFO] 22:09:18:706 KernelScheduler/(11839:12555): ## (3) Libera el Mutex MUTEX_3
+[DEBUG] 22:09:18:706 KernelScheduler/(11839:12555): Mutex MUTEX_3: liberado por (3) — 4 proceso(s) esperando
+[INFO] 22:09:18:707 KernelScheduler/(11839:12555): ## (4) Toma el Mutex MUTEX_3
+[INFO] 22:09:18:707 KernelScheduler/(11839:12555): ## (4) Pasa del estado BLOCK al estado READY
+[DEBUG] 22:09:18:707 KernelScheduler/(11839:11982): Planificador: proceso (4) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:18:907 KernelScheduler/(11839:12555): ## (3) Pasa del estado EXEC al estado READY
+[DEBUG] 22:09:18:914 KernelScheduler/(11839:11982): Planificador: proceso (4) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:18:914 KernelScheduler/(11839:11982): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 22:09:19:200 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:09:19:200 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[INFO] 22:09:19:200 KernelScheduler/(11839:12112): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 1 con prioridad 2
+[DEBUG] 22:09:19:200 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:19:504 KernelScheduler/(11839:12555): ## (4) Pasa del estado EXEC al estado READY
+[DEBUG] 22:09:19:508 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:19:508 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:09:23:743 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:09:23:801 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:09:23:802 KernelScheduler/(11839:11982): Planificador: proceso (4) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:23:802 KernelScheduler/(11839:11982): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 22:09:24:314 KernelScheduler/(11839:12555): ## (4) - Solicitó syscall: SLEEP
+[INFO] 22:09:24:317 KernelScheduler/(11839:12555): ## (4) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:09:24:317 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:24:317 KernelScheduler/(11839:11982): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 22:09:24:812 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:09:24:812 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[INFO] 22:09:24:812 KernelScheduler/(11839:12112): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 1 con prioridad 2
+[DEBUG] 22:09:24:812 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:24:940 KernelScheduler/(11839:12555): ## (3) Pasa del estado EXEC al estado READY
+[DEBUG] 22:09:24:942 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:24:942 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:09:25:813 KernelScheduler/(11839:12112): ## (4) Pasa del estado BLOCK al estado READY
+[INFO] 22:09:25:814 KernelScheduler/(11839:12112): ## (4) finalizó IO y pasa a READY
+[DEBUG] 22:09:25:814 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:29:305 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:09:29:309 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:09:29:311 KernelScheduler/(11839:11982): Planificador: proceso (3) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:29:313 KernelScheduler/(11839:11982): ## (3) Pasa del estado READY al estado EXEC
+[INFO] 22:09:30:320 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:09:30:320 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[INFO] 22:09:30:320 KernelScheduler/(11839:12112): ## (3) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 1 con prioridad 2
+[DEBUG] 22:09:30:321 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:30:418 KernelScheduler/(11839:12555): ## (3) - Solicitó syscall: MUTEX_LOCK
+[DEBUG] 22:09:30:421 KernelScheduler/(11839:12555): Mutex MUTEX_3: (3) queda esperando — 4 proceso(s) en cola de espera
+[INFO] 22:09:30:421 KernelScheduler/(11839:12555): ## (3) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:09:30:422 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:30:422 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[INFO] 22:09:34:821 KernelScheduler/(11839:12555): ## (1) - Solicitó syscall: SLEEP
+[INFO] 22:09:34:821 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado BLOCK
+[DEBUG] 22:09:34:822 KernelScheduler/(11839:11982): Planificador: proceso (4) nivel=3 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:34:822 KernelScheduler/(11839:11982): ## (4) Pasa del estado READY al estado EXEC
+[INFO] 22:09:35:844 KernelScheduler/(11839:12555): ## (4) - Solicitó syscall: MUTEX_UNLOCK
+[INFO] 22:09:35:844 KernelScheduler/(11839:12555): ## (4) Libera el Mutex MUTEX_3
+[DEBUG] 22:09:35:844 KernelScheduler/(11839:12555): Mutex MUTEX_3: liberado por (4) — 4 proceso(s) esperando
+[INFO] 22:09:35:844 KernelScheduler/(11839:12555): ## (5) Toma el Mutex MUTEX_3
+[INFO] 22:09:35:844 KernelScheduler/(11839:12555): ## (5) Pasa del estado BLOCK al estado READY
+[DEBUG] 22:09:35:844 KernelScheduler/(11839:11982): Planificador: proceso (5) nivel=3 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:35:852 KernelScheduler/(11839:12112): ## (1) Pasa del estado BLOCK al estado READY
+[INFO] 22:09:35:852 KernelScheduler/(11839:12112): ## (1) finalizó IO y pasa a READY
+[DEBUG] 22:09:35:853 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 1 CPUs conectadas)
+[INFO] 22:09:35:853 KernelScheduler/(11839:12112): ## (4) Prioridad: 3 - Desalojado por cola más prioritaria por el proceso 1 con prioridad 2
+[INFO] 22:09:35:897 KernelScheduler/(11839:12555): ## (4) Pasa del estado EXEC al estado READY
+[DEBUG] 22:09:35:897 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:09:35:897 KernelScheduler/(11839:11982): ## (1) Pasa del estado READY al estado EXEC
+[WARNING] 22:09:36:417 KernelScheduler/(11839:12555): ## (1) CPU desconectada durante EXEC — vuelve a READY
+[INFO] 22:09:36:418 KernelScheduler/(11839:12555): ## (1) Pasa del estado EXEC al estado READY
+[WARNING] 22:09:36:418 KernelScheduler/(11839:12555): ## CPU fd=9 desconectada
+[DEBUG] 22:09:36:418 KernelScheduler/(11839:11982): Planificador: proceso (1) nivel=2 -> sin CPU libre (de 0 CPUs conectadas)
+[ERROR] 22:09:39:673 KernelScheduler/(11839:11981): KM cerró la conexión
+[DEBUG] 22:14:19:756 KernelScheduler/(13516:13516): Planificación resuelta: algoritmo=RR n_colas=1 colas=[RR] RR_QUANTUM=1500ms QUEUE_PREEMPTION=FALSE SUSPENSION_TIMEOUT=35000ms
+[INFO] 22:14:19:757 KernelScheduler/(13516:13516): ## Conectado a Kernel Memory
+[INFO] 22:14:19:757 KernelScheduler/(13516:13516): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 22:14:19:757 KernelScheduler/(13516:13516): ## (0) Pasa del estado NEW al estado READY
+[DEBUG] 22:14:19:757 KernelScheduler/(13516:13659): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
+[INFO] 22:14:21:622 KernelScheduler/(13516:13793): ## IO SLEEP Conectada
+[INFO] 22:14:24:168 KernelScheduler/(13516:13923): ## IO STDIN Conectada
+[INFO] 22:14:26:324 KernelScheduler/(13516:14052): ## IO STDOUT Conectada
+[INFO] 22:14:36:017 KernelScheduler/(13516:14237): ## CPU 0 Conectada
+[DEBUG] 22:14:36:017 KernelScheduler/(13516:13659): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:14:36:017 KernelScheduler/(13516:13659): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:14:37:026 KernelScheduler/(13516:14237): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:14:37:029 KernelScheduler/(13516:14240): ## (0) - MEM_ALLOC: solicita crear segmento 0 (64 bytes)
+[INFO] 22:14:37:031 KernelScheduler/(13516:14241): ## Inicio de compactación
+[DEBUG] 22:14:37:519 KernelScheduler/(13516:14238): Timer de quantum descartado para (0) gen=1: ya no está en EXEC con esa generación de despacho
+[INFO] 22:15:07:036 KernelScheduler/(13516:14240): ## (0) - MEM_ALLOC: segmento 0 creado exitosamente
+[INFO] 22:15:07:036 KernelScheduler/(13516:14241): ## Fin de compactación
+[INFO] 22:15:08:617 KernelScheduler/(13516:14237): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 22:15:08:617 KernelScheduler/(13516:14237): ## (0) - Desalojado por fin de quantum
+[DEBUG] 22:15:08:618 KernelScheduler/(13516:13659): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:15:08:618 KernelScheduler/(13516:13659): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:15:09:209 KernelScheduler/(13516:14237): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:15:09:214 KernelScheduler/(13516:14379): ## (0) - MEM_ALLOC: solicita crear segmento 1 (32 bytes)
+[INFO] 22:15:09:221 KernelScheduler/(13516:14379): ## (0) - MEM_ALLOC: segmento 1 creado exitosamente
+[DEBUG] 22:15:10:118 KernelScheduler/(13516:14378): Timer de quantum descartado para (0) gen=3: ya no está en EXEC con esa generación de despacho
+[INFO] 22:15:10:866 KernelScheduler/(13516:14237): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 22:15:10:867 KernelScheduler/(13516:14237): ## (0) - Desalojado por fin de quantum
+[DEBUG] 22:15:10:867 KernelScheduler/(13516:13659): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:15:10:867 KernelScheduler/(13516:13659): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:15:11:489 KernelScheduler/(13516:14237): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:15:11:491 KernelScheduler/(13516:14385): ## (0) - MEM_ALLOC: solicita crear segmento 2 (16 bytes)
+[INFO] 22:15:11:494 KernelScheduler/(13516:14385): ## (0) - MEM_ALLOC: segmento 2 creado exitosamente
+[DEBUG] 22:15:12:369 KernelScheduler/(13516:14384): Timer de quantum descartado para (0) gen=5: ya no está en EXEC con esa generación de despacho
+[INFO] 22:15:13:097 KernelScheduler/(13516:14237): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 22:15:13:097 KernelScheduler/(13516:14237): ## (0) - Desalojado por fin de quantum
+[DEBUG] 22:15:13:097 KernelScheduler/(13516:13659): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:15:13:097 KernelScheduler/(13516:13659): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:15:13:601 KernelScheduler/(13516:14237): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:15:13:652 KernelScheduler/(13516:14532): ## (0) - MEM_ALLOC: solicita crear segmento 3 (32 bytes)
+[ERROR] 22:15:13:699 KernelScheduler/(13516:14532): ## (0) - MEM_ALLOC: KM no pudo crear segmento 3
+[INFO] 22:15:13:699 KernelScheduler/(13516:14532): ## (0) Pasa del estado EXEC al estado EXIT
+[INFO] 22:15:13:699 KernelScheduler/(13516:14532): ## (0) finalizó su ejecución con motivo de ERROR
+[INFO] 22:15:14:121 KernelScheduler/(13516:14573): ## CPU 1 Conectada
+[DEBUG] 22:15:14:603 KernelScheduler/(13516:14496): Timer de quantum descartado para (0) gen=7: ya no está en EXEC con esa generación de despacho
+[WARNING] 22:15:35:842 KernelScheduler/(13516:14573): ## CPU fd=10 desconectada
+[DEBUG] 22:16:38:852 KernelScheduler/(15308:15308): Planificación resuelta: algoritmo=RR n_colas=1 colas=[RR] RR_QUANTUM=1500ms QUEUE_PREEMPTION=FALSE SUSPENSION_TIMEOUT=35000ms
+[INFO] 22:16:38:853 KernelScheduler/(15308:15308): ## Conectado a Kernel Memory
+[INFO] 22:16:38:853 KernelScheduler/(15308:15308): ## (0) Se crea el proceso - Estado: NEW
+[INFO] 22:16:38:854 KernelScheduler/(15308:15308): ## (0) Pasa del estado NEW al estado READY
+[DEBUG] 22:16:38:854 KernelScheduler/(15308:15451): Planificador: proceso (0) nivel=0 -> sin CPU libre (de 0 CPUs conectadas)
+[INFO] 22:16:41:467 KernelScheduler/(15308:15581): ## IO SLEEP Conectada
+[INFO] 22:16:43:272 KernelScheduler/(15308:15710): ## IO STDIN Conectada
+[INFO] 22:16:44:678 KernelScheduler/(15308:15839): ## IO STDOUT Conectada
+[INFO] 22:16:47:969 KernelScheduler/(15308:16024): ## CPU 0 Conectada
+[DEBUG] 22:16:47:969 KernelScheduler/(15308:15451): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:16:47:969 KernelScheduler/(15308:15451): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:16:48:976 KernelScheduler/(15308:16024): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:16:48:978 KernelScheduler/(15308:16028): ## (0) - MEM_ALLOC: solicita crear segmento 0 (64 bytes)
+[INFO] 22:16:48:981 KernelScheduler/(15308:16028): ## (0) - MEM_ALLOC: segmento 0 creado exitosamente
+[DEBUG] 22:16:49:481 KernelScheduler/(15308:16026): Timer de quantum descartado para (0) gen=1: ya no está en EXEC con esa generación de despacho
+[INFO] 22:16:50:584 KernelScheduler/(15308:16024): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 22:16:50:584 KernelScheduler/(15308:16024): ## (0) - Desalojado por fin de quantum
+[DEBUG] 22:16:50:584 KernelScheduler/(15308:15451): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:16:50:584 KernelScheduler/(15308:15451): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:16:51:087 KernelScheduler/(15308:16024): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:16:51:089 KernelScheduler/(15308:16033): ## (0) - MEM_ALLOC: solicita crear segmento 1 (32 bytes)
+[INFO] 22:16:51:090 KernelScheduler/(15308:16033): ## (0) - MEM_ALLOC: segmento 1 creado exitosamente
+[DEBUG] 22:16:52:085 KernelScheduler/(15308:16032): Timer de quantum descartado para (0) gen=3: ya no está en EXEC con esa generación de despacho
+[INFO] 22:16:52:737 KernelScheduler/(15308:16024): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 22:16:52:737 KernelScheduler/(15308:16024): ## (0) - Desalojado por fin de quantum
+[DEBUG] 22:16:52:737 KernelScheduler/(15308:15451): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 1 CPUs conectadas)
+[INFO] 22:16:52:737 KernelScheduler/(15308:15451): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:16:53:238 KernelScheduler/(15308:16024): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:16:53:287 KernelScheduler/(15308:16045): ## (0) - MEM_ALLOC: solicita crear segmento 2 (16 bytes)
+[INFO] 22:16:53:289 KernelScheduler/(15308:16045): ## (0) - MEM_ALLOC: segmento 2 creado exitosamente
+[DEBUG] 22:16:54:238 KernelScheduler/(15308:16036): Timer de quantum descartado para (0) gen=5: ya no está en EXEC con esa generación de despacho
+[INFO] 22:16:54:554 KernelScheduler/(15308:16223): ## CPU 1 Conectada
+[INFO] 22:16:54:902 KernelScheduler/(15308:16024): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 22:16:54:902 KernelScheduler/(15308:16024): ## (0) - Desalojado por fin de quantum
+[DEBUG] 22:16:54:902 KernelScheduler/(15308:15451): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 2 CPUs conectadas)
+[INFO] 22:16:54:902 KernelScheduler/(15308:15451): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:16:55:465 KernelScheduler/(15308:16024): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:16:55:465 KernelScheduler/(15308:16226): ## (0) - MEM_ALLOC: solicita crear segmento 3 (32 bytes)
+[INFO] 22:16:55:511 KernelScheduler/(15308:16226): ## (0) - MEM_ALLOC: segmento 3 creado exitosamente
+[DEBUG] 22:16:56:403 KernelScheduler/(15308:16225): Timer de quantum descartado para (0) gen=7: ya no está en EXEC con esa generación de despacho
+[INFO] 22:16:57:145 KernelScheduler/(15308:16024): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 22:16:57:145 KernelScheduler/(15308:16024): ## (0) - Desalojado por fin de quantum
+[DEBUG] 22:16:57:145 KernelScheduler/(15308:15451): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 2 CPUs conectadas)
+[INFO] 22:16:57:145 KernelScheduler/(15308:15451): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:16:57:650 KernelScheduler/(15308:16024): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:16:57:696 KernelScheduler/(15308:16229): ## (0) - MEM_ALLOC: solicita crear segmento 4 (64 bytes)
+[INFO] 22:16:57:696 KernelScheduler/(15308:16230): ## Inicio de compactación
+[DEBUG] 22:16:58:650 KernelScheduler/(15308:16228): Timer de quantum descartado para (0) gen=9: ya no está en EXEC con esa generación de despacho
+[INFO] 22:17:27:825 KernelScheduler/(15308:16229): ## (0) - MEM_ALLOC: segmento 4 creado exitosamente
+[INFO] 22:17:27:825 KernelScheduler/(15308:16230): ## Fin de compactación
+[INFO] 22:17:29:443 KernelScheduler/(15308:16024): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 22:17:29:443 KernelScheduler/(15308:16024): ## (0) - Desalojado por fin de quantum
+[DEBUG] 22:17:29:443 KernelScheduler/(15308:15451): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 2 CPUs conectadas)
+[INFO] 22:17:29:443 KernelScheduler/(15308:15451): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:17:29:948 KernelScheduler/(15308:16024): ## (0) - Solicitó syscall: MEM_FREE
+[INFO] 22:17:29:951 KernelScheduler/(15308:16237): ## (0) - MEM_FREE: solicita eliminar segmento 0
+[INFO] 22:17:29:953 KernelScheduler/(15308:16237): ## (0) - MEM_FREE: segmento 0 eliminado
+[DEBUG] 22:17:30:945 KernelScheduler/(15308:16236): Timer de quantum descartado para (0) gen=11: ya no está en EXEC con esa generación de despacho
+[INFO] 22:17:31:597 KernelScheduler/(15308:16024): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:17:31:597 KernelScheduler/(15308:16240): ## (0) - MEM_ALLOC: solicita crear segmento 5 (32 bytes)
+[INFO] 22:17:31:689 KernelScheduler/(15308:16240): ## (0) - MEM_ALLOC: segmento 5 creado exitosamente
+[INFO] 22:17:33:288 KernelScheduler/(15308:16024): ## (0) Pasa del estado EXEC al estado READY
+[INFO] 22:17:33:288 KernelScheduler/(15308:16024): ## (0) - Desalojado por fin de quantum
+[DEBUG] 22:17:33:288 KernelScheduler/(15308:15451): Planificador: proceso (0) nivel=0 -> CPU libre encontrada (de 2 CPUs conectadas)
+[INFO] 22:17:33:288 KernelScheduler/(15308:15451): ## (0) Pasa del estado READY al estado EXEC
+[INFO] 22:17:33:790 KernelScheduler/(15308:16024): ## (0) - Solicitó syscall: MEM_ALLOC
+[INFO] 22:17:33:834 KernelScheduler/(15308:16245): ## (0) - MEM_ALLOC: solicita crear segmento 6 (48 bytes)
+[INFO] 22:17:33:836 KernelScheduler/(15308:16246): ## Inicio de compactación
+[DEBUG] 22:17:34:788 KernelScheduler/(15308:16244): Timer de quantum descartado para (0) gen=14: ya no está en EXEC con esa generación de despacho
+[WARNING] 22:17:38:035 KernelScheduler/(15308:16223): ## CPU fd=10 desconectada
+[ERROR] 22:17:42:886 KernelScheduler/(15308:15450): KM cerró la conexión

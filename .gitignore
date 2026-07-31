@@ -4,7 +4,7 @@ resumen_*.md
 instalacion.md
 
 # Archivos de configuración local (no commitear, cada uno tiene el suyo)
-*.config
+
 
 # Binarios compilados
 bin/

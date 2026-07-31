@@ -1,0 +1,1389 @@
+[DEBUG] 21:26:00:178 KernelMemory/(2931:2931): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=128
+[INFO] 21:26:00:178 KernelMemory/(2931:2931): Kernel Memory escuchando en puerto 23841
+[INFO] 21:26:09:074 KernelMemory/(2931:3175): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 21:26:35:700 KernelMemory/(2931:3310): ## Memory Stick de 256 bytes Conectada - ID: 0 - Puerto: 39787
+[INFO] 21:27:17:733 KernelMemory/(2931:3475): ## Kernel Scheduler Conectado - FD del socket: 7
+[INFO] 21:27:17:733 KernelMemory/(2931:3475): ## PID: 0 - Proceso Creado
+[DEBUG] 21:27:17:733 KernelMemory/(2931:3475): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PLANI_PRE_0.prc
+[INFO] 21:28:11:155 KernelMemory/(2931:4054): ## CPU Conectada - FD: 8
+[INFO] 21:28:11:425 KernelMemory/(2931:4054): ## PID: 0 - Obtener instrucción: 0 - Instrucción: INIT_PROC PLANI_PRE_1.prc 3
+[INFO] 21:28:11:427 KernelMemory/(2931:3475): ## PID: 1 - Proceso Creado
+[DEBUG] 21:28:11:427 KernelMemory/(2931:3475): PID: 1 - Path de script guardado: PLANI_PRE_1.prc
+[INFO] 21:28:11:691 KernelMemory/(2931:4054): ## PID: 0 - Obtener instrucción: 1 - Instrucción: INIT_PROC PLANI_PRE_1.prc 3
+[INFO] 21:28:11:694 KernelMemory/(2931:3475): ## PID: 2 - Proceso Creado
+[DEBUG] 21:28:11:694 KernelMemory/(2931:3475): PID: 2 - Path de script guardado: PLANI_PRE_1.prc
+[INFO] 21:28:11:988 KernelMemory/(2931:4054): ## PID: 0 - Obtener instrucción: 2 - Instrucción: INIT_PROC PLANI_PRE_2.prc 2
+[INFO] 21:28:12:036 KernelMemory/(2931:3475): ## PID: 3 - Proceso Creado
+[DEBUG] 21:28:12:036 KernelMemory/(2931:3475): PID: 3 - Path de script guardado: PLANI_PRE_2.prc
+[INFO] 21:28:12:322 KernelMemory/(2931:4054): ## PID: 0 - Obtener instrucción: 3 - Instrucción: INIT_PROC PLANI_PRE_2.prc 2
+[INFO] 21:28:12:374 KernelMemory/(2931:3475): ## PID: 4 - Proceso Creado
+[DEBUG] 21:28:12:374 KernelMemory/(2931:3475): PID: 4 - Path de script guardado: PLANI_PRE_2.prc
+[INFO] 21:28:12:676 KernelMemory/(2931:4054): ## PID: 0 - Obtener instrucción: 4 - Instrucción: INIT_PROC PLANI_PRE_3.prc 1
+[INFO] 21:28:12:677 KernelMemory/(2931:3475): ## PID: 5 - Proceso Creado
+[DEBUG] 21:28:12:677 KernelMemory/(2931:3475): PID: 5 - Path de script guardado: PLANI_PRE_3.prc
+[INFO] 21:28:12:980 KernelMemory/(2931:4054): ## PID: 0 - Obtener instrucción: 5 - Instrucción: EXIT
+[INFO] 21:28:12:982 KernelMemory/(2931:3475): ## PID: 0 - Proceso finalizado, memoria liberada
+[DEBUG] 21:28:12:982 KernelMemory/(2931:4054): PID: 0 - MSG_GUARDAR_CONTEXTO llegó después de que el proceso ya fue finalizado — se ignora
+[INFO] 21:28:13:339 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 0 - Instrucción: SET AX 1
+[INFO] 21:28:13:594 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 1 - Instrucción: SET BX 2
+[INFO] 21:28:14:003 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 2 - Instrucción: SET CX 3
+[INFO] 21:28:14:257 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 3 - Instrucción: SET DX 4
+[INFO] 21:28:14:515 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 4 - Instrucción: SET EAX 1001
+[INFO] 21:28:14:855 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 5 - Instrucción: SET EBX 1001
+[INFO] 21:28:15:109 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 6 - Instrucción: SET ECX 1001
+[INFO] 21:28:15:363 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 7 - Instrucción: SET EDX 1001
+[INFO] 21:28:15:679 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 8 - Instrucción: SET SI 0
+[INFO] 21:28:15:938 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 9 - Instrucción: SET DI 0
+[INFO] 21:28:16:194 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 10 - Instrucción: SLEEP 100
+[INFO] 21:28:16:506 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 0 - Instrucción: SET AX 50
+[INFO] 21:28:16:848 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 11 - Instrucción: SET AX 1
+[INFO] 21:28:17:100 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 12 - Instrucción: SET BX 2
+[INFO] 21:28:17:399 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 13 - Instrucción: SET CX 3
+[INFO] 21:28:17:653 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 14 - Instrucción: SET DX 4
+[INFO] 21:28:17:907 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 15 - Instrucción: SET EAX 1001
+[INFO] 21:28:18:211 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 16 - Instrucción: SET EBX 1001
+[INFO] 21:28:18:514 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 17 - Instrucción: SET ECX 1001
+[INFO] 21:28:18:768 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 18 - Instrucción: SET EDX 1001
+[INFO] 21:28:19:029 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 19 - Instrucción: SET SI 0
+[INFO] 21:28:19:378 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 20 - Instrucción: SET DI 0
+[INFO] 21:28:19:665 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 21 - Instrucción: SLEEP 100
+[INFO] 21:28:19:978 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:20:280 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 22 - Instrucción: SET AX 1
+[INFO] 21:28:20:533 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 23 - Instrucción: SET BX 2
+[INFO] 21:28:20:882 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 24 - Instrucción: SET CX 3
+[INFO] 21:28:21:134 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 25 - Instrucción: SET DX 4
+[INFO] 21:28:21:385 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 26 - Instrucción: SET EAX 1001
+[INFO] 21:28:21:685 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 27 - Instrucción: SET EBX 1001
+[INFO] 21:28:21:936 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 28 - Instrucción: SET ECX 1001
+[INFO] 21:28:22:188 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 29 - Instrucción: SET EDX 1001
+[INFO] 21:28:22:541 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 30 - Instrucción: SET SI 0
+[INFO] 21:28:22:794 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 31 - Instrucción: SET DI 0
+[INFO] 21:28:23:050 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 32 - Instrucción: SLEEP 100
+[INFO] 21:28:23:395 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:23:692 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 33 - Instrucción: SET AX 1
+[INFO] 21:28:23:957 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 34 - Instrucción: SET BX 2
+[INFO] 21:28:24:308 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 35 - Instrucción: SET CX 3
+[INFO] 21:28:24:561 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 36 - Instrucción: SET DX 4
+[INFO] 21:28:24:869 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 37 - Instrucción: SET EAX 1001
+[INFO] 21:28:25:177 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 38 - Instrucción: SET EBX 1001
+[INFO] 21:28:25:429 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 39 - Instrucción: SET ECX 1001
+[INFO] 21:28:25:735 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 40 - Instrucción: SET EDX 1001
+[INFO] 21:28:26:043 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 41 - Instrucción: SET SI 0
+[INFO] 21:28:26:299 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 42 - Instrucción: SET DI 0
+[INFO] 21:28:26:605 KernelMemory/(2931:4054): ## PID: 5 - Obtener instrucción: 43 - Instrucción: EXIT
+[INFO] 21:28:26:699 KernelMemory/(2931:3475): ## PID: 5 - Proceso finalizado, memoria liberada
+[INFO] 21:28:26:952 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:27:210 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:27:523 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:27:778 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:28:036 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:28:340 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:28:594 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:28:847 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:29:210 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:29:477 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:29:729 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:30:045 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:30:299 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:30:584 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:30:884 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:31:194 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:31:447 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:31:752 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:32:006 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:32:258 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:32:553 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:32:808 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:33:060 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:33:358 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:33:616 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:33:906 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:34:219 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:34:480 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:34:736 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:35:049 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:35:303 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:35:562 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:35:873 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:36:133 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:36:385 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:36:686 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:36:938 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:37:220 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:37:549 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:37:808 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:38:060 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:38:352 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:38:607 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:38:857 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:39:156 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:39:414 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:39:666 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:39:969 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:40:228 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:40:486 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:40:785 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:41:036 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:41:293 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:41:592 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:41:851 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:42:107 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:42:404 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:42:676 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:42:931 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:43:239 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:43:492 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:43:748 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:44:045 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:44:298 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:44:550 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:44:846 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:45:097 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:45:349 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:45:647 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:45:901 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:46:153 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:46:468 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:46:719 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:46:971 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:47:267 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:47:518 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:47:769 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:48:064 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:48:315 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:48:566 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:48:865 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:49:116 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:49:393 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:49:692 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:49:944 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:50:198 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:50:497 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:50:748 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:51:030 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:51:323 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:51:593 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:51:845 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:52:144 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:52:404 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:52:657 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:52:956 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:53:212 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:53:469 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:53:796 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:54:048 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:54:300 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:54:614 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:54:866 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:55:117 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:55:425 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:55:675 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:55:936 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:56:235 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:56:486 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:56:745 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:57:040 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:57:291 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:57:551 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:57:864 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:58:118 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:58:377 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:58:676 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:58:928 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:59:188 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:28:59:485 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:28:59:738 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:28:59:992 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:00:291 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:00:541 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:00:793 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:01:105 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:01:358 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:01:609 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:01:903 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:02:165 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:02:417 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:02:716 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:02:969 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:03:220 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:03:518 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:03:771 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:04:022 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:04:328 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:04:586 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:04:843 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:05:146 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:05:398 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:05:649 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:05:952 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:06:209 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:06:463 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:06:761 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:07:012 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:07:264 KernelMemory/(2931:4054): ## PID: 3 - Obtener instrucción: 4 - Instrucción: EXIT
+[INFO] 21:29:07:310 KernelMemory/(2931:3475): ## PID: 3 - Proceso finalizado, memoria liberada
+[INFO] 21:29:07:563 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 0 - Instrucción: SET AX 50
+[INFO] 21:29:08:020 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:08:274 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:08:571 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:08:825 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:09:076 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:09:417 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:09:668 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:09:919 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:10:224 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:10:476 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:10:728 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:11:028 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:11:279 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:11:531 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:11:843 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:12:094 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:12:352 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:12:652 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:12:906 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:13:162 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:13:466 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:13:799 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:14:083 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:14:392 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:14:645 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:14:900 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:15:202 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:15:460 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:15:722 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:16:020 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:16:298 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:16:549 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:16:853 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:17:104 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:17:366 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:17:721 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:17:974 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:18:226 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:18:522 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:18:773 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:19:029 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:19:333 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:19:587 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:19:877 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:20:198 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:20:451 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:20:717 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:21:011 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:21:267 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:21:528 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:21:842 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:22:103 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:22:361 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:22:658 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:22:910 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:23:204 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:23:500 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:23:755 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:24:008 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:24:316 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:24:569 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:24:824 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:25:129 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:25:390 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:25:643 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:25:946 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:26:198 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:26:449 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:26:746 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:26:998 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:27:282 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:27:583 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:27:842 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:28:093 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:28:389 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:28:640 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:28:891 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:29:186 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:29:441 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:29:692 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:29:992 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:30:247 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:30:498 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:30:794 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:31:049 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:31:302 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:31:601 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:31:865 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:32:121 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:32:421 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:32:676 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:32:927 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:33:229 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:33:488 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:33:749 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:34:059 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:34:315 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:34:567 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:34:859 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:35:111 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:35:362 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:35:656 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:35:910 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:36:161 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:36:458 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:36:710 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:36:962 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:37:258 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:37:509 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:37:762 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:38:069 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:38:321 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:38:574 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:38:880 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:39:135 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:39:387 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:39:680 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:39:931 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:40:183 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:40:477 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:40:728 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:41:005 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:41:346 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:41:601 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:41:905 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:42:224 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:42:476 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:42:737 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:43:052 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:43:312 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:43:563 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:43:868 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:44:120 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:44:371 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:44:664 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:44:933 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:45:185 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:45:487 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:45:742 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:45:993 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:46:287 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:46:539 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:46:796 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:47:096 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:47:429 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:47:682 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:47:980 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:48:231 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:48:509 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SUB AX BX
+[INFO] 21:29:48:808 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 3 - Instrucción: JNZ AX 1
+[INFO] 21:29:49:060 KernelMemory/(2931:4054): ## PID: 4 - Obtener instrucción: 4 - Instrucción: EXIT
+[INFO] 21:29:49:061 KernelMemory/(2931:3475): ## PID: 4 - Proceso finalizado, memoria liberada
+[INFO] 21:29:49:368 KernelMemory/(2931:4054): ## PID: 1 - Obtener instrucción: 0 - Instrucción: SET AX 1
+[INFO] 21:29:49:625 KernelMemory/(2931:4054): ## PID: 1 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:49:885 KernelMemory/(2931:4054): ## PID: 1 - Obtener instrucción: 2 - Instrucción: SLEEP 20000
+[INFO] 21:29:50:249 KernelMemory/(2931:4054): ## PID: 2 - Obtener instrucción: 0 - Instrucción: SET AX 1
+[INFO] 21:29:50:526 KernelMemory/(2931:4054): ## PID: 2 - Obtener instrucción: 1 - Instrucción: SET BX 1
+[INFO] 21:29:50:776 KernelMemory/(2931:4054): ## PID: 2 - Obtener instrucción: 2 - Instrucción: SLEEP 20000
+[INFO] 21:30:10:188 KernelMemory/(2931:4054): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET AX 1
+[INFO] 21:30:10:440 KernelMemory/(2931:4054): ## PID: 1 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 21:30:10:705 KernelMemory/(2931:4054): ## PID: 1 - Obtener instrucción: 5 - Instrucción: SLEEP 20000
+[INFO] 21:30:30:233 KernelMemory/(2931:4054): ## PID: 2 - Obtener instrucción: 3 - Instrucción: SET AX 1
+[INFO] 21:30:30:486 KernelMemory/(2931:4054): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 21:30:30:740 KernelMemory/(2931:4054): ## PID: 2 - Obtener instrucción: 5 - Instrucción: SLEEP 20000
+[DEBUG] 21:30:49:981 KernelMemory/(2931:3475): PID: 1 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[DEBUG] 21:30:49:982 KernelMemory/(2931:3475): PID: 1 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 21:30:50:234 KernelMemory/(2931:4054): ## PID: 1 - Obtener instrucción: 6 - Instrucción: EXIT
+[INFO] 21:30:50:236 KernelMemory/(2931:3475): ## PID: 1 - Proceso finalizado, memoria liberada
+[DEBUG] 21:30:50:874 KernelMemory/(2931:3475): PID: 2 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[DEBUG] 21:31:09:980 KernelMemory/(2931:3475): PID: 2 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 21:31:10:237 KernelMemory/(2931:4054): ## PID: 2 - Obtener instrucción: 6 - Instrucción: EXIT
+[INFO] 21:31:10:238 KernelMemory/(2931:3475): ## PID: 2 - Proceso finalizado, memoria liberada
+[DEBUG] 21:31:10:238 KernelMemory/(2931:4054): PID: 2 - MSG_GUARDAR_CONTEXTO llegó después de que el proceso ya fue finalizado — se ignora
+[INFO] 21:31:49:638 KernelMemory/(2931:4054): Cliente desconectado (fd=8)
+[INFO] 21:31:53:069 KernelMemory/(2931:3475): Cliente desconectado (fd=7)
+[DEBUG] 21:32:02:242 KernelMemory/(4676:4676): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=128
+[INFO] 21:32:02:242 KernelMemory/(4676:4676): Kernel Memory escuchando en puerto 23841
+[INFO] 21:32:03:907 KernelMemory/(4676:4916): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[DEBUG] 21:35:26:020 KernelMemory/(5071:5071): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=128
+[INFO] 21:35:26:020 KernelMemory/(5071:5071): Kernel Memory escuchando en puerto 23841
+[DEBUG] 21:35:59:675 KernelMemory/(5217:5217): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=256
+[INFO] 21:35:59:675 KernelMemory/(5217:5217): Kernel Memory escuchando en puerto 23841
+[INFO] 21:36:05:891 KernelMemory/(5217:5456): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 21:36:10:315 KernelMemory/(5217:5577): ## Memory Stick de 256 bytes Conectada - ID: 0 - Puerto: 46469
+[INFO] 21:36:56:475 KernelMemory/(5217:5754): ## Kernel Scheduler Conectado - FD del socket: 7
+[INFO] 21:36:56:476 KernelMemory/(5217:5754): ## PID: 0 - Proceso Creado
+[DEBUG] 21:36:56:477 KernelMemory/(5217:5754): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PCP.prc
+[INFO] 21:37:22:910 KernelMemory/(5217:6332): ## CPU Conectada - FD: 8
+[INFO] 21:37:23:422 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:37:23:924 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 1 - Instrucción: INIT_PROC PCP_1.prc 3
+[INFO] 21:37:23:926 KernelMemory/(5217:5754): ## PID: 1 - Proceso Creado
+[DEBUG] 21:37:23:926 KernelMemory/(5217:5754): PID: 1 - Path de script guardado: PCP_1.prc
+[INFO] 21:37:24:428 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 2 - Instrucción: INIT_PROC PCP_1.prc 3
+[INFO] 21:37:24:429 KernelMemory/(5217:5754): ## PID: 2 - Proceso Creado
+[DEBUG] 21:37:24:429 KernelMemory/(5217:5754): PID: 2 - Path de script guardado: PCP_1.prc
+[INFO] 21:37:24:979 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 3 - Instrucción: INIT_PROC PCP_1.prc 3
+[INFO] 21:37:25:039 KernelMemory/(5217:5754): ## PID: 3 - Proceso Creado
+[DEBUG] 21:37:25:039 KernelMemory/(5217:5754): PID: 3 - Path de script guardado: PCP_1.prc
+[INFO] 21:37:25:594 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 4 - Instrucción: INIT_PROC PCP_1.prc 3
+[INFO] 21:37:25:655 KernelMemory/(5217:5754): ## PID: 4 - Proceso Creado
+[DEBUG] 21:37:25:655 KernelMemory/(5217:5754): PID: 4 - Path de script guardado: PCP_1.prc
+[INFO] 21:37:26:267 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:37:26:771 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:37:27:290 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 7 - Instrucción: INIT_PROC PCP_2.prc 2
+[INFO] 21:37:27:352 KernelMemory/(5217:5754): ## PID: 5 - Proceso Creado
+[DEBUG] 21:37:27:353 KernelMemory/(5217:5754): PID: 5 - Path de script guardado: PCP_2.prc
+[INFO] 21:37:27:945 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 8 - Instrucción: INIT_PROC PCP_2.prc 2
+[INFO] 21:37:27:948 KernelMemory/(5217:5754): ## PID: 6 - Proceso Creado
+[DEBUG] 21:37:27:948 KernelMemory/(5217:5754): PID: 6 - Path de script guardado: PCP_2.prc
+[INFO] 21:37:28:499 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:37:29:046 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 10 - Instrucción: NOOP
+[INFO] 21:37:29:609 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 11 - Instrucción: INIT_PROC PCP_3.prc 1
+[INFO] 21:37:29:661 KernelMemory/(5217:5754): ## PID: 7 - Proceso Creado
+[DEBUG] 21:37:29:662 KernelMemory/(5217:5754): PID: 7 - Path de script guardado: PCP_3.prc
+[INFO] 21:37:30:268 KernelMemory/(5217:6332): ## PID: 0 - Obtener instrucción: 12 - Instrucción: EXIT
+[INFO] 21:37:30:321 KernelMemory/(5217:5754): ## PID: 0 - Proceso finalizado, memoria liberada
+[INFO] 21:37:30:836 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:37:31:337 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 1 - Instrucción: SLEEP 10000
+[INFO] 21:37:31:952 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:37:32:458 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 1 - Instrucción: SLEEP 5000
+[INFO] 21:37:33:017 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:37:33:519 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 1 - Instrucción: SLEEP 5000
+[INFO] 21:37:34:099 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:37:34:603 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 1 - Instrucción: NOOP
+[INFO] 21:37:35:105 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:37:35:663 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:37:36:167 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 21:37:36:671 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:37:37:228 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:37:37:731 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 21:37:38:239 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:37:38:787 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:37:39:313 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 10 - Instrucción: NOOP
+[INFO] 21:37:39:817 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:37:40:393 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:37:40:897 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 13 - Instrucción: NOOP
+[DEBUG] 21:37:41:393 KernelMemory/(5217:5754): PID: 7 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[INFO] 21:37:41:400 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 14 - Instrucción: NOOP
+[DEBUG] 21:37:41:444 KernelMemory/(5217:5754): PID: 7 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 21:37:41:948 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:37:42:511 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 2 - Instrucción: NOOP
+[DEBUG] 21:37:42:519 KernelMemory/(5217:5754): PID: 5 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[INFO] 21:37:43:013 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:37:43:585 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 4 - Instrucción: SLEEP 1000
+[DEBUG] 21:37:43:590 KernelMemory/(5217:5754): PID: 6 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[INFO] 21:37:44:102 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 16 - Instrucción: NOOP
+[INFO] 21:37:44:619 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:37:45:176 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 18 - Instrucción: SET PC 0
+[INFO] 21:37:45:685 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 1 - Instrucción: NOOP
+[INFO] 21:37:46:190 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 2 - Instrucción: NOOP
+[DEBUG] 21:37:46:434 KernelMemory/(5217:5754): PID: 5 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 21:37:46:738 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:37:47:297 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:37:47:799 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:37:48:344 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 21:37:48:853 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:37:49:356 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:37:49:900 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 7 - Instrucción: SLEEP 3000
+[INFO] 21:37:50:405 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 21:37:50:907 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[DEBUG] 21:37:51:394 KernelMemory/(5217:5754): PID: 6 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 21:37:51:467 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:37:51:971 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:37:52:474 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:37:53:112 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:37:53:621 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:37:54:132 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 21:37:54:695 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 21:37:55:198 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:37:55:699 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:37:56:246 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 7 - Instrucción: SLEEP 3000
+[INFO] 21:37:56:755 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:37:57:362 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:37:57:878 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:37:58:385 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 10 - Instrucción: SLEEP 1000
+[INFO] 21:37:59:000 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:37:59:514 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 10 - Instrucción: NOOP
+[INFO] 21:38:00:016 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:38:00:560 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:38:01:063 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:38:01:587 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:38:02:137 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 13 - Instrucción: SLEEP 1000
+[INFO] 21:38:02:686 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 13 - Instrucción: SLEEP 5000
+[INFO] 21:38:03:282 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:38:03:786 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 21:38:04:332 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:38:04:837 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 16 - Instrucción: SLEEP 1000
+[INFO] 21:38:05:386 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:38:05:888 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 10 - Instrucción: NOOP
+[INFO] 21:38:06:396 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:38:06:944 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:38:07:452 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 13 - Instrucción: SLEEP 5000
+[INFO] 21:38:08:017 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[DEBUG] 21:38:08:454 KernelMemory/(5217:5754): PID: 7 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[INFO] 21:38:08:521 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:38:09:072 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 14 - Instrucción: NOOP
+[DEBUG] 21:38:09:251 KernelMemory/(5217:5754): PID: 7 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 21:38:09:576 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:38:10:218 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:38:10:721 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 18 - Instrucción: SET PC 0
+[INFO] 21:38:11:225 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 1 - Instrucción: SLEEP 10000
+[INFO] 21:38:11:806 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 16 - Instrucción: NOOP
+[DEBUG] 21:38:12:188 KernelMemory/(5217:5754): PID: 7 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[INFO] 21:38:12:312 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:38:12:825 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 18 - Instrucción: NOOP
+[INFO] 21:38:13:397 KernelMemory/(5217:6332): ## PID: 5 - Obtener instrucción: 19 - Instrucción: EXIT
+[INFO] 21:38:13:409 KernelMemory/(5217:5754): ## PID: 5 - Proceso finalizado, memoria liberada
+[INFO] 21:38:13:968 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:38:14:480 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 10 - Instrucción: NOOP
+[INFO] 21:38:15:085 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 21:38:15:587 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:38:16:089 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 16 - Instrucción: NOOP
+[INFO] 21:38:16:653 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:38:17:155 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 18 - Instrucción: NOOP
+[INFO] 21:38:17:659 KernelMemory/(5217:6332): ## PID: 6 - Obtener instrucción: 19 - Instrucción: EXIT
+[INFO] 21:38:17:748 KernelMemory/(5217:5754): ## PID: 6 - Proceso finalizado, memoria liberada
+[INFO] 21:38:18:252 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:38:18:761 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:38:19:267 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 13 - Instrucción: NOOP
+[INFO] 21:38:19:825 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 21:38:20:341 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:38:20:844 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 16 - Instrucción: NOOP
+[INFO] 21:38:21:402 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:38:21:912 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 18 - Instrucción: SET PC 0
+[INFO] 21:38:22:416 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 1 - Instrucción: NOOP
+[INFO] 21:38:22:964 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:38:23:469 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:38:23:970 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[DEBUG] 21:38:24:205 KernelMemory/(5217:5754): PID: 7 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 21:38:24:521 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:38:25:024 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:38:25:571 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:38:26:151 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 4 - Instrucción: SLEEP 1000
+[INFO] 21:38:26:700 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:38:27:203 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 21:38:27:805 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:38:28:310 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:38:28:814 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 21:38:29:371 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:38:29:874 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:38:30:475 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:38:30:978 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:38:31:487 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 10 - Instrucción: SLEEP 1000
+[INFO] 21:38:32:099 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 10 - Instrucción: NOOP
+[INFO] 21:38:32:601 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:38:33:199 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:38:33:703 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:38:34:205 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 13 - Instrucción: SLEEP 1000
+[INFO] 21:38:34:770 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:38:35:276 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 13 - Instrucción: NOOP
+[INFO] 21:38:35:929 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 21:38:36:437 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:38:36:939 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 16 - Instrucción: SLEEP 1000
+[INFO] 21:38:37:500 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 21:38:38:005 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:38:38:508 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 16 - Instrucción: NOOP
+[INFO] 21:38:39:070 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:38:39:573 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 18 - Instrucción: SET PC 0
+[INFO] 21:38:40:075 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 1 - Instrucción: SLEEP 10000
+[INFO] 21:38:40:709 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:38:41:210 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 18 - Instrucción: SET PC 0
+[DEBUG] 21:38:41:595 KernelMemory/(5217:5754): PID: 7 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[INFO] 21:38:41:722 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 1 - Instrucción: NOOP
+[INFO] 21:38:42:275 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:38:42:776 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:38:43:279 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 21:38:43:825 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:38:44:329 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:38:44:830 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 21:38:45:384 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:38:45:887 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:38:46:388 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 10 - Instrucción: NOOP
+[INFO] 21:38:46:939 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:38:47:444 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:38:47:947 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 13 - Instrucción: NOOP
+[INFO] 21:38:48:515 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 21:38:49:023 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:38:49:527 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 16 - Instrucción: NOOP
+[INFO] 21:38:50:089 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 17 - Instrucción: NOOP
+[DEBUG] 21:38:50:213 KernelMemory/(5217:5754): PID: 7 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 21:38:50:591 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 18 - Instrucción: SET PC 0
+[INFO] 21:38:51:196 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:38:51:723 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:38:52:227 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 4 - Instrucción: SLEEP 1000
+[INFO] 21:38:52:794 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 1 - Instrucción: NOOP
+[INFO] 21:38:53:297 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:38:53:983 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:38:54:488 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:38:54:995 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 21:38:55:580 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:38:56:082 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 21:38:56:585 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:38:57:142 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:38:57:649 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:38:58:247 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 10 - Instrucción: SLEEP 1000
+[INFO] 21:38:58:849 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:38:59:352 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 21:38:59:913 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:39:00:415 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:39:00:918 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 13 - Instrucción: SLEEP 1000
+[INFO] 21:39:01:504 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:39:02:008 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:39:02:654 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 21:39:03:157 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:39:03:661 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 16 - Instrucción: SLEEP 1000
+[INFO] 21:39:04:217 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 10 - Instrucción: NOOP
+[INFO] 21:39:04:731 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:39:05:235 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:39:05:779 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:39:06:283 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 18 - Instrucción: SET PC 0
+[INFO] 21:39:06:869 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 1 - Instrucción: SLEEP 10000
+[INFO] 21:39:07:512 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 13 - Instrucción: NOOP
+[INFO] 21:39:08:014 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 14 - Instrucción: NOOP
+[DEBUG] 21:39:08:301 KernelMemory/(5217:5754): PID: 7 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[INFO] 21:39:08:518 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:39:09:079 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 16 - Instrucción: NOOP
+[INFO] 21:39:09:587 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:39:10:113 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 18 - Instrucción: SET PC 0
+[INFO] 21:39:10:737 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 1 - Instrucción: NOOP
+[INFO] 21:39:11:243 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:39:11:748 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:39:12:301 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 21:39:12:853 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:39:13:359 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:39:13:919 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 21:39:14:423 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:39:14:925 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:39:15:506 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 10 - Instrucción: NOOP
+[INFO] 21:39:16:022 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:39:16:526 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 12 - Instrucción: NOOP
+[DEBUG] 21:39:16:971 KernelMemory/(5217:5754): PID: 7 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 21:39:17:089 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 13 - Instrucción: NOOP
+[INFO] 21:39:17:604 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:39:18:175 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:39:18:745 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 4 - Instrucción: SLEEP 1000
+[INFO] 21:39:19:259 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 21:39:19:843 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:39:20:498 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:39:21:002 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:39:21:505 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 21:39:22:115 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 16 - Instrucción: NOOP
+[INFO] 21:39:22:619 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:39:23:169 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 21:39:23:671 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:39:24:173 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 10 - Instrucción: SLEEP 1000
+[INFO] 21:39:24:905 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 18 - Instrucción: SET PC 0
+[INFO] 21:39:25:415 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 1 - Instrucción: NOOP
+[INFO] 21:39:26:015 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:39:26:517 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:39:27:028 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 13 - Instrucción: SLEEP 1000
+[INFO] 21:39:27:646 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 2 - Instrucción: NOOP
+[INFO] 21:39:28:153 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 21:39:28:760 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 21:39:29:268 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:39:29:771 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 16 - Instrucción: SLEEP 1000
+[INFO] 21:39:30:319 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 21:39:30:822 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 21:39:31:377 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 21:39:31:879 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 18 - Instrucción: SET PC 0
+[INFO] 21:39:32:390 KernelMemory/(5217:6332): ## PID: 7 - Obtener instrucción: 1 - Instrucción: SLEEP 10000
+[INFO] 21:39:33:005 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 21:39:33:507 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 21:39:34:010 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[DEBUG] 21:39:34:313 KernelMemory/(5217:5754): PID: 7 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[INFO] 21:39:34:577 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 21:39:35:082 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 10 - Instrucción: NOOP
+[INFO] 21:39:35:584 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 11 - Instrucción: NOOP
+[INFO] 21:39:36:148 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 12 - Instrucción: NOOP
+[INFO] 21:39:36:653 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 13 - Instrucción: NOOP
+[INFO] 21:39:37:156 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 21:39:37:722 KernelMemory/(5217:6332): ## PID: 1 - Obtener instrucción: 15 - Instrucción: NOOP
+[INFO] 21:39:37:725 KernelMemory/(5217:6332): Cliente desconectado (fd=8)
+[DEBUG] 21:46:48:299 KernelMemory/(6568:6568): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=128
+[INFO] 21:46:48:301 KernelMemory/(6568:6568): Kernel Memory escuchando en puerto 23841
+[INFO] 21:46:52:077 KernelMemory/(6568:6807): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 21:46:57:485 KernelMemory/(6568:6929): ## Memory Stick de 16 bytes Conectada - ID: 0 - Puerto: 46477
+[INFO] 21:47:00:358 KernelMemory/(6568:7052): ## Memory Stick de 32 bytes Conectada - ID: 1 - Puerto: 33869
+[INFO] 21:47:03:665 KernelMemory/(6568:7175): ## Memory Stick de 64 bytes Conectada - ID: 2 - Puerto: 36955
+[INFO] 21:47:06:438 KernelMemory/(6568:7298): ## Memory Stick de 128 bytes Conectada - ID: 3 - Puerto: 40267
+[INFO] 21:48:06:842 KernelMemory/(6568:7463): ## Kernel Scheduler Conectado - FD del socket: 10
+[INFO] 21:48:06:843 KernelMemory/(6568:7463): ## PID: 0 - Proceso Creado
+[DEBUG] 21:48:06:843 KernelMemory/(6568:7463): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PLANI_MEM.prc
+[INFO] 21:48:22:577 KernelMemory/(6568:8039): ## CPU Conectada - FD: 11
+[INFO] 21:48:23:095 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:48:23:612 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 64
+[DEBUG] 21:48:23:618 KernelMemory/(6568:7463): PID: 0 - crear_segmento 0 (64 bytes): hueco elegido (BEST) base=48 tamanio_hueco=64
+[INFO] 21:48:23:618 KernelMemory/(6568:7463): ## PID: 0 - Segmento Creado 0 - Tamaño: 64
+[INFO] 21:48:24:133 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 2 - Instrucción: SET AX 64
+[INFO] 21:48:24:688 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 3 - Instrucción: SET DI 0
+[INFO] 21:48:25:195 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 4 - Instrucción: MOV_OUT AX
+[INFO] 21:48:25:771 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 5 - Instrucción: MEM_ALLOC 1 32
+[DEBUG] 21:48:25:773 KernelMemory/(6568:7463): PID: 0 - crear_segmento 1 (32 bytes): hueco elegido (BEST) base=16 tamanio_hueco=32
+[INFO] 21:48:25:773 KernelMemory/(6568:7463): ## PID: 0 - Segmento Creado 1 - Tamaño: 32
+[INFO] 21:48:26:324 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 6 - Instrucción: SET AX 65
+[INFO] 21:48:26:833 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 7 - Instrucción: SET DI 128
+[INFO] 21:48:27:388 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 8 - Instrucción: MOV_OUT AX
+[INFO] 21:48:27:989 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 9 - Instrucción: MEM_ALLOC 2 16
+[DEBUG] 21:48:28:002 KernelMemory/(6568:7463): PID: 0 - crear_segmento 2 (16 bytes): hueco elegido (BEST) base=0 tamanio_hueco=16
+[INFO] 21:48:28:002 KernelMemory/(6568:7463): ## PID: 0 - Segmento Creado 2 - Tamaño: 16
+[INFO] 21:48:28:547 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 10 - Instrucción: SET AX 66
+[INFO] 21:48:29:054 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 11 - Instrucción: SET DI 256
+[INFO] 21:48:29:562 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 12 - Instrucción: MOV_OUT AX
+[INFO] 21:48:30:119 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 13 - Instrucción: MEM_ALLOC 3 32
+[DEBUG] 21:48:30:218 KernelMemory/(6568:7463): PID: 0 - crear_segmento 3 (32 bytes): hueco elegido (BEST) base=112 tamanio_hueco=128
+[INFO] 21:48:30:218 KernelMemory/(6568:7463): ## PID: 0 - Segmento Creado 3 - Tamaño: 32
+[INFO] 21:48:30:766 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 14 - Instrucción: SET AX 67
+[INFO] 21:48:31:268 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 15 - Instrucción: SET DI 384
+[INFO] 21:48:31:771 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 16 - Instrucción: MOV_OUT AX
+[INFO] 21:48:32:336 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 17 - Instrucción: MEM_ALLOC 4 64
+[DEBUG] 21:48:32:338 KernelMemory/(6568:7463): PID: 0 - crear_segmento 4 (64 bytes): hueco elegido (BEST) base=144 tamanio_hueco=96
+[INFO] 21:48:32:338 KernelMemory/(6568:7463): ## PID: 0 - Segmento Creado 4 - Tamaño: 64
+[INFO] 21:48:32:897 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 18 - Instrucción: SET AX 68
+[INFO] 21:48:33:411 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 19 - Instrucción: SET DI 512
+[INFO] 21:48:33:962 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 20 - Instrucción: MOV_OUT AX
+[INFO] 21:48:34:520 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 21 - Instrucción: MEM_FREE 0
+[INFO] 21:48:35:090 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 22 - Instrucción: NOOP
+[INFO] 21:48:35:592 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 23 - Instrucción: NOOP
+[INFO] 21:48:36:136 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 24 - Instrucción: MEM_ALLOC 5 32
+[DEBUG] 21:48:36:191 KernelMemory/(6568:7463): PID: 0 - crear_segmento 5 (32 bytes): hueco elegido (BEST) base=208 tamanio_hueco=32
+[INFO] 21:48:36:191 KernelMemory/(6568:7463): ## PID: 0 - Segmento Creado 5 - Tamaño: 32
+[INFO] 21:48:36:738 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 25 - Instrucción: SET AX 69
+[INFO] 21:48:37:320 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 26 - Instrucción: SET DI 640
+[INFO] 21:48:37:881 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 27 - Instrucción: MOV_OUT AX
+[INFO] 21:48:38:394 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 28 - Instrucción: MEM_ALLOC 6 48
+[DEBUG] 21:48:38:448 KernelMemory/(6568:7463): PID: 0 - crear_segmento 6 (48 bytes): hueco elegido (BEST) base=48 tamanio_hueco=64
+[INFO] 21:48:38:449 KernelMemory/(6568:7463): ## PID: 0 - Segmento Creado 6 - Tamaño: 48
+[INFO] 21:48:38:957 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 29 - Instrucción: SET AX 70
+[INFO] 21:48:39:463 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 30 - Instrucción: SET DI 768
+[INFO] 21:48:39:966 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 31 - Instrucción: MOV_OUT AX
+[INFO] 21:48:40:618 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 32 - Instrucción: NOOP
+[INFO] 21:48:41:129 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 33 - Instrucción: SET SI 128
+[INFO] 21:48:41:631 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 34 - Instrucción: MOV_IN BX
+[INFO] 21:48:42:183 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 35 - Instrucción: SET SI 256
+[INFO] 21:48:42:687 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 36 - Instrucción: MOV_IN BX
+[INFO] 21:48:43:191 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 37 - Instrucción: SET SI 384
+[INFO] 21:48:43:784 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 38 - Instrucción: MOV_IN BX
+[INFO] 21:48:44:308 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 39 - Instrucción: SET SI 512
+[INFO] 21:48:44:811 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 40 - Instrucción: MOV_IN BX
+[INFO] 21:48:45:541 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 41 - Instrucción: SET SI 640
+[INFO] 21:48:46:043 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 42 - Instrucción: MOV_IN BX
+[INFO] 21:48:46:549 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 43 - Instrucción: SET SI 768
+[INFO] 21:48:47:109 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 44 - Instrucción: MOV_IN BX
+[INFO] 21:48:47:617 KernelMemory/(6568:8039): ## PID: 0 - Obtener instrucción: 45 - Instrucción: EXIT
+[INFO] 21:48:47:619 KernelMemory/(6568:7463): ## PID: 0 - Proceso finalizado, memoria liberada
+[INFO] 21:49:09:019 KernelMemory/(6568:8039): Cliente desconectado (fd=11)
+[DEBUG] 21:49:34:456 KernelMemory/(8093:8093): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=WORST SEGMENT_MAX_SIZE=128
+[INFO] 21:49:34:456 KernelMemory/(8093:8093): Kernel Memory escuchando en puerto 23841
+[INFO] 21:49:40:936 KernelMemory/(8093:8332): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 21:49:45:941 KernelMemory/(8093:8454): ## Memory Stick de 16 bytes Conectada - ID: 0 - Puerto: 42999
+[INFO] 21:49:48:217 KernelMemory/(8093:8577): ## Memory Stick de 32 bytes Conectada - ID: 1 - Puerto: 43343
+[INFO] 21:49:51:160 KernelMemory/(8093:8700): ## Memory Stick de 64 bytes Conectada - ID: 2 - Puerto: 32881
+[INFO] 21:49:54:012 KernelMemory/(8093:8823): ## Memory Stick de 128 bytes Conectada - ID: 3 - Puerto: 45809
+[INFO] 21:49:57:635 KernelMemory/(8093:8967): ## Kernel Scheduler Conectado - FD del socket: 10
+[INFO] 21:49:57:635 KernelMemory/(8093:8967): ## PID: 0 - Proceso Creado
+[DEBUG] 21:49:57:635 KernelMemory/(8093:8967): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PLANI_MEM.prc
+[INFO] 21:50:08:299 KernelMemory/(8093:9543): ## CPU Conectada - FD: 11
+[INFO] 21:50:08:865 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:50:09:372 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 64
+[DEBUG] 21:50:09:374 KernelMemory/(8093:8967): PID: 0 - crear_segmento 0 (64 bytes): hueco elegido (WORST) base=112 tamanio_hueco=128
+[INFO] 21:50:09:375 KernelMemory/(8093:8967): ## PID: 0 - Segmento Creado 0 - Tamaño: 64
+[INFO] 21:50:09:889 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 2 - Instrucción: SET AX 64
+[INFO] 21:50:10:390 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 3 - Instrucción: SET DI 0
+[INFO] 21:50:10:934 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 4 - Instrucción: MOV_OUT AX
+[INFO] 21:50:11:506 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 5 - Instrucción: MEM_ALLOC 1 32
+[DEBUG] 21:50:11:561 KernelMemory/(8093:8967): PID: 0 - crear_segmento 1 (32 bytes): hueco elegido (WORST) base=48 tamanio_hueco=64
+[INFO] 21:50:11:562 KernelMemory/(8093:8967): ## PID: 0 - Segmento Creado 1 - Tamaño: 32
+[INFO] 21:50:12:068 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 6 - Instrucción: SET AX 65
+[INFO] 21:50:12:575 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 7 - Instrucción: SET DI 128
+[INFO] 21:50:13:079 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 8 - Instrucción: MOV_OUT AX
+[INFO] 21:50:13:747 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 9 - Instrucción: MEM_ALLOC 2 16
+[DEBUG] 21:50:13:752 KernelMemory/(8093:8967): PID: 0 - crear_segmento 2 (16 bytes): hueco elegido (WORST) base=176 tamanio_hueco=64
+[INFO] 21:50:13:752 KernelMemory/(8093:8967): ## PID: 0 - Segmento Creado 2 - Tamaño: 16
+[INFO] 21:50:14:259 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 10 - Instrucción: SET AX 66
+[INFO] 21:50:14:806 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 11 - Instrucción: SET DI 256
+[INFO] 21:50:15:309 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 12 - Instrucción: MOV_OUT AX
+[INFO] 21:50:15:915 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 13 - Instrucción: MEM_ALLOC 3 32
+[DEBUG] 21:50:16:017 KernelMemory/(8093:8967): PID: 0 - crear_segmento 3 (32 bytes): hueco elegido (WORST) base=192 tamanio_hueco=48
+[INFO] 21:50:16:017 KernelMemory/(8093:8967): ## PID: 0 - Segmento Creado 3 - Tamaño: 32
+[INFO] 21:50:16:523 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 14 - Instrucción: SET AX 67
+[INFO] 21:50:17:027 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 15 - Instrucción: SET DI 384
+[INFO] 21:50:17:580 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 16 - Instrucción: MOV_OUT AX
+[INFO] 21:50:18:161 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 17 - Instrucción: MEM_ALLOC 4 64
+[DEBUG] 21:50:18:218 KernelMemory/(8093:8967): PID: 0 - crear_segmento 4 (64 bytes): sin hueco contiguo — libre_total=96 -> pide compactación
+[INFO] 21:50:18:218 KernelMemory/(8093:8967): ## Inicio de compactación
+[INFO] 21:50:48:318 KernelMemory/(8093:8967): ## Fin de compactación
+[DEBUG] 21:50:48:318 KernelMemory/(8093:8967): PID: 0 - crear_segmento 4 (64 bytes): hueco elegido (WORST) base=144 tamanio_hueco=96
+[INFO] 21:50:48:319 KernelMemory/(8093:8967): ## PID: 0 - Segmento Creado 4 - Tamaño: 64
+[INFO] 21:50:48:873 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 18 - Instrucción: SET AX 68
+[INFO] 21:50:49:374 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 19 - Instrucción: SET DI 512
+[INFO] 21:50:49:877 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 20 - Instrucción: MOV_OUT AX
+[INFO] 21:50:50:458 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 21 - Instrucción: MEM_FREE 0
+[INFO] 21:50:51:052 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 22 - Instrucción: NOOP
+[INFO] 21:50:51:562 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 23 - Instrucción: NOOP
+[INFO] 21:50:52:068 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 24 - Instrucción: MEM_ALLOC 5 32
+[DEBUG] 21:50:52:201 KernelMemory/(8093:8967): PID: 0 - crear_segmento 5 (32 bytes): hueco elegido (WORST) base=0 tamanio_hueco=64
+[INFO] 21:50:52:202 KernelMemory/(8093:8967): ## PID: 0 - Segmento Creado 5 - Tamaño: 32
+[INFO] 21:50:52:710 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 25 - Instrucción: SET AX 69
+[INFO] 21:50:53:234 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 26 - Instrucción: SET DI 640
+[INFO] 21:50:53:750 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 27 - Instrucción: MOV_OUT AX
+[INFO] 21:50:54:333 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 28 - Instrucción: MEM_ALLOC 6 48
+[DEBUG] 21:50:54:412 KernelMemory/(8093:8967): PID: 0 - crear_segmento 6 (48 bytes): sin hueco contiguo — libre_total=64 -> pide compactación
+[INFO] 21:50:54:413 KernelMemory/(8093:8967): ## Inicio de compactación
+[INFO] 21:51:24:729 KernelMemory/(8093:8967): ## Fin de compactación
+[DEBUG] 21:51:24:729 KernelMemory/(8093:8967): PID: 0 - crear_segmento 6 (48 bytes): hueco elegido (WORST) base=176 tamanio_hueco=64
+[INFO] 21:51:24:730 KernelMemory/(8093:8967): ## PID: 0 - Segmento Creado 6 - Tamaño: 48
+[INFO] 21:51:25:297 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 29 - Instrucción: SET AX 70
+[INFO] 21:51:25:801 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 30 - Instrucción: SET DI 768
+[INFO] 21:51:26:305 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 31 - Instrucción: MOV_OUT AX
+[INFO] 21:51:26:926 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 32 - Instrucción: NOOP
+[INFO] 21:51:27:435 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 33 - Instrucción: SET SI 128
+[INFO] 21:51:27:982 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 34 - Instrucción: MOV_IN BX
+[INFO] 21:51:28:495 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 35 - Instrucción: SET SI 256
+[INFO] 21:51:29:003 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 36 - Instrucción: MOV_IN BX
+[INFO] 21:51:29:569 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 37 - Instrucción: SET SI 384
+[INFO] 21:51:30:222 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 38 - Instrucción: MOV_IN BX
+[INFO] 21:51:30:726 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 39 - Instrucción: SET SI 512
+[INFO] 21:51:31:228 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 40 - Instrucción: MOV_IN BX
+[INFO] 21:51:31:801 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 41 - Instrucción: SET SI 640
+[INFO] 21:51:32:308 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 42 - Instrucción: MOV_IN BX
+[INFO] 21:51:32:833 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 43 - Instrucción: SET SI 768
+[INFO] 21:51:33:385 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 44 - Instrucción: MOV_IN BX
+[INFO] 21:51:33:891 KernelMemory/(8093:9543): ## PID: 0 - Obtener instrucción: 45 - Instrucción: EXIT
+[INFO] 21:51:33:949 KernelMemory/(8093:8967): ## PID: 0 - Proceso finalizado, memoria liberada
+[INFO] 21:51:41:259 KernelMemory/(8093:9543): Cliente desconectado (fd=11)
+[DEBUG] 21:54:13:313 KernelMemory/(9678:9678): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=128
+[INFO] 21:54:13:313 KernelMemory/(9678:9678): Kernel Memory escuchando en puerto 23841
+[INFO] 21:54:16:151 KernelMemory/(9678:9917): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 21:54:22:397 KernelMemory/(9678:10038): ## Memory Stick de 16 bytes Conectada - ID: 0 - Puerto: 45529
+[INFO] 21:54:32:900 KernelMemory/(9678:10160): ## Memory Stick de 16 bytes Conectada - ID: 1 - Puerto: 42675
+[INFO] 21:54:42:369 KernelMemory/(9678:10282): ## Memory Stick de 32 bytes Conectada - ID: 2 - Puerto: 42949
+[INFO] 21:54:55:147 KernelMemory/(9678:10404): ## Memory Stick de 64 bytes Conectada - ID: 3 - Puerto: 43293
+[INFO] 21:55:27:711 KernelMemory/(9678:10556): ## Kernel Scheduler Conectado - FD del socket: 10
+[INFO] 21:55:27:712 KernelMemory/(9678:10556): ## PID: 0 - Proceso Creado
+[DEBUG] 21:55:27:713 KernelMemory/(9678:10556): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PMP.prc
+[INFO] 21:58:39:628 KernelMemory/(9678:11242): ## CPU Conectada - FD: 11
+[INFO] 21:58:40:133 KernelMemory/(9678:11242): ## PID: 0 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:58:40:754 KernelMemory/(9678:11242): ## PID: 0 - Obtener instrucción: 1 - Instrucción: INIT_PROC PMP_1.prc 2
+[INFO] 21:58:40:758 KernelMemory/(9678:10556): ## PID: 1 - Proceso Creado
+[DEBUG] 21:58:40:758 KernelMemory/(9678:10556): PID: 1 - Path de script guardado: PMP_1.prc
+[INFO] 21:58:41:278 KernelMemory/(9678:11242): ## PID: 0 - Obtener instrucción: 2 - Instrucción: SLEEP 5000
+[INFO] 21:58:41:838 KernelMemory/(9678:11242): ## PID: 1 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:58:42:345 KernelMemory/(9678:11242): ## PID: 1 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 64
+[DEBUG] 21:58:42:393 KernelMemory/(9678:10556): PID: 1 - crear_segmento 0 (64 bytes): hueco elegido (BEST) base=64 tamanio_hueco=64
+[INFO] 21:58:42:394 KernelMemory/(9678:10556): ## PID: 1 - Segmento Creado 0 - Tamaño: 64
+[INFO] 21:58:42:953 KernelMemory/(9678:11242): ## PID: 1 - Obtener instrucción: 2 - Instrucción: SET SI 0
+[INFO] 21:58:43:457 KernelMemory/(9678:11242): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET AX 16
+[INFO] 21:58:43:977 KernelMemory/(9678:11242): ## PID: 1 - Obtener instrucción: 4 - Instrucción: STDIN SI AX
+[INFO] 21:58:46:891 KernelMemory/(9678:11242): ## PID: 0 - Obtener instrucción: 3 - Instrucción: INIT_PROC PMP_2.prc 1
+[INFO] 21:58:46:892 KernelMemory/(9678:10556): ## PID: 2 - Proceso Creado
+[DEBUG] 21:58:46:892 KernelMemory/(9678:10556): PID: 2 - Path de script guardado: PMP_2.prc
+[INFO] 21:58:47:439 KernelMemory/(9678:11242): ## PID: 0 - Obtener instrucción: 4 - Instrucción: SLEEP 5000
+[INFO] 21:58:48:065 KernelMemory/(9678:11242): ## PID: 2 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:58:48:586 KernelMemory/(9678:11242): ## PID: 2 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 32
+[DEBUG] 21:58:48:686 KernelMemory/(9678:10556): PID: 2 - crear_segmento 0 (32 bytes): hueco elegido (BEST) base=32 tamanio_hueco=32
+[INFO] 21:58:48:686 KernelMemory/(9678:10556): ## PID: 2 - Segmento Creado 0 - Tamaño: 32
+[INFO] 21:58:49:194 KernelMemory/(9678:11242): ## PID: 2 - Obtener instrucción: 2 - Instrucción: SET SI 0
+[INFO] 21:58:49:701 KernelMemory/(9678:11242): ## PID: 2 - Obtener instrucción: 3 - Instrucción: SET AX 16
+[INFO] 21:58:50:209 KernelMemory/(9678:11242): ## PID: 2 - Obtener instrucción: 4 - Instrucción: STDIN SI AX
+[DEBUG] 21:58:51:326 KernelMemory/(9678:10556): PID: 0 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[DEBUG] 21:58:52:502 KernelMemory/(9678:10556): PID: 0 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[INFO] 21:58:53:055 KernelMemory/(9678:11242): ## PID: 0 - Obtener instrucción: 5 - Instrucción: INIT_PROC PMP_3.prc 1
+[INFO] 21:58:53:101 KernelMemory/(9678:10556): ## PID: 3 - Proceso Creado
+[DEBUG] 21:58:53:102 KernelMemory/(9678:10556): PID: 3 - Path de script guardado: PMP_3.prc
+[INFO] 21:58:53:248 KernelMemory/(9678:10556): ## PID: 1 - Escritura - Dir. Física: 64 - Tamaño: 16
+[INFO] 21:58:53:606 KernelMemory/(9678:11242): ## PID: 0 - Obtener instrucción: 6 - Instrucción: SLEEP 5000
+[INFO] 21:58:54:159 KernelMemory/(9678:11242): ## PID: 3 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 21:58:54:661 KernelMemory/(9678:11242): ## PID: 3 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 32
+[DEBUG] 21:58:54:710 KernelMemory/(9678:10556): PID: 3 - crear_segmento 0 (32 bytes): sin hueco contiguo — libre_total=32 -> pide compactación
+[INFO] 21:58:54:753 KernelMemory/(9678:10556): ## Inicio de compactación
+[INFO] 21:59:24:793 KernelMemory/(9678:10556): ## Fin de compactación
+[DEBUG] 21:59:24:793 KernelMemory/(9678:10556): PID: 3 - crear_segmento 0 (32 bytes): hueco elegido (BEST) base=96 tamanio_hueco=32
+[INFO] 21:59:24:793 KernelMemory/(9678:10556): ## PID: 3 - Segmento Creado 0 - Tamaño: 32
+[INFO] 21:59:24:795 KernelMemory/(9678:10556): ## PID: 2 - Escritura - Dir. Física: 64 - Tamaño: 16
+[DEBUG] 21:59:24:849 KernelMemory/(9678:10556): PID: 0 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[DEBUG] 21:59:24:849 KernelMemory/(9678:10556): PID: 0 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[DEBUG] 21:59:24:850 KernelMemory/(9678:10556): PID: 2 - dessuspender_proceso: 0 segmento(s) a restaurar desde Swap
+[DEBUG] 21:59:24:851 KernelMemory/(9678:10556): PID: 2 - suspender_proceso: moviendo 1 segmento(s) a Swap
+[DEBUG] 21:59:24:851 KernelMemory/(9678:10556): PID: 2 - segmento 0 (32 bytes) -> 1 bloque(s) de swap
+[INFO] 21:59:25:295 KernelMemory/(9678:11242): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SET SI 0
+[INFO] 21:59:25:837 KernelMemory/(9678:11242): ## PID: 0 - Obtener instrucción: 7 - Instrucción: INIT_PROC PMP_4.prc 1
+[INFO] 21:59:25:885 KernelMemory/(9678:10556): ## PID: 4 - Proceso Creado
+[DEBUG] 21:59:25:885 KernelMemory/(9678:10556): PID: 4 - Path de script guardado: PMP_4.prc
+[INFO] 21:59:26:430 KernelMemory/(9678:11242): ## PID: 0 - Obtener instrucción: 8 - Instrucción: EXIT
+[INFO] 21:59:26:431 KernelMemory/(9678:10556): ## PID: 0 - Proceso finalizado, memoria liberada
+[INFO] 21:59:26:995 KernelMemory/(9678:11242): ## PID: 3 - Obtener instrucción: 3 - Instrucción: SET AX 16
+[INFO] 21:59:27:576 KernelMemory/(9678:11242): ## PID: 3 - Obtener instrucción: 4 - Instrucción: STDIN SI AX
+[INFO] 21:59:28:140 KernelMemory/(9678:11242): ## PID: 2 - Obtener instrucción: 5 - Instrucción: SET SI 16
+[INFO] 21:59:28:645 KernelMemory/(9678:11242): ## PID: 2 - Obtener instrucción: 6 - Instrucción: STDIN SI AX
+[INFO] 21:59:29:203 KernelMemory/(9678:11242): ## PID: 4 - Obtener instrucción: 0 - Instrucción: MEM_ALLOC 0 32
+[DEBUG] 21:59:29:249 KernelMemory/(9678:10556): PID: 4 - crear_segmento 0 (32 bytes): hueco elegido (BEST) base=64 tamanio_hueco=32
+[INFO] 21:59:29:250 KernelMemory/(9678:10556): ## PID: 4 - Segmento Creado 0 - Tamaño: 32
+[INFO] 21:59:29:803 KernelMemory/(9678:11242): ## PID: 4 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 1 32
+[DEBUG] 21:59:29:851 KernelMemory/(9678:10556): PID: 4 - crear_segmento 1 (32 bytes): sin hueco contiguo — libre_total=0 -> sin espacio total, error
+[INFO] 21:59:29:853 KernelMemory/(9678:10556): ## PID: 4 - Proceso finalizado, memoria liberada
+[INFO] 21:59:30:354 KernelMemory/(9678:11242): ## PID: 1 - Obtener instrucción: 5 - Instrucción: SET SI 16
+[INFO] 21:59:30:627 KernelMemory/(9678:10556): ## PID: 3 - Escritura - Dir. Física: 96 - Tamaño: 16
+[INFO] 21:59:30:856 KernelMemory/(9678:11242): ## PID: 1 - Obtener instrucción: 6 - Instrucción: STDIN SI AX
+[INFO] 21:59:31:412 KernelMemory/(9678:11242): ## PID: 3 - Obtener instrucción: 5 - Instrucción: SET SI 16
+[INFO] 21:59:31:914 KernelMemory/(9678:11242): ## PID: 3 - Obtener instrucción: 6 - Instrucción: STDIN SI AX
+[DEBUG] 21:59:33:827 KernelMemory/(9678:10556): PID: 2 - traducir_direccion: segmento 0 inexistente (proceso tiene 0) — dir_logica=16
+[INFO] 21:59:34:331 KernelMemory/(9678:11242): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 30000
+[INFO] 21:59:36:523 KernelMemory/(9678:10556): ## PID: 1 - Escritura - Dir. Física: 16 - Tamaño: 16
+[INFO] 21:59:37:086 KernelMemory/(9678:11242): ## PID: 1 - Obtener instrucción: 7 - Instrucción: SET SI 32
+[INFO] 21:59:37:591 KernelMemory/(9678:11242): ## PID: 1 - Obtener instrucción: 8 - Instrucción: STDIN SI AX
+[DEBUG] 21:59:37:682 KernelMemory/(9678:10556): PID: 3 - suspender_proceso: moviendo 1 segmento(s) a Swap
+[DEBUG] 21:59:37:683 KernelMemory/(9678:10556): PID: 3 - segmento 0 (32 bytes) -> 1 bloque(s) de swap
+[DEBUG] 21:59:38:082 KernelMemory/(9678:10556): PID: 3 - traducir_direccion: segmento 0 inexistente (proceso tiene 0) — dir_logica=16
+[DEBUG] 21:59:38:083 KernelMemory/(9678:10556): PID: 3 - dessuspender_proceso: 1 segmento(s) a restaurar desde Swap
+[DEBUG] 21:59:38:698 KernelMemory/(9678:10556): PID: 2 - suspender_proceso: moviendo 0 segmento(s) a Swap
+[DEBUG] 21:59:40:905 KernelMemory/(9678:10556): PID: 1 - suspender_proceso: moviendo 1 segmento(s) a Swap
+[DEBUG] 21:59:40:905 KernelMemory/(9678:10556): PID: 1 - segmento 0 (64 bytes) -> 1 bloque(s) de swap
+[DEBUG] 21:59:41:761 KernelMemory/(9678:10556): PID: 1 - traducir_direccion: segmento 0 inexistente (proceso tiene 0) — dir_logica=32
+[DEBUG] 21:59:41:763 KernelMemory/(9678:10556): PID: 3 - dessuspender_proceso: 1 segmento(s) a restaurar desde Swap
+[DEBUG] 22:00:04:336 KernelMemory/(9678:10556): PID: 3 - dessuspender_proceso: 1 segmento(s) a restaurar desde Swap
+[DEBUG] 22:04:07:040 KernelMemory/(11355:11355): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=128
+[INFO] 22:04:07:040 KernelMemory/(11355:11355): Kernel Memory escuchando en puerto 23841
+[INFO] 22:04:10:966 KernelMemory/(11355:11594): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 22:04:15:709 KernelMemory/(11355:11715): ## Memory Stick de 16 bytes Conectada - ID: 0 - Puerto: 32931
+[INFO] 22:04:21:255 KernelMemory/(11355:11837): ## Memory Stick de 16 bytes Conectada - ID: 1 - Puerto: 37963
+[INFO] 22:04:37:921 KernelMemory/(11355:11980): ## Kernel Scheduler Conectado - FD del socket: 8
+[INFO] 22:04:37:922 KernelMemory/(11355:11980): ## PID: 0 - Proceso Creado
+[DEBUG] 22:04:37:922 KernelMemory/(11355:11980): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PHP.prc
+[INFO] 22:04:52:832 KernelMemory/(11355:12556): ## CPU Conectada - FD: 9
+[INFO] 22:04:53:345 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:04:53:853 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 1 - Instrucción: MUTEX_CREATE MUTEX_1
+[INFO] 22:04:54:407 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 2 - Instrucción: MUTEX_CREATE MUTEX_2
+[INFO] 22:04:54:960 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 3 - Instrucción: MUTEX_CREATE MUTEX_3
+[INFO] 22:04:55:574 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:04:56:080 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:04:56:583 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 6 - Instrucción: INIT_PROC PHP_1.prc 5
+[INFO] 22:04:56:699 KernelMemory/(11355:11980): ## PID: 1 - Proceso Creado
+[DEBUG] 22:04:56:699 KernelMemory/(11355:11980): PID: 1 - Path de script guardado: PHP_1.prc
+[INFO] 22:04:57:205 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 7 - Instrucción: INIT_PROC PHP_2.prc 4
+[INFO] 22:04:57:207 KernelMemory/(11355:11980): ## PID: 2 - Proceso Creado
+[DEBUG] 22:04:57:207 KernelMemory/(11355:11980): PID: 2 - Path de script guardado: PHP_2.prc
+[INFO] 22:04:57:712 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 8 - Instrucción: SLEEP 10000
+[INFO] 22:04:58:289 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:04:58:791 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 1 - Instrucción: SLEEP 10000
+[INFO] 22:04:59:390 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:04:59:897 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 1 - Instrucción: MUTEX_LOCK MUTEX_1
+[INFO] 22:05:00:503 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 2 - Instrucción: SET AX 20
+[INFO] 22:05:01:004 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:05:01:511 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:05:02:058 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:05:02:560 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:05:08:232 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 9 - Instrucción: INIT_PROC PHP_3.prc 3
+[INFO] 22:05:08:233 KernelMemory/(11355:11980): ## PID: 3 - Proceso Creado
+[DEBUG] 22:05:08:233 KernelMemory/(11355:11980): PID: 3 - Path de script guardado: PHP_3.prc
+[INFO] 22:05:08:801 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 10 - Instrucción: INIT_PROC PHP_3.prc 3
+[INFO] 22:05:08:850 KernelMemory/(11355:11980): ## PID: 4 - Proceso Creado
+[DEBUG] 22:05:08:851 KernelMemory/(11355:11980): PID: 4 - Path de script guardado: PHP_3.prc
+[INFO] 22:05:09:411 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 11 - Instrucción: INIT_PROC PHP_3.prc 3
+[INFO] 22:05:09:413 KernelMemory/(11355:11980): ## PID: 5 - Proceso Creado
+[DEBUG] 22:05:09:414 KernelMemory/(11355:11980): PID: 5 - Path de script guardado: PHP_3.prc
+[INFO] 22:05:10:015 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 12 - Instrucción: INIT_PROC PHP_3.prc 3
+[INFO] 22:05:10:061 KernelMemory/(11355:11980): ## PID: 6 - Proceso Creado
+[DEBUG] 22:05:10:062 KernelMemory/(11355:11980): PID: 6 - Path de script guardado: PHP_3.prc
+[INFO] 22:05:10:567 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 13 - Instrucción: INIT_PROC PHP_3.prc 3
+[INFO] 22:05:10:617 KernelMemory/(11355:11980): ## PID: 7 - Proceso Creado
+[DEBUG] 22:05:10:617 KernelMemory/(11355:11980): PID: 7 - Path de script guardado: PHP_3.prc
+[INFO] 22:05:11:209 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 14 - Instrucción: NOOP
+[INFO] 22:05:11:711 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 15 - Instrucción: INIT_PROC PHP_4.prc 2
+[INFO] 22:05:11:715 KernelMemory/(11355:11980): ## PID: 8 - Proceso Creado
+[DEBUG] 22:05:11:715 KernelMemory/(11355:11980): PID: 8 - Path de script guardado: PHP_4.prc
+[INFO] 22:05:12:409 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 16 - Instrucción: NOOP
+[INFO] 22:05:12:911 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 17 - Instrucción: NOOP
+[INFO] 22:05:13:417 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 18 - Instrucción: INIT_PROC PHP_5.prc 1
+[INFO] 22:05:13:418 KernelMemory/(11355:11980): ## PID: 9 - Proceso Creado
+[DEBUG] 22:05:13:419 KernelMemory/(11355:11980): PID: 9 - Path de script guardado: PHP_5.prc
+[INFO] 22:05:13:966 KernelMemory/(11355:12556): ## PID: 0 - Obtener instrucción: 19 - Instrucción: EXIT
+[INFO] 22:05:14:053 KernelMemory/(11355:11980): ## PID: 0 - Proceso finalizado, memoria liberada
+[INFO] 22:05:14:567 KernelMemory/(11355:12556): ## PID: 9 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:05:15:081 KernelMemory/(11355:12556): ## PID: 9 - Obtener instrucción: 1 - Instrucción: SLEEP 30000
+[INFO] 22:05:15:697 KernelMemory/(11355:12556): ## PID: 8 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:05:16:201 KernelMemory/(11355:12556): ## PID: 8 - Obtener instrucción: 1 - Instrucción: SLEEP 20000
+[INFO] 22:05:16:812 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:05:17:318 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 1 - Instrucción: SLEEP 15000
+[INFO] 22:05:17:894 KernelMemory/(11355:12556): ## PID: 4 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:05:18:397 KernelMemory/(11355:12556): ## PID: 4 - Obtener instrucción: 1 - Instrucción: SLEEP 15000
+[INFO] 22:05:19:071 KernelMemory/(11355:12556): ## PID: 5 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:05:19:585 KernelMemory/(11355:12556): ## PID: 5 - Obtener instrucción: 1 - Instrucción: SLEEP 15000
+[INFO] 22:05:20:145 KernelMemory/(11355:12556): ## PID: 6 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:05:20:649 KernelMemory/(11355:12556): ## PID: 6 - Obtener instrucción: 1 - Instrucción: SLEEP 15000
+[INFO] 22:05:21:256 KernelMemory/(11355:12556): ## PID: 7 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:05:21:761 KernelMemory/(11355:12556): ## PID: 7 - Obtener instrucción: 1 - Instrucción: SLEEP 15000
+[INFO] 22:05:22:353 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 2 - Instrucción: MUTEX_LOCK MUTEX_2
+[INFO] 22:05:22:857 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 3 - Instrucción: SET AX 20
+[INFO] 22:05:23:358 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:05:23:902 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:05:24:405 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:05:24:908 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:05:25:465 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:05:26:001 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:05:26:502 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 9 - Instrucción: SUB AX BX
+[INFO] 22:05:27:073 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 10 - Instrucción: JNZ AX 3
+[INFO] 22:05:27:579 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:05:28:083 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:05:28:634 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:05:29:141 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:05:49:405 KernelMemory/(11355:12556): ## PID: 9 - Obtener instrucción: 2 - Instrucción: MUTEX_LOCK MUTEX_2
+[INFO] 22:06:09:339 KernelMemory/(11355:12556): ## PID: 8 - Obtener instrucción: 2 - Instrucción: MUTEX_LOCK MUTEX_1
+[INFO] 22:06:24:401 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 2 - Instrucción: SET AX 10
+[INFO] 22:06:24:925 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:06:25:489 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 4 - Instrucción: MUTEX_LOCK MUTEX_3
+[INFO] 22:06:25:994 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:06:26:501 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:06:39:356 KernelMemory/(11355:12556): ## PID: 4 - Obtener instrucción: 2 - Instrucción: SET AX 10
+[INFO] 22:06:39:859 KernelMemory/(11355:12556): ## PID: 4 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:06:40:363 KernelMemory/(11355:12556): ## PID: 4 - Obtener instrucción: 4 - Instrucción: MUTEX_LOCK MUTEX_3
+[INFO] 22:06:54:411 KernelMemory/(11355:12556): ## PID: 5 - Obtener instrucción: 2 - Instrucción: SET AX 10
+[INFO] 22:06:54:914 KernelMemory/(11355:12556): ## PID: 5 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:06:55:432 KernelMemory/(11355:12556): ## PID: 5 - Obtener instrucción: 4 - Instrucción: MUTEX_LOCK MUTEX_3
+[INFO] 22:07:09:357 KernelMemory/(11355:12556): ## PID: 6 - Obtener instrucción: 2 - Instrucción: SET AX 10
+[INFO] 22:07:09:868 KernelMemory/(11355:12556): ## PID: 6 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:07:10:374 KernelMemory/(11355:12556): ## PID: 6 - Obtener instrucción: 4 - Instrucción: MUTEX_LOCK MUTEX_3
+[INFO] 22:07:24:361 KernelMemory/(11355:12556): ## PID: 7 - Obtener instrucción: 2 - Instrucción: SET AX 10
+[INFO] 22:07:24:865 KernelMemory/(11355:12556): ## PID: 7 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:07:25:462 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:07:25:967 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:07:26:473 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:07:27:034 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:07:27:545 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:07:28:051 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:07:28:605 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:07:29:106 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:07:29:661 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:07:30:164 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:07:30:762 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:07:31:264 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:07:31:773 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:07:32:275 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:07:32:818 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:07:33:324 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:07:34:199 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:07:34:761 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:07:35:314 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 9 - Instrucción: SUB AX BX
+[INFO] 22:07:35:816 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 10 - Instrucción: JNZ AX 3
+[INFO] 22:07:36:424 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:07:36:932 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:07:37:436 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:07:38:007 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:07:38:514 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:07:39:021 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:07:39:583 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:07:40:094 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:07:40:658 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:07:41:181 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:07:41:779 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:07:42:284 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:07:42:787 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:07:43:339 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:07:43:847 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:07:44:352 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:07:44:926 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:07:45:454 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:07:46:007 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:07:46:508 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:07:47:225 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:07:47:727 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:07:48:229 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:07:48:735 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:07:49:389 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:07:49:893 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:07:50:395 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:07:50:970 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:07:51:530 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:07:52:034 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:07:52:642 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:07:53:150 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:07:53:654 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:07:54:213 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:07:54:733 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:07:55:279 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:07:55:861 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:07:56:373 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:07:56:936 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 9 - Instrucción: SUB AX BX
+[INFO] 22:07:57:439 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 10 - Instrucción: JNZ AX 3
+[INFO] 22:07:57:991 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:07:58:495 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:07:59:006 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:07:59:559 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:00:071 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:00:574 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:01:118 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:01:635 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:02:248 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:08:02:762 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:08:03:355 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:03:893 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:04:423 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:04:971 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:05:476 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:05:987 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:06:569 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:07:118 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:07:740 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:08:247 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:08:08:803 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:09:306 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:09:816 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:10:365 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:10:975 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:11:524 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:12:037 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:12:582 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:13:138 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:08:13:639 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:14:238 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:14:741 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:15:243 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:15:808 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:16:314 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:16:842 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:17:413 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:17:963 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:18:574 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 9 - Instrucción: SUB AX BX
+[INFO] 22:08:19:078 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 10 - Instrucción: JNZ AX 3
+[INFO] 22:08:19:696 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:20:198 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:20:702 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:21:259 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:21:769 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:22:284 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:22:846 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:23:348 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:23:959 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:08:24:463 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:08:25:011 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:25:514 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:26:018 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:26:563 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:27:077 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:27:597 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:28:152 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:28:658 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:29:263 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:29:780 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:08:30:342 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:30:858 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:31:409 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:31:912 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:32:420 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:32:977 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:33:480 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:33:982 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:34:583 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:08:35:090 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:35:679 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:36:182 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:36:690 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:37:195 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:37:754 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:38:267 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:38:773 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:39:322 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:39:834 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 9 - Instrucción: SUB AX BX
+[INFO] 22:08:40:336 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 10 - Instrucción: JNZ AX 3
+[INFO] 22:08:40:902 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:41:433 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:41:943 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:42:521 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:43:028 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:43:534 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:44:097 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:44:606 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:45:218 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:08:45:722 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:08:46:273 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:46:776 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:47:278 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:47:886 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:48:418 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:48:923 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:49:656 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:50:171 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:50:739 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:51:244 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:08:51:848 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:52:352 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:52:853 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:53:412 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:53:937 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:54:441 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:08:54:998 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:08:55:507 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:08:56:125 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:08:56:631 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:57:205 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:08:57:710 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:08:58:215 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:08:58:771 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:08:59:273 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:08:59:775 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:09:00:323 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:09:00:826 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:09:01:382 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 9 - Instrucción: SUB AX BX
+[INFO] 22:09:01:886 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 10 - Instrucción: JNZ AX 3
+[INFO] 22:09:02:538 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:09:03:067 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:09:03:572 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:09:04:117 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:09:04:623 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 4 - Instrucción: SET BX 1
+[INFO] 22:09:05:134 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:09:05:681 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 6 - Instrucción: NOOP
+[INFO] 22:09:06:192 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 7 - Instrucción: SLEEP 1000
+[INFO] 22:09:06:843 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:09:07:359 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:09:07:954 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:09:08:473 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 9 - Instrucción: NOOP
+[INFO] 22:09:08:977 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 10 - Instrucción: SUB AX BX
+[INFO] 22:09:09:479 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 11 - Instrucción: JNZ AX 4
+[INFO] 22:09:10:024 KernelMemory/(11355:12556): ## PID: 2 - Obtener instrucción: 12 - Instrucción: MUTEX_UNLOCK MUTEX_2
+[INFO] 22:09:10:579 KernelMemory/(11355:12556): ## PID: 9 - Obtener instrucción: 3 - Instrucción: NOOP
+[INFO] 22:09:11:083 KernelMemory/(11355:12556): ## PID: 9 - Obtener instrucción: 4 - Instrucción: MUTEX_UNLOCK MUTEX_2
+[INFO] 22:09:11:638 KernelMemory/(11355:12556): ## PID: 9 - Obtener instrucción: 5 - Instrucción: EXIT
+[INFO] 22:09:11:700 KernelMemory/(11355:11980): ## PID: 9 - Proceso finalizado, memoria liberada
+[INFO] 22:09:12:249 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:09:12:753 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:09:13:306 KernelMemory/(11355:12556): ## PID: 7 - Obtener instrucción: 4 - Instrucción: MUTEX_LOCK MUTEX_3
+[INFO] 22:09:13:811 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:09:14:458 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:09:14:965 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:09:15:505 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 9 - Instrucción: SUB AX BX
+[INFO] 22:09:16:007 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 10 - Instrucción: JNZ AX 3
+[INFO] 22:09:16:551 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:09:17:063 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:09:17:593 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:09:18:186 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:09:18:701 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 8 - Instrucción: MUTEX_UNLOCK MUTEX_3
+[INFO] 22:09:19:441 KernelMemory/(11355:12556): ## PID: 4 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:09:20:066 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:09:20:568 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:09:21:071 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 9 - Instrucción: SUB AX BX
+[INFO] 22:09:21:621 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 10 - Instrucción: JNZ AX 3
+[INFO] 22:09:22:143 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:09:22:669 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:09:23:236 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:09:23:741 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:09:24:311 KernelMemory/(11355:12556): ## PID: 4 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:09:24:829 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 9 - Instrucción: JNZ AX 3
+[INFO] 22:09:25:489 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:09:25:991 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:09:26:493 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 9 - Instrucción: SUB AX BX
+[INFO] 22:09:27:147 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 10 - Instrucción: JNZ AX 3
+[INFO] 22:09:27:737 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:09:28:246 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:09:28:750 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:09:29:302 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:09:29:861 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:09:30:373 KernelMemory/(11355:12556): ## PID: 3 - Obtener instrucción: 4 - Instrucción: MUTEX_LOCK MUTEX_3
+[INFO] 22:09:30:954 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:09:31:475 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 8 - Instrucción: NOOP
+[INFO] 22:09:32:065 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 9 - Instrucción: SUB AX BX
+[INFO] 22:09:32:568 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 10 - Instrucción: JNZ AX 3
+[INFO] 22:09:33:071 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 3 - Instrucción: SET BX 1
+[INFO] 22:09:33:634 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 4 - Instrucción: NOOP
+[INFO] 22:09:34:217 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 5 - Instrucción: NOOP
+[INFO] 22:09:34:729 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 6 - Instrucción: SLEEP 1000
+[INFO] 22:09:35:331 KernelMemory/(11355:12556): ## PID: 4 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:09:35:843 KernelMemory/(11355:12556): ## PID: 4 - Obtener instrucción: 8 - Instrucción: MUTEX_UNLOCK MUTEX_3
+[INFO] 22:09:36:446 KernelMemory/(11355:12556): ## PID: 1 - Obtener instrucción: 7 - Instrucción: NOOP
+[INFO] 22:09:36:446 KernelMemory/(11355:12556): Cliente desconectado (fd=9)
+[DEBUG] 22:13:01:843 KernelMemory/(12661:12661): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=BEST SEGMENT_MAX_SIZE=256
+[INFO] 22:13:01:843 KernelMemory/(12661:12661): Kernel Memory escuchando en puerto 23841
+[INFO] 22:13:04:376 KernelMemory/(12661:12903): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[DEBUG] 22:13:20:943 KernelMemory/(12904:12904): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=WORST SEGMENT_MAX_SIZE=128
+[INFO] 22:13:20:944 KernelMemory/(12904:12904): Kernel Memory escuchando en puerto 23841
+[INFO] 22:13:25:006 KernelMemory/(12904:13143): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 22:13:31:158 KernelMemory/(12904:13264): ## Memory Stick de 16 bytes Conectada - ID: 0 - Puerto: 41157
+[INFO] 22:13:35:014 KernelMemory/(12904:13386): ## Memory Stick de 16 bytes Conectada - ID: 1 - Puerto: 33805
+[INFO] 22:13:38:298 KernelMemory/(12904:13508): ## Memory Stick de 32 bytes Conectada - ID: 2 - Puerto: 39405
+[INFO] 22:14:19:756 KernelMemory/(12904:13657): ## Kernel Scheduler Conectado - FD del socket: 9
+[INFO] 22:14:19:757 KernelMemory/(12904:13657): ## PID: 0 - Proceso Creado
+[DEBUG] 22:14:19:757 KernelMemory/(12904:13657): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PLANI_MEM.prc
+[INFO] 22:14:36:017 KernelMemory/(12904:14239): ## CPU Conectada - FD: 10
+[INFO] 22:14:36:521 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:14:37:024 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 64
+[DEBUG] 22:14:37:030 KernelMemory/(12904:13657): PID: 0 - crear_segmento 0 (64 bytes): sin hueco contiguo — libre_total=64 -> pide compactación
+[INFO] 22:14:37:034 KernelMemory/(12904:13657): ## Inicio de compactación
+[INFO] 22:14:39:338 KernelMemory/(12904:14362): ## Memory Stick de 64 bytes Conectada - ID: 3 - Puerto: 46199
+[INFO] 22:15:07:035 KernelMemory/(12904:13657): ## Fin de compactación
+[DEBUG] 22:15:07:035 KernelMemory/(12904:13657): PID: 0 - crear_segmento 0 (64 bytes): hueco elegido (WORST) base=0 tamanio_hueco=64
+[INFO] 22:15:07:035 KernelMemory/(12904:13657): ## PID: 0 - Segmento Creado 0 - Tamaño: 64
+[INFO] 22:15:07:539 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 2 - Instrucción: SET AX 64
+[INFO] 22:15:08:042 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 3 - Instrucción: SET DI 0
+[INFO] 22:15:08:602 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 4 - Instrucción: MOV_OUT AX
+[INFO] 22:15:09:207 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 5 - Instrucción: MEM_ALLOC 1 32
+[DEBUG] 22:15:09:219 KernelMemory/(12904:13657): PID: 0 - crear_segmento 1 (32 bytes): hueco elegido (WORST) base=64 tamanio_hueco=64
+[INFO] 22:15:09:219 KernelMemory/(12904:13657): ## PID: 0 - Segmento Creado 1 - Tamaño: 32
+[INFO] 22:15:09:786 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 6 - Instrucción: SET AX 65
+[INFO] 22:15:10:295 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 7 - Instrucción: SET DI 128
+[INFO] 22:15:10:809 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 8 - Instrucción: MOV_OUT AX
+[INFO] 22:15:11:441 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 9 - Instrucción: MEM_ALLOC 2 16
+[DEBUG] 22:15:11:492 KernelMemory/(12904:13657): PID: 0 - crear_segmento 2 (16 bytes): hueco elegido (WORST) base=96 tamanio_hueco=32
+[INFO] 22:15:11:492 KernelMemory/(12904:13657): ## PID: 0 - Segmento Creado 2 - Tamaño: 16
+[INFO] 22:15:12:045 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 10 - Instrucción: SET AX 66
+[INFO] 22:15:12:545 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 11 - Instrucción: SET DI 256
+[INFO] 22:15:13:047 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 12 - Instrucción: MOV_OUT AX
+[INFO] 22:15:13:600 KernelMemory/(12904:14239): ## PID: 0 - Obtener instrucción: 13 - Instrucción: MEM_ALLOC 3 32
+[DEBUG] 22:15:13:698 KernelMemory/(12904:13657): PID: 0 - crear_segmento 3 (32 bytes): sin hueco contiguo — libre_total=16 -> sin espacio total, error
+[INFO] 22:15:13:701 KernelMemory/(12904:13657): ## PID: 0 - Proceso finalizado, memoria liberada
+[INFO] 22:15:14:121 KernelMemory/(12904:14574): ## CPU Conectada - FD: 12
+[INFO] 22:15:35:842 KernelMemory/(12904:14574): Cliente desconectado (fd=12)
+[INFO] 22:15:47:469 KernelMemory/(12904:13657): Cliente desconectado (fd=9)
+[INFO] 22:15:47:471 KernelMemory/(12904:14239): Cliente desconectado (fd=10)
+[DEBUG] 22:16:03:408 KernelMemory/(14580:14580): Config resuelta: SCRIPTS_BASEPATH=/home/utnso/plug-n-pray-pruebas/ ALLOCATION_STRATEGY=WORST SEGMENT_MAX_SIZE=128
+[INFO] 22:16:03:408 KernelMemory/(14580:14580): Kernel Memory escuchando en puerto 23841
+[INFO] 22:16:06:747 KernelMemory/(14580:14819): ## Swap Conectado - FD: 5 - Tamaño: 65536 bytes - Bloque: 256 bytes - Bloques totales: 256
+[INFO] 22:16:09:692 KernelMemory/(14580:14940): ## Memory Stick de 16 bytes Conectada - ID: 0 - Puerto: 33919
+[INFO] 22:16:18:944 KernelMemory/(14580:15062): ## Memory Stick de 32 bytes Conectada - ID: 1 - Puerto: 36557
+[INFO] 22:16:25:925 KernelMemory/(14580:15184): ## Memory Stick de 64 bytes Conectada - ID: 2 - Puerto: 41321
+[INFO] 22:16:34:892 KernelMemory/(14580:15306): ## Memory Stick de 128 bytes Conectada - ID: 3 - Puerto: 36575
+[INFO] 22:16:38:853 KernelMemory/(14580:15449): ## Kernel Scheduler Conectado - FD del socket: 10
+[INFO] 22:16:38:853 KernelMemory/(14580:15449): ## PID: 0 - Proceso Creado
+[DEBUG] 22:16:38:853 KernelMemory/(14580:15449): PID: 0 - Path de script guardado: /home/utnso/plug-n-pray-pruebas/PLANI_MEM.prc
+[INFO] 22:16:47:970 KernelMemory/(14580:16025): ## CPU Conectada - FD: 11
+[INFO] 22:16:48:471 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 0 - Instrucción: NOOP
+[INFO] 22:16:48:974 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 1 - Instrucción: MEM_ALLOC 0 64
+[DEBUG] 22:16:48:979 KernelMemory/(14580:15449): PID: 0 - crear_segmento 0 (64 bytes): hueco elegido (WORST) base=112 tamanio_hueco=128
+[INFO] 22:16:48:979 KernelMemory/(14580:15449): ## PID: 0 - Segmento Creado 0 - Tamaño: 64
+[INFO] 22:16:49:528 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 2 - Instrucción: SET AX 64
+[INFO] 22:16:50:030 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 3 - Instrucción: SET DI 0
+[INFO] 22:16:50:533 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 4 - Instrucción: MOV_OUT AX
+[INFO] 22:16:51:086 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 5 - Instrucción: MEM_ALLOC 1 32
+[DEBUG] 22:16:51:089 KernelMemory/(14580:15449): PID: 0 - crear_segmento 1 (32 bytes): hueco elegido (WORST) base=48 tamanio_hueco=64
+[INFO] 22:16:51:089 KernelMemory/(14580:15449): ## PID: 0 - Segmento Creado 1 - Tamaño: 32
+[INFO] 22:16:51:636 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 6 - Instrucción: SET AX 65
+[INFO] 22:16:52:137 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 7 - Instrucción: SET DI 128
+[INFO] 22:16:52:685 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 8 - Instrucción: MOV_OUT AX
+[INFO] 22:16:53:238 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 9 - Instrucción: MEM_ALLOC 2 16
+[DEBUG] 22:16:53:289 KernelMemory/(14580:15449): PID: 0 - crear_segmento 2 (16 bytes): hueco elegido (WORST) base=176 tamanio_hueco=64
+[INFO] 22:16:53:289 KernelMemory/(14580:15449): ## PID: 0 - Segmento Creado 2 - Tamaño: 16
+[INFO] 22:16:53:838 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 10 - Instrucción: SET AX 66
+[INFO] 22:16:54:348 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 11 - Instrucción: SET DI 256
+[INFO] 22:16:54:555 KernelMemory/(14580:16224): ## CPU Conectada - FD: 12
+[INFO] 22:16:54:849 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 12 - Instrucción: MOV_OUT AX
+[INFO] 22:16:55:409 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 13 - Instrucción: MEM_ALLOC 3 32
+[DEBUG] 22:16:55:508 KernelMemory/(14580:15449): PID: 0 - crear_segmento 3 (32 bytes): hueco elegido (WORST) base=192 tamanio_hueco=48
+[INFO] 22:16:55:509 KernelMemory/(14580:15449): ## PID: 0 - Segmento Creado 3 - Tamaño: 32
+[INFO] 22:16:56:071 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 14 - Instrucción: SET AX 67
+[INFO] 22:16:56:585 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 15 - Instrucción: SET DI 384
+[INFO] 22:16:57:135 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 16 - Instrucción: MOV_OUT AX
+[INFO] 22:16:57:649 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 17 - Instrucción: MEM_ALLOC 4 64
+[DEBUG] 22:16:57:696 KernelMemory/(14580:15449): PID: 0 - crear_segmento 4 (64 bytes): sin hueco contiguo — libre_total=96 -> pide compactación
+[INFO] 22:16:57:696 KernelMemory/(14580:15449): ## Inicio de compactación
+[INFO] 22:17:27:825 KernelMemory/(14580:15449): ## Fin de compactación
+[DEBUG] 22:17:27:825 KernelMemory/(14580:15449): PID: 0 - crear_segmento 4 (64 bytes): hueco elegido (WORST) base=144 tamanio_hueco=96
+[INFO] 22:17:27:825 KernelMemory/(14580:15449): ## PID: 0 - Segmento Creado 4 - Tamaño: 64
+[INFO] 22:17:28:373 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 18 - Instrucción: SET AX 68
+[INFO] 22:17:28:878 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 19 - Instrucción: SET DI 512
+[INFO] 22:17:29:384 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 20 - Instrucción: MOV_OUT AX
+[INFO] 22:17:29:945 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 21 - Instrucción: MEM_FREE 0
+[INFO] 22:17:30:498 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 22 - Instrucción: NOOP
+[INFO] 22:17:31:009 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 23 - Instrucción: NOOP
+[INFO] 22:17:31:511 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 24 - Instrucción: MEM_ALLOC 5 32
+[DEBUG] 22:17:31:689 KernelMemory/(14580:15449): PID: 0 - crear_segmento 5 (32 bytes): hueco elegido (WORST) base=0 tamanio_hueco=64
+[INFO] 22:17:31:689 KernelMemory/(14580:15449): ## PID: 0 - Segmento Creado 5 - Tamaño: 32
+[INFO] 22:17:32:236 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 25 - Instrucción: SET AX 69
+[INFO] 22:17:32:738 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 26 - Instrucción: SET DI 640
+[INFO] 22:17:33:240 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 27 - Instrucción: MOV_OUT AX
+[INFO] 22:17:33:789 KernelMemory/(14580:16025): ## PID: 0 - Obtener instrucción: 28 - Instrucción: MEM_ALLOC 6 48
+[DEBUG] 22:17:33:835 KernelMemory/(14580:15449): PID: 0 - crear_segmento 6 (48 bytes): sin hueco contiguo — libre_total=64 -> pide compactación
+[INFO] 22:17:33:837 KernelMemory/(14580:15449): ## Inicio de compactación
+[INFO] 22:17:38:035 KernelMemory/(14580:16224): Cliente desconectado (fd=12)
