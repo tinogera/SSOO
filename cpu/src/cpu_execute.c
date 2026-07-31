@@ -15,6 +15,12 @@ static uint32_t parsear_uint32(const char* valor) {
     return (uint32_t) strtoul(valor, NULL, 10);
 }
 
+static void avanzar_pc_si_corresponde(t_registros_cpu* registros, const char* registro_destino) {
+    if (strcmp(registro_destino, "PC") != 0) {
+        registros->pc++;
+    }
+}
+
 static void loguear_ejecucion(t_instruccion_decodificada* instruccion, uint32_t pid, t_log* logger) {
     char parametros[CPU_MAX_PARAMETROS * CPU_MAX_PARAMETRO_LENGTH] = "";
 
@@ -43,9 +49,8 @@ static t_resultado_ejecucion ejecutar_set(t_instruccion_decodificada* instruccio
         return CPU_EXEC_ERROR;
     }
 
-    // Incluso si el destino fue PC, SET termina incrementándolo como indica
-    // este flujo. Por eso SET PC 0 deja la próxima búsqueda en PC 1.
-    registros->pc++;
+    // Si la instrucción escribió PC, ese valor ya indica la próxima instrucción.
+    avanzar_pc_si_corresponde(registros, instruccion->parametros[0]);
     return CPU_EXEC_OK;
 }
 
@@ -68,7 +73,7 @@ static t_resultado_ejecucion ejecutar_sum(t_instruccion_decodificada* instruccio
         return CPU_EXEC_ERROR;
     }
 
-    registros->pc++;
+    avanzar_pc_si_corresponde(registros, instruccion->parametros[0]);
     return CPU_EXEC_OK;
 }
 
@@ -91,7 +96,7 @@ static t_resultado_ejecucion ejecutar_sub(t_instruccion_decodificada* instruccio
         return CPU_EXEC_ERROR;
     }
 
-    registros->pc++;
+    avanzar_pc_si_corresponde(registros, instruccion->parametros[0]);
     return CPU_EXEC_OK;
 }
 
@@ -105,7 +110,7 @@ static t_resultado_ejecucion ejecutar_jnz(t_instruccion_decodificada* instruccio
         return CPU_EXEC_ERROR;
     }
 
-    // JNZ es la única básica que puede reemplazar PC en vez de incrementarlo.
+    // Si hay salto, el destino reemplaza PC; si no, continúa normalmente.
     if (valor_registro != 0) {
         registros->pc = parsear_uint32(instruccion->parametros[1]);
     } else {

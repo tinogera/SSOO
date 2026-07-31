@@ -101,6 +101,9 @@ typedef enum {
     MSG_TABLA_SEGMENTOS,        // 51 KM → CPU: tabla actualizada
     MSG_FINALIZAR_PROCESO,      // 52 KS → KM: { pid } — libera segmentos + contexto al finalizar
 
+    MSG_SOLICITAR_MEMORY_STICK,             // CPU -> KM: resolver endpoint por ID
+    MSG_MEMORY_STICK_ENDPOINT,              // KM -> CPU: endpoint y rango fisico
+    MSG_SOLICITAR_MEMORY_STICK_DIRECCION,   // CPU -> KM: resolver por direccion global
     // Marcador de fin — SIEMPRE tiene que ser el último
     MSG_CANTIDAD
 } op_code;
@@ -206,6 +209,29 @@ typedef struct __attribute__((packed)) {
 typedef struct __attribute__((packed)) {
     uint32_t nro_bloque;
 } t_payload_swap_escribir;
+
+// El MS publica su tamanio y el puerto donde acepta conexiones de CPU. KM
+// obtiene la IP desde la conexion entrante y asigna ID y base global.
+typedef struct __attribute__((packed)) {
+    uint32_t tamanio;
+    uint32_t puerto;
+} t_payload_memory_stick_identificacion;
+
+typedef struct __attribute__((packed)) {
+    uint32_t id_memory_stick;
+} t_payload_solicitar_memory_stick;
+
+typedef struct __attribute__((packed)) {
+    uint32_t direccion_fisica;
+} t_payload_solicitar_memory_stick_direccion;
+
+typedef struct __attribute__((packed)) {
+    uint32_t id_memory_stick;
+    uint32_t ipv4;
+    uint32_t puerto;
+    uint32_t base_global;
+    uint32_t tamanio;
+} t_payload_memory_stick_endpoint;
 
 // --- Enums de motivos ---
 typedef enum {

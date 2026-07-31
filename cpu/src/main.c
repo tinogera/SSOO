@@ -14,6 +14,7 @@
 #include "cpu_dispatch.h"
 #include "cpu_registros.h"
 #include "cpu_handshake.h"
+#include "cpu_memory_sticks.h"
 
 /*
  * Este archivo es el recorrido general de la CPU. Para explicarlo en el oral:
@@ -33,24 +34,72 @@ int main(int argc, char* argv[]) {
     char* cpu_id = argv[2];
 
     t_config* config = config_create(config_path);
-    t_log* logger = log_create("cpu.log", cpu_id, 1, log_level_from_string(config_get_string_value(config, "LOG_LEVEL")));
+    if (config == NULL) {
+        fprintf(stderr, "No se pudo leer el archivo de configuracion: %s\n", config_path);
+        return 1;
+    }
+
+    char* fin_cpu_id = NULL;
+    unsigned long cpu_id_parseado = strtoul(cpu_id, &fin_cpu_id, 10);
+    if (fin_cpu_id == cpu_id || *fin_cpu_id != '\0' || cpu_id_parseado > UINT32_MAX) {
+        fprintf(stderr, "ID de CPU invalido: %s\n", cpu_id);
+        config_destroy(config);
+        return 1;
+    }
+    uint32_t cpu_id_numero = (uint32_t) cpu_id_parseado;
+
+    char log_file[64];
+    snprintf(log_file, sizeof(log_file), "cpu_%u.log", cpu_id_numero);
+    char* log_level = config_has_property(config, "LOG_LEVEL")
+        ? config_get_string_value(config, "LOG_LEVEL")
+        : "INFO";
+    t_log* logger = log_create(log_file, cpu_id, 1, log_level_from_string(log_level));
+    if (logger == NULL) {
+        fprintf(stderr, "No se pudo crear el logger de CPU\n");
+        config_destroy(config);
+        return 1;
+    }
     t_registros_cpu registros;
     inicializar_registros_cpu(&registros);
 
     log_info(logger, "CPU %s iniciada", cpu_id);
     log_info(logger, "Registros CPU inicializados - PC: %u", registros.pc);
 
+    if (!config_has_property(config, "IP_KERNEL") ||
+        !config_has_property(config, "PUERTO_KERNEL") ||
+        !config_has_property(config, "IP_MEMORY") ||
+        !config_has_property(config, "PUERTO_MEMORY")) {
+        log_error(logger, "Faltan datos de conexion obligatorios en el config de CPU");
+        log_destroy(logger);
+        config_destroy(config);
+        return 1;
+    }
+
     char* ip_kernel = config_get_string_value(config, "IP_KERNEL");
     int puerto_kernel = config_get_int_value(config, "PUERTO_KERNEL");
 
     char* ip_memory = config_get_string_value(config, "IP_MEMORY");
     int puerto_memory = config_get_int_value(config, "PUERTO_MEMORY");
+    if (puerto_kernel <= 0 || puerto_kernel > UINT16_MAX ||
+        puerto_memory <= 0 || puerto_memory > UINT16_MAX) {
+        log_error(logger, "Puerto de Kernel o Kernel Memory fuera de rango");
+        log_destroy(logger);
+        config_destroy(config);
+        return 1;
+    }
 
     // Este valor tiene que coincidir con KM. Si no coincide, los dos módulos
     // interpretarían una misma dirección lógica como segmentos distintos.
     uint32_t tamanio_max_segmento = 256;
     if (config_has_property(config, "SEGMENT_MAX_SIZE")) {
-        tamanio_max_segmento = (uint32_t) config_get_int_value(config, "SEGMENT_MAX_SIZE");
+        int tamanio_config = config_get_int_value(config, "SEGMENT_MAX_SIZE");
+        if (tamanio_config <= 0) {
+            log_error(logger, "SEGMENT_MAX_SIZE debe ser mayor que cero");
+            log_destroy(logger);
+            config_destroy(config);
+            return 1;
+        }
+        tamanio_max_segmento = (uint32_t) tamanio_config;
     }
     set_segment_max_size(tamanio_max_segmento);
 
@@ -78,6 +127,7 @@ int main(int argc, char* argv[]) {
                 log_error(logger, "Kernel Scheduler cerro la conexion durante la identificacion");
             else
                 log_error(logger, "Kernel Scheduler rechazo la identificacion");
+            close(socket_kernel);
             socket_kernel = -1;
         }
 
@@ -102,6 +152,7 @@ int main(int argc, char* argv[]) {
                 log_error(logger, "Kernel Memory cerro la conexion durante el handshake");
             else
                 log_error(logger, "Kernel Memory rechazo la conexion");
+            close(socket_memory);
             socket_memory = -1;
         }
 
@@ -134,8 +185,17 @@ int main(int argc, char* argv[]) {
             }
         }
 
+        if (!config_has_property(config, key_puerto)) {
+            log_warning(logger, "Falta %s; el Memory Stick %d se resolvera mediante KM", key_puerto, idx);
+            continue;
+        }
+
         char* ip_ms    = config_get_string_value(config, key_ip);
         int   puerto_ms = config_get_int_value(config, key_puerto);
+        if (puerto_ms <= 0 || puerto_ms > UINT16_MAX) {
+            log_warning(logger, "Puerto invalido para Memory Stick %d", idx);
+            continue;
+        }
 
         int fd = conectar_a_servidor(ip_ms, puerto_ms);
         if (fd == -1) {
@@ -144,7 +204,7 @@ int main(int argc, char* argv[]) {
         }
 
         // Los enteros que viajan por socket se mandan en byte order de red.
-        uint32_t cpu_id_n = htonl((uint32_t) atoi(cpu_id));
+        uint32_t cpu_id_n = htonl(cpu_id_numero);
         enviar_mensaje(fd, MSG_CPU_IDENTIFICACION, &cpu_id_n, sizeof(cpu_id_n));
 
         t_mensaje* resp_ms = recibir_mensaje(fd);
@@ -159,6 +219,26 @@ int main(int argc, char* argv[]) {
         log_info(logger, "## Conectado a Memory Stick %d", idx);
         sockets_ms[idx] = fd;
         n_sockets_ms = idx + 1;
+    }
+
+    // KM es la fuente de endpoints para sticks que aparezcan despues de
+    // iniciar la CPU. Los sockets del config se conservan como compatibilidad.
+    t_cpu_memory_sticks memory_sticks;
+    cpu_memory_sticks_inicializar(
+        &memory_sticks,
+        socket_memory,
+        cpu_id_numero,
+        logger
+    );
+    for (int i = 0; i < n_sockets_ms; i++) {
+        if (sockets_ms[i] < 0) {
+            continue;
+        }
+        if (cpu_memory_sticks_registrar_socket(&memory_sticks, (uint32_t) i, sockets_ms[i])) {
+            sockets_ms[i] = -1;
+        } else {
+            log_error(logger, "No se pudo registrar la conexion a Memory Stick %d", i);
+        }
     }
 
     // Este while representa las distintas ráfagas que atiende una misma CPU.
@@ -182,8 +262,7 @@ int main(int argc, char* argv[]) {
         t_resultado_ciclo_cpu resultado_ciclo = ejecutar_ciclo_proceso(
             socket_kernel,
             socket_memory,
-            sockets_ms,
-            n_sockets_ms,
+            &memory_sticks,
             pid,
             contexto,
             &registros,
@@ -219,8 +298,9 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    close(socket_kernel);
-    close(socket_memory);
+    if (socket_kernel >= 0) close(socket_kernel);
+    if (socket_memory >= 0) close(socket_memory);
+    cpu_memory_sticks_destruir(&memory_sticks);
     for (int i = 0; i < CPU_MAX_MS; i++) {
         if (sockets_ms[i] != -1) close(sockets_ms[i]);
     }

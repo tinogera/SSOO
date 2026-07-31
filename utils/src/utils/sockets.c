@@ -2,10 +2,16 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <pthread.h>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+// Un mensaje se envía como cabecera + payload. Varios hilos no deben
+// intercalar esas partes sobre un mismo socket; serializar los envíos en cada
+// proceso mantiene intacto el framing del protocolo.
+static pthread_mutex_t mutex_envios = PTHREAD_MUTEX_INITIALIZER;
 
 // ---------------------------------------------------------------------------
 // Función interna: enviar exactamente N bytes por el socket
@@ -118,15 +124,28 @@ int conectar_a_servidor(char* ip, int puerto) {
 // enviar_mensaje
 // ---------------------------------------------------------------------------
 void enviar_mensaje(int fd, uint32_t op_code, void* payload, uint32_t payload_size) {
+    if (fd < 0 || (payload_size > 0 && payload == NULL)) {
+        return;
+    }
+    pthread_mutex_lock(&mutex_envios);
+
     uint32_t code_n = htonl(op_code);
-    enviar_bytes(fd, &code_n, sizeof(code_n));
+    if (enviar_bytes(fd, &code_n, sizeof(code_n)) < 0) {
+        pthread_mutex_unlock(&mutex_envios);
+        return;
+    }
 
     uint32_t size_n = htonl(payload_size);
-    enviar_bytes(fd, &size_n, sizeof(size_n));
+    if (enviar_bytes(fd, &size_n, sizeof(size_n)) < 0) {
+        pthread_mutex_unlock(&mutex_envios);
+        return;
+    }
 
     if (payload_size > 0 && payload != NULL) {
         enviar_bytes(fd, payload, payload_size);
     }
+
+    pthread_mutex_unlock(&mutex_envios);
 }
 
 // ---------------------------------------------------------------------------
