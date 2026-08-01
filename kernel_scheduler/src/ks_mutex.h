@@ -65,4 +65,14 @@ int mutex_ks_lock(uint32_t pid, int prioridad, const char* nombre, t_log* logger
 int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger,
                     int* prioridad_restaurar);
 
+/*
+ * Prioridad más alta (número más chico) entre los waiters de TODOS los mutex
+ * que posee pid. Devuelve INT_MAX si pid no posee mutex o ninguno tiene cola.
+ *
+ * Es la pieza que faltaba para que la herencia sea correcta con más de un
+ * mutex: mirando un solo mutex, soltarlo restauraría la prioridad base aunque
+ * otro mutex retenido siga teniendo un waiter más prioritario.
+ */
+int mutex_ks_prioridad_heredada(uint32_t pid);
+
 #endif
