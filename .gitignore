@@ -6,6 +6,10 @@ instalacion.md
 # Archivos de configuración local (no commitear, cada uno tiene el suyo)
 *.config
 
+# Logs de ejecución: el logger appendea sobre el archivo existente, así que un
+# .log versionado contamina cualquier grep del evaluador con corridas viejas.
+*.log
+
 # Binarios compilados
 bin/
 

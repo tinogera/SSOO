@@ -1212,6 +1212,12 @@ static void* atender_cliente(void* arg) {
             list_add(memory_sticks, ms);
             pthread_rwlock_unlock(&rwlock_memory_sticks);
             agregar_hueco(ms->offset_global, tamanio);
+            // El stick nuevo se ubica justo después del último rango físico, así
+            // que su hueco casi siempre es contiguo al hueco final ya existente.
+            // Sin fusionar quedan dos huecos adyacentes y best_fit ve una
+            // fragmentación que no existe: un CREAR_SEGMENTO que entra sin
+            // problemas termina disparando una compactación de más.
+            fusionar_huecos();
             pthread_mutex_unlock(&mutex_memoria);
 
             pthread_t monitor;

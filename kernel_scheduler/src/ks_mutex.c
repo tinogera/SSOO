@@ -1,5 +1,6 @@
 #include "ks_mutex.h"
 
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <utils/sockets.h>
@@ -83,12 +84,11 @@ int mutex_ks_lock(uint32_t pid, int prioridad, const char* nombre, t_log* logger
     log_debug(logger, "Mutex %s: (%u) queda esperando — %d proceso(s) en cola de espera",
               nombre, pid, (int)queue_size(m->cola_espera));
 
-    // Herencia de prioridades: si el waiter tiene mayor prioridad (número menor)
-    // que la prioridad original del owner, señalamos al llamador que eleve al owner.
-    if (prioridad < m->owner_prioridad_original) {
-        *owner_a_elevar        = m->owner_pid;
-        *nueva_prioridad_owner = prioridad;
-    }
+    // Herencia de prioridades: se señala siempre al owner. Quién decide si hay
+    // que moverle la prioridad es el llamador, recalculando la efectiva contra
+    // todos los mutex que posee — no contra este solo.
+    *owner_a_elevar        = m->owner_pid;
+    *nueva_prioridad_owner = prioridad;
 
     pthread_mutex_unlock(&m->lock);
     return 1;
@@ -135,4 +135,30 @@ int mutex_ks_unlock(uint32_t pid, const char* nombre, t_log* logger,
     m->owner_prioridad_original = -1;
     pthread_mutex_unlock(&m->lock);
     return -1;
+}
+
+// ---------------------------------------------------------------------------
+// mutex_ks_prioridad_heredada
+// ---------------------------------------------------------------------------
+int mutex_ks_prioridad_heredada(uint32_t pid) {
+    int mejor = INT_MAX;
+
+    // Mismo orden de toma que el resto del archivo (lista y después mutex),
+    // así que no puede haber deadlock con lock/unlock corriendo en paralelo.
+    pthread_mutex_lock(&lock_lista);
+    for (int i = 0; i < list_size(lista_mutexes); i++) {
+        t_ks_mutex* m = list_get(lista_mutexes, i);
+        pthread_mutex_lock(&m->lock);
+        if (m->owner_pid == (int)pid) {
+            t_list* esperando = m->cola_espera->elements;
+            for (int j = 0; j < list_size(esperando); j++) {
+                t_mutex_waiter* w = list_get(esperando, j);
+                if (w->prioridad < mejor) mejor = w->prioridad;
+            }
+        }
+        pthread_mutex_unlock(&m->lock);
+    }
+    pthread_mutex_unlock(&lock_lista);
+
+    return mejor;
 }

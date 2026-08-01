@@ -140,10 +140,26 @@ static void encolar_al_frente_en_ready(t_proceso* proc) {
 static void verificar_preemption(t_proceso* entrante) {
     if (!queue_preemption) return;
 
+    // Si hay una CPU libre el entrante se despacha ahí: desalojar a otro sería
+    // sacar de ejecución a un proceso para nada (y ensuciar el log con un
+    // "Desalojado" que no corresponde). Se toma y suelta mutex_cpus sin anidar
+    // con mutex_exec para no invertir el orden que usa el planificador.
+    pthread_mutex_lock(&mutex_cpus);
+    bool hay_cpu_libre = false;
+    for (int i = 0; i < list_size(lista_cpus); i++) {
+        t_cpu_entry* e = list_get(lista_cpus, i);
+        if (!e->ocupada) { hay_cpu_libre = true; break; }
+    }
+    pthread_mutex_unlock(&mutex_cpus);
+    if (hay_cpu_libre) return;
+
     pthread_mutex_lock(&mutex_exec);
     t_proceso* victima = NULL;
     for (int i = 0; i < (int)queue_size(cola_exec); i++) {
         t_proceso* p = list_get(cola_exec->elements, i);
+        // Un proceso ya interrumpido está saliendo de EXEC: volver a elegirlo
+        // gasta el desalojo y deja corriendo al que en realidad había que sacar.
+        if (p->preemptado) continue;
         if (p->prioridad > entrante->prioridad &&
             (victima == NULL || p->prioridad > victima->prioridad)) {
             victima = p;
@@ -695,6 +711,7 @@ t_proceso* crear_proceso(char* path, int prioridad) {
     proc->estado                 = NEW;
     proc->controladorDeProgramas = 0;
     proc->prioridad              = prioridad;
+    proc->prioridad_base         = prioridad;
     proc->fd_cpu                 = -1;
     proc->preemptado             = 0;
     proc->gen_despacho           = 0;
@@ -1070,6 +1087,26 @@ static void aplicar_cambio_prioridad(t_proceso* proc, int nueva_prioridad) {
     }
 
     proc->prioridad = nueva_prioridad;
+}
+
+// Herencia de prioridades, versión completa: la prioridad efectiva de un
+// proceso es su prioridad base, salvo que alguno de los mutex que posee tenga
+// un waiter más prioritario. Recalcular siempre contra TODOS los mutex es lo
+// que hace correctos los casos que un solo mutex no cubre:
+//   - poseer dos mutex y soltar uno (el otro puede seguir elevando),
+//   - recibir un mutex por transferencia con waiters ya encolados.
+static void recalcular_prioridad_efectiva(t_proceso* proc) {
+    if (!proc) return;
+
+    int efectiva = proc->prioridad_base;
+    int heredada = mutex_ks_prioridad_heredada((uint32_t)proc->PID);
+    if (heredada < efectiva) efectiva = heredada;
+
+    if (efectiva == proc->prioridad) return;
+
+    log_info(logger, "## %d Cambio de prioridad: %d - %d",
+             proc->PID, proc->prioridad, efectiva);
+    aplicar_cambio_prioridad(proc, efectiva);
 }
 
 static void* thread_suspension_timer(void* arg) {
@@ -1565,14 +1602,11 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 cambiar_estado(proc, READY);
                 encolar_en_ready(proc);
             } else if (resultado == 1) {
-                // Herencia de prioridades: elevar al owner si corresponde.
+                // Herencia de prioridades: el waiter ya quedó encolado, así que
+                // recalcular la efectiva del owner lo eleva si corresponde.
+                (void)nueva_prioridad_owner;
                 if (owner_a_elevar >= 0) {
-                    t_proceso* owner = buscar_proceso_activo(owner_a_elevar);
-                    if (owner && owner->prioridad > nueva_prioridad_owner) {
-                        log_info(logger, "## %d Cambio de prioridad: %d - %d",
-                                 owner->PID, owner->prioridad, nueva_prioridad_owner);
-                        aplicar_cambio_prioridad(owner, nueva_prioridad_owner);
-                    }
+                    recalcular_prioridad_efectiva(buscar_proceso_activo(owner_a_elevar));
                 }
                 mover_a_block(proc);
             } else {
@@ -1656,14 +1690,15 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             int prioridad_restaurar;
             int waiter_pid = mutex_ks_unlock(pid, p->nombre, logger, &prioridad_restaurar);
 
-            // Restaurar la prioridad original del owner si fue elevada por herencia.
-            if (prioridad_restaurar >= 0) {
-                t_proceso* owner = buscar_proceso_activo(pid);
-                if (owner && owner->prioridad != prioridad_restaurar) {
-                    log_info(logger, "## %d Cambio de prioridad: %d - %d",
-                             owner->PID, owner->prioridad, prioridad_restaurar);
-                    aplicar_cambio_prioridad(owner, prioridad_restaurar);
-                }
+            // Bajar al que soltó: vuelve a su base salvo que otro mutex que
+            // todavía posee tenga un waiter más prioritario.
+            (void)prioridad_restaurar;
+            recalcular_prioridad_efectiva(buscar_proceso_activo(pid));
+
+            if (waiter_pid >= 0) {
+                // El nuevo dueño hereda de los waiters que quedaron en la cola
+                // de ESTE mutex, que él nunca vio pasar por un LOCK propio.
+                recalcular_prioridad_efectiva(buscar_proceso_activo(waiter_pid));
             }
 
             if (waiter_pid >= 0) {
