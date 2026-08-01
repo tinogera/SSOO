@@ -24,6 +24,8 @@ static t_proceso* crear_proceso(int pid, int prioridad) {
     p->fd_cpu           = -1;
     p->preemptado       = 0;
     p->gen_despacho     = 0;
+    p->gen_bloqueo      = 0;
+    p->esperando_stdin  = 0;
     p->tiempo_suspension = 0;
     return p;
 }

@@ -19,3 +19,6 @@ obj/
 !.vscode/launch.json
 !.vscode/settings.json
 !.vscode/tasks.json
+
+# Archivos de configuración local (no commitear, cada uno tiene el suyo)
+*.config

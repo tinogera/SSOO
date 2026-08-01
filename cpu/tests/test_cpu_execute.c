@@ -61,6 +61,20 @@ context (cpu_execute) {
             log_destroy(logger);
         } end
 
+        it ("no incrementa el program counter cuando PC es el destino") {
+            t_log* logger = crear_logger_test();
+            t_registros_cpu registros;
+            inicializar_registros_cpu(&registros);
+
+            t_instruccion_decodificada instruccion = decode_instruccion("SET PC 7");
+            t_resultado_ejecucion resultado = ejecutar_instruccion(&instruccion, &registros, 1, logger);
+
+            should_int(resultado) be equal to(CPU_EXEC_OK);
+            should_int(registros.pc) be equal to(7);
+
+            log_destroy(logger);
+        } end
+
     } end
 
     describe ("SUM") {
@@ -82,6 +96,22 @@ context (cpu_execute) {
             log_destroy(logger);
         } end
 
+        it ("no incrementa el program counter cuando SUM escribe PC") {
+            t_log* logger = crear_logger_test();
+            t_registros_cpu registros;
+            inicializar_registros_cpu(&registros);
+            registros.pc = 5;
+            registros.eax = 3;
+
+            t_instruccion_decodificada instruccion = decode_instruccion("SUM PC EAX");
+            t_resultado_ejecucion resultado = ejecutar_instruccion(&instruccion, &registros, 1, logger);
+
+            should_int(resultado) be equal to(CPU_EXEC_OK);
+            should_int(registros.pc) be equal to(8);
+
+            log_destroy(logger);
+        } end
+
     } end
 
     describe ("SUB") {
@@ -99,6 +129,22 @@ context (cpu_execute) {
             should_int(resultado) be equal to(CPU_EXEC_OK);
             should_int(registros.eax) be equal to(6);
             should_int(registros.pc) be equal to(1);
+
+            log_destroy(logger);
+        } end
+
+        it ("no incrementa el program counter cuando SUB escribe PC") {
+            t_log* logger = crear_logger_test();
+            t_registros_cpu registros;
+            inicializar_registros_cpu(&registros);
+            registros.pc = 10;
+            registros.eax = 4;
+
+            t_instruccion_decodificada instruccion = decode_instruccion("SUB PC EAX");
+            t_resultado_ejecucion resultado = ejecutar_instruccion(&instruccion, &registros, 1, logger);
+
+            should_int(resultado) be equal to(CPU_EXEC_OK);
+            should_int(registros.pc) be equal to(6);
 
             log_destroy(logger);
         } end

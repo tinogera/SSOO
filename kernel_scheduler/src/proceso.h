@@ -12,10 +12,13 @@ typedef struct {
     int      PID;
     t_estado estado;
     uint32_t controladorDeProgramas;
-    int      prioridad;
+    int      prioridad;         // prioridad EFECTIVA: base, o heredada si es mayor
+    int      prioridad_base;    // la que le dio INIT_PROC; la herencia nunca la pisa
     int      fd_cpu;            // fd de la CPU que lo ejecuta (-1 si ninguna)
     int      preemptado;        // 1 si fue desalojado por QUEUE_PREEMPTION (va al frente de READY)
     int      gen_despacho;      // se incrementa en cada despacho; invalida timers de quantum viejos
+    int      gen_bloqueo;       // se incrementa en cada IO; invalida timers de suspensión viejos
+    int      esperando_stdin;   // 1 hasta que los bytes de STDIN se persisten en KM
     time_t   tiempo_suspension; // epoch al momento de pasar a SUSP_BLOCK
 } t_proceso;
 

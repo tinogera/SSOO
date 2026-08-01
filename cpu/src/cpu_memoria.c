@@ -41,7 +41,7 @@ static uint32_t bytes_a_valor(uint8_t* origen, uint32_t tamanio) {
 bool memoria_read(int socket_memory, uint32_t direccion, uint32_t tamanio, void* valor) {
     // Aunque el parámetro se llama socket_memory, desde CPU este fd es el del
     // Memory Stick elegido por la tabla de segmentos.
-    if (socket_memory < 0 || valor == NULL) {
+    if (socket_memory < 0 || valor == NULL || tamanio == 0) {
         return false;
     }
 
@@ -59,7 +59,8 @@ bool memoria_read(int socket_memory, uint32_t direccion, uint32_t tamanio, void*
     }
 
     bool ok = respuesta->op_code == MSG_MEMORY_READ_RESPUESTA &&
-              respuesta->payload_size >= tamanio;
+              respuesta->payload != NULL &&
+              respuesta->payload_size == tamanio;
     if (ok) {
         memcpy(valor, respuesta->payload, tamanio);
     }
@@ -69,7 +70,8 @@ bool memoria_read(int socket_memory, uint32_t direccion, uint32_t tamanio, void*
 }
 
 bool memoria_write(int socket_memory, uint32_t direccion, uint32_t tamanio, const void* datos) {
-    if (socket_memory < 0 || datos == NULL) {
+    if (socket_memory < 0 || datos == NULL || tamanio == 0 ||
+        tamanio > UINT32_MAX - sizeof(t_payload_escribir_memoria)) {
         return false;
     }
 
@@ -132,25 +134,134 @@ static t_resultado_memoria_cpu traducir_o_fallar(
     return CPU_MEMORIA_ERROR;
 }
 
-static int fd_para_ms(int* sockets_ms, int n_sockets_ms, uint32_t id_ms) {
-    // El id del Memory Stick se usa como índice en el arreglo armado en main.
-    if ((int)id_ms < n_sockets_ms) return sockets_ms[id_ms];
-    return -1;
+static bool resolver_inicio(
+    t_cpu_memory_sticks* memory_sticks,
+    uint32_t id_memory_stick,
+    uint32_t direccion,
+    t_cpu_memory_stick_resuelto* stick
+) {
+    if (!cpu_memory_sticks_resolver_id(memory_sticks, id_memory_stick, stick)) {
+        return false;
+    }
+
+    if (!stick->rango_conocido ||
+        (direccion >= stick->base_global &&
+         (uint64_t) direccion < (uint64_t) stick->base_global + stick->tamanio)) {
+        return true;
+    }
+
+    return cpu_memory_sticks_resolver_direccion(memory_sticks, direccion, stick);
 }
 
-static int fd_para_ms_logueado(int* sockets_ms, int n_sockets_ms, uint32_t id_ms, t_log* logger) {
-    int fd = fd_para_ms(sockets_ms, n_sockets_ms, id_ms);
-    if (fd < 0) {
-        log_debug(logger,
-            "fd_para_ms: Memory Stick %u no está conectado a esta CPU (hay %d conectados)",
-            id_ms, n_sockets_ms);
+static uint32_t tamanio_fragmento(
+    const t_cpu_memory_stick_resuelto* stick,
+    uint32_t direccion,
+    uint32_t pendiente
+) {
+    if (!stick->rango_conocido) {
+        return pendiente;
     }
-    return fd;
+    uint64_t fin = (uint64_t) stick->base_global + stick->tamanio;
+    if ((uint64_t) direccion >= fin) {
+        return 0;
+    }
+    uint64_t disponible = fin - direccion;
+    return disponible < pendiente ? (uint32_t) disponible : pendiente;
+}
+
+static bool memoria_read_fragmentada(
+    t_cpu_memory_sticks* memory_sticks,
+    uint32_t id_memory_stick,
+    uint32_t direccion,
+    uint32_t tamanio,
+    void* valor
+) {
+    if (memory_sticks == NULL || valor == NULL || tamanio == 0 ||
+        direccion > UINT32_MAX - (tamanio - 1)) {
+        return false;
+    }
+
+    t_cpu_memory_stick_resuelto stick;
+    if (!resolver_inicio(memory_sticks, id_memory_stick, direccion, &stick)) {
+        return false;
+    }
+
+    uint32_t procesado = 0;
+    while (procesado < tamanio) {
+        uint32_t actual = direccion + procesado;
+        if (stick.rango_conocido &&
+            (actual < stick.base_global ||
+             (uint64_t) actual >= (uint64_t) stick.base_global + stick.tamanio)) {
+            if (!cpu_memory_sticks_resolver_direccion(memory_sticks, actual, &stick)) {
+                return false;
+            }
+        }
+
+        uint32_t fragmento = tamanio_fragmento(&stick, actual, tamanio - procesado);
+        if (fragmento == 0 ||
+            !memoria_read(stick.socket, actual, fragmento, (uint8_t*) valor + procesado)) {
+            cpu_memory_sticks_invalidar_socket(
+                memory_sticks,
+                stick.id_memory_stick,
+                stick.socket
+            );
+            return false;
+        }
+        procesado += fragmento;
+    }
+    return true;
+}
+
+static bool memoria_write_fragmentada(
+    t_cpu_memory_sticks* memory_sticks,
+    uint32_t id_memory_stick,
+    uint32_t direccion,
+    uint32_t tamanio,
+    const void* datos
+) {
+    if (memory_sticks == NULL || datos == NULL || tamanio == 0 ||
+        direccion > UINT32_MAX - (tamanio - 1)) {
+        return false;
+    }
+
+    t_cpu_memory_stick_resuelto stick;
+    if (!resolver_inicio(memory_sticks, id_memory_stick, direccion, &stick)) {
+        return false;
+    }
+
+    uint32_t procesado = 0;
+    while (procesado < tamanio) {
+        uint32_t actual = direccion + procesado;
+        if (stick.rango_conocido &&
+            (actual < stick.base_global ||
+             (uint64_t) actual >= (uint64_t) stick.base_global + stick.tamanio)) {
+            if (!cpu_memory_sticks_resolver_direccion(memory_sticks, actual, &stick)) {
+                return false;
+            }
+        }
+
+        uint32_t fragmento = tamanio_fragmento(&stick, actual, tamanio - procesado);
+        if (fragmento == 0 ||
+            !memoria_write(
+                stick.socket,
+                actual,
+                fragmento,
+                (const uint8_t*) datos + procesado
+            )) {
+            cpu_memory_sticks_invalidar_socket(
+                memory_sticks,
+                stick.id_memory_stick,
+                stick.socket
+            );
+            return false;
+        }
+        procesado += fragmento;
+    }
+    return true;
 }
 
 static t_resultado_memoria_cpu ejecutar_mov_in(
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -180,9 +291,14 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
         return resultado;
     }
 
-    int fd = fd_para_ms_logueado(sockets_ms, n_sockets_ms, traduccion.id_memory_stick, logger);
     uint8_t buffer[sizeof(uint32_t)] = {0};
-    if (!memoria_read(fd, traduccion.direccion_fisica, tamanio_registro, buffer)) {
+    if (!memoria_read_fragmentada(
+        memory_sticks,
+        traduccion.id_memory_stick,
+        traduccion.direccion_fisica,
+        tamanio_registro,
+        buffer
+    )) {
         return CPU_MEMORIA_ERROR;
     }
 
@@ -193,14 +309,15 @@ static t_resultado_memoria_cpu ejecutar_mov_in(
     }
 
     log_cpu_acceso_memoria(logger, pid, "LEER", traduccion.direccion_fisica, valor);
-    // PC avanza sólo si toda la operación terminó bien.
-    registros->pc++;
+    // Si MOV_IN escribió PC, ese valor ya indica la próxima instrucción.
+    if (strcmp(instruccion->parametros[0], "PC") != 0) {
+        registros->pc++;
+    }
     return CPU_MEMORIA_OK;
 }
 
 static t_resultado_memoria_cpu ejecutar_mov_out(
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -234,11 +351,16 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
         return resultado;
     }
 
-    int fd = fd_para_ms_logueado(sockets_ms, n_sockets_ms, traduccion.id_memory_stick, logger);
     uint8_t buffer[sizeof(uint32_t)] = {0};
     // Convierto el valor al formato que espera el otro extremo antes de enviarlo.
     valor_a_bytes(valor, tamanio_registro, buffer);
-    if (!memoria_write(fd, traduccion.direccion_fisica, tamanio_registro, buffer)) {
+    if (!memoria_write_fragmentada(
+        memory_sticks,
+        traduccion.id_memory_stick,
+        traduccion.direccion_fisica,
+        tamanio_registro,
+        buffer
+    )) {
         return CPU_MEMORIA_ERROR;
     }
 
@@ -248,8 +370,7 @@ static t_resultado_memoria_cpu ejecutar_mov_out(
 }
 
 static t_resultado_memoria_cpu ejecutar_copy_mem(
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -299,15 +420,24 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
         return CPU_MEMORIA_ERROR;
     }
 
-    int fd_origen  = fd_para_ms_logueado(sockets_ms, n_sockets_ms, origen.id_memory_stick, logger);
-    int fd_destino = fd_para_ms_logueado(sockets_ms, n_sockets_ms, destino.id_memory_stick, logger);
-
-    if (!memoria_read(fd_origen, origen.direccion_fisica, tamanio, buffer)) {
+    if (!memoria_read_fragmentada(
+        memory_sticks,
+        origen.id_memory_stick,
+        origen.direccion_fisica,
+        tamanio,
+        buffer
+    )) {
         free(buffer);
         return CPU_MEMORIA_ERROR;
     }
 
-    if (!memoria_write(fd_destino, destino.direccion_fisica, tamanio, buffer)) {
+    if (!memoria_write_fragmentada(
+        memory_sticks,
+        destino.id_memory_stick,
+        destino.direccion_fisica,
+        tamanio,
+        buffer
+    )) {
         free(buffer);
         return CPU_MEMORIA_ERROR;
     }
@@ -322,8 +452,7 @@ static t_resultado_memoria_cpu ejecutar_copy_mem(
 }
 
 t_resultado_memoria_cpu ejecutar_instruccion_memoria(
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     t_instruccion_decodificada* instruccion,
     t_contexto* contexto,
     t_registros_cpu* registros,
@@ -346,11 +475,11 @@ t_resultado_memoria_cpu ejecutar_instruccion_memoria(
     // Este switch es el execute específico de las instrucciones de memoria.
     switch (instruccion->opcode) {
         case CPU_INST_MOV_IN:
-            return ejecutar_mov_in(sockets_ms, n_sockets_ms, instruccion, contexto, registros, pid, logger);
+            return ejecutar_mov_in(memory_sticks, instruccion, contexto, registros, pid, logger);
         case CPU_INST_MOV_OUT:
-            return ejecutar_mov_out(sockets_ms, n_sockets_ms, instruccion, contexto, registros, pid, logger);
+            return ejecutar_mov_out(memory_sticks, instruccion, contexto, registros, pid, logger);
         case CPU_INST_COPY_MEM:
-            return ejecutar_copy_mem(sockets_ms, n_sockets_ms, instruccion, contexto, registros, pid, logger);
+            return ejecutar_copy_mem(memory_sticks, instruccion, contexto, registros, pid, logger);
         default:
             return CPU_MEMORIA_ERROR;
     }

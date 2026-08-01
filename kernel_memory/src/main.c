@@ -1,9 +1,14 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <poll.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <commons/log.h>
@@ -22,6 +27,10 @@ typedef struct {
     int      fd;
     uint32_t tamanio;
     uint32_t offset_global; // dónde empieza en el espacio de memoria total
+    uint32_t ipv4;          // byte order de red
+    uint32_t puerto;        // host order
+    bool activo;
+    pthread_mutex_t mutex_io;
 } t_memory_stick;
 
 // Un hueco libre en memoria
@@ -34,6 +43,7 @@ typedef struct {
 typedef struct {
     uint32_t  pid;
     uint32_t  id_segmento;
+    uint32_t  tamanio_original;
     uint32_t* bloques;      // array de números de bloque en Swap
     uint32_t  cant_bloques;
 } t_swap_metadata;
@@ -47,6 +57,7 @@ t_config* config;
 pthread_mutex_t mutex_contextos   = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_memoria     = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_swap        = PTHREAD_MUTEX_INITIALIZER;
+pthread_rwlock_t rwlock_memory_sticks = PTHREAD_RWLOCK_INITIALIZER;
 
 t_list* contextos;      // t_contexto*
 t_list* memory_sticks;  // t_memory_stick*
@@ -63,6 +74,9 @@ uint32_t swap_cant_bloques = 0;
 uint8_t* swap_bitmap       = NULL; // 0=libre, 1=ocupado
 
 uint32_t next_ms_id = 0;
+static pthread_mutex_t mutex_estado_memoria = PTHREAD_MUTEX_INITIALIZER;
+static int memoria_corrupta = 0;
+static int bsod_enviado = 0;
 
 // NOTA [fix deadlock compactación]: la versión anterior sincronizaba con un
 // semáforo: el handler de MSG_CREAR_SEGMENTO se bloqueaba en sem_wait esperando
@@ -95,23 +109,34 @@ static t_contexto* buscar_contexto(uint32_t pid) {
 
 // Dirección global → MS y dirección local dentro de ese MS
 static t_memory_stick* ms_para_direccion(uint32_t dir_global, uint32_t* dir_local) {
+    t_memory_stick* encontrado = NULL;
+    pthread_rwlock_rdlock(&rwlock_memory_sticks);
     for (int i = 0; i < list_size(memory_sticks); i++) {
         t_memory_stick* ms = list_get(memory_sticks, i);
-        if (dir_global >= ms->offset_global &&
-            dir_global <  ms->offset_global + ms->tamanio) {
+        if (ms->activo && dir_global >= ms->offset_global &&
+            dir_global - ms->offset_global < ms->tamanio) {
             *dir_local = dir_global - ms->offset_global;
-            return ms;
+            encontrado = ms;
+            break;
         }
     }
-    return NULL;
+    pthread_rwlock_unlock(&rwlock_memory_sticks);
+    return encontrado;
 }
 
-static uint32_t memoria_total(void) {
+static uint32_t memoria_total_sin_lock(void) {
     uint32_t total = 0;
     for (int i = 0; i < list_size(memory_sticks); i++) {
         t_memory_stick* ms = list_get(memory_sticks, i);
         total += ms->tamanio;
     }
+    return total;
+}
+
+static uint32_t memoria_total(void) {
+    pthread_rwlock_rdlock(&rwlock_memory_sticks);
+    uint32_t total = memoria_total_sin_lock();
+    pthread_rwlock_unlock(&rwlock_memory_sticks);
     return total;
 }
 
@@ -188,44 +213,70 @@ static t_hueco* seleccionar_hueco(uint32_t tamanio) {
 static int ms_escribir(t_memory_stick* ms, uint32_t dir_local,
                         uint8_t* datos, uint32_t tamanio) {
     // Payload: [dir_local:4][tamanio:4][datos]
+    if (ms == NULL || datos == NULL || tamanio == 0 || tamanio > UINT32_MAX - 8u) {
+        return -1;
+    }
     uint32_t psize = 8 + tamanio;
     uint8_t* buf   = malloc(psize);
+    if (buf == NULL) {
+        return -1;
+    }
     uint32_t dl_n  = htonl(dir_local);
     uint32_t ts_n  = htonl(tamanio);
     memcpy(buf,     &dl_n, 4);
     memcpy(buf + 4, &ts_n, 4);
     memcpy(buf + 8, datos, tamanio);
+    pthread_mutex_lock(&ms->mutex_io);
     enviar_mensaje(ms->fd, MSG_MEMORY_WRITE, buf, psize);
     free(buf);
 
     t_mensaje* resp = recibir_mensaje(ms->fd);
-    int ok = (resp && resp->op_code == MSG_OK);
+    int ok = resp != NULL && resp->op_code == MSG_OK;
     if (resp) free_mensaje(resp);
+    pthread_mutex_unlock(&ms->mutex_io);
     return ok ? 0 : -1;
 }
 
 static uint8_t* ms_leer(t_memory_stick* ms, uint32_t dir_local, uint32_t tamanio) {
+    if (ms == NULL || tamanio == 0) {
+        return NULL;
+    }
     uint8_t buf[8];
     uint32_t dl_n = htonl(dir_local);
     uint32_t ts_n = htonl(tamanio);
     memcpy(buf,     &dl_n, 4);
     memcpy(buf + 4, &ts_n, 4);
+    pthread_mutex_lock(&ms->mutex_io);
     enviar_mensaje(ms->fd, MSG_MEMORY_READ, buf, 8);
 
     t_mensaje* resp = recibir_mensaje(ms->fd);
-    if (!resp || resp->op_code != MSG_MEMORY_READ_RESPUESTA) {
+    if (!resp || resp->op_code != MSG_MEMORY_READ_RESPUESTA ||
+        resp->payload == NULL || resp->payload_size != tamanio) {
         if (resp) free_mensaje(resp);
+        pthread_mutex_unlock(&ms->mutex_io);
         return NULL;
     }
     uint8_t* datos = malloc(tamanio);
+    if (datos == NULL) {
+        free_mensaje(resp);
+        pthread_mutex_unlock(&ms->mutex_io);
+        return NULL;
+    }
     memcpy(datos, resp->payload, tamanio);
     free_mensaje(resp);
+    pthread_mutex_unlock(&ms->mutex_io);
     return datos;
 }
 
 // Leer/escribir abarcando múltiples Memory Sticks
 static uint8_t* leer_fisico(uint32_t dir_global, uint32_t tamanio) {
+    if (tamanio == 0 || dir_global > UINT32_MAX - (tamanio - 1)) {
+        return NULL;
+    }
     uint8_t* resultado = malloc(tamanio);
+    if (resultado == NULL) {
+        return NULL;
+    }
     uint32_t leido = 0;
     while (leido < tamanio) {
         uint32_t dir_local;
@@ -245,6 +296,10 @@ static uint8_t* leer_fisico(uint32_t dir_global, uint32_t tamanio) {
 }
 
 static int escribir_fisico(uint32_t dir_global, uint8_t* datos, uint32_t tamanio) {
+    if (datos == NULL || tamanio == 0 ||
+        dir_global > UINT32_MAX - (tamanio - 1)) {
+        return -1;
+    }
     uint32_t escrito = 0;
     while (escrito < tamanio) {
         uint32_t dir_local;
@@ -266,22 +321,38 @@ static int escribir_fisico(uint32_t dir_global, uint8_t* datos, uint32_t tamanio
 // ---------------------------------------------------------------------------
 static uint32_t traducir_direccion(t_contexto* ctx, uint32_t dir_logica,
                                     uint32_t tamanio_acceso) {
-    uint32_t seg_max = (uint32_t)config_get_int_value(config, "SEGMENT_MAX_SIZE");
+    int seg_max_config = config_get_int_value(config, "SEGMENT_MAX_SIZE");
+    if (ctx == NULL || seg_max_config <= 0 || tamanio_acceso == 0) {
+        return UINT32_MAX;
+    }
+
+    uint32_t seg_max = (uint32_t) seg_max_config;
     uint32_t num_seg      = dir_logica / seg_max;
     uint32_t desplazamiento = dir_logica % seg_max;
 
-    if (num_seg >= ctx->cant_segmentos) {
+    t_entrada_segmento* seg = NULL;
+    for (uint32_t i = 0; i < ctx->cant_segmentos; i++) {
+        if (ctx->segmentos[i].id_segmento == num_seg) {
+            seg = &ctx->segmentos[i];
+            break;
+        }
+    }
+
+    if (seg == NULL) {
         log_debug(logger,
             "PID: %u - traducir_direccion: segmento %u inexistente (proceso tiene %u) — dir_logica=%u",
             ctx->pid, num_seg, ctx->cant_segmentos, dir_logica);
         return UINT32_MAX;
     }
 
-    t_entrada_segmento* seg = &ctx->segmentos[num_seg];
-    if (desplazamiento + tamanio_acceso > seg->limite) {
+    if (desplazamiento > seg->limite || tamanio_acceso > seg->limite - desplazamiento) {
         log_debug(logger,
             "PID: %u - traducir_direccion: SEG_FAULT en segmento %u — desplazamiento=%u + tamanio=%u > limite=%u",
             ctx->pid, num_seg, desplazamiento, tamanio_acceso, seg->limite);
+        return UINT32_MAX;
+    }
+
+    if (seg->base > UINT32_MAX - desplazamiento) {
         return UINT32_MAX;
     }
 
@@ -292,22 +363,52 @@ static uint32_t traducir_direccion(t_contexto* ctx, uint32_t dir_logica,
 // Helpers — Swap
 // ---------------------------------------------------------------------------
 static int swap_bloque_libre(void) {
+    if (!swap_bitmap) return -1;
     for (uint32_t i = 0; i < swap_cant_bloques; i++)
         if (swap_bitmap[i] == 0) return (int)i;
     return -1;
 }
 
+// Llamar con mutex_swap tomado. Detecta también un peer que cerró mientras
+// Swap estaba inactivo, sin consumir bytes de una conexión viva.
+static int swap_socket_activo_locked(void) {
+    if (fd_swap < 0) return 0;
+
+    uint8_t byte;
+    ssize_t recibido = recv(fd_swap, &byte, sizeof(byte), MSG_PEEK | MSG_DONTWAIT);
+    if (recibido == 0 ||
+        (recibido < 0 && errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR)) {
+        close(fd_swap);
+        fd_swap = -1;
+        return 0;
+    }
+    return 1;
+}
+
 static int swap_leer_bloque(uint32_t nro_bloque, uint8_t* out) {
+    if (!out) return -1;
+
     pthread_mutex_lock(&mutex_swap);
+    if (fd_swap < 0 || !swap_bitmap || swap_block_size == 0 ||
+        nro_bloque >= swap_cant_bloques) {
+        pthread_mutex_unlock(&mutex_swap);
+        return -1;
+    }
+
     uint8_t buf[4];
     uint32_t nb_n = htonl(nro_bloque);
     memcpy(buf, &nb_n, 4);
     enviar_mensaje(fd_swap, MSG_SWAP_LEER, buf, 4);
     t_mensaje* resp = recibir_mensaje(fd_swap);
     int ok = 0;
-    if (resp && resp->op_code == MSG_SWAP_LEER_RESP) {
+    if (resp && resp->op_code == MSG_SWAP_LEER_RESP &&
+        resp->payload_size == swap_block_size && resp->payload) {
         memcpy(out, resp->payload, swap_block_size);
         ok = 1;
+    }
+    if (!resp) {
+        close(fd_swap);
+        fd_swap = -1;
     }
     if (resp) free_mensaje(resp);
     pthread_mutex_unlock(&mutex_swap);
@@ -315,16 +416,33 @@ static int swap_leer_bloque(uint32_t nro_bloque, uint8_t* out) {
 }
 
 static int swap_escribir_bloque(uint32_t nro_bloque, uint8_t* datos) {
+    if (!datos) return -1;
+
     pthread_mutex_lock(&mutex_swap);
+    if (fd_swap < 0 || !swap_bitmap || swap_block_size == 0 ||
+        swap_block_size > UINT32_MAX - 4u ||
+        nro_bloque >= swap_cant_bloques) {
+        pthread_mutex_unlock(&mutex_swap);
+        return -1;
+    }
+
     uint32_t psize = 4 + swap_block_size;
     uint8_t* buf   = malloc(psize);
+    if (!buf) {
+        pthread_mutex_unlock(&mutex_swap);
+        return -1;
+    }
     uint32_t nb_n  = htonl(nro_bloque);
     memcpy(buf, &nb_n, 4);
     memcpy(buf + 4, datos, swap_block_size);
     enviar_mensaje(fd_swap, MSG_SWAP_ESCRIBIR, buf, psize);
     free(buf);
     t_mensaje* resp = recibir_mensaje(fd_swap);
-    int ok = (resp && resp->op_code == MSG_OK);
+    int ok = (resp && resp->op_code == MSG_OK && resp->payload_size == 0);
+    if (!resp) {
+        close(fd_swap);
+        fd_swap = -1;
+    }
     if (resp) free_mensaje(resp);
     pthread_mutex_unlock(&mutex_swap);
     return ok ? 0 : -1;
@@ -335,8 +453,16 @@ static int swap_escribir_bloque(uint32_t nro_bloque, uint8_t* datos) {
 // Retorna 1 si hay que compactar, 0 si OK, -1 si error
 // ---------------------------------------------------------------------------
 static int crear_segmento(t_contexto* ctx, uint32_t id_seg, uint32_t tamanio) {
-    uint32_t seg_max = (uint32_t)config_get_int_value(config, "SEGMENT_MAX_SIZE");
-    if (tamanio > seg_max) return -1;
+    int seg_max_config = config_get_int_value(config, "SEGMENT_MAX_SIZE");
+    if (ctx == NULL || seg_max_config <= 0 || tamanio == 0 ||
+        tamanio > (uint32_t) seg_max_config) {
+        return -1;
+    }
+    for (uint32_t i = 0; i < ctx->cant_segmentos; i++) {
+        if (ctx->segmentos[i].id_segmento == id_seg) {
+            return -1;
+        }
+    }
 
     pthread_mutex_lock(&mutex_memoria);
     t_hueco* h = seleccionar_hueco(tamanio);
@@ -367,6 +493,21 @@ static int crear_segmento(t_contexto* ctx, uint32_t id_seg, uint32_t tamanio) {
     t_memory_stick* ms = ms_para_direccion(base, &dir_local);
     if (!ms) { pthread_mutex_unlock(&mutex_memoria); return -1; }
 
+    if (ctx->cant_segmentos == UINT32_MAX) {
+        pthread_mutex_unlock(&mutex_memoria);
+        return -1;
+    }
+    uint32_t nueva_cantidad = ctx->cant_segmentos + 1;
+    t_entrada_segmento* nuevos_segmentos = realloc(
+        ctx->segmentos,
+        (size_t) nueva_cantidad * sizeof(t_entrada_segmento)
+    );
+    if (nuevos_segmentos == NULL) {
+        pthread_mutex_unlock(&mutex_memoria);
+        return -1;
+    }
+    ctx->segmentos = nuevos_segmentos;
+
     // Actualizar hueco
     if (h->tamanio == tamanio) {
         // NOTA LUCIANO [FIX list_get_index en crear_segmento]:
@@ -382,10 +523,8 @@ static int crear_segmento(t_contexto* ctx, uint32_t id_seg, uint32_t tamanio) {
     }
 
     // Agregar entrada a la tabla de segmentos del proceso
-    ctx->cant_segmentos++;
-    ctx->segmentos = realloc(ctx->segmentos,
-                             ctx->cant_segmentos * sizeof(t_entrada_segmento));
-    t_entrada_segmento* seg = &ctx->segmentos[ctx->cant_segmentos - 1];
+    ctx->cant_segmentos = nueva_cantidad;
+    t_entrada_segmento* seg = &ctx->segmentos[nueva_cantidad - 1];
     seg->id_segmento    = id_seg;
     seg->id_memory_stick = ms->id;
     seg->base           = base;
@@ -411,8 +550,18 @@ static void eliminar_segmento(t_contexto* ctx, uint32_t id_seg) {
             for (uint32_t j = i; j < ctx->cant_segmentos - 1; j++)
                 ctx->segmentos[j] = ctx->segmentos[j + 1];
             ctx->cant_segmentos--;
-            ctx->segmentos = realloc(ctx->segmentos,
-                                     ctx->cant_segmentos * sizeof(t_entrada_segmento));
+            if (ctx->cant_segmentos == 0) {
+                free(ctx->segmentos);
+                ctx->segmentos = NULL;
+            } else {
+                t_entrada_segmento* segmentos_reducidos = realloc(
+                    ctx->segmentos,
+                    (size_t) ctx->cant_segmentos * sizeof(t_entrada_segmento)
+                );
+                if (segmentos_reducidos != NULL) {
+                    ctx->segmentos = segmentos_reducidos;
+                }
+            }
             break;
         }
     }
@@ -443,7 +592,8 @@ static void finalizar_proceso(uint32_t pid) {
         t_swap_metadata* m = list_get(swap_metadata, i);
         if (m->pid != pid) continue;
         for (uint32_t b = 0; b < m->cant_bloques; b++) {
-            swap_bitmap[m->bloques[b]] = 0;
+            if (swap_bitmap && m->bloques[b] < swap_cant_bloques)
+                swap_bitmap[m->bloques[b]] = 0;
         }
         list_remove(swap_metadata, i);
         free(m->bloques);
@@ -471,32 +621,47 @@ static void finalizar_proceso(uint32_t pid) {
 // ---------------------------------------------------------------------------
 // Compactación
 // ---------------------------------------------------------------------------
+static bool comparar_base_segmento(void* a, void* b) {
+    return ((t_entrada_segmento*)a)->base < ((t_entrada_segmento*)b)->base;
+}
+
 static void compactar(void) {
     pthread_mutex_lock(&mutex_memoria);
 
-    uint32_t cursor = 0;
-
-    // Recorrer todos los contextos y mover cada segmento al inicio
+    // Los segmentos se mueven en orden ascendente de base física: como los
+    // destinos se empaquetan desde 0, cada copia escribe en cursor <= base y
+    // no puede pisar el origen de un segmento todavía no movido (todos los
+    // pendientes tienen base mayor). En cualquier otro orden una copia puede
+    // sobreescribir datos vivos antes de que se muevan.
+    t_list* ordenados = list_create();
     for (int c = 0; c < list_size(contextos); c++) {
         t_contexto* ctx = list_get(contextos, c);
-        for (uint32_t s = 0; s < ctx->cant_segmentos; s++) {
-            t_entrada_segmento* seg = &ctx->segmentos[s];
-            if (seg->base != cursor) {
-                // Leer datos actuales
-                uint8_t* datos = leer_fisico(seg->base, seg->limite);
-                if (datos) {
-                    escribir_fisico(cursor, datos, seg->limite);
-                    free(datos);
-                }
-                seg->base = cursor;
-                // Actualizar id_memory_stick
-                uint32_t dl;
-                t_memory_stick* ms = ms_para_direccion(cursor, &dl);
-                if (ms) seg->id_memory_stick = ms->id;
-            }
-            cursor += seg->limite;
-        }
+        for (uint32_t s = 0; s < ctx->cant_segmentos; s++)
+            list_add(ordenados, &ctx->segmentos[s]);
     }
+    list_sort(ordenados, comparar_base_segmento);
+
+    uint32_t cursor = 0;
+
+    for (int i = 0; i < list_size(ordenados); i++) {
+        t_entrada_segmento* seg = list_get(ordenados, i);
+        if (seg->base != cursor) {
+            // Leer datos actuales
+            uint8_t* datos = leer_fisico(seg->base, seg->limite);
+            if (datos) {
+                escribir_fisico(cursor, datos, seg->limite);
+                free(datos);
+            }
+            seg->base = cursor;
+            // Actualizar id_memory_stick
+            uint32_t dl;
+            t_memory_stick* ms = ms_para_direccion(cursor, &dl);
+            if (ms) seg->id_memory_stick = ms->id;
+        }
+        cursor += seg->limite;
+    }
+
+    list_destroy(ordenados);
 
     // Reconstruir lista de huecos: un único hueco al final
     list_destroy_and_destroy_elements(huecos, free);
@@ -519,152 +684,335 @@ static int suspender_proceso(uint32_t pid) {
     t_contexto* ctx = buscar_contexto(pid);
     if (!ctx) { pthread_mutex_unlock(&mutex_contextos); return -1; }
 
+    if (fd_swap < 0 || !swap_bitmap || swap_block_size == 0 ||
+        swap_cant_bloques == 0) {
+        log_error(logger, "PID: %u - Swap no esta disponible", pid);
+        pthread_mutex_unlock(&mutex_contextos);
+        return -1;
+    }
+
     log_debug(logger, "PID: %u - suspender_proceso: moviendo %u segmento(s) a Swap",
               pid, ctx->cant_segmentos);
 
-    for (uint32_t s = 0; s < ctx->cant_segmentos; s++) {
-        t_entrada_segmento* seg = &ctx->segmentos[s];
-        uint32_t tamanio = seg->limite;
-
-        // Cuántos bloques necesita
-        uint32_t cant = (tamanio + swap_block_size - 1) / swap_block_size;
-        log_debug(logger, "PID: %u - segmento %u (%u bytes) -> %u bloque(s) de swap",
-                  pid, seg->id_segmento, tamanio, cant);
-
-        t_swap_metadata* meta = malloc(sizeof(t_swap_metadata));
-        meta->pid         = pid;
-        meta->id_segmento = seg->id_segmento;
-        meta->cant_bloques = cant;
-        meta->bloques     = malloc(cant * sizeof(uint32_t));
-
-        uint8_t* datos = leer_fisico(seg->base, tamanio);
-
-        for (uint32_t b = 0; b < cant; b++) {
-            int nb = swap_bloque_libre();
-            if (nb < 0) {
-                free(meta->bloques); free(meta); free(datos);
-                pthread_mutex_unlock(&mutex_contextos);
-                return -1;
-            }
-            swap_bitmap[nb] = 1;
-            meta->bloques[b] = (uint32_t)nb;
-
-            // Datos del bloque (puede ser parcial en el último)
-            uint8_t bloque_buf[swap_block_size];
-            memset(bloque_buf, 0, swap_block_size);
-            uint32_t offset = b * swap_block_size;
-            uint32_t chunk  = (tamanio - offset < swap_block_size)
-                              ? tamanio - offset : swap_block_size;
-            if (datos) memcpy(bloque_buf, datos + offset, chunk);
-            swap_escribir_bloque((uint32_t)nb, bloque_buf);
-        }
-        if (datos) free(datos);
-
-        pthread_mutex_lock(&mutex_memoria);
-        agregar_hueco(seg->base, seg->limite);
-        fusionar_huecos();
-        pthread_mutex_unlock(&mutex_memoria);
-
-        list_add(swap_metadata, meta);
+    uint32_t cant_segmentos = ctx->cant_segmentos;
+    if (cant_segmentos == 0) {
+        free(ctx->segmentos);
+        ctx->segmentos = NULL;
+        pthread_mutex_unlock(&mutex_contextos);
+        return 0;
     }
 
-    // Limpiar tabla de segmentos (quedan en swap_metadata)
+    uint64_t bloques_necesarios = 0;
+    for (uint32_t s = 0; s < cant_segmentos; s++) {
+        t_entrada_segmento* seg = &ctx->segmentos[s];
+        if (seg->limite == 0) {
+            log_error(logger, "PID: %u - segmento %u con tamanio invalido",
+                      pid, seg->id_segmento);
+            pthread_mutex_unlock(&mutex_contextos);
+            return -1;
+        }
+        bloques_necesarios += seg->limite / swap_block_size +
+                              (seg->limite % swap_block_size != 0);
+        if (bloques_necesarios > swap_cant_bloques) {
+            pthread_mutex_unlock(&mutex_contextos);
+            return -1;
+        }
+    }
+
+    uint32_t bloques_libres = 0;
+    for (uint32_t b = 0; b < swap_cant_bloques; b++)
+        if (swap_bitmap[b] == 0) bloques_libres++;
+    if ((uint64_t)bloques_libres < bloques_necesarios) {
+        log_warning(logger, "PID: %u - espacio insuficiente en Swap", pid);
+        pthread_mutex_unlock(&mutex_contextos);
+        return -1;
+    }
+
+    t_swap_metadata** nuevas_metas = calloc(cant_segmentos, sizeof(t_swap_metadata*));
+    uint8_t* bloque_buf = malloc(swap_block_size);
+    if (!nuevas_metas || !bloque_buf) {
+        free(nuevas_metas);
+        free(bloque_buf);
+        pthread_mutex_unlock(&mutex_contextos);
+        return -1;
+    }
+
+    int resultado = -1;
+
+    for (uint32_t s = 0; s < cant_segmentos; s++) {
+        t_entrada_segmento* seg = &ctx->segmentos[s];
+        uint32_t cant = seg->limite / swap_block_size +
+                        (seg->limite % swap_block_size != 0);
+
+        t_swap_metadata* meta = calloc(1, sizeof(t_swap_metadata));
+        if (!meta) goto rollback_suspension;
+        meta->pid = pid;
+        meta->id_segmento = seg->id_segmento;
+        meta->tamanio_original = seg->limite;
+        meta->cant_bloques = cant;
+        meta->bloques = malloc(cant * sizeof(uint32_t));
+        if (!meta->bloques) {
+            free(meta);
+            goto rollback_suspension;
+        }
+
+        uint32_t reservados = 0;
+        for (; reservados < cant; reservados++) {
+            int nb = swap_bloque_libre();
+            if (nb < 0) {
+                for (uint32_t r = 0; r < reservados; r++)
+                    swap_bitmap[meta->bloques[r]] = 0;
+                free(meta->bloques);
+                free(meta);
+                goto rollback_suspension;
+            }
+            swap_bitmap[nb] = 1;
+            meta->bloques[reservados] = (uint32_t)nb;
+        }
+        nuevas_metas[s] = meta;
+
+        log_debug(logger, "PID: %u - segmento %u (%u bytes) -> %u bloque(s) de swap",
+                  pid, seg->id_segmento, seg->limite, cant);
+    }
+
+    for (uint32_t s = 0; s < cant_segmentos; s++) {
+        t_entrada_segmento* seg = &ctx->segmentos[s];
+        t_swap_metadata* meta = nuevas_metas[s];
+        uint8_t* datos = leer_fisico(seg->base, seg->limite);
+        if (!datos) goto rollback_suspension;
+
+        for (uint32_t b = 0; b < meta->cant_bloques; b++) {
+            memset(bloque_buf, 0, swap_block_size);
+            uint32_t offset = b * swap_block_size;
+            uint32_t restante = seg->limite - offset;
+            uint32_t chunk = restante < swap_block_size ? restante : swap_block_size;
+            memcpy(bloque_buf, datos + offset, chunk);
+            if (swap_escribir_bloque(meta->bloques[b], bloque_buf) < 0) {
+                free(datos);
+                log_error(logger, "PID: %u - fallo al copiar segmento %u a Swap",
+                          pid, seg->id_segmento);
+                goto rollback_suspension;
+            }
+        }
+        free(datos);
+    }
+
+    pthread_mutex_lock(&mutex_memoria);
+    for (uint32_t s = 0; s < cant_segmentos; s++) {
+        agregar_hueco(ctx->segmentos[s].base, ctx->segmentos[s].limite);
+        list_add(swap_metadata, nuevas_metas[s]);
+        nuevas_metas[s] = NULL;
+    }
+    fusionar_huecos();
+    pthread_mutex_unlock(&mutex_memoria);
+
     free(ctx->segmentos);
-    ctx->segmentos      = NULL;
+    ctx->segmentos = NULL;
     ctx->cant_segmentos = 0;
 
+    resultado = 0;
+
+rollback_suspension:
+    if (resultado != 0) {
+        for (uint32_t s = 0; s < cant_segmentos; s++) {
+            t_swap_metadata* meta = nuevas_metas[s];
+            if (!meta) continue;
+            for (uint32_t b = 0; b < meta->cant_bloques; b++)
+                if (meta->bloques[b] < swap_cant_bloques)
+                    swap_bitmap[meta->bloques[b]] = 0;
+            free(meta->bloques);
+            free(meta);
+        }
+    }
+
+    free(bloque_buf);
+    free(nuevas_metas);
     pthread_mutex_unlock(&mutex_contextos);
-    return 0;
+    return resultado;
 }
 
 // ---------------------------------------------------------------------------
 // Des-suspensión — restaurar segmentos desde Swap
 // Retorna 0=ok, 1=no cabe sin compactar, -1=error
 // ---------------------------------------------------------------------------
+typedef struct {
+    t_swap_metadata* meta;
+    uint32_t base;
+    uint8_t* datos;
+    int reservado;
+} t_restauracion_swap;
+
+static void devolver_huecos_reservados(t_restauracion_swap* etapas, uint32_t cantidad) {
+    pthread_mutex_lock(&mutex_memoria);
+    for (uint32_t i = 0; i < cantidad; i++) {
+        if (!etapas[i].reservado) continue;
+        agregar_hueco(etapas[i].base, etapas[i].meta->tamanio_original);
+        etapas[i].reservado = 0;
+    }
+    fusionar_huecos();
+    pthread_mutex_unlock(&mutex_memoria);
+}
+
 static int dessuspender_proceso(uint32_t pid) {
     pthread_mutex_lock(&mutex_contextos);
     t_contexto* ctx = buscar_contexto(pid);
     if (!ctx) { pthread_mutex_unlock(&mutex_contextos); return -1; }
 
-    // Recolectar metadata de Swap para este PID
-    t_list* metas_pid = list_create();
+    if (ctx->cant_segmentos != 0 || fd_swap < 0 || !swap_bitmap ||
+        swap_block_size == 0 || swap_cant_bloques == 0) {
+        pthread_mutex_unlock(&mutex_contextos);
+        return -1;
+    }
+
+    uint32_t cant_metas = 0;
     for (int i = 0; i < list_size(swap_metadata); i++) {
         t_swap_metadata* m = list_get(swap_metadata, i);
-        if (m->pid == pid) list_add(metas_pid, m);
+        if (m->pid == pid) cant_metas++;
     }
-    log_debug(logger, "PID: %u - dessuspender_proceso: %d segmento(s) a restaurar desde Swap",
-              pid, list_size(metas_pid));
+    log_debug(logger, "PID: %u - dessuspender_proceso: %u segmento(s) a restaurar desde Swap",
+              pid, cant_metas);
 
-    // Verificar que todos los segmentos caben sin compactar
+    if (cant_metas == 0) {
+        pthread_mutex_unlock(&mutex_contextos);
+        return 0;
+    }
+
+    t_restauracion_swap* etapas = calloc(cant_metas, sizeof(t_restauracion_swap));
+    t_entrada_segmento* nuevos_segmentos =
+        calloc(cant_metas, sizeof(t_entrada_segmento));
+    uint8_t* bloque_buf = malloc(swap_block_size);
+    if (!etapas || !nuevos_segmentos || !bloque_buf) {
+        free(etapas);
+        free(nuevos_segmentos);
+        free(bloque_buf);
+        pthread_mutex_unlock(&mutex_contextos);
+        return -1;
+    }
+
+    uint32_t indice = 0;
+    for (int i = 0; i < list_size(swap_metadata); i++) {
+        t_swap_metadata* m = list_get(swap_metadata, i);
+        if (m->pid != pid) continue;
+
+        uint32_t bloques_esperados =
+            m->tamanio_original / swap_block_size +
+            (m->tamanio_original % swap_block_size != 0);
+        if (m->tamanio_original == 0 || !m->bloques ||
+            m->cant_bloques != bloques_esperados)
+            goto error_dessuspension;
+
+        for (uint32_t b = 0; b < m->cant_bloques; b++) {
+            if (m->bloques[b] >= swap_cant_bloques ||
+                swap_bitmap[m->bloques[b]] == 0)
+                goto error_dessuspension;
+        }
+
+        etapas[indice].meta = m;
+        etapas[indice].datos = malloc(m->tamanio_original);
+        if (!etapas[indice].datos) goto error_dessuspension;
+        indice++;
+    }
+
     pthread_mutex_lock(&mutex_memoria);
-    for (int i = 0; i < list_size(metas_pid); i++) {
-        t_swap_metadata* m = list_get(metas_pid, i);
-        uint32_t tamanio = m->cant_bloques * swap_block_size;
+    for (uint32_t i = 0; i < cant_metas; i++) {
+        uint32_t tamanio = etapas[i].meta->tamanio_original;
         t_hueco* h = seleccionar_hueco(tamanio);
         if (!h) {
+            for (uint32_t r = 0; r < i; r++) {
+                agregar_hueco(etapas[r].base, etapas[r].meta->tamanio_original);
+                etapas[r].reservado = 0;
+            }
+            fusionar_huecos();
             pthread_mutex_unlock(&mutex_memoria);
+            for (uint32_t j = 0; j < cant_metas; j++) free(etapas[j].datos);
+            free(bloque_buf);
+            free(nuevos_segmentos);
+            free(etapas);
             pthread_mutex_unlock(&mutex_contextos);
-            list_destroy(metas_pid);
-            return 1; // no cabe sin compactar
+            return 1;
         }
-    }
-    pthread_mutex_unlock(&mutex_memoria);
 
-    // Restaurar cada segmento
-    for (int i = 0; i < list_size(metas_pid); i++) {
-        t_swap_metadata* m = list_get(metas_pid, i);
-        uint32_t tamanio   = m->cant_bloques * swap_block_size;
-
-        pthread_mutex_lock(&mutex_memoria);
-        t_hueco* h = seleccionar_hueco(tamanio);
-        uint32_t base = h->base_global;
+        etapas[i].base = h->base_global;
+        etapas[i].reservado = 1;
         if (h->tamanio == tamanio) {
-            // NOTA LUCIANO [FIX list_get_index en dessuspender_proceso]:
-            // Mismo problema que en crear_segmento: list_get_index() no existe.
-            // Ver comentario en crear_segmento para la explicación completa.
             list_remove_element(huecos, h);
             free(h);
         } else {
             h->base_global += tamanio;
             h->tamanio     -= tamanio;
         }
-        pthread_mutex_unlock(&mutex_memoria);
+    }
+    pthread_mutex_unlock(&mutex_memoria);
 
-        // Leer bloques de Swap y escribir en memoria
-        uint8_t* datos = malloc(tamanio);
+    for (uint32_t i = 0; i < cant_metas; i++) {
+        t_swap_metadata* m = etapas[i].meta;
+        uint32_t copiados = 0;
         for (uint32_t b = 0; b < m->cant_bloques; b++) {
-            swap_leer_bloque(m->bloques[b], datos + b * swap_block_size);
-            swap_bitmap[m->bloques[b]] = 0; // liberar bloque
+            if (swap_leer_bloque(m->bloques[b], bloque_buf) < 0)
+                goto rollback_dessuspension;
+
+            uint32_t restante = m->tamanio_original - copiados;
+            uint32_t chunk = restante < swap_block_size ? restante : swap_block_size;
+            memcpy(etapas[i].datos + copiados, bloque_buf, chunk);
+            copiados += chunk;
         }
-        escribir_fisico(base, datos, tamanio);
-        free(datos);
+    }
 
-        // Agregar a la tabla de segmentos del proceso
+    for (uint32_t i = 0; i < cant_metas; i++) {
+        if (escribir_fisico(etapas[i].base, etapas[i].datos,
+                            etapas[i].meta->tamanio_original) < 0)
+            goto rollback_dessuspension;
+    }
+
+    for (uint32_t i = 0; i < cant_metas; i++) {
         uint32_t dl;
-        t_memory_stick* ms = ms_para_direccion(base, &dl);
-        ctx->cant_segmentos++;
-        ctx->segmentos = realloc(ctx->segmentos,
-                                 ctx->cant_segmentos * sizeof(t_entrada_segmento));
-        t_entrada_segmento* seg = &ctx->segmentos[ctx->cant_segmentos - 1];
-        seg->id_segmento     = m->id_segmento;
-        seg->id_memory_stick = ms ? ms->id : 0;
-        seg->base            = base;
-        seg->limite          = tamanio;
+        t_memory_stick* ms = ms_para_direccion(etapas[i].base, &dl);
+        if (!ms) goto rollback_dessuspension;
+        nuevos_segmentos[i].id_segmento = etapas[i].meta->id_segmento;
+        nuevos_segmentos[i].id_memory_stick = ms->id;
+        nuevos_segmentos[i].base = etapas[i].base;
+        nuevos_segmentos[i].limite = etapas[i].meta->tamanio_original;
+    }
 
-        // Eliminar de la lista global de swap_metadata
-        for (int j = 0; j < list_size(swap_metadata); j++) {
-            if (list_get(swap_metadata, j) == m) {
-                list_remove(swap_metadata, j);
-                free(m->bloques);
-                free(m);
+    ctx->segmentos = nuevos_segmentos;
+    ctx->cant_segmentos = cant_metas;
+    nuevos_segmentos = NULL;
+
+    for (uint32_t i = 0; i < cant_metas; i++) {
+        t_swap_metadata* m = etapas[i].meta;
+        for (uint32_t b = 0; b < m->cant_bloques; b++)
+            swap_bitmap[m->bloques[b]] = 0;
+        list_remove_element(swap_metadata, m);
+        free(m->bloques);
+        free(m);
+        etapas[i].meta = NULL;
+        etapas[i].reservado = 0;
+    }
+
+    for (uint32_t i = 0; i < cant_metas; i++) free(etapas[i].datos);
+    free(bloque_buf);
+    free(etapas);
+    pthread_mutex_unlock(&mutex_contextos);
+    return 0;
+
+rollback_dessuspension:
+    devolver_huecos_reservados(etapas, cant_metas);
+
+error_dessuspension:
+    for (uint32_t i = 0; i < cant_metas; i++) free(etapas[i].datos);
+    if (indice > 0) {
+        for (uint32_t i = 0; i < cant_metas; i++) {
+            if (etapas[i].reservado) {
+                devolver_huecos_reservados(etapas, cant_metas);
                 break;
             }
         }
     }
-
-    list_destroy(metas_pid);
+    free(bloque_buf);
+    free(nuevos_segmentos);
+    free(etapas);
     pthread_mutex_unlock(&mutex_contextos);
-    return 0;
+    return -1;
 }
 
 // ---------------------------------------------------------------------------
@@ -678,6 +1026,97 @@ static char* leer_instruccion(uint32_t pid, uint32_t pc);
 
 // Hilo por cliente
 // ---------------------------------------------------------------------------
+static void completar_endpoint(
+    const t_memory_stick* ms,
+    t_payload_memory_stick_endpoint* endpoint
+) {
+    endpoint->id_memory_stick = htonl(ms->id);
+    endpoint->ipv4 = ms->ipv4;
+    endpoint->puerto = htonl(ms->puerto);
+    endpoint->base_global = htonl(ms->offset_global);
+    endpoint->tamanio = htonl(ms->tamanio);
+}
+
+static bool endpoint_por_id(
+    uint32_t id_memory_stick,
+    t_payload_memory_stick_endpoint* endpoint
+) {
+    bool encontrado = false;
+    pthread_rwlock_rdlock(&rwlock_memory_sticks);
+    for (int i = 0; i < list_size(memory_sticks); i++) {
+        t_memory_stick* ms = list_get(memory_sticks, i);
+        if (ms->activo && ms->id == id_memory_stick) {
+            completar_endpoint(ms, endpoint);
+            encontrado = true;
+            break;
+        }
+    }
+    pthread_rwlock_unlock(&rwlock_memory_sticks);
+    return encontrado;
+}
+
+static bool endpoint_por_direccion(
+    uint32_t direccion_fisica,
+    t_payload_memory_stick_endpoint* endpoint
+) {
+    bool encontrado = false;
+    pthread_rwlock_rdlock(&rwlock_memory_sticks);
+    for (int i = 0; i < list_size(memory_sticks); i++) {
+        t_memory_stick* ms = list_get(memory_sticks, i);
+        if (ms->activo && direccion_fisica >= ms->offset_global &&
+            direccion_fisica - ms->offset_global < ms->tamanio) {
+            completar_endpoint(ms, endpoint);
+            encontrado = true;
+            break;
+        }
+    }
+    pthread_rwlock_unlock(&rwlock_memory_sticks);
+    return encontrado;
+}
+
+static void notificar_bsod_si_corresponde(void) {
+    pthread_mutex_lock(&mutex_estado_memoria);
+    if (memoria_corrupta && !bsod_enviado && fd_ks >= 0) {
+        bsod_enviado = 1;
+        log_error(logger, "## Memoria corrupta - notificando BSOD a Kernel Scheduler");
+        enviar_mensaje(fd_ks, MSG_BSOD, NULL, 0);
+    }
+    pthread_mutex_unlock(&mutex_estado_memoria);
+}
+
+static void marcar_memory_stick_desconectado(t_memory_stick* ms) {
+    pthread_rwlock_wrlock(&rwlock_memory_sticks);
+    bool estaba_activo = ms->activo;
+    ms->activo = false;
+    pthread_rwlock_unlock(&rwlock_memory_sticks);
+
+    if (!estaba_activo) return;
+
+    log_error(logger, "## Memory Stick %u desconectado - memoria corrupta", ms->id);
+    pthread_mutex_lock(&mutex_estado_memoria);
+    memoria_corrupta = 1;
+    pthread_mutex_unlock(&mutex_estado_memoria);
+    notificar_bsod_si_corresponde();
+}
+
+static void* monitor_memory_stick(void* arg) {
+    t_memory_stick* ms = arg;
+    struct pollfd descriptor = {
+        .fd = ms->fd,
+        .events = POLLRDHUP
+    };
+
+    while (1) {
+        int resultado = poll(&descriptor, 1, -1);
+        if (resultado < 0 && errno == EINTR) continue;
+        if (resultado < 0 ||
+            (descriptor.revents & (POLLHUP | POLLRDHUP | POLLERR | POLLNVAL))) {
+            marcar_memory_stick_desconectado(ms);
+            return NULL;
+        }
+    }
+}
+
 typedef struct { int fd; } t_args;
 
 static void* atender_cliente(void* arg) {
@@ -686,7 +1125,10 @@ static void* atender_cliente(void* arg) {
     free(a);
 
     t_mensaje* msg = recibir_mensaje(fd);
-    if (!msg) return NULL;
+    if (!msg) {
+        close(fd);
+        return NULL;
+    }
 
     int identificado = 1;
     int conexion_pasiva = 0; // 1 = MS/Swap: este hilo deja de leer el fd tras identificar
@@ -695,57 +1137,169 @@ static void* atender_cliente(void* arg) {
 
         case MSG_KS_IDENTIFICACION:
             log_info(logger, "## Kernel Scheduler Conectado - FD del socket: %d", fd);
-            fd_ks = fd;
             enviar_mensaje(fd, MSG_OK, NULL, 0);
+            pthread_mutex_lock(&mutex_estado_memoria);
+            fd_ks = fd;
+            pthread_mutex_unlock(&mutex_estado_memoria);
+            notificar_bsod_si_corresponde();
             break;
 
         case MSG_MEMORY_STICK_IDENTIFICACION: {
-            if (msg->payload_size >= 4) {
-                uint32_t tn; memcpy(&tn, msg->payload, 4);
-                uint32_t tamanio = ntohl(tn);
-                log_info(logger, "## Memory Stick de %u bytes Conectada", tamanio);
-
-                pthread_mutex_lock(&mutex_memoria);
-                t_memory_stick* ms = malloc(sizeof(t_memory_stick));
-                ms->id           = next_ms_id++;
-                ms->fd           = fd;
-                ms->tamanio      = tamanio;
-                ms->offset_global = memoria_total();
-                list_add(memory_sticks, ms);
-                agregar_hueco(ms->offset_global, tamanio);
-                pthread_mutex_unlock(&mutex_memoria);
-
-                // El stick necesita saber dónde empieza dentro del espacio
-                // global de direcciones para poder traducir las direcciones
-                // globales que le llegan directo de la CPU (MOV_IN/MOV_OUT/
-                // COPY_MEM) a un offset local a su propio buffer.
-                uint32_t offset_n = htonl(ms->offset_global);
-                enviar_mensaje(fd, MSG_OK, &offset_n, sizeof(offset_n));
-
-                // Notificar al KS que hay más memoria
-                if (fd_ks >= 0)
-                    enviar_mensaje(fd_ks, MSG_MAS_MEMORIA, NULL, 0);
-
-                conexion_pasiva = 1;
-            } else {
-                log_warning(logger, "Memory Stick sin payload (fd=%d)", fd);
+            if (msg->payload == NULL ||
+                (msg->payload_size != sizeof(uint32_t) &&
+                 msg->payload_size != sizeof(t_payload_memory_stick_identificacion))) {
+                log_warning(logger, "Identificacion de Memory Stick invalida (fd=%d)", fd);
                 enviar_mensaje(fd, MSG_ERROR, NULL, 0);
                 identificado = 0;
+                break;
             }
+
+            uint32_t tamanio_n;
+            memcpy(&tamanio_n, msg->payload, sizeof(tamanio_n));
+            uint32_t tamanio = ntohl(tamanio_n);
+            uint32_t puerto = 0;
+            if (msg->payload_size == sizeof(t_payload_memory_stick_identificacion)) {
+                uint32_t puerto_n;
+                memcpy(
+                    &puerto_n,
+                    (uint8_t*) msg->payload + sizeof(uint32_t),
+                    sizeof(puerto_n)
+                );
+                puerto = ntohl(puerto_n);
+            }
+
+            struct sockaddr_in peer;
+            socklen_t peer_len = sizeof(peer);
+            memset(&peer, 0, sizeof(peer));
+            bool endpoint_valido = tamanio > 0 && puerto <= UINT16_MAX &&
+                                    getpeername(fd, (struct sockaddr*) &peer, &peer_len) == 0 &&
+                                    peer.sin_family == AF_INET;
+            if (!endpoint_valido) {
+                log_warning(logger, "Datos invalidos de Memory Stick (fd=%d)", fd);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                identificado = 0;
+                break;
+            }
+
+            t_memory_stick* ms = calloc(1, sizeof(t_memory_stick));
+            if (ms == NULL || pthread_mutex_init(&ms->mutex_io, NULL) != 0) {
+                free(ms);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                identificado = 0;
+                break;
+            }
+
+            pthread_mutex_lock(&mutex_memoria);
+            pthread_rwlock_wrlock(&rwlock_memory_sticks);
+            uint32_t offset_global = memoria_total_sin_lock();
+            if (offset_global > UINT32_MAX - tamanio) {
+                pthread_rwlock_unlock(&rwlock_memory_sticks);
+                pthread_mutex_unlock(&mutex_memoria);
+                pthread_mutex_destroy(&ms->mutex_io);
+                free(ms);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                identificado = 0;
+                break;
+            }
+
+            ms->id = next_ms_id++;
+            ms->fd = fd;
+            ms->tamanio = tamanio;
+            ms->offset_global = offset_global;
+            ms->ipv4 = peer.sin_addr.s_addr;
+            ms->puerto = puerto;
+            ms->activo = true;
+            list_add(memory_sticks, ms);
+            pthread_rwlock_unlock(&rwlock_memory_sticks);
+            agregar_hueco(ms->offset_global, tamanio);
+            // El stick nuevo se ubica justo después del último rango físico, así
+            // que su hueco casi siempre es contiguo al hueco final ya existente.
+            // Sin fusionar quedan dos huecos adyacentes y best_fit ve una
+            // fragmentación que no existe: un CREAR_SEGMENTO que entra sin
+            // problemas termina disparando una compactación de más.
+            fusionar_huecos();
+            pthread_mutex_unlock(&mutex_memoria);
+
+            pthread_t monitor;
+            if (pthread_create(&monitor, NULL, monitor_memory_stick, ms) != 0) {
+                log_error(logger, "No se pudo monitorear Memory Stick %u", ms->id);
+                marcar_memory_stick_desconectado(ms);
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                identificado = 0;
+                break;
+            }
+            pthread_detach(monitor);
+
+            log_info(logger, "## Memory Stick de %u bytes Conectada", tamanio);
+            log_debug(logger, "Memory Stick %u - Rango físico: %u-%u - Puerto: %u",
+                      ms->id, ms->offset_global,
+                      ms->offset_global + tamanio - 1, ms->puerto);
+
+            uint32_t offset_n = htonl(ms->offset_global);
+            enviar_mensaje(fd, MSG_OK, &offset_n, sizeof(offset_n));
+
+            pthread_mutex_lock(&mutex_estado_memoria);
+            if (fd_ks >= 0) {
+                enviar_mensaje(fd_ks, MSG_MAS_MEMORIA, NULL, 0);
+            }
+            pthread_mutex_unlock(&mutex_estado_memoria);
+
+            conexion_pasiva = 1;
             break;
         }
 
         case MSG_SWAP_IDENTIFICACION: {
-            if (msg->payload_size >= 8) {
+            if (msg->payload_size == 8 && msg->payload) {
                 uint32_t ss_n, bs_n;
                 memcpy(&ss_n, msg->payload,     4);
                 memcpy(&bs_n, (uint8_t*)msg->payload + 4, 4);
                 uint32_t swap_size  = ntohl(ss_n);
                 uint32_t block_size = ntohl(bs_n);
-                swap_block_size   = block_size;
-                swap_cant_bloques = swap_size / block_size;
-                swap_bitmap = calloc(swap_cant_bloques, 1);
+
+                if (swap_size == 0 || block_size == 0 ||
+                    swap_size < block_size || swap_size % block_size != 0 ||
+                    block_size > UINT32_MAX - 4u) {
+                    log_error(logger, "Swap rechazo: tamanios invalidos");
+                    enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                    identificado = 0;
+                    break;
+                }
+
+                uint32_t cant_bloques = swap_size / block_size;
+                uint8_t* nuevo_bitmap = calloc(cant_bloques, 1);
+                if (!nuevo_bitmap) {
+                    enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                    identificado = 0;
+                    break;
+                }
+
+                pthread_mutex_lock(&mutex_contextos);
+                pthread_mutex_lock(&mutex_swap);
+                if (swap_socket_activo_locked() || list_size(swap_metadata) > 0) {
+                    pthread_mutex_unlock(&mutex_swap);
+                    pthread_mutex_unlock(&mutex_contextos);
+                    free(nuevo_bitmap);
+                    log_warning(logger, "Se rechazo una conexion adicional de Swap");
+                    enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                    identificado = 0;
+                    break;
+                }
+                free(swap_bitmap);
+                swap_bitmap = nuevo_bitmap;
+                swap_block_size = block_size;
+                swap_cant_bloques = cant_bloques;
                 fd_swap = fd;
+
+                struct timeval timeout_swap = { .tv_sec = 30, .tv_usec = 0 };
+                if (setsockopt(fd_swap, SOL_SOCKET, SO_RCVTIMEO,
+                               &timeout_swap, sizeof(timeout_swap)) != 0 ||
+                    setsockopt(fd_swap, SOL_SOCKET, SO_SNDTIMEO,
+                               &timeout_swap, sizeof(timeout_swap)) != 0) {
+                    log_warning(logger, "No se pudo configurar el timeout de Swap");
+                }
+                pthread_mutex_unlock(&mutex_swap);
+                pthread_mutex_unlock(&mutex_contextos);
+
                 log_info(logger,
                     "## Swap Conectado - FD: %d - Tamaño: %u bytes - Bloque: %u bytes - Bloques totales: %u",
                     fd, swap_size, block_size, swap_cant_bloques);
@@ -778,7 +1332,10 @@ static void* atender_cliente(void* arg) {
     }
 
     free_mensaje(msg);
-    if (!identificado) return NULL;
+    if (!identificado) {
+        close(fd);
+        return NULL;
+    }
 
     // NOTA [fix lectura concurrente MS/Swap]: los fds de Memory Stick y Swap se
     // usan en modo pedido/respuesta desde los helpers (ms_leer, ms_escribir,
@@ -840,6 +1397,38 @@ static void* atender_cliente(void* arg) {
                 free(pl); free(inst);
             }
             free(req);
+        }
+
+        else if (pedido->op_code == MSG_SOLICITAR_MEMORY_STICK) {
+            if (pedido->payload == NULL ||
+                pedido->payload_size != sizeof(t_payload_solicitar_memory_stick)) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+            } else {
+                t_payload_solicitar_memory_stick solicitud;
+                memcpy(&solicitud, pedido->payload, sizeof(solicitud));
+                t_payload_memory_stick_endpoint endpoint;
+                if (endpoint_por_id(ntohl(solicitud.id_memory_stick), &endpoint)) {
+                    enviar_mensaje(fd, MSG_MEMORY_STICK_ENDPOINT, &endpoint, sizeof(endpoint));
+                } else {
+                    enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                }
+            }
+        }
+
+        else if (pedido->op_code == MSG_SOLICITAR_MEMORY_STICK_DIRECCION) {
+            if (pedido->payload == NULL ||
+                pedido->payload_size != sizeof(t_payload_solicitar_memory_stick_direccion)) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+            } else {
+                t_payload_solicitar_memory_stick_direccion solicitud;
+                memcpy(&solicitud, pedido->payload, sizeof(solicitud));
+                t_payload_memory_stick_endpoint endpoint;
+                if (endpoint_por_direccion(ntohl(solicitud.direccion_fisica), &endpoint)) {
+                    enviar_mensaje(fd, MSG_MEMORY_STICK_ENDPOINT, &endpoint, sizeof(endpoint));
+                } else {
+                    enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                }
+            }
         }
 
         // GUARDAR CONTEXTO
@@ -933,7 +1522,7 @@ static void* atender_cliente(void* arg) {
                 compact_pend_pid     = pid;
                 compact_pend_id_seg  = id_seg;
                 compact_pend_tamanio = tamanio;
-                if (fd_ks >= 0) enviar_mensaje(fd_ks, MSG_COMPACTAR, NULL, 0);
+                enviar_mensaje(fd, MSG_COMPACTAR, NULL, 0);
                 free_mensaje(pedido); continue;
             }
 
@@ -1001,32 +1590,48 @@ static void* atender_cliente(void* arg) {
 
         // ESCRIBIR DATOS (KS → KM → MS, para STDIN)
         else if (pedido->op_code == MSG_ESCRIBIR_DATOS) {
-            uint32_t pid_n, dl_n, tam_n;
-            memcpy(&pid_n, pedido->payload,      4);
-            memcpy(&dl_n,  (uint8_t*)pedido->payload + 4, 4);
-            memcpy(&tam_n, (uint8_t*)pedido->payload + 8, 4);
-            uint32_t pid        = ntohl(pid_n);
-            uint32_t dir_logica = ntohl(dl_n);
-            uint32_t tamanio    = ntohl(tam_n);
-            uint8_t* datos      = (uint8_t*)pedido->payload + 12;
-
-            pthread_mutex_lock(&mutex_contextos);
-            t_contexto* ctx = buscar_contexto(pid);
-            if (!ctx) {
-                pthread_mutex_unlock(&mutex_contextos);
-                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
-                free_mensaje(pedido); continue;
-            }
-            uint32_t dir_fisica = traducir_direccion(ctx, dir_logica, tamanio);
-            pthread_mutex_unlock(&mutex_contextos);
-
-            if (dir_fisica == UINT32_MAX) {
+            if (pedido->payload_size < 12u) {
+                log_warning(logger, "MSG_ESCRIBIR_DATOS con payload incompleto");
                 enviar_mensaje(fd, MSG_ERROR, NULL, 0);
             } else {
-                log_info(logger, "## PID: %u - Escritura - Dir. Física: %u - Tamaño: %u",
-                         pid, dir_fisica, tamanio);
-                int ok = escribir_fisico(dir_fisica, datos, tamanio);
-                enviar_mensaje(fd, ok == 0 ? MSG_OK : MSG_ERROR, NULL, 0);
+                uint32_t pid_n, dl_n, tam_n;
+                memcpy(&pid_n, pedido->payload,      4);
+                memcpy(&dl_n,  (uint8_t*)pedido->payload + 4, 4);
+                memcpy(&tam_n, (uint8_t*)pedido->payload + 8, 4);
+                uint32_t pid        = ntohl(pid_n);
+                uint32_t dir_logica = ntohl(dl_n);
+                uint32_t tamanio    = ntohl(tam_n);
+
+                // El tamaño declarado debe coincidir exactamente con los bytes
+                // presentes. Evita lecturas fuera del payload ante mensajes
+                // truncados o corruptos.
+                if (tamanio != pedido->payload_size - 12u) {
+                    log_warning(logger,
+                        "PID: %u - MSG_ESCRIBIR_DATOS inválido: declaró %u bytes y recibió %u",
+                        pid, tamanio, pedido->payload_size - 12u);
+                    enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                } else {
+                    uint8_t* datos = (uint8_t*)pedido->payload + 12;
+
+                    pthread_mutex_lock(&mutex_contextos);
+                    t_contexto* ctx = buscar_contexto(pid);
+                    if (!ctx) {
+                        pthread_mutex_unlock(&mutex_contextos);
+                        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                    } else {
+                        uint32_t dir_fisica = traducir_direccion(ctx, dir_logica, tamanio);
+                        pthread_mutex_unlock(&mutex_contextos);
+
+                        if (dir_fisica == UINT32_MAX) {
+                            enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                        } else {
+                            log_info(logger, "## PID: %u - Escritura - Dir. Física: %u - Tamaño: %u",
+                                     pid, dir_fisica, tamanio);
+                            int ok = escribir_fisico(dir_fisica, datos, tamanio);
+                            enviar_mensaje(fd, ok == 0 ? MSG_OK : MSG_ERROR, NULL, 0);
+                        }
+                    }
+                }
             }
         }
 
@@ -1062,6 +1667,11 @@ static void* atender_cliente(void* arg) {
 
         // SUSPENDER PROCESO
         else if (pedido->op_code == MSG_SUSPENDER_PROCESO) {
+            if (pedido->payload_size != sizeof(uint32_t) || !pedido->payload) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
             uint32_t pid_n; memcpy(&pid_n, pedido->payload, 4);
             uint32_t pid = ntohl(pid_n);
             int res = suspender_proceso(pid);
@@ -1070,6 +1680,11 @@ static void* atender_cliente(void* arg) {
 
         // DES-SUSPENDER PROCESO
         else if (pedido->op_code == MSG_DESSUSPENDER_PROCESO) {
+            if (pedido->payload_size != sizeof(uint32_t) || !pedido->payload) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                free_mensaje(pedido);
+                continue;
+            }
             uint32_t pid_n; memcpy(&pid_n, pedido->payload, 4);
             uint32_t pid = ntohl(pid_n);
             int res = dessuspender_proceso(pid);
@@ -1104,6 +1719,15 @@ static void* atender_cliente(void* arg) {
     }
 
     log_info(logger, "Cliente desconectado (fd=%d)", fd);
+    pthread_mutex_lock(&mutex_estado_memoria);
+    if (fd_ks == fd) {
+        fd_ks = -1;
+        bsod_enviado = 0;
+        close(fd);
+        fd = -1;
+    }
+    pthread_mutex_unlock(&mutex_estado_memoria);
+    if (fd >= 0) close(fd);
     return NULL;
 }
 

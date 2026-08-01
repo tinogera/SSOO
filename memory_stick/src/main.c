@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <arpa/inet.h>
@@ -9,6 +10,8 @@
 #include <utils/protocolo.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <errno.h>
+#include <time.h>
 
 void* atender_cpu(void* arg);
 void* atender_kernel_memory(void* arg);
@@ -20,7 +23,7 @@ void manejar_write(int fd_cpu, t_mensaje* msg, bool direccion_global);
 void manejar_read(int fd_cpu, t_mensaje* msg, bool direccion_global);
 void manejar_read_cpu(int fd_cpu, t_mensaje* msg);
 
-int delay;
+static uint32_t delay_ms;
 
 // Dónde empieza este stick dentro del espacio global de direcciones físicas.
 // Lo informa Kernel Memory en la respuesta del handshake de identificación.
@@ -43,6 +46,33 @@ typedef struct {
 t_log* logger;
 t_memory_stick memoria_global;
 
+static void aplicar_memory_delay(void) {
+    struct timespec restante = {
+        .tv_sec = delay_ms / 1000u,
+        .tv_nsec = (long)(delay_ms % 1000u) * 1000000L
+    };
+
+    while (nanosleep(&restante, &restante) == -1 && errno == EINTR) {
+    }
+}
+
+static bool resolver_rango(uint32_t direccion_recibida, uint32_t tamanio,
+                           bool direccion_global, uint32_t* direccion_local) {
+    if (direccion_local == NULL || tamanio == 0) return false;
+
+    uint32_t local = direccion_recibida;
+    if (direccion_global) {
+        if (direccion_recibida < offset_global_ms) return false;
+        local = direccion_recibida - offset_global_ms;
+    }
+
+    if (local > memoria_global.tamanio) return false;
+    if (tamanio > memoria_global.tamanio - local) return false;
+
+    *direccion_local = local;
+    return true;
+}
+
 int main(int argc, char* argv[]) {
     // -------------------------------------------------------------------
     // 1. Validar argumentos
@@ -54,26 +84,16 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    char*    config_path = argv[1];
-    uint32_t tamanio     = (uint32_t)atoi(argv[2]);
-    if (tamanio == 0) {
-    fprintf(stderr, "Tamaño inválido\n");
-    return EXIT_FAILURE;
-    }
-
-    // inicialización del espacio de almacenamiento
-    memoria_global.buffer = malloc(tamanio);
-
-    if (memoria_global.buffer == NULL) {
-
-        fprintf(stderr, "No se pudo reservar memoria\n");
-
+    char* config_path = argv[1];
+    char* fin_tamanio = NULL;
+    errno = 0;
+    unsigned long tamanio_parseado = strtoul(argv[2], &fin_tamanio, 10);
+    if (errno != 0 || fin_tamanio == argv[2] || *fin_tamanio != '\0' ||
+        tamanio_parseado == 0 || tamanio_parseado > UINT32_MAX) {
+        fprintf(stderr, "Tamaño inválido\n");
         return EXIT_FAILURE;
     }
-
-    memoria_global.tamanio = tamanio;
-
-    pthread_mutex_init(&memoria_global.mutex,NULL);
+    uint32_t tamanio = (uint32_t)tamanio_parseado;
 
     // -------------------------------------------------------------------
     // 2. Leer configuración y cargar variables
@@ -85,13 +105,36 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
+    memoria_global.buffer = malloc(tamanio);
+    if (memoria_global.buffer == NULL) {
+        fprintf(stderr, "No se pudo reservar memoria\n");
+        config_destroy(config);
+        return EXIT_FAILURE;
+    }
+    memoria_global.tamanio = tamanio;
+    if (pthread_mutex_init(&memoria_global.mutex, NULL) != 0) {
+        fprintf(stderr, "No se pudo inicializar el mutex de memoria\n");
+        free(memoria_global.buffer);
+        config_destroy(config);
+        return EXIT_FAILURE;
+    }
+
 
     // char * ip         = config_get_string_value(config,    "MEMORY_STICK_IP");
     int   puerto      = config_get_int_value(config,    "MEMORY_STICK_PORT");
-          delay       = config_get_int_value(config,    "MEMORY_DELAY");
+    int   delay_config = config_get_int_value(config,   "MEMORY_DELAY");
     int   kernel_port = config_get_int_value(config,    "KERNEL_MEMORY_PORT");
     char* kernel_ip   = config_get_string_value(config, "KERNEL_MEMORY_IP");
     char* logLevel    = config_get_string_value(config, "LOG_LEVEL");
+    if (puerto <= 0 || puerto > UINT16_MAX || kernel_port <= 0 || kernel_port > UINT16_MAX ||
+        delay_config < 0 || kernel_ip == NULL || logLevel == NULL) {
+        fprintf(stderr, "Configuración inválida o incompleta\n");
+        pthread_mutex_destroy(&memoria_global.mutex);
+        free(memoria_global.buffer);
+        config_destroy(config);
+        return EXIT_FAILURE;
+    }
+    delay_ms = (uint32_t)delay_config;
     // -------------------------------------------------------------------
     // 3. Inicializar logger
     // -------------------------------------------------------------------
@@ -108,6 +151,8 @@ int main(int argc, char* argv[]) {
     logger = log_create(log_file, "MemoryStick", true, log_level_from_string(logLevel));
     if (logger == NULL) {
         fprintf(stderr, "Error al crear el logger\n");
+        pthread_mutex_destroy(&memoria_global.mutex);
+        free(memoria_global.buffer);
         config_destroy(config);
         return EXIT_FAILURE;
     }
@@ -119,6 +164,8 @@ int main(int argc, char* argv[]) {
 
     if (kernel_ip == NULL) {
         log_error(logger, "Falta KERNEL_MEMORY_IP en el archivo de configuración");
+        pthread_mutex_destroy(&memoria_global.mutex);
+        free(memoria_global.buffer);
         config_destroy(config);
         log_destroy(logger);
         return EXIT_FAILURE;
@@ -143,34 +190,46 @@ int main(int argc, char* argv[]) {
     // void* payload = serializar_string(msdatos, &size);
     // enviar_mensaje(fd, MSG_MEMORY_STICK_IDENTIFICACION, payload, size);
     // free(payload);
-    // Conectarse a Kernel Memory
-    int fd_km = conectar_a_servidor(kernel_ip, kernel_port);
-    if (fd_km < 0) {
-        log_error(logger, "No se pudo conectar a Kernel Memory en %s:%d", kernel_ip, kernel_port);
+    // Abrir el servidor antes de publicarlo en Kernel Memory: así nunca se
+    // anuncia un endpoint al que una CPU todavía no puede conectarse.
+    int fd_servidor = crear_servidor(puerto);
+    if (fd_servidor < 0) {
+        log_error(logger, "No se pudo levantar servidor en puerto %d", puerto);
+        pthread_mutex_destroy(&memoria_global.mutex);
+        free(memoria_global.buffer);
         config_destroy(config);
         log_destroy(logger);
         return EXIT_FAILURE;
     }
 
-    // Identificarse con tamaño en el payload
-    //  4 + 4 + 32
-    // u_int64_t  payload[40];
-    // uint32_t ip_n = htonl(ms.ip);
-    // memcpy(payload, &ip_n, 32);
-    // uint32_t puerto_n = htonl(ms.puerto);
-    // memcpy(payload, &puerto_n, 4);
-    // uint32_t tamanio_n = htonl(tamanio);
-    // memcpy(payload, &tamanio_n, 4);
-    uint8_t  payload[4];
-    uint32_t tamanio_n = htonl(tamanio);
-    memcpy(payload, &tamanio_n, 4);
+    // Conectarse a Kernel Memory
+    int fd_km = conectar_a_servidor(kernel_ip, kernel_port);
+    if (fd_km < 0) {
+        log_error(logger, "No se pudo conectar a Kernel Memory en %s:%d", kernel_ip, kernel_port);
+        close(fd_servidor);
+        pthread_mutex_destroy(&memoria_global.mutex);
+        free(memoria_global.buffer);
+        config_destroy(config);
+        log_destroy(logger);
+        return EXIT_FAILURE;
+    }
 
-    enviar_mensaje(fd_km, MSG_MEMORY_STICK_IDENTIFICACION, payload, sizeof(payload));
+    // Publicar tamaño y puerto del servidor. KM obtiene la IP desde el peer de
+    // esta conexión y luego puede resolver el endpoint para CPUs dinámicas.
+    t_payload_memory_stick_identificacion payload = {
+        .tamanio = htonl(tamanio),
+        .puerto = htonl((uint32_t)puerto)
+    };
+    enviar_mensaje(fd_km, MSG_MEMORY_STICK_IDENTIFICACION, &payload, sizeof(payload));
 
     t_mensaje* respuesta = recibir_mensaje(fd_km);
     if (respuesta == NULL || respuesta->op_code != MSG_OK) {
         log_error(logger, "Kernel Memory rechazó la conexión");
         if (respuesta) free_mensaje(respuesta);
+        close(fd_km);
+        close(fd_servidor);
+        pthread_mutex_destroy(&memoria_global.mutex);
+        free(memoria_global.buffer);
         config_destroy(config);
         log_destroy(logger);
         return EXIT_FAILURE;
@@ -189,26 +248,35 @@ int main(int argc, char* argv[]) {
     // (compactación, STDOUT/STDIN, suspensión). Antes nadie leía fd_km después
     // del handshake, así que todos esos pedidos quedaban sin respuesta y KM se
     // colgaba esperando. Este hilo atiende los pedidos de KM.
-    {
-        int* fd_km_heap = malloc(sizeof(int));
-        *fd_km_heap = fd_km;
-        pthread_t t_km;
-        pthread_create(&t_km, NULL, atender_kernel_memory, fd_km_heap);
-        pthread_detach(t_km);
-    }
-
-    // -------------------------------------------------------------------
-    // 7. Creo servidor y se queda la espera de una CPU
-    // -------------------------------------------------------------------
-
-    // Levantar servidor para CPUs
-    int fd_servidor = crear_servidor(puerto);
-    if (fd_servidor < 0) {
-        log_error(logger, "No se pudo levantar servidor en puerto %d", puerto);
+    int* fd_km_heap = malloc(sizeof(int));
+    if (fd_km_heap == NULL) {
+        log_error(logger, "No se pudo reservar memoria para atender Kernel Memory");
+        close(fd_km);
+        close(fd_servidor);
+        pthread_mutex_destroy(&memoria_global.mutex);
+        free(memoria_global.buffer);
         config_destroy(config);
         log_destroy(logger);
         return EXIT_FAILURE;
     }
+    *fd_km_heap = fd_km;
+    pthread_t t_km;
+    if (pthread_create(&t_km, NULL, atender_kernel_memory, fd_km_heap) != 0) {
+        log_error(logger, "No se pudo crear el hilo de Kernel Memory");
+        free(fd_km_heap);
+        close(fd_km);
+        close(fd_servidor);
+        pthread_mutex_destroy(&memoria_global.mutex);
+        free(memoria_global.buffer);
+        config_destroy(config);
+        log_destroy(logger);
+        return EXIT_FAILURE;
+    }
+    pthread_detach(t_km);
+
+    // -------------------------------------------------------------------
+    // 7. Creo servidor y se queda la espera de una CPU
+    // -------------------------------------------------------------------
 
     log_info(logger, "Escuchando CPUs en puerto %d", puerto);
 
@@ -220,12 +288,21 @@ int main(int argc, char* argv[]) {
         }
 
         t_cpu_args* args = malloc(sizeof(t_cpu_args));
+        if (args == NULL) {
+            log_error(logger, "Sin memoria para atender una conexión de CPU");
+            close(fd_cpu);
+            continue;
+        }
 
         args->fd_cpu = fd_cpu;
 
         pthread_t tid;
-
-        pthread_create(&tid, NULL, atender_cpu, args);
+        if (pthread_create(&tid, NULL, atender_cpu, args) != 0) {
+            log_error(logger, "No se pudo crear el hilo para una CPU");
+            free(args);
+            close(fd_cpu);
+            continue;
+        }
 
         pthread_detach(tid);
 
@@ -268,6 +345,7 @@ void* atender_kernel_memory(void* arg) {
 
         free_mensaje(msg);
     }
+    close(fd_km);
     return NULL;
 }
 
@@ -283,7 +361,8 @@ void* atender_cpu(void* arg) {
         close(fd_cpu);
         return NULL;
     }
-    if (id_msg->op_code != MSG_CPU_IDENTIFICACION) {
+    if (id_msg->op_code != MSG_CPU_IDENTIFICACION ||
+        id_msg->payload == NULL || id_msg->payload_size != sizeof(uint32_t)) {
         log_info(logger, "Primer mensaje no es identificacion: %u", id_msg->op_code);
         enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
         free_mensaje(id_msg);
@@ -337,120 +416,94 @@ void* atender_cpu(void* arg) {
 }
 
 void manejar_write(int fd_cpu, t_mensaje* msg, bool direccion_global) {
-
-    uint32_t direccion_n;
-    uint32_t size_n;
-
-    memcpy(&direccion_n,msg->payload,4);
-
-    memcpy(&size_n,msg->payload + 4,4);
-
-    uint32_t direccion = ntohl(direccion_n);
-    if (direccion_global) direccion -= offset_global_ms;
-
-    uint32_t size = ntohl(size_n);
-
-    void* datos = msg->payload + 8;
-
-    // ------------------------------------------------
-    // Delay
-    // ------------------------------------------------
-
-    usleep(delay);
-
-    // ------------------------------------------------
-    // Validar límites
-    // ------------------------------------------------
-
-    if (direccion + size > memoria_global.tamanio) {
-
+    if (msg == NULL || msg->payload == NULL || msg->payload_size < 8u) {
+        log_warning(logger, "Pedido de escritura con payload incompleto");
         enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
-        log_info(logger, "La cantidad de bytes a escribir es mayor al tamaño disponible");
         return;
     }
 
-    // ------------------------------------------------
-    // Mutex
-    // ------------------------------------------------
-
-    pthread_mutex_lock(&memoria_global.mutex);
-
-    memcpy((char*)memoria_global.buffer + direccion, datos, size);
-
-    pthread_mutex_unlock(&memoria_global.mutex);
-
-    log_debug(logger, "Escritura en dirección local=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
-    log_info(logger,"## Escritura de %u bytes",size);
-
-    enviar_mensaje(fd_cpu,MSG_OK,NULL,0);
-}
-
-void manejar_read(int fd_cpu, t_mensaje* msg, bool direccion_global) {
-
     uint32_t direccion_n;
     uint32_t size_n;
-
-    memcpy(&direccion_n,msg->payload,4);
-
-    memcpy(&size_n,msg->payload + 4,4);
-
-    uint32_t direccion = ntohl(direccion_n);
-    if (direccion_global) direccion -= offset_global_ms;
-
-    uint32_t size = ntohl(size_n);
-
-    usleep(delay);
-
-    if (direccion + size > memoria_global.tamanio) {
-        enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
-        log_info(logger, "La cantidad de bytes a leer es mayor al tamaño");
-        return;
-    }
-
-    void* buffer = malloc(size);
-
-    pthread_mutex_lock(&memoria_global.mutex);
-
-    memcpy(buffer, (char*)memoria_global.buffer + direccion, size);
-
-    pthread_mutex_unlock(&memoria_global.mutex);
-
-    log_debug(logger, "Lectura en dirección local=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
-    log_info(logger, "## Lectura de %u bytes", size);
-
-    enviar_mensaje(fd_cpu, MSG_MEMORY_READ_RESPUESTA, buffer, size);
-
-    free(buffer);
-}
-
-void manejar_read_cpu(int fd_cpu, t_mensaje* msg) {
-    uint32_t direccion_n;
-    uint32_t size_n;
-
     memcpy(&direccion_n, msg->payload, 4);
     memcpy(&size_n, (uint8_t*)msg->payload + 4, 4);
 
-    uint32_t direccion = ntohl(direccion_n) - offset_global_ms; // siempre CPU: dirección global
-    uint32_t size      = ntohl(size_n);
-
-    usleep(delay);
-
-    if (direccion + size > memoria_global.tamanio) {
+    uint32_t direccion_recibida = ntohl(direccion_n);
+    uint32_t size = ntohl(size_n);
+    if (size > UINT32_MAX - 8u || msg->payload_size != 8u + size) {
+        log_warning(logger, "Pedido de escritura inválido: tamaño declarado=%u payload=%u",
+                    size, msg->payload_size);
         enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
-        log_info(logger, "La cantidad de bytes a leer es mayor al tamaño");
         return;
     }
 
-    void* buffer = malloc(size);
+    uint32_t direccion_local;
+    if (!resolver_rango(direccion_recibida, size, direccion_global, &direccion_local)) {
+        log_warning(logger, "Escritura fuera de rango: dirección=%u tamaño=%u",
+                    direccion_recibida, size);
+        enviar_mensaje(fd_cpu, MSG_ERROR, NULL, 0);
+        return;
+    }
 
+    aplicar_memory_delay();
+
+    const uint8_t* datos = (const uint8_t*)msg->payload + 8;
     pthread_mutex_lock(&memoria_global.mutex);
-    memcpy(buffer, (char*)memoria_global.buffer + direccion, size);
+    memcpy((uint8_t*)memoria_global.buffer + direccion_local, datos, size);
     pthread_mutex_unlock(&memoria_global.mutex);
 
-    log_debug(logger, "Lectura en dirección local=%u (tamaño propio del stick=%u)", direccion, memoria_global.tamanio);
+    log_debug(logger, "Escritura en dirección local=%u (tamaño propio del stick=%u)",
+              direccion_local, memoria_global.tamanio);
+    log_info(logger, "## Escritura de %u bytes", size);
+    enviar_mensaje(fd_cpu, MSG_OK, NULL, 0);
+}
+
+static void manejar_read_con_respuesta(int fd, t_mensaje* msg, bool direccion_global,
+                                       uint32_t op_respuesta) {
+    if (msg == NULL || msg->payload == NULL || msg->payload_size != 8u) {
+        log_warning(logger, "Pedido de lectura con payload inválido");
+        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+        return;
+    }
+
+    uint32_t direccion_n;
+    uint32_t size_n;
+    memcpy(&direccion_n, msg->payload, 4);
+    memcpy(&size_n, (uint8_t*)msg->payload + 4, 4);
+
+    uint32_t direccion_recibida = ntohl(direccion_n);
+    uint32_t size = ntohl(size_n);
+    uint32_t direccion_local;
+    if (!resolver_rango(direccion_recibida, size, direccion_global, &direccion_local)) {
+        log_warning(logger, "Lectura fuera de rango: dirección=%u tamaño=%u",
+                    direccion_recibida, size);
+        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+        return;
+    }
+
+    uint8_t* buffer = malloc(size);
+    if (buffer == NULL) {
+        log_error(logger, "Sin memoria para responder una lectura de %u bytes", size);
+        enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+        return;
+    }
+
+    aplicar_memory_delay();
+
+    pthread_mutex_lock(&memoria_global.mutex);
+    memcpy(buffer, (uint8_t*)memoria_global.buffer + direccion_local, size);
+    pthread_mutex_unlock(&memoria_global.mutex);
+
+    log_debug(logger, "Lectura en dirección local=%u (tamaño propio del stick=%u)",
+              direccion_local, memoria_global.tamanio);
     log_info(logger, "## Lectura de %u bytes", size);
-
-    enviar_mensaje(fd_cpu, MSG_LEER_MEMORIA_RESP, buffer, size);  // ← op_code correcto para CPU
-
+    enviar_mensaje(fd, op_respuesta, buffer, size);
     free(buffer);
+}
+
+void manejar_read(int fd_cpu, t_mensaje* msg, bool direccion_global) {
+    manejar_read_con_respuesta(fd_cpu, msg, direccion_global, MSG_MEMORY_READ_RESPUESTA);
+}
+
+void manejar_read_cpu(int fd_cpu, t_mensaje* msg) {
+    manejar_read_con_respuesta(fd_cpu, msg, true, MSG_LEER_MEMORIA_RESP);
 }

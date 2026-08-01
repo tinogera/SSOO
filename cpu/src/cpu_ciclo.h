@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <commons/log.h>
 
+#include "cpu_memory_sticks.h"
 #include "cpu_registros.h"
 
 // Resultado de una ráfaga completa, no de una sola instrucción. main lo
@@ -24,8 +25,7 @@ t_resultado_ciclo_cpu ejecutar_ciclo_proceso(
     int socket_kernel,
     int socket_memory,
     // Los accesos físicos van directo al MS indicado en el contexto.
-    int* sockets_ms,
-    int n_sockets_ms,
+    t_cpu_memory_sticks* memory_sticks,
     uint32_t pid,
     t_contexto* contexto,
     t_registros_cpu* registros,

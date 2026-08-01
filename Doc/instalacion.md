@@ -705,6 +705,44 @@ cp plug-n-pray-pruebas/*.prc /home/utnso/pruebas/
 3. `MEMORIA_PRE_1` completa el ciclo alloc → write → free → realloc → read sin errores.
 4. `MEMORIA_PRE_2` bloquea en STDIN esperando input; al recibirlo, lo escribe por STDOUT y termina.
 
+### 10.3 Prueba Memoria oficial — 4 Memory Sticks
+
+La "Prueba Memoria" oficial de la cátedra (`PLANI_MEM.prc`, corrida dos veces: una con `ALLOCATION_STRATEGY=BEST_FIT` y otra con `WORST_FIT`) usa **4 Memory Sticks** de 16, 32, 64 y 128 bytes.
+
+Todo se levanta con `./deploy.sh`, igual que el resto del proyecto — no hace falta invocar los binarios a mano. Kernel Memory, Swap, Kernel Scheduler e IO usan el config **por defecto** de cada módulo (`kernel_memory/kernel_memory.config`, `swap/swap.config`, `kernel_scheduler/kernel_scheduler.config`, `io/io.config`, todos apuntando a `127.0.0.1` con KM en el puerto `23841` y KS en el `19337`). Solo Memory Stick y CPU necesitan un config alternativo, porque esta prueba usa 4 sticks en vez de 1: ya están listos en el repo y se le indican a `deploy.sh` con `-c`.
+
+- `memory_stick/PruebaMem/msPruebaMem.config` (16 B, puerto 27643, id 0)
+- `memory_stick/PruebaMem/msPruebaMem2.config` (32 B, puerto 27644, id 1)
+- `memory_stick/PruebaMem/msPruebaMem3.config` (64 B, puerto 27645, id 2)
+- `memory_stick/PruebaMem/msPruebaMem4.config` (128 B, puerto 27646, id 3)
+- `cpu/PruebaMem/cpu.config` (apunta a KM/KS por defecto y a los 4 sticks de arriba)
+
+> Estos `.config` quedan ignorados por git igual que el resto (regla `*.config` del `.gitignore` — ver [Sección 4](#4-configurar-cada-módulo)), son copias locales de conveniencia. Si hacen falta en otra máquina, hay que copiarlos a mano o forzar el `git add`.
+
+**Orden de arranque** (una terminal por comando — ver [Orden de inicio](#8-orden-de-inicio) para el porqué):
+
+```bash
+./deploy.sh km      # ALLOCATION_STRATEGY=BEST_FIT (o WORST_FIT para la 2.ª corrida) en kernel_memory/kernel_memory.config
+./deploy.sh swap
+./deploy.sh ms 16  -c memory_stick/PruebaMem/msPruebaMem.config
+./deploy.sh ms 32  -c memory_stick/PruebaMem/msPruebaMem2.config
+./deploy.sh ms 64  -c memory_stick/PruebaMem/msPruebaMem3.config
+./deploy.sh ms 128 -c memory_stick/PruebaMem/msPruebaMem4.config
+./deploy.sh ks /home/utnso/pruebas/PLANI_MEM.prc
+./deploy.sh io SLEEP
+./deploy.sh io STDOUT
+./deploy.sh io STDIN
+./deploy.sh cpu 0 -c cpu/PruebaMem/cpu.config
+```
+
+> Los 4 Memory Sticks deben conectarse **en ese orden exacto** (16 → 32 → 64 → 128): el Kernel Memory les asigna `id_memory_stick` según el orden de conexión, y `cpu/PruebaMem/cpu.config` asume ese mismo orden (`IP_MEMORY_STICK_0` .. `_3`).
+
+Para la segunda corrida, cambiar la estrategia de asignación y repetir:
+
+```bash
+./set_config.sh km ALLOCATION_STRATEGY=WORST_FIT
+```
+
 ---
 
 ## 11. Cambios introducidos en v1.1 del enunciado

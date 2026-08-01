@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <sys/socket.h>
 #include <time.h>
 #include <commons/log.h>
 #include <commons/collections/queue.h>
@@ -37,6 +38,8 @@ static sem_t           sem_planificador_ok; // 1=normal, 0=compactando (bloquea 
 static sem_t           sem_fin_compactacion;
 static int             esperando_fin_compactacion = 0; // protegido por mutex_compactando
 static pthread_mutex_t mutex_km_send = PTHREAD_MUTEX_INITIALIZER; // serializa envíos crudos a fd_km
+static pthread_mutex_t mutex_bsod = PTHREAD_MUTEX_INITIALIZER;
+static int             bsod_iniciado = 0;
 
 t_queue *cola_new, *cola_exec;
 t_queue *cola_block, *cola_susp_block, *cola_susp_ready, *cola_exit;
@@ -70,6 +73,13 @@ typedef struct {
     int gen;
 } t_quantum_args;
 
+// Args del timer de suspensión. La generación evita que el timer de una IO
+// anterior suspenda por error un bloqueo posterior del mismo proceso.
+typedef struct {
+    int pid;
+    int gen_bloqueo;
+} t_suspension_args;
+
 static t_list*         lista_cpus = NULL;
 static pthread_mutex_t mutex_cpus = PTHREAD_MUTEX_INITIALIZER;
 static sem_t           sem_cpu_disponible;
@@ -84,14 +94,20 @@ typedef struct {
     int      pid;
     uint32_t dir_logica;
     uint32_t tamanio;
+    uint8_t* datos;
+    uint32_t datos_size;
+    bool     datos_recibidos;
 } t_stdin_pendiente;
 
 static t_list*         lista_stdin_pendientes = NULL;
 static pthread_mutex_t mutex_stdin_pendientes = PTHREAD_MUTEX_INITIALIZER;
+// Serializa el fin de una IO con su timer de suspensión. Sin esto el proceso
+// puede aparecer en SUSP_BLOCK antes de que KM confirme que lo suspendió.
+static pthread_mutex_t mutex_transiciones_io = PTHREAD_MUTEX_INITIALIZER;
 
 static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size);
 static void       avisar_km_finalizacion(int pid);
-static void       manejar_bsod(void);
+static void*      manejar_bsod(void* _);
 static void*      manejar_mas_memoria(void* _);
 static void*      thread_km_listener(void* _);
 t_proceso* crear_proceso(char* path, int prioridad);
@@ -124,13 +140,29 @@ static void encolar_al_frente_en_ready(t_proceso* proc) {
 static void verificar_preemption(t_proceso* entrante) {
     if (!queue_preemption) return;
 
+    // Si hay una CPU libre el entrante se despacha ahí: desalojar a otro sería
+    // sacar de ejecución a un proceso para nada (y ensuciar el log con un
+    // "Desalojado" que no corresponde). Se toma y suelta mutex_cpus sin anidar
+    // con mutex_exec para no invertir el orden que usa el planificador.
+    pthread_mutex_lock(&mutex_cpus);
+    bool hay_cpu_libre = false;
+    for (int i = 0; i < list_size(lista_cpus); i++) {
+        t_cpu_entry* e = list_get(lista_cpus, i);
+        if (!e->ocupada) { hay_cpu_libre = true; break; }
+    }
+    pthread_mutex_unlock(&mutex_cpus);
+    if (hay_cpu_libre) return;
+
     pthread_mutex_lock(&mutex_exec);
     t_proceso* victima = NULL;
     for (int i = 0; i < (int)queue_size(cola_exec); i++) {
         t_proceso* p = list_get(cola_exec->elements, i);
-        if (p->prioridad > entrante->prioridad) {
+        // Un proceso ya interrumpido está saliendo de EXEC: volver a elegirlo
+        // gasta el desalojo y deja corriendo al que en realidad había que sacar.
+        if (p->preemptado) continue;
+        if (p->prioridad > entrante->prioridad &&
+            (victima == NULL || p->prioridad > victima->prioridad)) {
             victima = p;
-            break;
         }
     }
     if (victima) {
@@ -176,8 +208,72 @@ static void cambiar_estado(t_proceso* proc, t_estado nuevo) {
     proc->estado = nuevo;
 }
 
+static void destruir_stdin_pendiente(void* elem) {
+    t_stdin_pendiente* sp = elem;
+    if (!sp) return;
+    free(sp->datos);
+    free(sp);
+}
+
+// Extrae el pedido de la lista y transfiere ownership al llamador.
+static t_stdin_pendiente* extraer_stdin_pendiente(int pid) {
+    t_stdin_pendiente* encontrado = NULL;
+    pthread_mutex_lock(&mutex_stdin_pendientes);
+    for (int i = 0; i < list_size(lista_stdin_pendientes); i++) {
+        t_stdin_pendiente* sp = list_get(lista_stdin_pendientes, i);
+        if (sp->pid == pid) {
+            encontrado = list_remove(lista_stdin_pendientes, i);
+            break;
+        }
+    }
+    pthread_mutex_unlock(&mutex_stdin_pendientes);
+    return encontrado;
+}
+
+// Escribe el resultado de STDIN solamente cuando el proceso está residente.
+// Retorna 0 si KM confirmó la escritura y -1 ante datos inválidos o error de KM.
+static int escribir_stdin_en_km(const t_stdin_pendiente* sp) {
+    if (!sp || !sp->datos_recibidos || sp->datos_size != sp->tamanio)
+        return -1;
+    if (sp->tamanio == 0)
+        return 0;
+    if (sp->tamanio > UINT32_MAX - 12u)
+        return -1;
+
+    uint32_t km_size = 12u + sp->tamanio;
+    uint8_t* km_buf = malloc(km_size);
+    if (!km_buf) return -1;
+
+    uint32_t pid_n = htonl((uint32_t)sp->pid);
+    uint32_t dl_n  = htonl(sp->dir_logica);
+    uint32_t tam_n = htonl(sp->tamanio);
+    memcpy(km_buf,      &pid_n, 4);
+    memcpy(km_buf + 4,  &dl_n,  4);
+    memcpy(km_buf + 8,  &tam_n, 4);
+    memcpy(km_buf + 12, sp->datos, sp->tamanio);
+
+    t_mensaje* resp = km_request(MSG_ESCRIBIR_DATOS, km_buf, km_size);
+    int ok = resp && resp->op_code == MSG_OK;
+    if (resp) free_mensaje(resp);
+    free(km_buf);
+    return ok ? 0 : -1;
+}
+
+// Un proceso cuyo resultado de IO no pudo persistirse no puede volver a READY:
+// continuarlo haría que consumiera memoria con datos inexistentes o corruptos.
+static void finalizar_por_error_io(t_proceso* proc, const char* detalle) {
+    cambiar_estado(proc, EXIT);
+    log_info(logger, "## (%d) finalizó su ejecución con motivo de ERROR", proc->PID);
+    log_error(logger, "## (%d) - IO: %s", proc->PID, detalle);
+    pthread_mutex_lock(&mutex_exit);
+    queue_push(cola_exit, proc);
+    pthread_mutex_unlock(&mutex_exit);
+    avisar_km_finalizacion(proc->PID);
+}
+
 
 static void finalizar_proceso_bsod(t_proceso* proc) {
+    if (!proc || proc->estado == EXIT) return;
     cambiar_estado(proc, EXIT);
     log_info(logger, "## (%d) finalizó su ejecución con motivo de BSOD", proc->PID);
     pthread_mutex_lock(&mutex_exit);
@@ -186,49 +282,73 @@ static void finalizar_proceso_bsod(t_proceso* proc) {
     avisar_km_finalizacion(proc->PID);
 }
 
-static void manejar_bsod(void) {
+static void mover_cola_a_lista(t_queue* cola, pthread_mutex_t* mutex, t_list* destino) {
+    pthread_mutex_lock(mutex);
+    while (queue_size(cola) > 0) {
+        list_add(destino, queue_pop(cola));
+    }
+    pthread_mutex_unlock(mutex);
+}
+
+static bool hay_bsod(void) {
+    pthread_mutex_lock(&mutex_bsod);
+    bool activo = bsod_iniciado != 0;
+    pthread_mutex_unlock(&mutex_bsod);
+    return activo;
+}
+
+static void* manejar_bsod(void* _) {
+    (void)_;
     log_warning(logger, "## BSOD: Memory Stick desconectado — finalizando todos los procesos");
 
-    // Interrumpir CPUs en EXEC antes de vaciar la cola
+    t_list* procesos_a_finalizar = list_create();
+    if (!procesos_a_finalizar) {
+        log_error(logger, "## BSOD: no se pudo reservar la lista de finalización");
+        exit(EXIT_FAILURE);
+    }
+
+    // Primero se retiran los procesos de las colas. Las llamadas síncronas a
+    // KM se hacen después de liberar los mutex para no bloquear otros hilos.
+    mover_cola_a_lista(cola_new, &mutex_new, procesos_a_finalizar);
+
     pthread_mutex_lock(&mutex_exec);
-    int sz = queue_size(cola_exec);
-    for (int i = 0; i < sz; i++) {
+    while (queue_size(cola_exec) > 0) {
         t_proceso* proc = queue_pop(cola_exec);
-        t_payload_interrupcion_cpu pay = {
-            .pid    = htonl((uint32_t)proc->PID),
-            .motivo = htonl(MOTIVO_INTERRUPCION_DESALOJO)
-        };
-        enviar_mensaje(proc->fd_cpu, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
+        if (proc->fd_cpu >= 0) {
+            t_payload_interrupcion_cpu pay = {
+                .pid    = htonl((uint32_t)proc->PID),
+                .motivo = htonl(MOTIVO_INTERRUPCION_DESALOJO)
+            };
+            enviar_mensaje(proc->fd_cpu, MSG_INTERRUPCION_CPU, &pay, sizeof(pay));
+        }
         proc->fd_cpu = -1;
-        finalizar_proceso_bsod(proc);
+        list_add(procesos_a_finalizar, proc);
     }
     pthread_mutex_unlock(&mutex_exec);
 
-    // Vaciar el resto de las colas
     for (int i = 0; i < n_colas; i++) {
-        pthread_mutex_lock(&mutex_colas_ready[i]);
-        while (queue_size(colas_ready[i]) > 0)
-            finalizar_proceso_bsod(queue_pop(colas_ready[i]));
-        pthread_mutex_unlock(&mutex_colas_ready[i]);
+        mover_cola_a_lista(colas_ready[i], &mutex_colas_ready[i], procesos_a_finalizar);
     }
+    mover_cola_a_lista(cola_block, &mutex_block, procesos_a_finalizar);
+    mover_cola_a_lista(cola_susp_block, &mutex_susp_block, procesos_a_finalizar);
+    mover_cola_a_lista(cola_susp_ready, &mutex_susp_ready, procesos_a_finalizar);
 
-    pthread_mutex_lock(&mutex_block);
-    while (queue_size(cola_block) > 0)
-        finalizar_proceso_bsod(queue_pop(cola_block));
-    pthread_mutex_unlock(&mutex_block);
+    for (int i = 0; i < list_size(procesos_a_finalizar); i++) {
+        finalizar_proceso_bsod(list_get(procesos_a_finalizar, i));
+    }
+    list_destroy(procesos_a_finalizar);
 
-    pthread_mutex_lock(&mutex_susp_block);
-    while (queue_size(cola_susp_block) > 0)
-        finalizar_proceso_bsod(queue_pop(cola_susp_block));
-    pthread_mutex_unlock(&mutex_susp_block);
-
-    pthread_mutex_lock(&mutex_susp_ready);
-    while (queue_size(cola_susp_ready) > 0)
-        finalizar_proceso_bsod(queue_pop(cola_susp_ready));
-    pthread_mutex_unlock(&mutex_susp_ready);
+    // No debe quedar ninguna CPU ejecutando ni esperando un nuevo despacho.
+    pthread_mutex_lock(&mutex_cpus);
+    for (int i = 0; i < list_size(lista_cpus); i++) {
+        t_cpu_entry* cpu = list_get(lista_cpus, i);
+        shutdown(cpu->fd, SHUT_RDWR);
+    }
+    pthread_mutex_unlock(&mutex_cpus);
 
     log_warning(logger, "## BSOD: sistema finalizado");
     exit(EXIT_FAILURE);
+    return NULL;
 }
 
 static bool cmp_suspension(void* a, void* b) {
@@ -263,16 +383,31 @@ static void* manejar_mas_memoria(void* _) {
 
         if (resp && resp->op_code == MSG_OK) {
             free_mensaje(resp);
+
+            // Si llegó un STDIN mientras el proceso estaba suspendido, sus
+            // bytes quedaron retenidos en KS. Ahora que KM restauró todos los
+            // segmentos se pueden escribir de forma segura.
+            if (proc->esperando_stdin) {
+                t_stdin_pendiente* sp = extraer_stdin_pendiente(proc->PID);
+                int escritura_ok = escribir_stdin_en_km(sp) == 0;
+                destruir_stdin_pendiente(sp);
+                proc->esperando_stdin = 0;
+                if (!escritura_ok) {
+                    finalizar_por_error_io(proc,
+                        "no se pudo persistir el resultado de STDIN después de desuspender");
+                    continue;
+                }
+            }
+
             cambiar_estado(proc, READY);
             encolar_en_ready(proc);
         } else {
-            // Sin espacio — devolver este y los restantes a cola_susp_ready
+            // Sin espacio: este proceso sigue suspendido, pero se prueban los
+            // restantes porque alguno más pequeño sí podría caber.
             if (resp) free_mensaje(resp);
             pthread_mutex_lock(&mutex_susp_ready);
-            for (int j = i; j < list_size(candidatos); j++)
-                queue_push(cola_susp_ready, list_get(candidatos, j));
+            queue_push(cola_susp_ready, proc);
             pthread_mutex_unlock(&mutex_susp_ready);
-            break;
         }
     }
 
@@ -303,8 +438,11 @@ static t_mensaje* km_request(uint32_t op, void* payload, uint32_t size) {
 static void avisar_km_finalizacion(int pid) {
     uint32_t pid_n = htonl((uint32_t)pid);
     t_mensaje* resp = km_request(MSG_FINALIZAR_PROCESO, &pid_n, sizeof(uint32_t));
-    if (!resp || resp->op_code != MSG_OK)
+    if (!resp || resp->op_code != MSG_OK) {
         log_error(logger, "KM no confirmó la liberación de memoria del proceso %d", pid);
+    } else {
+        sem_post(&sem_largo_plazo);
+    }
     if (resp) free_mensaje(resp);
 }
 
@@ -340,15 +478,24 @@ static void* thread_km_listener(void* _) {
             break;
         case MSG_MAS_MEMORIA:
             free_mensaje(msg);
-            {
-                pthread_t t;
-                pthread_create(&t, NULL, manejar_mas_memoria, NULL);
-                pthread_detach(t);
-            }
+            // Un único worker procesa SUSP_READY. Evita dos des-suspensiones
+            // concurrentes y conserva el orden por prioridad/antigüedad.
+            sem_post(&sem_largo_plazo);
             break;
         case MSG_BSOD:
             free_mensaje(msg);
-            manejar_bsod();
+            pthread_mutex_lock(&mutex_bsod);
+            if (!bsod_iniciado) {
+                bsod_iniciado = 1;
+                pthread_t t_bsod;
+                if (pthread_create(&t_bsod, NULL, manejar_bsod, NULL) != 0) {
+                    pthread_mutex_unlock(&mutex_bsod);
+                    log_error(logger, "## BSOD: no se pudo iniciar la finalización");
+                    exit(EXIT_FAILURE);
+                }
+                pthread_detach(t_bsod);
+            }
+            pthread_mutex_unlock(&mutex_bsod);
             break;
         default:
             log_warning(logger, "KM: op_code inesperado %u", msg->op_code);
@@ -543,28 +690,49 @@ static void handle_compactar(void) {
     // Habilitar el planificador y señalarlo para que redespaché los procesos en READY.
     sem_post(&sem_planificador_ok);
     sem_post(&sem_cpu_disponible);
+    sem_post(&sem_largo_plazo);
 }
 
 t_proceso* crear_proceso(char* path, int prioridad) {
+    if (path == NULL || path[0] == '\0' ||
+        (strcmp(algoritmo, "CMN") == 0 &&
+         (prioridad < 0 || prioridad >= n_colas))) {
+        log_error(logger, "No se puede crear proceso: path o prioridad inválidos");
+        return NULL;
+    }
+
     pthread_mutex_lock(&mutex_pid);
     uint32_t pid = next_pid++;
     pthread_mutex_unlock(&mutex_pid);
 
     t_proceso* proc = malloc(sizeof(t_proceso));
+    if (proc == NULL) return NULL;
     proc->PID                    = (int)pid;
     proc->estado                 = NEW;
     proc->controladorDeProgramas = 0;
     proc->prioridad              = prioridad;
+    proc->prioridad_base         = prioridad;
     proc->fd_cpu                 = -1;
     proc->preemptado             = 0;
     proc->gen_despacho           = 0;
+    proc->gen_bloqueo            = 0;
+    proc->esperando_stdin        = 0;
     proc->tiempo_suspension      = 0;
 
     log_info(logger, "## (%u) Se crea el proceso - Estado: NEW", pid);
 
-    uint32_t path_len     = strlen(path) + 1;
+    size_t path_len_real = strlen(path) + 1;
+    if (path_len_real > UINT32_MAX - sizeof(uint32_t)) {
+        free(proc);
+        return NULL;
+    }
+    uint32_t path_len     = (uint32_t) path_len_real;
     uint32_t payload_size = sizeof(uint32_t) + path_len;
     void*    payload      = malloc(payload_size);
+    if (payload == NULL) {
+        free(proc);
+        return NULL;
+    }
     uint32_t pid_n        = htonl(pid);
     memcpy(payload, &pid_n, sizeof(uint32_t));
     memcpy((char*)payload + sizeof(uint32_t), path, path_len);
@@ -636,7 +804,6 @@ static void despachar(t_proceso* proc, t_cpu_entry* cpu) {
     cambiar_estado(proc, EXEC);
     proc->fd_cpu = cpu->fd;
     proc->gen_despacho++;
-    cpu->ocupada  = 1;
 
     pthread_mutex_lock(&mutex_exec);
     queue_push(cola_exec, proc);
@@ -700,6 +867,7 @@ static void* thread_planificador(void* _) {
         // Bloquea mientras haya una compactación en curso; se libera al terminar.
         sem_wait(&sem_planificador_ok);
         sem_post(&sem_planificador_ok);
+        if (hay_bsod()) return NULL;
 
         // Seleccionar el proceso de la cola no vacía de mayor prioridad (índice 0 = mayor)
         t_proceso* proc = NULL;
@@ -721,7 +889,16 @@ static void* thread_planificador(void* _) {
         int cant_cpus = list_size(lista_cpus);
         for (int i = 0; i < cant_cpus; i++) {
             t_cpu_entry* e = list_get(lista_cpus, i);
-            if (!e->ocupada) { cpu = e; break; }
+            if (!e->ocupada) {
+                cpu = e;
+                e->ocupada = 1;
+                break;
+            }
+        }
+        if (cpu != NULL) {
+            // Se despacha antes de liberar mutex_cpus para que una desconexión
+            // no pueda retirar la CPU entre la reserva y el alta en EXEC.
+            despachar(proc, cpu);
         }
         pthread_mutex_unlock(&mutex_cpus);
 
@@ -737,8 +914,6 @@ static void* thread_planificador(void* _) {
             pthread_mutex_unlock(&mutex_colas_ready[nivel_elegido]);
             continue;
         }
-
-        despachar(proc, cpu);
 
         if (strcmp(algoritmos_cola[nivel_elegido], "RR") == 0)
             lanzar_quantum_timer(proc);
@@ -782,17 +957,27 @@ static t_proceso* sacar_de_exec(int pid) {
 // Mueve el proceso a BLOCK y señala al planificador que la CPU quedó libre.
 static void mover_a_block(t_proceso* proc) {
     proc->preemptado = 0; // si estaba marcado para desalojo, sacar_de_exec ya lo contabilizó
+    proc->gen_bloqueo++;
     cambiar_estado(proc, BLOCK);
     pthread_mutex_lock(&mutex_block);
     queue_push(cola_block, proc);
     pthread_mutex_unlock(&mutex_block);
     sem_post(&sem_cpu_disponible);
 
-    int* pid_heap = malloc(sizeof(int));
-    *pid_heap = proc->PID;
+    t_suspension_args* args = malloc(sizeof(t_suspension_args));
+    if (!args) {
+        log_error(logger, "## (%d) - No se pudo crear el timer de suspensión", proc->PID);
+        return;
+    }
+    args->pid          = proc->PID;
+    args->gen_bloqueo = proc->gen_bloqueo;
     pthread_t t;
-    pthread_create(&t, NULL, thread_suspension_timer, pid_heap);
-    pthread_detach(t);
+    if (pthread_create(&t, NULL, thread_suspension_timer, args) == 0) {
+        pthread_detach(t);
+    } else {
+        log_error(logger, "## (%d) - No se pudo iniciar el timer de suspensión", proc->PID);
+        free(args);
+    }
 }
 
 // Saca el proceso de cola_block por PID. Retorna el proceso o NULL.
@@ -803,6 +988,21 @@ static t_proceso* sacar_de_block(int pid) {
     for (int i = 0; i < sz; i++) {
         t_proceso* q = queue_pop(cola_block);
         if (q->PID == pid) proc = q;
+        else queue_push(cola_block, q);
+    }
+    pthread_mutex_unlock(&mutex_block);
+    return proc;
+}
+
+// Variante usada por el timer: solo extrae el bloqueo que originó ESE timer.
+// Si el PID ya completó otra IO y volvió a bloquearse, la generación no coincide.
+static t_proceso* sacar_de_block_generacion(int pid, int gen_bloqueo) {
+    pthread_mutex_lock(&mutex_block);
+    t_proceso* proc = NULL;
+    int sz = queue_size(cola_block);
+    for (int i = 0; i < sz; i++) {
+        t_proceso* q = queue_pop(cola_block);
+        if (!proc && q->PID == pid && q->gen_bloqueo == gen_bloqueo) proc = q;
         else queue_push(cola_block, q);
     }
     pthread_mutex_unlock(&mutex_block);
@@ -845,11 +1045,72 @@ static t_proceso* buscar_proceso_activo(int pid) {
     pthread_mutex_lock(&mutex_block);
     p = buscar_pid_en_queue(cola_block, pid);
     pthread_mutex_unlock(&mutex_block);
+    if (p) return p;
+
+    pthread_mutex_lock(&mutex_susp_block);
+    p = buscar_pid_en_queue(cola_susp_block, pid);
+    pthread_mutex_unlock(&mutex_susp_block);
+    if (p) return p;
+
+    pthread_mutex_lock(&mutex_susp_ready);
+    p = buscar_pid_en_queue(cola_susp_ready, pid);
+    pthread_mutex_unlock(&mutex_susp_ready);
     return p;
 }
 
+// Si el proceso estaba en READY, además de cambiar el campo hay que moverlo a
+// la cola de su nueva prioridad. Dejarlo en la cola anterior anula en la
+// práctica la herencia hasta el próximo cambio de estado.
+static void aplicar_cambio_prioridad(t_proceso* proc, int nueva_prioridad) {
+    if (!proc || proc->prioridad == nueva_prioridad) return;
+
+    bool estaba_en_ready = false;
+    if (strcmp(algoritmo, "CMN") == 0 &&
+        nueva_prioridad >= 0 && nueva_prioridad < n_colas) {
+        for (int i = 0; i < n_colas; i++) {
+            pthread_mutex_lock(&mutex_colas_ready[i]);
+        }
+        for (int i = 0; i < n_colas; i++) {
+            if (list_remove_element(colas_ready[i]->elements, proc)) {
+                estaba_en_ready = true;
+                break;
+            }
+        }
+        proc->prioridad = nueva_prioridad;
+        if (estaba_en_ready) {
+            queue_push(colas_ready[nueva_prioridad], proc);
+        }
+        for (int i = n_colas - 1; i >= 0; i--) {
+            pthread_mutex_unlock(&mutex_colas_ready[i]);
+        }
+        return;
+    }
+
+    proc->prioridad = nueva_prioridad;
+}
+
+// Herencia de prioridades, versión completa: la prioridad efectiva de un
+// proceso es su prioridad base, salvo que alguno de los mutex que posee tenga
+// un waiter más prioritario. Recalcular siempre contra TODOS los mutex es lo
+// que hace correctos los casos que un solo mutex no cubre:
+//   - poseer dos mutex y soltar uno (el otro puede seguir elevando),
+//   - recibir un mutex por transferencia con waiters ya encolados.
+static void recalcular_prioridad_efectiva(t_proceso* proc) {
+    if (!proc) return;
+
+    int efectiva = proc->prioridad_base;
+    int heredada = mutex_ks_prioridad_heredada((uint32_t)proc->PID);
+    if (heredada < efectiva) efectiva = heredada;
+
+    if (efectiva == proc->prioridad) return;
+
+    log_info(logger, "## %d Cambio de prioridad: %d - %d",
+             proc->PID, proc->prioridad, efectiva);
+    aplicar_cambio_prioridad(proc, efectiva);
+}
+
 static void* thread_suspension_timer(void* arg) {
-    int pid = *((int*)arg);
+    t_suspension_args args = *((t_suspension_args*)arg);
     free(arg);
 
     struct timespec ts = {
@@ -858,21 +1119,37 @@ static void* thread_suspension_timer(void* arg) {
     };
     nanosleep(&ts, NULL);
 
-    t_proceso* proc = sacar_de_block(pid);
-    if (!proc) return NULL;
+    pthread_mutex_lock(&mutex_transiciones_io);
+    t_proceso* proc = sacar_de_block_generacion(args.pid, args.gen_bloqueo);
+    if (!proc) {
+        pthread_mutex_unlock(&mutex_transiciones_io);
+        return NULL;
+    }
 
-    log_info(logger, "## (%d) - Timeout de IO: suspendiendo proceso", pid);
-    proc->tiempo_suspension = time(NULL);
-    cambiar_estado(proc, SUSP_BLOCK);
-    pthread_mutex_lock(&mutex_susp_block);
-    queue_push(cola_susp_block, proc);
-    pthread_mutex_unlock(&mutex_susp_block);
-
-    uint32_t pid_n = htonl((uint32_t)pid);
+    log_info(logger, "## (%d) - Timeout de IO: suspendiendo proceso", args.pid);
+    uint32_t pid_n = htonl((uint32_t)args.pid);
     t_mensaje* resp = km_request(MSG_SUSPENDER_PROCESO, &pid_n, sizeof(uint32_t));
-    if (!resp || resp->op_code != MSG_OK)
-        log_error(logger, "KM rechazó suspender proceso %d", pid);
+    if (resp && resp->op_code == MSG_OK) {
+        // El estado se publica recién después de que KM confirma que los
+        // segmentos ya fueron enviados a Swap.
+        proc->tiempo_suspension = time(NULL);
+        cambiar_estado(proc, SUSP_BLOCK);
+        pthread_mutex_lock(&mutex_susp_block);
+        queue_push(cola_susp_block, proc);
+        pthread_mutex_unlock(&mutex_susp_block);
+        // Sus segmentos liberaron memoria física; puede habilitar la
+        // des-suspensión de otro proceso que ya estaba en SUSP_READY.
+        sem_post(&sem_largo_plazo);
+    } else {
+        // KM no lo suspendió: sigue residente y debe continuar en BLOCK para
+        // que la finalización de la IO todavía pueda encontrarlo.
+        log_error(logger, "KM rechazó suspender proceso %d; permanece en BLOCK", args.pid);
+        pthread_mutex_lock(&mutex_block);
+        queue_push(cola_block, proc);
+        pthread_mutex_unlock(&mutex_block);
+    }
     if (resp) free_mensaje(resp);
+    pthread_mutex_unlock(&mutex_transiciones_io);
 
     return NULL;
 }
@@ -1026,6 +1303,7 @@ static void* manejar_mem_free(void* arg) {
     if (resp && resp->op_code == MSG_OK) {
         log_info(logger, "## (%d) - MEM_FREE: segmento %u eliminado",
                  a->proc->PID, a->id_segmento);
+        sem_post(&sem_largo_plazo);
     } else {
         log_error(logger, "## (%d) - MEM_FREE: KM reportó error eliminando segmento %u",
                   a->proc->PID, a->id_segmento);
@@ -1151,26 +1429,43 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
         }
 
         case MSG_SYSCALL_SLEEP: {
+            if (msg->payload_size < sizeof(t_payload_io_sleep)) {
+                log_error(logger, "CPU envió SLEEP con payload inválido");
+                break;
+            }
             t_payload_io_sleep* p = msg->payload;
             int      pid       = (int)ntohl(p->pid);
             uint32_t tiempo_ms = ntohl(p->tiempo_ms);
 
             log_info(logger, "## (%d) - Solicitó syscall: SLEEP", pid);
             consumir_devolver(fd, "SLEEP");
+
+            pthread_mutex_lock(&mutex_transiciones_io);
             t_proceso* proc = sacar_de_exec(pid);
             if (proc) mover_a_block(proc);
 
             pthread_mutex_lock(&mutex_io);
             int fd_io = fd_io_sleep;
-            pthread_mutex_unlock(&mutex_io);
-            if (fd_io != -1) {
+            if (proc && fd_io != -1) {
                 t_payload_io_sleep fwd = { .pid = htonl(pid), .tiempo_ms = htonl(tiempo_ms) };
                 enviar_mensaje(fd_io, MSG_IO_SLEEP, &fwd, sizeof(fwd));
             }
+            pthread_mutex_unlock(&mutex_io);
+
+            if (proc && fd_io == -1) {
+                t_proceso* bloqueado = sacar_de_block(pid);
+                if (bloqueado)
+                    finalizar_por_error_io(bloqueado, "interfaz SLEEP no conectada");
+            }
+            pthread_mutex_unlock(&mutex_transiciones_io);
             break;
         }
 
         case MSG_SYSCALL_STDOUT: {
+            if (msg->payload_size < sizeof(t_payload_syscall_io_memoria)) {
+                log_error(logger, "CPU envió STDOUT con payload inválido");
+                break;
+            }
             t_payload_syscall_io_memoria* p = msg->payload;
             int      pid        = (int)ntohl(p->pid);
             uint32_t dir_logica = ntohl(p->direccion_logica);
@@ -1178,6 +1473,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             log_info(logger, "## (%d) - Solicitó syscall: STDOUT", pid);
             consumir_devolver(fd, "STDOUT");
 
+            pthread_mutex_lock(&mutex_transiciones_io);
             t_proceso* proc = sacar_de_exec(pid);
             if (proc) mover_a_block(proc);
 
@@ -1185,30 +1481,57 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             int fd_io = fd_io_stdout;
             pthread_mutex_unlock(&mutex_io);
 
-            if (fd_io != -1) {
+            bool io_iniciada = false;
+            if (proc && fd_io != -1) {
                 t_payload_acceso_datos km_payload = {
                     .pid        = htonl((uint32_t)pid),
                     .dir_logica = htonl(dir_logica),
                     .tamanio    = htonl(tamanio)
                 };
                 t_mensaje* resp = km_request(MSG_LEER_DATOS, &km_payload, sizeof(km_payload));
-                if (resp && resp->op_code == MSG_LEER_DATOS_RESP) {
+                if (resp && resp->op_code == MSG_LEER_DATOS_RESP &&
+                    resp->payload_size == tamanio &&
+                    resp->payload_size <= UINT32_MAX - sizeof(uint32_t)) {
                     uint32_t total = sizeof(uint32_t) + resp->payload_size;
                     uint8_t* buf = malloc(total);
-                    uint32_t pid_n = htonl((uint32_t)pid);
-                    memcpy(buf, &pid_n, sizeof(uint32_t));
-                    memcpy(buf + sizeof(uint32_t), resp->payload, resp->payload_size);
-                    enviar_mensaje(fd_io, MSG_IO_STDOUT, buf, total);
-                    free(buf);
-                } else {
+                    if (buf) {
+                        uint32_t pid_n = htonl((uint32_t)pid);
+                        memcpy(buf, &pid_n, sizeof(uint32_t));
+                        memcpy(buf + sizeof(uint32_t), resp->payload, resp->payload_size);
+
+                        // mutex_io cubre el envío completo para impedir que
+                        // mensajes concurrentes se intercalen en el socket.
+                        pthread_mutex_lock(&mutex_io);
+                        if (fd_io_stdout == fd_io) {
+                            enviar_mensaje(fd_io, MSG_IO_STDOUT, buf, total);
+                            io_iniciada = true;
+                        }
+                        pthread_mutex_unlock(&mutex_io);
+                        free(buf);
+                    }
+                }
+                if (!io_iniciada) {
                     log_warning(logger, "## (%d) - STDOUT: error al leer datos de KM", pid);
                 }
                 if (resp) free_mensaje(resp);
             }
+
+            if (proc && !io_iniciada) {
+                t_proceso* bloqueado = sacar_de_block(pid);
+                if (bloqueado)
+                    finalizar_por_error_io(bloqueado,
+                        fd_io == -1 ? "interfaz STDOUT no conectada" :
+                                      "no se pudo iniciar la operación STDOUT");
+            }
+            pthread_mutex_unlock(&mutex_transiciones_io);
             break;
         }
 
         case MSG_SYSCALL_STDIN: {
+            if (msg->payload_size < sizeof(t_payload_syscall_io_memoria)) {
+                log_error(logger, "CPU envió STDIN con payload inválido");
+                break;
+            }
             t_payload_syscall_io_memoria* p = msg->payload;
             int      pid        = (int)ntohl(p->pid);
             uint32_t dir_logica = ntohl(p->direccion_logica);
@@ -1216,24 +1539,40 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             log_info(logger, "## (%d) - Solicitó syscall: STDIN", pid);
             consumir_devolver(fd, "STDIN");
 
+            pthread_mutex_lock(&mutex_transiciones_io);
             t_proceso* proc = sacar_de_exec(pid);
             if (proc) mover_a_block(proc);
 
-            t_stdin_pendiente* sp = malloc(sizeof(t_stdin_pendiente));
-            sp->pid        = pid;
-            sp->dir_logica = dir_logica;
-            sp->tamanio    = n_bytes;
-            pthread_mutex_lock(&mutex_stdin_pendientes);
-            list_add(lista_stdin_pendientes, sp);
-            pthread_mutex_unlock(&mutex_stdin_pendientes);
+            t_stdin_pendiente* sp = proc ? calloc(1, sizeof(t_stdin_pendiente)) : NULL;
+            if (sp) {
+                sp->pid        = pid;
+                sp->dir_logica = dir_logica;
+                sp->tamanio    = n_bytes;
+                proc->esperando_stdin = 1;
+                pthread_mutex_lock(&mutex_stdin_pendientes);
+                list_add(lista_stdin_pendientes, sp);
+                pthread_mutex_unlock(&mutex_stdin_pendientes);
+            }
 
             pthread_mutex_lock(&mutex_io);
             int fd_io = fd_io_stdin;
-            pthread_mutex_unlock(&mutex_io);
-            if (fd_io != -1) {
+            if (sp && fd_io != -1) {
                 t_payload_io_stdin fwd = { .pid = htonl(pid), .n_bytes = htonl(n_bytes) };
                 enviar_mensaje(fd_io, MSG_IO_STDIN, &fwd, sizeof(fwd));
             }
+            pthread_mutex_unlock(&mutex_io);
+
+            if (proc && (!sp || fd_io == -1)) {
+                t_stdin_pendiente* pendiente = extraer_stdin_pendiente(pid);
+                destruir_stdin_pendiente(pendiente);
+                proc->esperando_stdin = 0;
+                t_proceso* bloqueado = sacar_de_block(pid);
+                if (bloqueado)
+                    finalizar_por_error_io(bloqueado,
+                        !sp ? "sin memoria para registrar STDIN" :
+                              "interfaz STDIN no conectada");
+            }
+            pthread_mutex_unlock(&mutex_transiciones_io);
             break;
         }
 
@@ -1263,14 +1602,11 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                 cambiar_estado(proc, READY);
                 encolar_en_ready(proc);
             } else if (resultado == 1) {
-                // Herencia de prioridades: elevar al owner si corresponde.
+                // Herencia de prioridades: el waiter ya quedó encolado, así que
+                // recalcular la efectiva del owner lo eleva si corresponde.
+                (void)nueva_prioridad_owner;
                 if (owner_a_elevar >= 0) {
-                    t_proceso* owner = buscar_proceso_activo(owner_a_elevar);
-                    if (owner && owner->prioridad > nueva_prioridad_owner) {
-                        log_info(logger, "## %d Cambio de prioridad: %d - %d",
-                                 owner->PID, owner->prioridad, nueva_prioridad_owner);
-                        owner->prioridad = nueva_prioridad_owner;
-                    }
+                    recalcular_prioridad_efectiva(buscar_proceso_activo(owner_a_elevar));
                 }
                 mover_a_block(proc);
             } else {
@@ -1354,18 +1690,20 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             int prioridad_restaurar;
             int waiter_pid = mutex_ks_unlock(pid, p->nombre, logger, &prioridad_restaurar);
 
-            // Restaurar la prioridad original del owner si fue elevada por herencia.
-            if (prioridad_restaurar >= 0) {
-                t_proceso* owner = buscar_proceso_activo(pid);
-                if (owner && owner->prioridad != prioridad_restaurar) {
-                    log_info(logger, "## %d Cambio de prioridad: %d - %d",
-                             owner->PID, owner->prioridad, prioridad_restaurar);
-                    owner->prioridad = prioridad_restaurar;
-                }
+            // Bajar al que soltó: vuelve a su base salvo que otro mutex que
+            // todavía posee tenga un waiter más prioritario.
+            (void)prioridad_restaurar;
+            recalcular_prioridad_efectiva(buscar_proceso_activo(pid));
+
+            if (waiter_pid >= 0) {
+                // El nuevo dueño hereda de los waiters que quedaron en la cola
+                // de ESTE mutex, que él nunca vio pasar por un LOCK propio.
+                recalcular_prioridad_efectiva(buscar_proceso_activo(waiter_pid));
             }
 
             if (waiter_pid >= 0) {
                 // Mover al waiter de BLOCK → READY (o SUSP_BLOCK → SUSP_READY)
+                pthread_mutex_lock(&mutex_transiciones_io);
                 t_proceso* waiter = sacar_de_block(waiter_pid);
                 if (waiter) {
                     cambiar_estado(waiter, READY);
@@ -1380,6 +1718,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
                         sem_post(&sem_largo_plazo);
                     }
                 }
+                pthread_mutex_unlock(&mutex_transiciones_io);
             }
             break;
         }
@@ -1407,7 +1746,7 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
         }
 
         case MSG_INIT_PROC: {
-            if (msg->payload_size < sizeof(uint32_t)) {
+            if (msg->payload == NULL || msg->payload_size < 2u * sizeof(uint32_t) + 1u) {
                 enviar_mensaje(fd, MSG_ERROR, NULL, 0);
                 break;
             }
@@ -1417,7 +1756,17 @@ static void atender_cpu(int fd, t_cpu_entry* entry) {
             int pid_padre = (int)ntohl(pid_padre_n);
 
             char* path_hijo = (char*)msg->payload + sizeof(uint32_t);
-            size_t path_len = strlen(path_hijo) + 1;
+            size_t espacio_path = msg->payload_size - 2u * sizeof(uint32_t);
+            char* fin_path = memchr(path_hijo, '\0', espacio_path);
+            if (fin_path == NULL) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                break;
+            }
+            size_t path_len = (size_t)(fin_path - path_hijo) + 1u;
+            if (sizeof(uint32_t) + path_len + sizeof(uint32_t) != msg->payload_size) {
+                enviar_mensaje(fd, MSG_ERROR, NULL, 0);
+                break;
+            }
             uint32_t prioridad_n;
             memcpy(&prioridad_n,
                    (char*)msg->payload + sizeof(uint32_t) + path_len,
@@ -1456,86 +1805,135 @@ static void atender_io(int fd, char* tipo) {
         }
 
         if (msg->op_code == MSG_IO_FIN) {
+            if (msg->payload_size < sizeof(t_payload_io_fin)) {
+                log_warning(logger, "## IO %s envió MSG_IO_FIN con payload inválido", tipo);
+                free_mensaje(msg);
+                continue;
+            }
             t_payload_io_fin* p = msg->payload;
             int pid = (int)ntohl(p->pid);
 
+            pthread_mutex_lock(&mutex_transiciones_io);
             t_proceso* proc = sacar_de_block(pid);
             if (proc) {
-                // IO terminó antes del timeout: BLOCK → READY
-                cambiar_estado(proc, READY);
-                log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
-                encolar_en_ready(proc);
+                if (proc->esperando_stdin) {
+                    t_stdin_pendiente* sp = extraer_stdin_pendiente(pid);
+                    destruir_stdin_pendiente(sp);
+                    proc->esperando_stdin = 0;
+                    finalizar_por_error_io(proc,
+                        "STDIN respondió MSG_IO_FIN sin entregar sus datos");
+                } else {
+                    // IO terminó antes del timeout: BLOCK → READY
+                    cambiar_estado(proc, READY);
+                    log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
+                    encolar_en_ready(proc);
+                }
             } else {
                 // IO terminó después del timeout: SUSP. BLOCK → SUSP. READY
                 proc = sacar_de_susp_block(pid);
                 if (proc) {
-                    cambiar_estado(proc, SUSP_READY);
-                    log_info(logger, "## (%d) finalizó IO y pasa a SUSP. READY", pid);
-                    pthread_mutex_lock(&mutex_susp_ready);
-                    queue_push(cola_susp_ready, proc);
-                    pthread_mutex_unlock(&mutex_susp_ready);
-                    sem_post(&sem_largo_plazo);
+                    if (proc->esperando_stdin) {
+                        t_stdin_pendiente* sp = extraer_stdin_pendiente(pid);
+                        destruir_stdin_pendiente(sp);
+                        proc->esperando_stdin = 0;
+                        finalizar_por_error_io(proc,
+                            "STDIN respondió MSG_IO_FIN sin entregar sus datos");
+                    } else {
+                        cambiar_estado(proc, SUSP_READY);
+                        log_info(logger, "## (%d) finalizó IO y pasa a SUSP. READY", pid);
+                        pthread_mutex_lock(&mutex_susp_ready);
+                        queue_push(cola_susp_ready, proc);
+                        pthread_mutex_unlock(&mutex_susp_ready);
+                        sem_post(&sem_largo_plazo);
+                    }
                 }
             }
+            pthread_mutex_unlock(&mutex_transiciones_io);
 
         } else if (msg->op_code == MSG_IO_STDIN_DATOS) {
             if (msg->payload_size < 8) { free_mensaje(msg); continue; }
 
-            // IO devuelve pid y n_bytes en byte order del host (aplica ntohl antes de enviarlos)
-            uint32_t pid_raw, n_bytes_raw;
-            memcpy(&pid_raw,     msg->payload,               4);
-            memcpy(&n_bytes_raw, (uint8_t*)msg->payload + 4, 4);
-            int      pid     = (int)pid_raw;
-            uint32_t n_bytes = n_bytes_raw;
+            uint32_t pid_n, n_bytes_n;
+            memcpy(&pid_n,     msg->payload,               4);
+            memcpy(&n_bytes_n, (uint8_t*)msg->payload + 4, 4);
+            int      pid     = (int)ntohl(pid_n);
+            uint32_t n_bytes = ntohl(n_bytes_n);
             uint8_t* datos   = (uint8_t*)msg->payload + 8;
 
-            // Recuperar dirección lógica guardada al recibir MSG_SYSCALL_STDIN
-            uint32_t dir_logica = 0, tamanio = 0;
+            // Conservar los bytes junto al pedido. Si el proceso está
+            // suspendido, se escribirán recién después de restaurar segmentos.
+            bool pendiente_encontrado = false;
+            bool datos_validos = false;
             pthread_mutex_lock(&mutex_stdin_pendientes);
             for (int i = 0; i < list_size(lista_stdin_pendientes); i++) {
                 t_stdin_pendiente* sp = list_get(lista_stdin_pendientes, i);
                 if (sp->pid == pid) {
-                    dir_logica = sp->dir_logica;
-                    tamanio    = sp->tamanio;
-                    list_remove_and_destroy_element(lista_stdin_pendientes, i, free);
+                    pendiente_encontrado = true;
+                    uint32_t bytes_en_payload = msg->payload_size - 8u;
+                    if (!sp->datos_recibidos &&
+                        n_bytes == bytes_en_payload &&
+                        n_bytes == sp->tamanio) {
+                        uint8_t* copia = n_bytes > 0 ? malloc(n_bytes) : NULL;
+                        if (n_bytes == 0 || copia) {
+                            if (n_bytes > 0) memcpy(copia, datos, n_bytes);
+                            sp->datos           = copia;
+                            sp->datos_size      = n_bytes;
+                            sp->datos_recibidos = true;
+                            datos_validos       = true;
+                        }
+                    }
                     break;
                 }
             }
             pthread_mutex_unlock(&mutex_stdin_pendientes);
 
-            if (tamanio > 0 && n_bytes > 0) {
-                uint32_t km_size  = 12 + n_bytes;
-                uint8_t* km_buf   = malloc(km_size);
-                uint32_t pid_n    = htonl((uint32_t)pid);
-                uint32_t dl_n     = htonl(dir_logica);
-                uint32_t tam_n    = htonl(tamanio);
-                memcpy(km_buf,      &pid_n, 4);
-                memcpy(km_buf + 4,  &dl_n,  4);
-                memcpy(km_buf + 8,  &tam_n, 4);
-                memcpy(km_buf + 12, datos,  n_bytes);
-                t_mensaje* resp = km_request(MSG_ESCRIBIR_DATOS, km_buf, km_size);
-                if (!resp || resp->op_code != MSG_OK)
-                    log_warning(logger, "## (%d) - STDIN: error al escribir datos en KM", pid);
-                if (resp) free_mensaje(resp);
-                free(km_buf);
+            if (!pendiente_encontrado) {
+                log_warning(logger, "## (%d) - STDIN: respuesta sin pedido pendiente", pid);
+                free_mensaje(msg);
+                continue;
             }
 
+            pthread_mutex_lock(&mutex_transiciones_io);
+            bool estaba_suspendido = false;
             t_proceso* proc = sacar_de_block(pid);
-            if (proc) {
-                cambiar_estado(proc, READY);
-                log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
-                encolar_en_ready(proc);
-            } else {
+            if (!proc) {
                 proc = sacar_de_susp_block(pid);
-                if (proc) {
-                    cambiar_estado(proc, SUSP_READY);
-                    log_info(logger, "## (%d) finalizó IO y pasa a SUSP. READY", pid);
-                    pthread_mutex_lock(&mutex_susp_ready);
-                    queue_push(cola_susp_ready, proc);
-                    pthread_mutex_unlock(&mutex_susp_ready);
-                    sem_post(&sem_largo_plazo);
+                estaba_suspendido = proc != NULL;
+            }
+
+            if (!proc) {
+                t_stdin_pendiente* sp = extraer_stdin_pendiente(pid);
+                destruir_stdin_pendiente(sp);
+                log_warning(logger, "## (%d) - STDIN: el proceso ya no esperaba esta IO", pid);
+            } else if (!datos_validos) {
+                t_stdin_pendiente* sp = extraer_stdin_pendiente(pid);
+                destruir_stdin_pendiente(sp);
+                proc->esperando_stdin = 0;
+                finalizar_por_error_io(proc, "respuesta STDIN inválida o incompleta");
+            } else if (estaba_suspendido) {
+                // No tocar KM todavía: sus segmentos continúan en Swap.
+                // El worker de mediano plazo escribirá tras des-suspender.
+                cambiar_estado(proc, SUSP_READY);
+                log_info(logger, "## (%d) finalizó IO y pasa a SUSP. READY", pid);
+                pthread_mutex_lock(&mutex_susp_ready);
+                queue_push(cola_susp_ready, proc);
+                pthread_mutex_unlock(&mutex_susp_ready);
+                sem_post(&sem_largo_plazo);
+            } else {
+                t_stdin_pendiente* sp = extraer_stdin_pendiente(pid);
+                int escritura_ok = escribir_stdin_en_km(sp) == 0;
+                destruir_stdin_pendiente(sp);
+                proc->esperando_stdin = 0;
+                if (escritura_ok) {
+                    cambiar_estado(proc, READY);
+                    log_info(logger, "## (%d) finalizó IO y pasa a READY", pid);
+                    encolar_en_ready(proc);
+                } else {
+                    log_warning(logger, "## (%d) - STDIN: error al escribir datos en KM", pid);
+                    finalizar_por_error_io(proc, "Kernel Memory rechazó la escritura de STDIN");
                 }
             }
+            pthread_mutex_unlock(&mutex_transiciones_io);
         }
 
         free_mensaje(msg);
